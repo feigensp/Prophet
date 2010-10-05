@@ -10,7 +10,7 @@ import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.Highlighter;
 
 
-public class Search extends JTextField implements KeyListener{
+public class Search_1 extends JTextField implements KeyListener{
 	private String text;
 	private String word;
 	int caret;
@@ -27,7 +27,7 @@ public class Search extends JTextField implements KeyListener{
 	 * Konstruktoren für mehrere Komponenten möglich - nur extra erstellen und in Methoden dann überprüfen
 	 * 
 	 */
-	public Search(JTextArea textarea) {
+	public Search_1(JTextArea textarea) {
 		super();
 		addKeyListener(this);
 		this.textarea = textarea;
@@ -39,7 +39,7 @@ public class Search extends JTextField implements KeyListener{
 		textarea.setHighlighter(hilit);
 	}
 	
-	public Search(JTextArea textarea, int col) {
+	public Search_1(JTextArea textarea, int col) {
 		super(col);
 		addKeyListener(this);
 		this.textarea = textarea;
@@ -54,14 +54,11 @@ public class Search extends JTextField implements KeyListener{
 	@Override
 	public void keyReleased(KeyEvent ke) {	
 		if(ke.getKeyCode() == KeyEvent.VK_ENTER) {
-			System.out.println("enter");
 			getNextPos();
 		} else if(ke.getKeyCode() == KeyEvent.VK_ESCAPE) {
-			System.out.println("escape");
 			setText("");
 			cancelSearch();
 		} else {
-			System.out.println("sonstiges");
 			cancelSearch();
 			setWord(this.getText());
 			getNextPos();
