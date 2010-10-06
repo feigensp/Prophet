@@ -1,0 +1,9 @@
+<?xml version="1.0">
+
+<!-- interne DTD -->
+<!DOCTYPE CLASSES [
+	<!-- Wurzelelemente kann beliebig viele Klassen enthalten -->
+	<!ELEMENT CLASSES (CLASS)*>
+	<!-- Eine Klasse enthält Klassenname + Zusatzinfo -->
+	
+]>
