@@ -9,18 +9,23 @@ import javax.swing.JFrame;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-public class testMain {
+public class testMain implements ActionListener{
+	Search s;
 
 	public testMain() {
 		JFrame frame = new JFrame("test");
 		JTextArea textarea = new JTextArea();
 		textarea.setText("hallo\ndu\nda\nd\nu\nda\nda\ndudu\nda\nDu\nda");
-		Search s = new Search(textarea);
+		s = new Search(textarea);
 		frame.getContentPane();
+		
+		JButton button = new JButton("Zeige!");
+		frame.getContentPane().add(button, BorderLayout.SOUTH);
 		frame.add(textarea, BorderLayout.CENTER);
 		frame.add(s, BorderLayout.NORTH);
 		
-		frame.setSize(800, 800);		
+		frame.setSize(800, 800);
+		button.addActionListener(this);
 		
 		
 
@@ -30,6 +35,12 @@ public class testMain {
 
 	public static void main(String args[]) {
 		testMain test = new testMain();
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent arg0) {
+		s.visible();
+		
 	}
 
 }
