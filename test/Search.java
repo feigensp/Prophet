@@ -22,14 +22,13 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.Highlighter;
 
-public class Search extends JPanel implements KeyListener, ActionListener, MouseListener {
+public class Search extends JPanel implements KeyListener, ActionListener,
+		MouseListener {
 	private String text;
 	private String word;
-	int caret;
-	int lastSearchPosition;
 	JTextArea textarea = null;
-	private Vector<Integer> v; //Vector für die Positionen der Vorkommen
-	private int lastPos; //Position des aktuellen Vorkommen
+	private Vector<Integer> v; // Vector für die Positionen der Vorkommen
+	private int lastPos; // Position des aktuellen Vorkommen
 
 	final Color HILIT_COLOR_GRAY = Color.LIGHT_GRAY;
 	final Color HILIT_COLOR_YELLOW = Color.YELLOW;
@@ -46,8 +45,8 @@ public class Search extends JPanel implements KeyListener, ActionListener, Mouse
 	private JCheckBox search_chkbx_upperlower;
 
 	/*
-	 * Konstruktoren für mehrere Komponenten (ausser Textarea) möglich - nur extra erstellen und
-	 * in Methoden dann überprüfen
+	 * Konstruktoren für mehrere Komponenten (ausser Textarea) möglich - nur
+	 * extra erstellen und in Methoden dann überprüfen
 	 */
 	public Search(JTextArea textarea) {
 		super();
@@ -66,52 +65,84 @@ public class Search extends JPanel implements KeyListener, ActionListener, Mouse
 		search_chkbx_upperlower = new JCheckBox("Gro\u00DF-/Kleinschreibung");
 
 		GroupLayout groupLayout = new GroupLayout(this);
-		groupLayout.setHorizontalGroup(
-			groupLayout.createParallelGroup(Alignment.LEADING)
-				.addGroup(groupLayout.createSequentialGroup()
-					.addContainerGap()
-					.addComponent(search_lbl_close)
-					.addGap(18)
-					.addComponent(search_lbl_suchen)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(search_textfield_word, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(search_btn_down)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(search_btn_up)
-					.addGap(6)
-					.addComponent(search_chkbx_upperlower)
-					.addGap(6)
-					.addComponent(search_lbl_text)
-					.addContainerGap(55, Short.MAX_VALUE))
-		);
-		groupLayout.setVerticalGroup(
-			groupLayout.createParallelGroup(Alignment.LEADING)
-				.addGroup(groupLayout.createSequentialGroup()
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addGroup(groupLayout.createSequentialGroup()
-							.addContainerGap()
-							.addComponent(search_lbl_close))
-						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(7)
-							.addComponent(search_btn_down))
-						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(7)
-							.addComponent(search_btn_up))
-						.addGroup(groupLayout.createSequentialGroup()
-							.addContainerGap()
-							.addComponent(search_chkbx_upperlower))
-						.addGroup(groupLayout.createSequentialGroup()
-							.addContainerGap()
-							.addComponent(search_lbl_text))
-						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(8)
-							.addComponent(search_textfield_word, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-						.addGroup(groupLayout.createSequentialGroup()
-							.addContainerGap()
-							.addComponent(search_lbl_suchen)))
-					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-		);
+		groupLayout.setHorizontalGroup(groupLayout.createParallelGroup(
+				Alignment.LEADING).addGroup(
+				groupLayout
+						.createSequentialGroup()
+						.addContainerGap()
+						.addComponent(search_lbl_close)
+						.addGap(18)
+						.addComponent(search_lbl_suchen)
+						.addPreferredGap(ComponentPlacement.RELATED)
+						.addComponent(search_textfield_word,
+								GroupLayout.PREFERRED_SIZE,
+								GroupLayout.DEFAULT_SIZE,
+								GroupLayout.PREFERRED_SIZE)
+						.addPreferredGap(ComponentPlacement.RELATED)
+						.addComponent(search_btn_down)
+						.addPreferredGap(ComponentPlacement.RELATED)
+						.addComponent(search_btn_up).addGap(6)
+						.addComponent(search_chkbx_upperlower).addGap(6)
+						.addComponent(search_lbl_text)
+						.addContainerGap(55, Short.MAX_VALUE)));
+		groupLayout
+				.setVerticalGroup(groupLayout
+						.createParallelGroup(Alignment.LEADING)
+						.addGroup(
+								groupLayout
+										.createSequentialGroup()
+										.addGroup(
+												groupLayout
+														.createParallelGroup(
+																Alignment.LEADING)
+														.addGroup(
+																groupLayout
+																		.createSequentialGroup()
+																		.addContainerGap()
+																		.addComponent(
+																				search_lbl_close))
+														.addGroup(
+																groupLayout
+																		.createSequentialGroup()
+																		.addGap(7)
+																		.addComponent(
+																				search_btn_down))
+														.addGroup(
+																groupLayout
+																		.createSequentialGroup()
+																		.addGap(7)
+																		.addComponent(
+																				search_btn_up))
+														.addGroup(
+																groupLayout
+																		.createSequentialGroup()
+																		.addContainerGap()
+																		.addComponent(
+																				search_chkbx_upperlower))
+														.addGroup(
+																groupLayout
+																		.createSequentialGroup()
+																		.addContainerGap()
+																		.addComponent(
+																				search_lbl_text))
+														.addGroup(
+																groupLayout
+																		.createSequentialGroup()
+																		.addGap(8)
+																		.addComponent(
+																				search_textfield_word,
+																				GroupLayout.PREFERRED_SIZE,
+																				GroupLayout.DEFAULT_SIZE,
+																				GroupLayout.PREFERRED_SIZE))
+														.addGroup(
+																groupLayout
+																		.createSequentialGroup()
+																		.addContainerGap()
+																		.addComponent(
+																				search_lbl_suchen)))
+										.addContainerGap(
+												GroupLayout.DEFAULT_SIZE,
+												Short.MAX_VALUE)));
 		setLayout(groupLayout);
 
 		search_textfield_word.addKeyListener(this);
@@ -120,7 +151,6 @@ public class Search extends JPanel implements KeyListener, ActionListener, Mouse
 		search_chkbx_upperlower.addActionListener(this);
 		search_lbl_close.addMouseListener(this);
 
-		lastSearchPosition = -1;
 		hilit = new DefaultHighlighter();
 		painterGray = new DefaultHighlighter.DefaultHighlightPainter(
 				HILIT_COLOR_GRAY);
@@ -128,21 +158,24 @@ public class Search extends JPanel implements KeyListener, ActionListener, Mouse
 				HILIT_COLOR_YELLOW);
 		textarea.setHighlighter(hilit);
 	}
+
 	/*
 	 * KeyEvents für das Suchfeld
 	 */
 	@Override
 	public void keyReleased(KeyEvent ke) {
-		//wenn enter oder ein alphanumerisches Zeichen gedrückt wurde Suche neu starten - klappt nicht
-		//if ((ke.getKeyCode() == KeyEvent.VK_ALPHANUMERIC)||(ke.getKeyCode() == KeyEvent.VK_ENTER)) {
-		if(!(ke.getKeyCode() == KeyEvent.VK_ENTER)) {
+		// wenn enter oder ein alphanumerisches Zeichen gedrückt wurde Suche neu
+		// starten - klappt nicht
+		// if ((ke.getKeyCode() == KeyEvent.VK_ALPHANUMERIC)||(ke.getKeyCode()
+		// == KeyEvent.VK_ENTER)) {
+		if (!(ke.getKeyCode() == KeyEvent.VK_ENTER)) {
 			cancelSearch();
 		}
 		if (setWord(search_textfield_word.getText())) {
-			getPos(true);				
+			getPos(true);
 		}
 	}
-	
+
 	/*
 	 * ActionEvents für die Suchbuttons und der Checkbox
 	 */
@@ -156,14 +189,14 @@ public class Search extends JPanel implements KeyListener, ActionListener, Mouse
 		if (ae.getSource() == search_btn_up) {
 			getPos(false);
 		}
-		//Checkbox
-		if(ae.getSource() == search_chkbx_upperlower) {
+		// Checkbox
+		if (ae.getSource() == search_chkbx_upperlower) {
 			cancelSearch();
 			setWord(search_textfield_word.getText());
 			getPos(true);
-		}	
+		}
 	}
-	
+
 	/*
 	 * MouseEvent für das schließen Label
 	 */
@@ -172,7 +205,6 @@ public class Search extends JPanel implements KeyListener, ActionListener, Mouse
 		invisible();
 	}
 
-
 	/*
 	 * Allgemeine Suchmethode Baut einen Vector auf, der als Index der
 	 * gefundenen Werte dient. Alle Ergebnisse werden grau Hinterlegt
@@ -180,47 +212,52 @@ public class Search extends JPanel implements KeyListener, ActionListener, Mouse
 	 * letzte aktuelle Ergebnis an und muss zum Ende aktualisiert werden, damit
 	 * es das aktuelle angibt
 	 * 
-	 * @param mod boolean der angibt ob vorwärts (true) oder rückwärts (false) gesucht werden soll 
+	 * @param mod boolean der angibt ob vorwärts (true) oder rückwärts (false)
+	 * gesucht werden soll
 	 * 
 	 * @return true wenn was gefunden, sonst false
 	 */
-	public boolean getPos(boolean forward) {	
+	public boolean getPos(boolean forward) {
 		// liste aller vorkommen aufbauen (nur wenn nötig)
 		if (word.equals("")) {
 			cancelSearch();
 			return false;
 		}
-		text = search_chkbx_upperlower.isSelected() ? textarea.getText() : textarea.getText().toLowerCase();
+		text = search_chkbx_upperlower.isSelected() ? textarea.getText()
+				: textarea.getText().toLowerCase();
 		word = search_chkbx_upperlower.isSelected() ? word : word.toLowerCase();
 		if (lastPos == -1) {
 			v.removeAllElements();
-			//Position in Abhängigkeit ob mit Unterscheidung der Groß- Kleinschreibung finden
+			// Position in Abhängigkeit ob mit Unterscheidung der Groß-
+			// Kleinschreibung finden
 			int pos = text.indexOf(word);
 			int i = 0;
 			while (pos != -1) {
 				i++;
 				v.add(pos);
-				pos = text.indexOf(word, pos+1);
+				pos = text.indexOf(word, pos + 1);
 			}
 		}
 		if (!v.isEmpty()) {
-			//Vorwärtseinstellung
+			// Vorwärtseinstellung
 			if (forward) {
-				if(lastPos >= v.size()-1) {
-					search_lbl_text.setText("Textende erreicht. Die Suche wurde vom Textanfang neu gestartet.");
+				if (lastPos >= v.size() - 1) {
+					search_lbl_text
+							.setText("Textende erreicht. Die Suche wurde vom Textanfang neu gestartet.");
 				} else {
 					search_lbl_text.setText("");
 				}
-				lastPos = (lastPos >= v.size()-1) ? 0 : lastPos+1;
+				lastPos = (lastPos >= v.size() - 1) ? 0 : lastPos + 1;
 			}
-			//Rückwärtseinstellung
+			// Rückwärtseinstellung
 			if (!forward) {
-				if(lastPos <= 0) {
-					search_lbl_text.setText("Textanfang erreicht. Die Suche wurde vom Textende neu gestartet.");
+				if (lastPos <= 0) {
+					search_lbl_text
+							.setText("Textanfang erreicht. Die Suche wurde vom Textende neu gestartet.");
 				} else {
 					search_lbl_text.setText("");
 				}
-				lastPos = lastPos <= 0 ? v.size()-1 : lastPos-1;
+				lastPos = lastPos <= 0 ? v.size() - 1 : lastPos - 1;
 			}
 			// Ergebnisse einfärben und Cursor setzen
 			showHighlights();
@@ -233,7 +270,7 @@ public class Search extends JPanel implements KeyListener, ActionListener, Mouse
 		search_textfield_word.setBackground(Color.RED);
 		return false;
 	}
-	
+
 	/*
 	 * Lässt alle Suchergebnissfarbhinterlegungen im Farbschema anzeigen
 	 */
@@ -242,8 +279,8 @@ public class Search extends JPanel implements KeyListener, ActionListener, Mouse
 		for (int j = 0; j < v.size(); j++) {
 			try {
 				if (j == lastPos) {
-					hilit.addHighlight(v.get(j), v.get(j)
-							+ word.length(), painterYellow);
+					hilit.addHighlight(v.get(j), v.get(j) + word.length(),
+							painterYellow);
 				} else {
 					hilit.addHighlight(v.get(j), v.get(j) + word.length(),
 							painterGray);
@@ -251,27 +288,29 @@ public class Search extends JPanel implements KeyListener, ActionListener, Mouse
 			} catch (BadLocationException e) {
 				e.printStackTrace();
 			}
-		}		
-	}
-	
-	/*
-	 * Lässt alle Suchergebnissfarbhinterlegungen verschwinden 
-	 */
-	public void hideHighlights() {
-		hilit.removeAllHighlights();		
+		}
 	}
 
+	/*
+	 * Lässt alle Suchergebnissfarbhinterlegungen verschwinden
+	 */
+	public void hideHighlights() {
+		hilit.removeAllHighlights();
+	}
 
 	/*
 	 * Setzt das derzeitige Suchwort
+	 * 
 	 * @param word Das Wort was nun gesucht werden soll
-	 * @return true wenn es ein echtes Wort ist, false wenn es ein Leerstring ist
+	 * 
+	 * @return true wenn es ein echtes Wort ist, false wenn es ein Leerstring
+	 * ist
 	 */
 	public boolean setWord(String word) {
 		this.word = word;
 		return word.equals("") ? false : true;
 	}
-	
+
 	/*
 	 * Führt alle nötigen Vorgänge aus um eine Suche abzubrechen
 	 */
@@ -280,9 +319,9 @@ public class Search extends JPanel implements KeyListener, ActionListener, Mouse
 		search_textfield_word.setBackground(Color.WHITE);
 		hideHighlights();
 		setWord("");
-		lastPos=-1;
+		lastPos = -1;
 	}
-	
+
 	/*
 	 * Zeigt diese Klasse optisch an
 	 */
@@ -290,28 +329,39 @@ public class Search extends JPanel implements KeyListener, ActionListener, Mouse
 		showHighlights();
 		this.setVisible(true);
 	}
-	
+
 	/*
 	 * Lässt diese Klasse optisch verschwinden
 	 */
-	public void invisible() {	
+	public void invisible() {
 		hideHighlights();
 		this.setVisible(false);
 	}
-	
+
 	/*
 	 * ungenutze Funktionen
 	 */
 	@Override
-	public void keyPressed(KeyEvent ke) {}
+	public void keyPressed(KeyEvent ke) {
+	}
+
 	@Override
-	public void keyTyped(KeyEvent arg0) {}
+	public void keyTyped(KeyEvent arg0) {
+	}
+
 	@Override
-	public void mouseEntered(MouseEvent arg0) {}
+	public void mouseEntered(MouseEvent arg0) {
+	}
+
 	@Override
-	public void mouseExited(MouseEvent arg0) {}
+	public void mouseExited(MouseEvent arg0) {
+	}
+
 	@Override
-	public void mousePressed(MouseEvent arg0) {}
+	public void mousePressed(MouseEvent arg0) {
+	}
+
 	@Override
-	public void mouseReleased(MouseEvent arg0) {}
+	public void mouseReleased(MouseEvent arg0) {
+	}
 }
