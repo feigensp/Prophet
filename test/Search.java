@@ -17,20 +17,20 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.JTextPane;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.Highlighter;
-import java.awt.event.InputMethodListener;
-import java.awt.event.InputMethodEvent;
 
 public class Search extends JPanel implements KeyListener, ActionListener,
 		MouseListener, DocumentListener {
 	private String text;
 	private String word;
 	JTextArea textarea = null;
+	JTextPane textpane = null;
 	private Vector<Integer> v; // Vector für die Positionen der Vorkommen
 	private int lastPos; // Position des aktuellen Vorkommen
 
@@ -55,6 +55,119 @@ public class Search extends JPanel implements KeyListener, ActionListener,
 	 * Konstruktoren für mehrere Komponenten (ausser Textarea) möglich - nur
 	 * extra erstellen und in Methoden dann überprüfen
 	 */
+	public Search(JTextPane textpane) {
+		super();
+		this.textpane = textpane;
+		this.word = "";
+		lastPos = -1;
+		v = new Vector<Integer>();
+
+		hideButton = new JLabel("x");
+		JLabel searchFieldLabel = new JLabel("Suchen:");
+		searchField = new JTextField();
+		searchField.getDocument().addDocumentListener(this);
+		searchField.setColumns(10);
+		forwardButton = new JButton("Abw\u00E4rts");
+		backwardButton = new JButton("Aufw\u00E4rts");
+		infoLabel = new JLabel("");
+		caseSensitivityCheckbox = new JCheckBox("Gro\u00DF-/Kleinschreibung");
+
+		GroupLayout groupLayout = new GroupLayout(this);
+		groupLayout.setHorizontalGroup(groupLayout.createParallelGroup(
+				Alignment.LEADING).addGroup(
+				groupLayout
+						.createSequentialGroup()
+						.addContainerGap()
+						.addComponent(hideButton)
+						.addGap(18)
+						.addComponent(searchFieldLabel)
+						.addPreferredGap(ComponentPlacement.RELATED)
+						.addComponent(searchField,
+								GroupLayout.PREFERRED_SIZE,
+								GroupLayout.DEFAULT_SIZE,
+								GroupLayout.PREFERRED_SIZE)
+						.addPreferredGap(ComponentPlacement.RELATED)
+						.addComponent(forwardButton)
+						.addPreferredGap(ComponentPlacement.RELATED)
+						.addComponent(backwardButton).addGap(6)
+						.addComponent(caseSensitivityCheckbox).addGap(6)
+						.addComponent(infoLabel)
+						.addContainerGap(55, Short.MAX_VALUE)));
+		groupLayout
+				.setVerticalGroup(groupLayout
+						.createParallelGroup(Alignment.LEADING)
+						.addGroup(
+								groupLayout
+										.createSequentialGroup()
+										.addGroup(
+												groupLayout
+														.createParallelGroup(
+																Alignment.LEADING)
+														.addGroup(
+																groupLayout
+																		.createSequentialGroup()
+																		.addContainerGap()
+																		.addComponent(
+																				hideButton))
+														.addGroup(
+																groupLayout
+																		.createSequentialGroup()
+																		.addGap(7)
+																		.addComponent(
+																				forwardButton))
+														.addGroup(
+																groupLayout
+																		.createSequentialGroup()
+																		.addGap(7)
+																		.addComponent(
+																				backwardButton))
+														.addGroup(
+																groupLayout
+																		.createSequentialGroup()
+																		.addContainerGap()
+																		.addComponent(
+																				caseSensitivityCheckbox))
+														.addGroup(
+																groupLayout
+																		.createSequentialGroup()
+																		.addContainerGap()
+																		.addComponent(
+																				infoLabel))
+														.addGroup(
+																groupLayout
+																		.createSequentialGroup()
+																		.addGap(8)
+																		.addComponent(
+																				searchField,
+																				GroupLayout.PREFERRED_SIZE,
+																				GroupLayout.DEFAULT_SIZE,
+																				GroupLayout.PREFERRED_SIZE))
+														.addGroup(
+																groupLayout
+																		.createSequentialGroup()
+																		.addContainerGap()
+																		.addComponent(
+																				searchFieldLabel)))
+										.addContainerGap(
+												GroupLayout.DEFAULT_SIZE,
+												Short.MAX_VALUE)));
+		setLayout(groupLayout);
+
+		searchField.addKeyListener(this);
+		backwardButton.addActionListener(this);
+		forwardButton.addActionListener(this);
+		caseSensitivityCheckbox.addActionListener(this);
+		hideButton.addMouseListener(this);
+
+		hilit = new DefaultHighlighter();
+		painterGray = new DefaultHighlighter.DefaultHighlightPainter(
+				HILIT_COLOR_GRAY);
+		painterYellow = new DefaultHighlighter.DefaultHighlightPainter(
+				HILIT_COLOR_YELLOW);
+		textpane.setHighlighter(hilit);
+		
+	}
+	
 	public Search(JTextArea textarea) {
 		super();
 		this.textarea = textarea;
@@ -185,9 +298,14 @@ public class Search extends JPanel implements KeyListener, ActionListener,
 			cancelSearch();
 			return false;
 		}
-		text = caseSensitivityCheckbox.isSelected() ? textarea.getText()
-				: textarea.getText().toLowerCase();
-		word = caseSensitivityCheckbox.isSelected() ? word : word.toLowerCase();
+		if(textpane == null) {
+			text = caseSensitivityCheckbox.isSelected() ? textarea.getText()
+					: textarea.getText().toLowerCase();
+		} else {
+			text = caseSensitivityCheckbox.isSelected() ? textpane.getText()
+					: textpane.getText().toLowerCase();			
+		}
+			word = caseSensitivityCheckbox.isSelected() ? word : word.toLowerCase();
 		if (lastPos == -1) {
 			v.removeAllElements();
 			// Position in Abhängigkeit ob mit Unterscheidung der Groß-
@@ -225,7 +343,11 @@ public class Search extends JPanel implements KeyListener, ActionListener,
 			showHighlights();
 			searchField.setForeground(Color.BLACK);
 			searchField.setBackground(Color.WHITE);
-			textarea.setCaretPosition(v.get(lastPos));
+			if(textpane == null) {
+				textarea.setCaretPosition(v.get(lastPos));
+			} else {
+				textpane.setCaretPosition(v.get(lastPos));
+			}
 			return true;
 		}
 		searchField.setForeground(Color.WHITE);
