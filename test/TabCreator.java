@@ -10,7 +10,7 @@ public class TabCreator {
 	private static TabComponents tabComp;
 	
 	public TabCreator(JTabbedPane tabbedPane) {
-		this.tabbedPane = tabbedPane; 
+		TabCreator.tabbedPane = tabbedPane; 
 		tabComp = new TabComponents();
 	}
 	
@@ -24,12 +24,12 @@ public class TabCreator {
 		tabComp.getPanel(famIndex).add(tabComp.getTextArea(famIndex), BorderLayout.CENTER);
 		tabComp.getPanel(famIndex).add(tabComp.getSearchField(famIndex), BorderLayout.SOUTH);
 		tabComp.getSearchField(famIndex).setVisible(false);
+		tabbedPane.setSelectedIndex(famIndex);
 	}
 	
 	public void closeTab(String filename) {
-		//famIndex extrahieren
 		int famIndex = tabComp.getFamIndex(filename);
-		tabbedPane.remove(famIndex);
+		tabbedPane.remove(tabComp.getPanel(famIndex));
 		tabComp.removeComponentFamily(famIndex);
 	}
 

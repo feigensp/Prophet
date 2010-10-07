@@ -14,31 +14,10 @@ package test;
  *    notice, this list of conditions and the following disclaimer in the
  *    documentation and/or other materials provided with the distribution.
  *
- * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS''
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
- * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS
- * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
- * 
- * Java, the Duke mascot, and all variants of Sun's Java "steaming coffee
- * cup" logo are trademarks of Sun Microsystems. Sun's, and James Gosling's,
- * pioneering role in inventing and promulgating (and standardizing) the Java 
- * language and environment is gratefully acknowledged.
- * 
- * The pioneering role of Dennis Ritchie and Bjarne Stroustrup, of AT&T, for
- * inventing predecessor languages C and C++ is also gratefully acknowledged.
+ * Modified by Markus Köppen and Andreas Hasselberg
  */
 
-import test.testMain;
 import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -46,14 +25,11 @@ import java.io.File;
 import java.util.Collections;
 import java.util.Vector;
 
-import javax.swing.BoxLayout;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreeSelectionModel;
 
 /**
  * Display a file system in a JTree view
@@ -72,13 +48,15 @@ public class FileTree extends JPanel implements MouseListener {
 		setLayout(new BorderLayout());
 		// Make a tree list with all the nodes, and make it a JTree
 		tree = new JTree(addNodes(null, dir));
+		tree.getSelectionModel().setSelectionMode(
+				TreeSelectionModel.SINGLE_TREE_SELECTION);
 		// Add a listener
 		tree.addMouseListener(this);
 		// Lastly, put the JTree into a JScrollPane.
 		JScrollPane scrollpane = new JScrollPane();
 		scrollpane.getViewport().add(tree);
 		add(BorderLayout.CENTER, scrollpane);
-		
+
 		tabCreator = new TabCreator();
 		tabComp = new TabComponents();
 	}
@@ -124,30 +102,22 @@ public class FileTree extends JPanel implements MouseListener {
 		return new Dimension(200, 400);
 	}
 
-	/** Main: make a Frame, add a FileTree */
 	/*
-	 * public static void main(String[] av) {
-	 * 
-	 * JFrame frame = new JFrame("FileTree"); frame.setForeground(Color.black);
-	 * frame.setBackground(Color.lightGray); Container cp =
-	 * frame.getContentPane();
-	 * 
-	 * if (av.length == 0) { cp.add(new FileTree(new File("."))); } else {
-	 * cp.setLayout(new BoxLayout(cp, BoxLayout.X_AXIS)); for (int i = 0; i <
-	 * av.length; i++) cp.add(new FileTree(new File(av[i]))); }
-	 * 
-	 * frame.pack(); frame.setVisible(true);
-	 * frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); }
+	 * Mouse Listener Methoden Hier wird getestet, ob auf eine Datei
+	 * Doppelgeklickt wurde
 	 */
-
 	@Override
 	public void mouseClicked(MouseEvent me) {
 		if (me.getSource() == tree) {
-			if (me.getClickCount() == 2) {
-				if(tabComp.getFamIndex(tree.getSelectionPath().toString()) == -1) {
-					tabCreator.createTab(tree.getSelectionPath().toString());
-				} else {
-					tabCreator.closeTab(tree.getSelectionPath().toString());
+			if (((DefaultMutableTreeNode) tree.getLastSelectedPathComponent())
+					.isLeaf()) {
+				if (me.getClickCount() == 2) {
+					if (tabComp.getFamIndex(tree.getSelectionPath().toString()) == -1) {
+						tabCreator
+								.createTab(tree.getSelectionPath().toString());
+					} else {
+						tabCreator.closeTab(tree.getSelectionPath().toString());
+					}
 				}
 			}
 		}
@@ -155,25 +125,17 @@ public class FileTree extends JPanel implements MouseListener {
 
 	@Override
 	public void mouseEntered(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void mouseExited(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void mousePressed(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-
 	}
 }
