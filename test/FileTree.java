@@ -29,6 +29,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
 /**
@@ -101,6 +102,14 @@ public class FileTree extends JPanel implements MouseListener {
 	public Dimension getPreferredSize() {
 		return new Dimension(200, 400);
 	}
+	
+	public String treePathToString(TreePath tp) { 
+		String ret = "";
+		for (int i=0; i<tp.getPathCount(); i++) {
+			ret = ret.concat((String) tp.getPathComponent(i));
+		}		
+		return ret;
+	}
 
 	/*
 	 * Mouse Listener Methoden Hier wird getestet, ob auf eine Datei
@@ -112,11 +121,11 @@ public class FileTree extends JPanel implements MouseListener {
 			if (((DefaultMutableTreeNode) tree.getLastSelectedPathComponent())
 					.isLeaf()) {
 				if (me.getClickCount() == 2) {
-					if (tabComp.getFamIndex(tree.getSelectionPath().toString()) == -1) {
+					if (tabComp.getFamIndex(tree.getLastSelectedPathComponent().toString()) == -1) {
 						tabCreator
-								.createTab(tree.getSelectionPath().toString());
+								.createTab(tree.getLastSelectedPathComponent().toString());
 					} else {
-						tabCreator.closeTab(tree.getSelectionPath().toString());
+						tabCreator.closeTab(tree.getLastSelectedPathComponent().toString());
 					}
 				}
 			}
