@@ -17,83 +17,129 @@ package test;
  * Modified by Markus Köppen and Andreas Hasselberg
  */
 
+import java.awt.AWTEventMulticaster;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
-import java.util.Collections;
-import java.util.Vector;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.LinkedList;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
+import javax.swing.event.TreeModelListener;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
 /**
  * Display a file system in a JTree view
  * 
- * @version $Id: FileTree.java,v 1.9 2004/02/23 03:39:22 ian Exp $
- * @author Ian Darwin
+ * @author Ian Darwin, Andreas Hasselberg, Markus Koeppen
  */
 public class FileTree extends JPanel implements MouseListener {
 
+	private static final long serialVersionUID = 1L;
+	
 	private JTree tree;
-	private TabCreator tabCreator;
-	private TabComponents tabComp;
-
+	private File dir;
+	ActionListener actionListener;
+	
 	/** Construct a FileTree */
-	public FileTree(File dir) {
+	public FileTree(File d) {
+		dir=d;
 		setLayout(new BorderLayout());
 		// Make a tree list with all the nodes, and make it a JTree
-		tree = new JTree(addNodes(null, dir));
+		TreeModel tm = new TreeModel() {
+			File root = dir;
+			Collection<TreeModelListener> listeners = new LinkedList<TreeModelListener>();
+			public void addTreeModelListener(TreeModelListener l) {
+				listeners.add( l );
+			}
+			public Object	getChild(Object parent, int index) {
+				File f = (File)parent;
+				File[] fileListing = f.listFiles() ;
+				Arrays.sort( fileListing );
+				return fileListing [ index ];
+			}
+			public int getChildCount(Object parent) {		
+				File f = (File)parent;
+				return f.listFiles().length;
+			}
+			public int getIndexOfChild(Object parent, Object child) {
+				File f = (File)parent;
+				File[] fileListing =  f.listFiles() ;
+				Arrays.sort( fileListing );
+				return Arrays.binarySearch( fileListing, child );
+			}
+			public Object	getRoot() {
+				return root;
+			}
+ 
+			public boolean	isLeaf(Object node) {
+				File f = (File)node;
+				return !f.isDirectory();
+			}
+			public void	removeTreeModelListener(TreeModelListener l) {
+				listeners.remove( l );
+			}
+			public void	valueForPathChanged(TreePath path, Object newValue) {
+				return; 
+			}
+		};
+		//tree = new JTree(addNodes(null, dir));
+		tree = new JTree(tm);
 		tree.getSelectionModel().setSelectionMode(
 				TreeSelectionModel.SINGLE_TREE_SELECTION);
 		// Add a listener
-		tree.addMouseListener(this);
+		//tree.addMouseListener(this);
 		// Lastly, put the JTree into a JScrollPane.
 		JScrollPane scrollpane = new JScrollPane();
 		scrollpane.getViewport().add(tree);
 		add(BorderLayout.CENTER, scrollpane);
-
-		tabCreator = new TabCreator();
-		tabComp = new TabComponents();
+	}
+	
+	public void addMouseListener(MouseListener l) {
+		tree.addMouseListener(l);
 	}
 
 	/** Add nodes from under "dir" into curTop. Highly recursive. */
-	DefaultMutableTreeNode addNodes(DefaultMutableTreeNode curTop, File dir) {
+	/*DefaultMutableTreeNode addNodes(DefaultMutableTreeNode curDir, File dir) {
 		String curPath = dir.getPath();
-		DefaultMutableTreeNode curDir = new DefaultMutableTreeNode(curPath);
-		if (curTop != null) { // should only be null at root
-			curTop.add(curDir);
-		}
-		Vector ol = new Vector();
+		if (curDir == null) { // should only be null at root
+			curDir=new DefaultMutableTreeNode(curPath);
+		}		
+		
+		Vector<String> entries = new Vector<String>();
 		String[] tmp = dir.list();
 		for (int i = 0; i < tmp.length; i++)
-			ol.addElement(tmp[i]);
-		Collections.sort(ol, String.CASE_INSENSITIVE_ORDER);
+			entries.addElement(tmp[i]);
+		Collections.sort(entries, String.CASE_INSENSITIVE_ORDER);
+		
 		File f;
-		Vector files = new Vector();
+		Vector<String> files = new Vector<String>();
 		// Make two passes, one for Dirs and one for Files. This is #1.
-		for (int i = 0; i < ol.size(); i++) {
-			String thisObject = (String) ol.elementAt(i);
+		for (String entry: entries) {
 			String newPath;
-			if (curPath.equals("."))
-				newPath = thisObject;
-			else
-				newPath = curPath + File.separator + thisObject;
-			if ((f = new File(newPath)).isDirectory())
-				addNodes(curDir, f);
-			else
-				files.addElement(thisObject);
+			newPath = curPath + File.separator + entry;
+			if ((f = new File(newPath)).isDirectory()) {
+				DefaultMutableTreeNode fDir = new DefaultMutableTreeNode(entry);
+				curDir.add(fDir);
+				addNodes(fDir, f);
+			} else
+				files.addElement(entry);
 		}
 		// Pass two: for files.
 		for (int fnum = 0; fnum < files.size(); fnum++)
 			curDir.add(new DefaultMutableTreeNode(files.elementAt(fnum)));
 		return curDir;
-	}
+	} */
 
 	public Dimension getMinimumSize() {
 		return new Dimension(200, 400);
@@ -103,14 +149,24 @@ public class FileTree extends JPanel implements MouseListener {
 		return new Dimension(200, 400);
 	}
 	
-	public String treePathToString(TreePath tp) { 
-		String ret = "";
-		for (int i=0; i<tp.getPathCount(); i++) {
-			ret = ret.concat((String) tp.getPathComponent(i));
-		}		
-		return ret;
-	}
-
+	/*
+	 * Vorbereitungen zum Casten eines ActionEvents
+	 */
+    public void addActionListener(ActionListener l) {
+        actionListener = AWTEventMulticaster.add(actionListener, l);
+    }
+    public void removeActionListener(ActionListener l) {
+        actionListener = AWTEventMulticaster.remove(actionListener, l);
+    }
+    
+    private void fireEvent(String actionCommand) {
+        if (actionListener != null) {
+            ActionEvent event = new ActionEvent( this, 
+                                ActionEvent.ACTION_PERFORMED, actionCommand);
+            actionListener.actionPerformed( event );
+        }
+    }
+	
 	/*
 	 * Mouse Listener Methoden Hier wird getestet, ob auf eine Datei
 	 * Doppelgeklickt wurde
@@ -121,12 +177,7 @@ public class FileTree extends JPanel implements MouseListener {
 			if (((DefaultMutableTreeNode) tree.getLastSelectedPathComponent())
 					.isLeaf()) {
 				if (me.getClickCount() == 2) {
-					if (tabComp.getFamIndex(tree.getLastSelectedPathComponent().toString()) == -1) {
-						tabCreator
-								.createTab(tree.getLastSelectedPathComponent().toString());
-					} else {
-						tabCreator.closeTab(tree.getLastSelectedPathComponent().toString());
-					}
+					fireEvent(tree.getLastSelectedPathComponent().toString());
 				}
 			}
 		}

@@ -2,6 +2,8 @@ package test;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 
 import javax.swing.JFrame;
@@ -9,11 +11,10 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.border.EmptyBorder;
 
-public class testMain extends JFrame {
+public class testMain extends JFrame implements ActionListener {
 
 	private JPanel contentPane;
 	private JTabbedPane tabbi;
-	private TabCreator tabCreator;
 
 	/**
 	 * Launch the application.
@@ -43,10 +44,15 @@ public class testMain extends JFrame {
 		contentPane.setLayout(new BorderLayout(0, 0));
 		
 		tabbi = new JTabbedPane(JTabbedPane.TOP);
-		tabCreator = new TabCreator(tabbi);
 		contentPane.add(tabbi, BorderLayout.CENTER);
-		FileTree mytree = new FileTree(new File("."));
+		FileTree mytree = new FileTree(new File("..\\"));
 		contentPane.add(mytree, BorderLayout.WEST);
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent arg0) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

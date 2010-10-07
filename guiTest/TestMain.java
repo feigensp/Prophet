@@ -26,7 +26,6 @@ import javax.swing.JButton;
 public class TestMain extends JFrame {
 
 	private JPanel contentPane;
-	private JTextField textField;
 
 	/**
 	 * Launch the application.
@@ -52,32 +51,11 @@ public class TestMain extends JFrame {
 		setBounds(100, 100, 722, 533);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
-		
-		JPanel panel = new JPanel();
-		contentPane.add(panel, BorderLayout.CENTER);
-		
-		JPanel left = new JPanel();
-		
-		JPanel right = new JPanel();
-		GroupLayout gl_panel = new GroupLayout(panel);
-		gl_panel.setHorizontalGroup(
-			gl_panel.createParallelGroup(Alignment.LEADING)
-				.addGroup(Alignment.TRAILING, gl_panel.createSequentialGroup()
-					.addComponent(left, GroupLayout.DEFAULT_SIZE, 219, Short.MAX_VALUE)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(right, GroupLayout.PREFERRED_SIZE, 471, GroupLayout.PREFERRED_SIZE))
-		);
-		gl_panel.setVerticalGroup(
-			gl_panel.createParallelGroup(Alignment.LEADING)
-				.addComponent(right, GroupLayout.DEFAULT_SIZE, 464, Short.MAX_VALUE)
-				.addComponent(left, GroupLayout.DEFAULT_SIZE, 464, Short.MAX_VALUE)
-		);
-		right.setLayout(new BorderLayout(0, 0));
+		contentPane.setLayout(new BorderLayout(0, 0));
 		
 		JTabbedPane rightTabs = new JTabbedPane(JTabbedPane.TOP);
-		right.add(rightTabs, BorderLayout.CENTER);
+		contentPane.add(rightTabs, BorderLayout.CENTER);
 		
 		JPanel rightexperiment = new JPanel();
 		rightTabs.addTab("Experiment", null, rightexperiment, null);
@@ -149,59 +127,12 @@ public class TestMain extends JFrame {
 		
 		JTextArea textArea = new JTextArea();
 		editorpanel.add(textArea, BorderLayout.CENTER);
-		left.setLayout(new BorderLayout(0, 0));
-		
-		JTabbedPane leftTabs = new JTabbedPane(JTabbedPane.TOP);
-		left.add(leftTabs, BorderLayout.CENTER);
 		
 		JPanel filesystempanel = new JPanel();
-		leftTabs.addTab("Dateiverwaltung", null, filesystempanel, null);
+		contentPane.add(filesystempanel, BorderLayout.WEST);
 		filesystempanel.setLayout(new BorderLayout(0, 0));
 		
 		JTree filesystemtree = new JTree();
 		filesystempanel.add(filesystemtree, BorderLayout.CENTER);
-		
-		JPanel leftExperiment = new JPanel();
-		leftTabs.addTab("Experiment", null, leftExperiment, null);
-		GridBagLayout gbl_leftExperiment = new GridBagLayout();
-		gbl_leftExperiment.columnWidths = new int[]{0, 0, 0};
-		gbl_leftExperiment.rowHeights = new int[]{0, 0, 0, 0, 0};
-		gbl_leftExperiment.columnWeights = new double[]{0.0, 1.0, Double.MIN_VALUE};
-		gbl_leftExperiment.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
-		leftExperiment.setLayout(gbl_leftExperiment);
-		
-		JLabel lblCodewort = new JLabel("Codewort:");
-		GridBagConstraints gbc_lblCodewort = new GridBagConstraints();
-		gbc_lblCodewort.insets = new Insets(0, 0, 5, 5);
-		gbc_lblCodewort.anchor = GridBagConstraints.EAST;
-		gbc_lblCodewort.gridx = 0;
-		gbc_lblCodewort.gridy = 1;
-		leftExperiment.add(lblCodewort, gbc_lblCodewort);
-		
-		textField = new JTextField();
-		GridBagConstraints gbc_textField = new GridBagConstraints();
-		gbc_textField.insets = new Insets(0, 0, 5, 0);
-		gbc_textField.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textField.gridx = 1;
-		gbc_textField.gridy = 1;
-		leftExperiment.add(textField, gbc_textField);
-		textField.setColumns(10);
-		
-		JButton btnStarten = new JButton("Starten");
-		GridBagConstraints gbc_btnStarten = new GridBagConstraints();
-		gbc_btnStarten.gridx = 1;
-		gbc_btnStarten.gridy = 3;
-		leftExperiment.add(btnStarten, gbc_btnStarten);
-		leftTabs.setBackgroundAt(1, new Color(240, 128, 128));
-		panel.setLayout(gl_panel);
-		
-		JMenuBar menuBar = new JMenuBar();
-		contentPane.add(menuBar, BorderLayout.NORTH);
-		
-		JMenu menu = new JMenu("New menu");
-		menuBar.add(menu);
-		
-		JMenuItem menuItem = new JMenuItem("New menu item");
-		menu.add(menuItem);
 	}
 }
