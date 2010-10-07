@@ -5,12 +5,14 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
+import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
+import javax.swing.border.EmptyBorder;
 
 public class testSearch extends JFrame {
 
 	private JPanel contentPane;
+    //private HighlightedDocument document = new HighlightedDocument();
 
 	/**
 	 * Launch the application.
@@ -38,9 +40,11 @@ public class testSearch extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(new BorderLayout(0, 0));
-		
-		JTextPane textPane = new JTextPane();
-		contentPane.add(textPane, BorderLayout.CENTER);
+		//document.setHighlightStyle(HighlightedDocument.JAVA_STYLE);
+		JTextPane textPane = new JTextPane(/*document*/);
+
+		JScrollPane sp = new JScrollPane(textPane);
+		contentPane.add(sp, BorderLayout.CENTER);
 		Search s = new Search(textPane);
 		contentPane.add(s, BorderLayout.SOUTH);
 	}

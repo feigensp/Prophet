@@ -23,6 +23,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultHighlighter;
+import javax.swing.text.Document;
 import javax.swing.text.Highlighter;
 
 public class Search extends JPanel implements KeyListener, ActionListener,
@@ -302,8 +303,13 @@ public class Search extends JPanel implements KeyListener, ActionListener,
 			text = caseSensitivityCheckbox.isSelected() ? textarea.getText()
 					: textarea.getText().toLowerCase();
 		} else {
-			text = caseSensitivityCheckbox.isSelected() ? textpane.getText()
-					: textpane.getText().toLowerCase();			
+			try {
+				Document doc = textpane.getDocument();
+				text = caseSensitivityCheckbox.isSelected() ? doc.getText(0, doc.getLength())
+							: doc.getText(0, doc.getLength()).toLowerCase();
+			} catch (BadLocationException e) {
+				e.printStackTrace();
+			}			
 		}
 			word = caseSensitivityCheckbox.isSelected() ? word : word.toLowerCase();
 		if (lastPos == -1) {
