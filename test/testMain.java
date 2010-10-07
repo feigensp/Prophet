@@ -1,46 +1,52 @@
 package test;
 
 import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.EventQueue;
+import java.io.File;
 
-import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
+import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
+import javax.swing.border.EmptyBorder;
 
-public class testMain implements ActionListener{
-	Search s;
+public class testMain extends JFrame {
 
+	private JPanel contentPane;
+	private JTabbedPane tabbi;
+	private TabCreator tabCreator;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					testMain frame = new testMain();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the frame.
+	 */
 	public testMain() {
-		JFrame frame = new JFrame("test");
-		JTextArea textarea = new JTextArea();
-		textarea.setText("hallo\ndu\nda\nd\nu\nda\nda\ndudu\nda\nDu\nda");
-		s = new Search(textarea);
-		frame.getContentPane();
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 450, 300);
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		contentPane.setLayout(new BorderLayout(0, 0));
 		
-		JButton button = new JButton("Zeige!");
-		frame.getContentPane().add(button, BorderLayout.SOUTH);
-		frame.add(textarea, BorderLayout.CENTER);
-		frame.add(s, BorderLayout.NORTH);
-		
-		frame.setSize(800, 800);
-		button.addActionListener(this);
-		
-		
-
-		frame.setVisible(true);
-		
-	}
-
-	public static void main(String args[]) {
-		testMain test = new testMain();
-	}
-
-	@Override
-	public void actionPerformed(ActionEvent arg0) {
-		s.visible();
-		
+		tabbi = new JTabbedPane(JTabbedPane.TOP);
+		tabCreator = new TabCreator(tabbi);
+		contentPane.add(tabbi, BorderLayout.CENTER);
+		FileTree mytree = new FileTree(new File("."));
+		contentPane.add(mytree, BorderLayout.WEST);
 	}
 
 }
