@@ -7,8 +7,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 
+@SuppressWarnings("serial")
 public class EditorTab extends JPanel {
-	private static final long serialVersionUID = 1L;
 	
 	File file;
 	JScrollPane scrollPane;

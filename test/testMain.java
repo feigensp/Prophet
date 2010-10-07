@@ -11,7 +11,8 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.border.EmptyBorder;
 
-public class testMain extends JFrame implements ActionListener {
+@SuppressWarnings("serial")
+public class testMain extends JFrame implements FileListener {
 
 	private JPanel contentPane;
 	private JTabbedPane tabbi;
@@ -45,14 +46,14 @@ public class testMain extends JFrame implements ActionListener {
 		
 		tabbi = new JTabbedPane(JTabbedPane.TOP);
 		contentPane.add(tabbi, BorderLayout.CENTER);
-		FileTree mytree = new FileTree(new File("..\\"));
-		contentPane.add(mytree, BorderLayout.WEST);
+		FileTree myTree = new FileTree(new File("."));
+		myTree.addFileListener(this);
+		contentPane.add(myTree, BorderLayout.WEST);
 	}
 
 	@Override
-	public void actionPerformed(ActionEvent arg0) {
-		// TODO Auto-generated method stub
-		
+	public void fileOpened(FileEvent arg0) {
+		System.out.println(arg0.getFile().getPath());
 	}
 
 }
