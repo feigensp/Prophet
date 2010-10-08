@@ -18,6 +18,7 @@ import EditorTabbedPane.EditorTabbedPane;
 import FileTree.FileEvent;
 import FileTree.FileListener;
 import FileTree.FileTree;
+import javax.swing.JSplitPane;
 
 
 @SuppressWarnings("serial")
@@ -28,6 +29,9 @@ public class MyTestMain extends JFrame implements FileListener {
 	private JMenuBar menuBar;
 	private JMenu menu;
 	private JMenuItem menuItem;
+	private JSplitPane splitPane;
+	private JPanel panel;
+	private JPanel panel_1;
 
 	/**
 	 * Launch the application.
@@ -49,11 +53,11 @@ public class MyTestMain extends JFrame implements FileListener {
 	 * Create the frame.
 	 */
 	public MyTestMain() {
-		try {
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+//		try {
+//			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 800, 600);
 		
@@ -70,13 +74,17 @@ public class MyTestMain extends JFrame implements FileListener {
 		setContentPane(contentPane);
 		contentPane.setLayout(new BorderLayout(0, 0));
 		
-		tabbedPane = new EditorTabbedPane();
-		contentPane.add(tabbedPane, BorderLayout.CENTER);
+		splitPane = new JSplitPane();
+		splitPane.setBorder(null);
+		contentPane.add(splitPane, BorderLayout.CENTER);
+		
 		FileTree myTree = new FileTree(new File("."));
-		myTree.setMinimumSize(new Dimension(200, 400));
 		myTree.setPreferredSize(new Dimension(200, 400));
 		myTree.addFileListener(this);
-		contentPane.add(myTree, BorderLayout.WEST);
+		splitPane.setLeftComponent(myTree);
+		
+		tabbedPane = new EditorTabbedPane();
+		splitPane.setRightComponent(tabbedPane);
 	}
 
 	@Override
