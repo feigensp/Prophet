@@ -1,5 +1,4 @@
 package EditorTabbedPane;
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -7,12 +6,7 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 
-import javax.swing.BorderFactory;
 import javax.swing.JComponent;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 
 @SuppressWarnings("serial")
 public class LineNumbers extends JComponent
@@ -147,31 +141,5 @@ public class LineNumbers extends JComponent
 
 		int rows = component.getSize().height / componentFontHeight;
 		setPreferredWidth( rows );
-	}
-
-	public static void main(String[] args)
-	{
-		JFrame frame = new JFrame("LineNumberDemo");
-		frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
-
-		JPanel panel = new JPanel();
-		frame.setContentPane( panel );
-		panel.setBorder(BorderFactory.createEmptyBorder(20,20,20,20));
-		panel.setLayout(new BorderLayout());
-
-		JTextArea textPane = new JTextArea();
-		textPane.setFont( new Font("monospaced", Font.PLAIN, 12) );
-		textPane.setText("abc");
-		textPane.setEditable(true);
-
-		JScrollPane scrollPane = new JScrollPane(textPane, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS , JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS );
-		panel.add(scrollPane);
-		scrollPane.setPreferredSize(new Dimension(300, 250));
-
-		LineNumbers lineNumber = new LineNumbers( textPane );
-		scrollPane.setRowHeaderView( lineNumber );
-
-		frame.pack();
-		frame.setVisible(true);
 	}
 }
