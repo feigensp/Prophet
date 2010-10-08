@@ -1,4 +1,4 @@
-package FileTree;
+
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -10,9 +10,13 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.border.EmptyBorder;
 
+import FileTree.FileEvent;
+import FileTree.FileListener;
+import FileTree.FileTree;
+
 
 @SuppressWarnings("serial")
-public class FileTestMain extends JFrame implements FileListener {
+public class FileTreeTestMain extends JFrame implements FileListener {
 
 	private JPanel contentPane;
 	private JTabbedPane tabbi;
@@ -24,7 +28,7 @@ public class FileTestMain extends JFrame implements FileListener {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					FileTestMain frame = new FileTestMain();
+					FileTreeTestMain frame = new FileTreeTestMain();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -36,7 +40,7 @@ public class FileTestMain extends JFrame implements FileListener {
 	/**
 	 * Create the frame.
 	 */
-	public FileTestMain() {
+	public FileTreeTestMain() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
