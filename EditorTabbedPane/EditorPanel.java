@@ -44,7 +44,7 @@ public class EditorPanel extends JPanel {
 			textPane.read(fr, null);
 			fr.close();
 		} catch (IOException e) {
-			System.err.println(e);
+			e.printStackTrace();
 		}
 		
 		scrollPane = new JScrollPane(textPane, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS , JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
