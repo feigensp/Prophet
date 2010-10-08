@@ -1,9 +1,21 @@
-import java.awt.*;
-import javax.swing.*;
-import javax.swing.border.*;
-import javax.swing.text.*;
+package EditorTabbedPane;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
+import java.awt.Rectangle;
 
-public class LineNumber extends JComponent
+import javax.swing.BorderFactory;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+
+@SuppressWarnings("serial")
+public class LineNumbers extends JComponent
 {
 	private final static Color DEFAULT_BACKGROUND = new Color(204, 204, 255);
 	private final static Color DEFAULT_FOREGROUND = Color.black;
@@ -28,7 +40,7 @@ public class LineNumber extends JComponent
 	/**
 	 *	Convenience constructor for Text Components
 	 */
-	public LineNumber(JComponent component)
+	public LineNumbers(JComponent component)
 	{
 		if (component == null)
 		{
@@ -156,7 +168,7 @@ public class LineNumber extends JComponent
 		panel.add(scrollPane);
 		scrollPane.setPreferredSize(new Dimension(300, 250));
 
-		LineNumber lineNumber = new LineNumber( textPane );
+		LineNumbers lineNumber = new LineNumbers( textPane );
 		scrollPane.setRowHeaderView( lineNumber );
 
 		frame.pack();

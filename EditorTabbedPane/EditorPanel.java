@@ -1,6 +1,8 @@
 package EditorTabbedPane;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Font;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -25,6 +27,7 @@ public class EditorPanel extends JPanel {
 	public EditorPanel(File f) {
 		file=f;
 		textPane = new JTextPane();
+		textPane.setFont( new Font("monospaced", Font.PLAIN, 12) );
 		textPane.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
@@ -44,7 +47,11 @@ public class EditorPanel extends JPanel {
 			System.err.println(e);
 		}
 		
-		scrollPane = new JScrollPane(textPane);
+		scrollPane = new JScrollPane(textPane, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS , JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+		
+		LineNumbers lineNumbers = new LineNumbers(textPane);
+		scrollPane.setRowHeaderView(lineNumbers);
+		
 		searchBar = new SearchBar(textPane);
 		
 		setLayout(new BorderLayout());

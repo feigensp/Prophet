@@ -39,8 +39,7 @@ public class SearchBar extends JPanel implements KeyListener, ActionListener,
 	static final Color HILIT_COLOR_GRAY = Color.LIGHT_GRAY;
 	static final Color HILIT_COLOR_YELLOW = Color.YELLOW;
 	static final boolean SEARCH_FORWARD = true;
-	static final boolean SEARCH_BACKWARD = false;
-	
+	static final boolean SEARCH_BACKWARD = false;	
 
 	Highlighter hilit;
 	Highlighter.HighlightPainter painterGray;
