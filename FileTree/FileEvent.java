@@ -1,4 +1,4 @@
-package test;
+package FileTree;
 
 import java.awt.AWTEvent;
 import java.io.File;

@@ -26,6 +26,7 @@ import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.Document;
 import javax.swing.text.Highlighter;
 
+@SuppressWarnings("serial")
 public class Search extends JPanel implements KeyListener, ActionListener,
 		MouseListener, DocumentListener {
 	private String text;
