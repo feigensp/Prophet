@@ -7,16 +7,17 @@ import java.awt.EventQueue;
 import java.io.File;
 
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 
 import EditorTabbedPane.EditorTabbedPane;
 import FileTree.FileEvent;
 import FileTree.FileListener;
 import FileTree.FileTree;
-import javax.swing.JMenuBar;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
 
 
 @SuppressWarnings("serial")
@@ -48,6 +49,11 @@ public class MyTestMain extends JFrame implements FileListener {
 	 * Create the frame.
 	 */
 	public MyTestMain() {
+		try {
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 800, 600);
 		
