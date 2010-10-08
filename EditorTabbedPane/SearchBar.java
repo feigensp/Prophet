@@ -9,16 +9,15 @@
 package EditorTabbedPane;
 
 import java.awt.Color;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.Vector;
 
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
@@ -26,17 +25,22 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
-import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.Document;
 import javax.swing.text.Highlighter;
+import java.awt.event.MouseAdapter;
+import java.awt.Component;
+import javax.swing.Box;
+import javax.swing.border.TitledBorder;
+import java.awt.Rectangle;
+import java.awt.Dimension;
+import javax.swing.SwingConstants;
 
 @SuppressWarnings("serial")
-public class SearchBar extends JPanel implements KeyListener, ActionListener,
-		MouseListener, DocumentListener {
+public class SearchBar extends JPanel {
 	private String text;	//Text der Suchsucht wird
 	private String word;	//Wort das gesucht wird
 	JTextArea textarea = null;
@@ -62,6 +66,7 @@ public class SearchBar extends JPanel implements KeyListener, ActionListener,
 
 	/**
 	 * Konstruktor wenn eine JTextPane durchsucht werden soll
+	 * @wbp.parser.constructor
 	 */
 	public SearchBar(JTextPane textpane) {
 		this.textpane = textpane;
@@ -73,7 +78,6 @@ public class SearchBar extends JPanel implements KeyListener, ActionListener,
 	 * Konstruktor wenn eine JTextArea durchsucht werden soll
 	 */
 	public SearchBar(JTextArea textarea) {
-		super();
 		this.textarea = textarea;
 		initialise();
 		textarea.setHighlighter(hilit);
@@ -86,102 +90,86 @@ public class SearchBar extends JPanel implements KeyListener, ActionListener,
 		this.word = "";
 		lastPos = -1;
 		v = new Vector<Integer>();
-
-		hideButton = new JLabel("x");
 		JLabel searchFieldLabel = new JLabel("Suchen:");
 		searchField = new JTextField();
-		searchField.getDocument().addDocumentListener(this);
+		searchField.addKeyListener(new KeyAdapter() {
+			public void keyPressed(KeyEvent ke) {
+				if (ke.getKeyCode() == KeyEvent.VK_ENTER) {
+					if (setWord(searchField.getText())) {
+						getPos(SEARCH_FORWARD);
+					}
+				}
+				if (ke.getKeyCode() == KeyEvent.VK_ESCAPE) {
+					setVisible(false);
+				}
+			}
+		});
+		searchField.getDocument().addDocumentListener(new DocumentListener() {
+			public void searchwordChanged() {
+				cancelSearch();
+				if (setWord(searchField.getText())) {
+					getPos(SEARCH_FORWARD);
+				}
+			}
+
+			@Override
+			public void changedUpdate(DocumentEvent arg0) {
+
+			}
+
+			@Override
+			public void insertUpdate(DocumentEvent arg0) {
+				searchwordChanged();
+			}
+
+			@Override
+			public void removeUpdate(DocumentEvent arg0) {
+				searchwordChanged();
+			}
+		});
 		searchField.setColumns(10);
 		forwardButton = new JButton("Abw\u00E4rts");
+		forwardButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				getPos(SEARCH_FORWARD);
+			}
+		});
 		backwardButton = new JButton("Aufw\u00E4rts");
+		backwardButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				getPos(SEARCH_BACKWARD);
+			}
+		});
 		infoLabel = new JLabel("");
 		caseSensitivityCheckbox = new JCheckBox("Gro\u00DF-/Kleinschreibung");
+		caseSensitivityCheckbox.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				cancelSearch();
+				setWord(searchField.getText());
+				getPos(SEARCH_FORWARD);
+			}
+		});
 
-		GroupLayout groupLayout = new GroupLayout(this);
-		groupLayout.setHorizontalGroup(groupLayout.createParallelGroup(
-				Alignment.LEADING).addGroup(
-				groupLayout
-						.createSequentialGroup()
-						.addContainerGap()
-						.addComponent(hideButton)
-						.addGap(18)
-						.addComponent(searchFieldLabel)
-						.addPreferredGap(ComponentPlacement.RELATED)
-						.addComponent(searchField, GroupLayout.PREFERRED_SIZE,
-								GroupLayout.DEFAULT_SIZE,
-								GroupLayout.PREFERRED_SIZE)
-						.addPreferredGap(ComponentPlacement.RELATED)
-						.addComponent(forwardButton)
-						.addPreferredGap(ComponentPlacement.RELATED)
-						.addComponent(backwardButton).addGap(6)
-						.addComponent(caseSensitivityCheckbox).addGap(6)
-						.addComponent(infoLabel)
-						.addContainerGap(55, Short.MAX_VALUE)));
-		groupLayout
-				.setVerticalGroup(groupLayout
-						.createParallelGroup(Alignment.LEADING)
-						.addGroup(
-								groupLayout
-										.createSequentialGroup()
-										.addGroup(
-												groupLayout
-														.createParallelGroup(
-																Alignment.LEADING)
-														.addGroup(
-																groupLayout
-																		.createSequentialGroup()
-																		.addContainerGap()
-																		.addComponent(
-																				hideButton))
-														.addGroup(
-																groupLayout
-																		.createSequentialGroup()
-																		.addGap(7)
-																		.addComponent(
-																				forwardButton))
-														.addGroup(
-																groupLayout
-																		.createSequentialGroup()
-																		.addGap(7)
-																		.addComponent(
-																				backwardButton))
-														.addGroup(
-																groupLayout
-																		.createSequentialGroup()
-																		.addContainerGap()
-																		.addComponent(
-																				caseSensitivityCheckbox))
-														.addGroup(
-																groupLayout
-																		.createSequentialGroup()
-																		.addContainerGap()
-																		.addComponent(
-																				infoLabel))
-														.addGroup(
-																groupLayout
-																		.createSequentialGroup()
-																		.addGap(8)
-																		.addComponent(
-																				searchField,
-																				GroupLayout.PREFERRED_SIZE,
-																				GroupLayout.DEFAULT_SIZE,
-																				GroupLayout.PREFERRED_SIZE))
-														.addGroup(
-																groupLayout
-																		.createSequentialGroup()
-																		.addContainerGap()
-																		.addComponent(
-																				searchFieldLabel)))
-										.addContainerGap(
-												GroupLayout.DEFAULT_SIZE,
-												Short.MAX_VALUE)));
-		setLayout(groupLayout);
-
-		searchField.addKeyListener(this);
-		backwardButton.addActionListener(this);
-		forwardButton.addActionListener(this);
-		caseSensitivityCheckbox.addActionListener(this);
-		hideButton.addMouseListener(this);
+		setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
+		
+				hideButton = new JLabel("X");
+				hideButton.setHorizontalAlignment(SwingConstants.CENTER);
+				hideButton.setPreferredSize(new Dimension(20, 20));
+				hideButton.setMinimumSize(new Dimension(20, 20));
+				hideButton.setMaximumSize(new Dimension(20, 20));
+				add(hideButton);
+				hideButton.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+				hideButton.addMouseListener(new MouseAdapter() {
+					public void mouseClicked(MouseEvent arg0) {
+						setVisible(false);
+					}
+				});
+		add(searchFieldLabel);
+		add(searchField);
+		add(forwardButton);
+		add(backwardButton);
+		add(caseSensitivityCheckbox);
+		add(infoLabel);
 
 		hilit = new DefaultHighlighter();
 		painterGray = new DefaultHighlighter.DefaultHighlightPainter(
@@ -336,107 +324,11 @@ public class SearchBar extends JPanel implements KeyListener, ActionListener,
 			showHighlights();
 		} else {
 			hideHighlights();
-		}
-	}
-
-	/**
-	 * KeyEvents für das Suchfeld
-	 */
-	@Override
-	public void keyPressed(KeyEvent ke) {
-		if (ke.getKeyCode() == KeyEvent.VK_ENTER) {
-			if (setWord(searchField.getText())) {
-				getPos(SEARCH_FORWARD);
-			}
-		}
-		if (ke.getKeyCode() == KeyEvent.VK_ESCAPE) {
-			setVisible(false);
 			if (textarea == null) {
 				textpane.grabFocus();
 			} else {
 				textarea.grabFocus();
 			}
-		}
-	}
-
-	@Override
-	public void keyTyped(KeyEvent ke) {
-	}
-
-	@Override
-	public void keyReleased(KeyEvent ke) {
-	}
-
-	/**
-	 * DocumentEvents für das Suchfeld
-	 */
-	public void searchwordChanged() {
-		cancelSearch();
-		if (setWord(searchField.getText())) {
-			getPos(SEARCH_FORWARD);
-		}
-	}
-
-	@Override
-	public void changedUpdate(DocumentEvent arg0) {
-
-	}
-
-	@Override
-	public void insertUpdate(DocumentEvent arg0) {
-		searchwordChanged();
-	}
-
-	@Override
-	public void removeUpdate(DocumentEvent arg0) {
-		searchwordChanged();
-	}
-
-	/**
-	 * MouseEvents für das Schließen-Label
-	 */
-	@Override
-	public void mouseClicked(MouseEvent arg0) {
-		setVisible(false);
-	}
-
-	@Override
-	public void mousePressed(MouseEvent arg0) {
-	}
-
-	@Override
-	public void mouseReleased(MouseEvent arg0) {
-	}
-
-	@Override
-	public void mouseEntered(MouseEvent arg0) {
-	}
-
-	@Override
-	public void mouseExited(MouseEvent arg0) {
-	}
-
-	/**
-	 * ActionEvents für die Suchbuttons und der Checkbox
-	 */
-	@Override
-	public void actionPerformed(ActionEvent ae) {
-		// Vorwärtssuche auslösen
-		if (ae.getSource() == forwardButton) {
-			getPos(SEARCH_FORWARD);
-			return;
-		}
-		// Rückwärtssuche auslösen
-		if (ae.getSource() == backwardButton) {
-			getPos(SEARCH_BACKWARD);
-			return;
-		}
-		// Checkbox
-		if (ae.getSource() == caseSensitivityCheckbox) {
-			cancelSearch();
-			setWord(searchField.getText());
-			getPos(SEARCH_FORWARD);
-			return;
 		}
 	}
 

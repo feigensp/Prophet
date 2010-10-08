@@ -14,6 +14,9 @@ import EditorTabbedPane.EditorTabbedPane;
 import FileTree.FileEvent;
 import FileTree.FileListener;
 import FileTree.FileTree;
+import javax.swing.JMenuBar;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
 
 
 @SuppressWarnings("serial")
@@ -21,6 +24,9 @@ public class MyTestMain extends JFrame implements FileListener {
 
 	private JPanel contentPane;
 	private EditorTabbedPane tabbedPane;
+	private JMenuBar menuBar;
+	private JMenu menu;
+	private JMenuItem menuItem;
 
 	/**
 	 * Launch the application.
@@ -43,7 +49,16 @@ public class MyTestMain extends JFrame implements FileListener {
 	 */
 	public MyTestMain() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
+		setBounds(100, 100, 800, 600);
+		
+		menuBar = new JMenuBar();
+		setJMenuBar(menuBar);
+		
+		menu = new JMenu("New menu");
+		menuBar.add(menu);
+		
+		menuItem = new JMenuItem("New menu item");
+		menu.add(menuItem);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);

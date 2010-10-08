@@ -78,7 +78,7 @@ public class LineNumbers extends JComponent
 	public void setFont(Font font)
 	{
 		super.setFont(font);
-		fontMetrics = getFontMetrics( getFont() );
+		fontMetrics = getFontMetrics(getFont());
 		componentFontHeight = fontMetrics.getHeight();
 		componentFontAscent = fontMetrics.getAscent();
 	}
