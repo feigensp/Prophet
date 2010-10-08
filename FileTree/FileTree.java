@@ -64,6 +64,6 @@ public class FileTree extends JScrollPane {
 		FileEvent event = new FileEvent(this, FileEvent.FILE_OPENED, fireFile);
 		for (Enumeration<FileListener> e = fileListeners.elements(); e
 				.hasMoreElements();)
-			((FileListener) e.nextElement()).fileEventOccured(event);
+			((FileListener) e.nextElement()).fileEventOccured(event);			
 	}
 }

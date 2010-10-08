@@ -1,7 +1,5 @@
 package test;
 
-
-import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.io.File;
@@ -10,28 +8,22 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JPanel;
+import javax.swing.JSplitPane;
 import javax.swing.UIManager;
-import javax.swing.border.EmptyBorder;
 
 import EditorTabbedPane.EditorTabbedPane;
 import FileTree.FileEvent;
 import FileTree.FileListener;
 import FileTree.FileTree;
-import javax.swing.JSplitPane;
 
 
 @SuppressWarnings("serial")
 public class MyTestMain extends JFrame implements FileListener {
-
-	private JPanel contentPane;
 	private EditorTabbedPane tabbedPane;
 	private JMenuBar menuBar;
 	private JMenu menu;
 	private JMenuItem menuItem;
 	private JSplitPane splitPane;
-	private JPanel panel;
-	private JPanel panel_1;
 
 	/**
 	 * Launch the application.
@@ -69,14 +61,9 @@ public class MyTestMain extends JFrame implements FileListener {
 		
 		menuItem = new JMenuItem("New menu item");
 		menu.add(menuItem);
-		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		setContentPane(contentPane);
-		contentPane.setLayout(new BorderLayout(0, 0));
 		
 		splitPane = new JSplitPane();
 		splitPane.setBorder(null);
-		contentPane.add(splitPane, BorderLayout.CENTER);
 		
 		FileTree myTree = new FileTree(new File("."));
 		myTree.setPreferredSize(new Dimension(200, 400));
@@ -85,6 +72,8 @@ public class MyTestMain extends JFrame implements FileListener {
 		
 		tabbedPane = new EditorTabbedPane();
 		splitPane.setRightComponent(tabbedPane);
+		
+		setContentPane(splitPane);
 	}
 
 	@Override
