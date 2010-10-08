@@ -29,8 +29,8 @@ import javax.swing.text.Highlighter;
 @SuppressWarnings("serial")
 public class SearchBar extends JPanel implements KeyListener, ActionListener,
 		MouseListener, DocumentListener {
-	private String text;
-	private String word;
+	private String text;	//Text der Suchsucht wird
+	private String word;	//Wort das gesucht wird
 	JTextArea textarea = null;
 	JTextPane textpane = null;
 	private Vector<Integer> v; // Vector für die Positionen der Vorkommen
@@ -39,7 +39,7 @@ public class SearchBar extends JPanel implements KeyListener, ActionListener,
 	static final Color HILIT_COLOR_GRAY = Color.LIGHT_GRAY;
 	static final Color HILIT_COLOR_YELLOW = Color.YELLOW;
 	static final boolean SEARCH_FORWARD = true;
-	static final boolean SEARCH_BACKWARD = false;	
+	static final boolean SEARCH_BACKWARD = false;
 
 	Highlighter hilit;
 	Highlighter.HighlightPainter painterGray;
@@ -53,125 +53,28 @@ public class SearchBar extends JPanel implements KeyListener, ActionListener,
 	private JCheckBox caseSensitivityCheckbox;
 
 	/*
-	 * Konstruktoren für mehrere Komponenten (ausser Textarea) möglich - nur
-	 * extra erstellen und in Methoden dann überprüfen
+	 * Konstruktor wenn eine JTextPane durchsucht werden soll
 	 */
 	public SearchBar(JTextPane textpane) {
-		super();
 		this.textpane = textpane;
-		this.word = "";
-		lastPos = -1;
-		v = new Vector<Integer>();
-
-		hideButton = new JLabel("x");
-		JLabel searchFieldLabel = new JLabel("Suchen:");
-		searchField = new JTextField();
-		searchField.getDocument().addDocumentListener(this);
-		searchField.setColumns(10);
-		forwardButton = new JButton("Abw\u00E4rts");
-		backwardButton = new JButton("Aufw\u00E4rts");
-		infoLabel = new JLabel("");
-		caseSensitivityCheckbox = new JCheckBox("Gro\u00DF-/Kleinschreibung");
-
-		GroupLayout groupLayout = new GroupLayout(this);
-		groupLayout.setHorizontalGroup(groupLayout.createParallelGroup(
-				Alignment.LEADING).addGroup(
-				groupLayout
-						.createSequentialGroup()
-						.addContainerGap()
-						.addComponent(hideButton)
-						.addGap(18)
-						.addComponent(searchFieldLabel)
-						.addPreferredGap(ComponentPlacement.RELATED)
-						.addComponent(searchField,
-								GroupLayout.PREFERRED_SIZE,
-								GroupLayout.DEFAULT_SIZE,
-								GroupLayout.PREFERRED_SIZE)
-						.addPreferredGap(ComponentPlacement.RELATED)
-						.addComponent(forwardButton)
-						.addPreferredGap(ComponentPlacement.RELATED)
-						.addComponent(backwardButton).addGap(6)
-						.addComponent(caseSensitivityCheckbox).addGap(6)
-						.addComponent(infoLabel)
-						.addContainerGap(55, Short.MAX_VALUE)));
-		groupLayout
-				.setVerticalGroup(groupLayout
-						.createParallelGroup(Alignment.LEADING)
-						.addGroup(
-								groupLayout
-										.createSequentialGroup()
-										.addGroup(
-												groupLayout
-														.createParallelGroup(
-																Alignment.LEADING)
-														.addGroup(
-																groupLayout
-																		.createSequentialGroup()
-																		.addContainerGap()
-																		.addComponent(
-																				hideButton))
-														.addGroup(
-																groupLayout
-																		.createSequentialGroup()
-																		.addGap(7)
-																		.addComponent(
-																				forwardButton))
-														.addGroup(
-																groupLayout
-																		.createSequentialGroup()
-																		.addGap(7)
-																		.addComponent(
-																				backwardButton))
-														.addGroup(
-																groupLayout
-																		.createSequentialGroup()
-																		.addContainerGap()
-																		.addComponent(
-																				caseSensitivityCheckbox))
-														.addGroup(
-																groupLayout
-																		.createSequentialGroup()
-																		.addContainerGap()
-																		.addComponent(
-																				infoLabel))
-														.addGroup(
-																groupLayout
-																		.createSequentialGroup()
-																		.addGap(8)
-																		.addComponent(
-																				searchField,
-																				GroupLayout.PREFERRED_SIZE,
-																				GroupLayout.DEFAULT_SIZE,
-																				GroupLayout.PREFERRED_SIZE))
-														.addGroup(
-																groupLayout
-																		.createSequentialGroup()
-																		.addContainerGap()
-																		.addComponent(
-																				searchFieldLabel)))
-										.addContainerGap(
-												GroupLayout.DEFAULT_SIZE,
-												Short.MAX_VALUE)));
-		setLayout(groupLayout);
-
-		searchField.addKeyListener(this);
-		backwardButton.addActionListener(this);
-		forwardButton.addActionListener(this);
-		caseSensitivityCheckbox.addActionListener(this);
-		hideButton.addMouseListener(this);
-
-		hilit = new DefaultHighlighter();
-		painterGray = new DefaultHighlighter.DefaultHighlightPainter(
-				HILIT_COLOR_GRAY);
-		painterYellow = new DefaultHighlighter.DefaultHighlightPainter(
-				HILIT_COLOR_YELLOW);
+		initialise();
 		textpane.setHighlighter(hilit);
-		
 	}
-	
+
+	/*
+	 * Konstruktor wenn eine JTextArea durchsucht werden soll
+	 */
 	public SearchBar(JTextArea textarea) {
 		super();
 		this.textarea = textarea;
+		initialise();
+		textarea.setHighlighter(hilit);
+	}
+
+	/*
+	 * Variablen-/ und Objektinitialisierung, sowie setzen des Layouts
+	 */
+	public void initialise() {
 		this.word = "";
 		lastPos = -1;
 		v = new Vector<Integer>();
@@ -196,8 +99,7 @@ public class SearchBar extends JPanel implements KeyListener, ActionListener,
 						.addGap(18)
 						.addComponent(searchFieldLabel)
 						.addPreferredGap(ComponentPlacement.RELATED)
-						.addComponent(searchField,
-								GroupLayout.PREFERRED_SIZE,
+						.addComponent(searchField, GroupLayout.PREFERRED_SIZE,
 								GroupLayout.DEFAULT_SIZE,
 								GroupLayout.PREFERRED_SIZE)
 						.addPreferredGap(ComponentPlacement.RELATED)
@@ -278,7 +180,6 @@ public class SearchBar extends JPanel implements KeyListener, ActionListener,
 				HILIT_COLOR_GRAY);
 		painterYellow = new DefaultHighlighter.DefaultHighlightPainter(
 				HILIT_COLOR_YELLOW);
-		textarea.setHighlighter(hilit);
 	}
 
 	/*
@@ -294,28 +195,28 @@ public class SearchBar extends JPanel implements KeyListener, ActionListener,
 	 * @return true wenn was gefunden, sonst false
 	 */
 	public boolean getPos(boolean forward) {
-		// liste aller vorkommen aufbauen (nur wenn nötig)
 		if (word.equals("")) {
 			cancelSearch();
 			return false;
 		}
-		if(textpane == null) {
+		// Unterscheidung Groß- und Kleinschreibung
+		if (textpane == null) {
 			text = caseSensitivityCheckbox.isSelected() ? textarea.getText()
 					: textarea.getText().toLowerCase();
 		} else {
 			try {
 				Document doc = textpane.getDocument();
-				text = caseSensitivityCheckbox.isSelected() ? doc.getText(0, doc.getLength())
-							: doc.getText(0, doc.getLength()).toLowerCase();
+				text = caseSensitivityCheckbox.isSelected() ? doc.getText(0,
+						doc.getLength()) : doc.getText(0, doc.getLength())
+						.toLowerCase();
 			} catch (BadLocationException e) {
 				e.printStackTrace();
-			}			
+			}
 		}
-			word = caseSensitivityCheckbox.isSelected() ? word : word.toLowerCase();
+		word = caseSensitivityCheckbox.isSelected() ? word : word.toLowerCase();
+		// liste aller vorkommen aufbauen (nur wenn nötig)
 		if (lastPos == -1) {
 			v.removeAllElements();
-			// Position in Abhängigkeit ob mit Unterscheidung der Groß-
-			// Kleinschreibung finden
 			int pos = text.indexOf(word);
 			int i = 0;
 			while (pos != -1) {
@@ -349,7 +250,7 @@ public class SearchBar extends JPanel implements KeyListener, ActionListener,
 			showHighlights();
 			searchField.setForeground(Color.BLACK);
 			searchField.setBackground(Color.WHITE);
-			if(textpane == null) {
+			if (textpane == null) {
 				textarea.setCaretPosition(v.get(lastPos));
 			} else {
 				textpane.setCaretPosition(v.get(lastPos));
@@ -417,7 +318,7 @@ public class SearchBar extends JPanel implements KeyListener, ActionListener,
 	 */
 	@Override
 	public void setVisible(boolean show) {
-		if (show==this.isVisible()) {
+		if (show == this.isVisible()) {
 			return;
 		}
 		super.setVisible(show);
@@ -429,7 +330,7 @@ public class SearchBar extends JPanel implements KeyListener, ActionListener,
 			hideHighlights();
 		}
 	}
-	
+
 	/*
 	 * KeyEvents für das Suchfeld
 	 */
@@ -442,7 +343,7 @@ public class SearchBar extends JPanel implements KeyListener, ActionListener,
 		}
 		if (ke.getKeyCode() == KeyEvent.VK_ESCAPE) {
 			setVisible(false);
-			if (textarea==null) {
+			if (textarea == null) {
 				textpane.grabFocus();
 			} else {
 				textarea.grabFocus();
@@ -453,11 +354,11 @@ public class SearchBar extends JPanel implements KeyListener, ActionListener,
 	@Override
 	public void keyTyped(KeyEvent ke) {
 	}
-	
+
 	@Override
 	public void keyReleased(KeyEvent ke) {
 	}
-	
+
 	/*
 	 * DocumentEvents für das Suchfeld
 	 */
@@ -467,14 +368,17 @@ public class SearchBar extends JPanel implements KeyListener, ActionListener,
 			getPos(SEARCH_FORWARD);
 		}
 	}
+
 	@Override
 	public void changedUpdate(DocumentEvent arg0) {
-		
+
 	}
+
 	@Override
 	public void insertUpdate(DocumentEvent arg0) {
-		searchwordChanged()	;
+		searchwordChanged();
 	}
+
 	@Override
 	public void removeUpdate(DocumentEvent arg0) {
 		searchwordChanged();
@@ -495,7 +399,7 @@ public class SearchBar extends JPanel implements KeyListener, ActionListener,
 	@Override
 	public void mouseReleased(MouseEvent arg0) {
 	}
-	
+
 	@Override
 	public void mouseEntered(MouseEvent arg0) {
 	}
@@ -503,7 +407,7 @@ public class SearchBar extends JPanel implements KeyListener, ActionListener,
 	@Override
 	public void mouseExited(MouseEvent arg0) {
 	}
-	
+
 	/*
 	 * ActionEvents für die Suchbuttons und der Checkbox
 	 */
@@ -527,6 +431,7 @@ public class SearchBar extends JPanel implements KeyListener, ActionListener,
 			return;
 		}
 	}
+
 	public void grabFocus() {
 		searchField.grabFocus();
 	}
