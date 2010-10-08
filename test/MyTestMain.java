@@ -17,7 +17,7 @@ import FileTree.FileTree;
 
 
 @SuppressWarnings("serial")
-public class TestMain extends JFrame implements FileListener {
+public class MyTestMain extends JFrame implements FileListener {
 
 	private JPanel contentPane;
 	private EditorTabbedPane tabbedPane;
@@ -29,7 +29,7 @@ public class TestMain extends JFrame implements FileListener {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					TestMain frame = new TestMain();
+					MyTestMain frame = new MyTestMain();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -41,7 +41,7 @@ public class TestMain extends JFrame implements FileListener {
 	/**
 	 * Create the frame.
 	 */
-	public TestMain() {
+	public MyTestMain() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
