@@ -1,3 +1,11 @@
+/**
+ * Diese Klasse erbt von JPanel - in diesem sind dann alle Elemente einer Suchleiste enthalten.
+ * Es kann ihr im Konstruktor ein JTextArea oder JTextPane übergeben werden.
+ * In diesem Kann dann gesucht werden - Treffer werden dabei in dem übergebenen Objekt Farbig markiert.
+ * 
+ * @author Markus Köppen, Andreas Hasselberg
+ */
+
 package EditorTabbedPane;
 
 import java.awt.Color;
@@ -52,7 +60,7 @@ public class SearchBar extends JPanel implements KeyListener, ActionListener,
 	private JLabel infoLabel;
 	private JCheckBox caseSensitivityCheckbox;
 
-	/*
+	/**
 	 * Konstruktor wenn eine JTextPane durchsucht werden soll
 	 */
 	public SearchBar(JTextPane textpane) {
@@ -61,7 +69,7 @@ public class SearchBar extends JPanel implements KeyListener, ActionListener,
 		textpane.setHighlighter(hilit);
 	}
 
-	/*
+	/**
 	 * Konstruktor wenn eine JTextArea durchsucht werden soll
 	 */
 	public SearchBar(JTextArea textarea) {
@@ -71,7 +79,7 @@ public class SearchBar extends JPanel implements KeyListener, ActionListener,
 		textarea.setHighlighter(hilit);
 	}
 
-	/*
+	/**
 	 * Variablen-/ und Objektinitialisierung, sowie setzen des Layouts
 	 */
 	public void initialise() {
@@ -182,7 +190,7 @@ public class SearchBar extends JPanel implements KeyListener, ActionListener,
 				HILIT_COLOR_YELLOW);
 	}
 
-	/*
+	/**
 	 * Allgemeine Suchmethode Baut einen Vector auf, der als Index der
 	 * gefundenen Werte dient. Alle Ergebnisse werden grau Hinterlegt
 	 * eingefärbt, das aktuelle gelb. LastSearchPosition gibt dabei anfangs das
@@ -262,7 +270,7 @@ public class SearchBar extends JPanel implements KeyListener, ActionListener,
 		return false;
 	}
 
-	/*
+	/**
 	 * Lässt alle Suchergebnissfarbhinterlegungen im Farbschema anzeigen
 	 */
 	public void showHighlights() {
@@ -282,14 +290,14 @@ public class SearchBar extends JPanel implements KeyListener, ActionListener,
 		}
 	}
 
-	/*
+	/**
 	 * Lässt alle Suchergebnissfarbhinterlegungen verschwinden
 	 */
 	public void hideHighlights() {
 		hilit.removeAllHighlights();
 	}
 
-	/*
+	/**
 	 * Setzt das derzeitige Suchwort
 	 * 
 	 * @param word Das Wort was nun gesucht werden soll
@@ -302,7 +310,7 @@ public class SearchBar extends JPanel implements KeyListener, ActionListener,
 		return word.equals("") ? false : true;
 	}
 
-	/*
+	/**
 	 * Führt alle nötigen Vorgänge aus um eine Suche abzubrechen
 	 */
 	public void cancelSearch() {
@@ -313,7 +321,7 @@ public class SearchBar extends JPanel implements KeyListener, ActionListener,
 		lastPos = -1;
 	}
 
-	/*
+	/**
 	 * Zeigt diese Klasse optisch an
 	 */
 	@Override
@@ -331,7 +339,7 @@ public class SearchBar extends JPanel implements KeyListener, ActionListener,
 		}
 	}
 
-	/*
+	/**
 	 * KeyEvents für das Suchfeld
 	 */
 	@Override
@@ -359,7 +367,7 @@ public class SearchBar extends JPanel implements KeyListener, ActionListener,
 	public void keyReleased(KeyEvent ke) {
 	}
 
-	/*
+	/**
 	 * DocumentEvents für das Suchfeld
 	 */
 	public void searchwordChanged() {
@@ -384,7 +392,7 @@ public class SearchBar extends JPanel implements KeyListener, ActionListener,
 		searchwordChanged();
 	}
 
-	/*
+	/**
 	 * MouseEvents für das Schließen-Label
 	 */
 	@Override
@@ -408,7 +416,7 @@ public class SearchBar extends JPanel implements KeyListener, ActionListener,
 	public void mouseExited(MouseEvent arg0) {
 	}
 
-	/*
+	/**
 	 * ActionEvents für die Suchbuttons und der Checkbox
 	 */
 	@Override
@@ -432,6 +440,9 @@ public class SearchBar extends JPanel implements KeyListener, ActionListener,
 		}
 	}
 
+	/**
+	 * Gibt dem Suchfeld den Fokus
+	 */
 	public void grabFocus() {
 		searchField.grabFocus();
 	}
