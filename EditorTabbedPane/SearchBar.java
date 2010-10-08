@@ -1,4 +1,4 @@
-package test;
+package EditorTabbedPane;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;
@@ -27,7 +27,7 @@ import javax.swing.text.Document;
 import javax.swing.text.Highlighter;
 
 @SuppressWarnings("serial")
-public class Search extends JPanel implements KeyListener, ActionListener,
+public class SearchBar extends JPanel implements KeyListener, ActionListener,
 		MouseListener, DocumentListener {
 	private String text;
 	private String word;
@@ -57,7 +57,7 @@ public class Search extends JPanel implements KeyListener, ActionListener,
 	 * Konstruktoren für mehrere Komponenten (ausser Textarea) möglich - nur
 	 * extra erstellen und in Methoden dann überprüfen
 	 */
-	public Search(JTextPane textpane) {
+	public SearchBar(JTextPane textpane) {
 		super();
 		this.textpane = textpane;
 		this.word = "";
@@ -170,7 +170,7 @@ public class Search extends JPanel implements KeyListener, ActionListener,
 		
 	}
 	
-	public Search(JTextArea textarea) {
+	public SearchBar(JTextArea textarea) {
 		super();
 		this.textarea = textarea;
 		this.word = "";
@@ -418,6 +418,9 @@ public class Search extends JPanel implements KeyListener, ActionListener,
 	 */
 	@Override
 	public void setVisible(boolean show) {
+		if (show==this.isVisible()) {
+			return;
+		}
 		super.setVisible(show);
 		if (show) {
 			lastPos = 0;
@@ -436,6 +439,14 @@ public class Search extends JPanel implements KeyListener, ActionListener,
 		if (ke.getKeyCode() == KeyEvent.VK_ENTER) {
 			if (setWord(searchField.getText())) {
 				getPos(SEARCH_FORWARD);
+			}
+		}
+		if (ke.getKeyCode() == KeyEvent.VK_ESCAPE) {
+			setVisible(false);
+			if (textarea==null) {
+				textpane.grabFocus();
+			} else {
+				textarea.grabFocus();
 			}
 		}
 	}
@@ -516,5 +527,8 @@ public class Search extends JPanel implements KeyListener, ActionListener,
 			getPos(SEARCH_FORWARD);
 			return;
 		}
+	}
+	public void grabFocus() {
+		searchField.grabFocus();
 	}
 }

@@ -9,6 +9,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 import javax.swing.border.EmptyBorder;
 
+import EditorTabbedPane.SearchBar;
+
 @SuppressWarnings("serial")
 public class testSearch extends JFrame {
 
@@ -46,7 +48,7 @@ public class testSearch extends JFrame {
 
 		JScrollPane sp = new JScrollPane(textPane);
 		contentPane.add(sp, BorderLayout.CENTER);
-		Search s = new Search(textPane);
+		SearchBar s = new SearchBar(textPane);
 		contentPane.add(s, BorderLayout.SOUTH);
 	}
 

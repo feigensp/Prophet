@@ -10,8 +10,8 @@ import javax.swing.tree.TreePath;
 public class FileTreeModel implements TreeModel {
 	FileTreeNode root;
 	
-	public FileTreeModel(File dir) {
-		 root = new FileTreeNode(dir);
+	public FileTreeModel(File file) {
+		 root = new FileTreeNode(file);
 	}
 	public Object getChild(Object parent, int index) {
 		return ((FileTreeNode)parent).getChild(index);

@@ -4,23 +4,25 @@ package test;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.EventQueue;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.File;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.JTabbedPane;
 import javax.swing.border.EmptyBorder;
 
+import EditorTabbedPane.EditorTabbedPane;
 import FileTree.FileEvent;
 import FileTree.FileListener;
 import FileTree.FileTree;
 
 
 @SuppressWarnings("serial")
-public class FileTreeTestMain extends JFrame implements FileListener {
+public class TestMain extends JFrame implements FileListener {
 
 	private JPanel contentPane;
-	private JTabbedPane tabbi;
+	private EditorTabbedPane tabbedPane;
 
 	/**
 	 * Launch the application.
@@ -29,7 +31,7 @@ public class FileTreeTestMain extends JFrame implements FileListener {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					FileTreeTestMain frame = new FileTreeTestMain();
+					TestMain frame = new TestMain();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -41,7 +43,7 @@ public class FileTreeTestMain extends JFrame implements FileListener {
 	/**
 	 * Create the frame.
 	 */
-	public FileTreeTestMain() {
+	public TestMain() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -49,8 +51,8 @@ public class FileTreeTestMain extends JFrame implements FileListener {
 		setContentPane(contentPane);
 		contentPane.setLayout(new BorderLayout(0, 0));
 		
-		tabbi = new JTabbedPane(JTabbedPane.TOP);
-		contentPane.add(tabbi, BorderLayout.CENTER);
+		tabbedPane = new EditorTabbedPane();
+		contentPane.add(tabbedPane, BorderLayout.CENTER);
 		FileTree myTree = new FileTree(new File("."));
 		myTree.setMinimumSize(new Dimension(200, 400));
 		myTree.setPreferredSize(new Dimension(200, 400));
@@ -59,8 +61,7 @@ public class FileTreeTestMain extends JFrame implements FileListener {
 	}
 
 	@Override
-	public void fileOpened(FileEvent arg0) {
-		System.out.println(arg0.getFile().getPath());
+	public void fileEventOccured(FileEvent arg0) {
+		tabbedPane.openFile(arg0.getFile());
 	}
-
 }

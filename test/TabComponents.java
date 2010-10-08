@@ -7,16 +7,18 @@ import java.util.LinkedList;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
+import EditorTabbedPane.SearchBar;
+
 public class TabComponents {
 	private static LinkedList<JPanel> panels;
 	private static LinkedList<JTextArea> textareas;
-	private static LinkedList<Search> searchfields;
+	private static LinkedList<SearchBar> searchfields;
 	private static LinkedList<String> filenames;
 
 	public TabComponents() {
 		panels = new LinkedList<JPanel>();
 		textareas = new LinkedList<JTextArea>();
-		searchfields = new LinkedList<Search>();
+		searchfields = new LinkedList<SearchBar>();
 		filenames = new LinkedList<String>();
 	}
 
@@ -28,7 +30,7 @@ public class TabComponents {
 	public int addComponentFamily(String filename) {
 		panels.add(new JPanel());
 		textareas.add(new JTextArea());
-		searchfields.add(new Search(textareas.getLast()));
+		searchfields.add(new SearchBar(textareas.getLast()));
 		filenames.add(filename);
 		return panels.size() - 1;
 	}
@@ -68,7 +70,7 @@ public class TabComponents {
 	 * 
 	 * @return Das besagte Search
 	 */
-	public Search getSearchField(int i) {
+	public SearchBar getSearchField(int i) {
 		return searchfields.get(i);
 	}
 

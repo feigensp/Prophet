@@ -1,13 +1,11 @@
 package FileTree;
 
-import java.awt.BorderLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.Enumeration;
 import java.util.Vector;
 
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.tree.TreePath;
@@ -21,15 +19,14 @@ import javax.swing.tree.TreeSelectionModel;
  * @author Andreas Hasselberg, Markus Koeppen
  */
 @SuppressWarnings("serial")
-public class FileTree extends JPanel {	
+public class FileTree extends JScrollPane {	
 	private JTree tree;
-	private File dir, fireFile;
+	private File file, fireFile;
 	private Vector<FileListener> fileListeners;
 	
-	public FileTree(File d) {
-		dir=d;
-		setLayout(new BorderLayout());
-		tree = new JTree(new FileTreeModel(dir));
+	public FileTree(File f) {
+		file=f;
+		tree = new JTree(new FileTreeModel(file));
 		tree.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
@@ -41,9 +38,7 @@ public class FileTree extends JPanel {
 			}
 		});
 		tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
-		JScrollPane scrollpane = new JScrollPane();
-		scrollpane.setViewportView(tree);
-		add(BorderLayout.CENTER, scrollpane);
+		setViewportView(tree);
 	}
 	
 	/*
@@ -63,6 +58,6 @@ public class FileTree extends JPanel {
 			return;
 		FileEvent event = new FileEvent(this, FileEvent.FILE_OPENED, fireFile);
 		for (Enumeration<FileListener> e = fileListeners.elements(); e.hasMoreElements(); ) 
-            ((FileListener)e.nextElement()).fileOpened(event);
+            ((FileListener)e.nextElement()).fileEventOccured(event);
 	}
 }
