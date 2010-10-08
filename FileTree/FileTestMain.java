@@ -12,7 +12,7 @@ import javax.swing.border.EmptyBorder;
 
 
 @SuppressWarnings("serial")
-public class FileTest extends JFrame implements FileListener {
+public class FileTestMain extends JFrame implements FileListener {
 
 	private JPanel contentPane;
 	private JTabbedPane tabbi;
@@ -24,7 +24,7 @@ public class FileTest extends JFrame implements FileListener {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					FileTest frame = new FileTest();
+					FileTestMain frame = new FileTestMain();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -36,7 +36,7 @@ public class FileTest extends JFrame implements FileListener {
 	/**
 	 * Create the frame.
 	 */
-	public FileTest() {
+	public FileTestMain() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
