@@ -1,7 +1,12 @@
 package experimentQuestionCreator;
 
 import java.awt.AWTEvent;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Enumeration;
@@ -27,6 +32,8 @@ public class QuestionElement extends JPanel {
 	public static final int COMBOBOX = 3;
 	public static final int CHECKBOX = 4;
 	public static final int RADIOBUTTON = 5;
+	
+	public static Dimension menuSize;
 
 	private JPanel menuPanel;
 	private JPanel contentPanel;
@@ -39,10 +46,10 @@ public class QuestionElement extends JPanel {
 		this.selection = selection;
 		this.text = text;
 		setLayout(new GridLayout(1, 2, 10, 0));
-		createContent(text, selection);
 		createMenu();
-		add(contentPanel);
+		createContent(text, selection);
 		add(menuPanel);
+		add(contentPanel);
 		enableEvents(AWTEvent.MOUSE_EVENT_MASK);
 	}
 
@@ -57,38 +64,105 @@ public class QuestionElement extends JPanel {
 			questionElementListeners.removeElement(listener);
 	}
 
-	private void fireEvent() {
+	private void fireEvent(int eventType) {
 		if (questionElementListeners == null)
 			return;
-		QuestionElementEvent event = new QuestionElementEvent(this,
-				QuestionElementEvent.QELECLOSED, this);
+		QuestionElementEvent event;
+
+		switch (eventType) {
+		case QuestionElementEvent.QELECLOSED:
+			event = new QuestionElementEvent(this,
+					QuestionElementEvent.QELECLOSED, this);
+			break;
+		case QuestionElementEvent.QELEUP:
+			event = new QuestionElementEvent(this, QuestionElementEvent.QELEUP,
+					this);
+			break;
+		case QuestionElementEvent.QELEDOWN:
+			event = new QuestionElementEvent(this, QuestionElementEvent.QELEUP,
+					this);
+			break;
+		default:
+			return;
+		}
+
 		for (Enumeration<QuestionElementListener> e = questionElementListeners
-				.elements(); e.hasMoreElements();)
-			((QuestionElementListener) e.nextElement())
-					.questionElementClosed(event);
+				.elements(); e.hasMoreElements();) {
+			switch (eventType) {
+			case QuestionElementEvent.QELECLOSED:
+				((QuestionElementListener) e.nextElement())
+						.questionElementClose(event);
+				break;
+			case QuestionElementEvent.QELEUP:
+				((QuestionElementListener) e.nextElement())
+						.questionElementUp(event);
+				break;
+			case QuestionElementEvent.QELEDOWN:
+				((QuestionElementListener) e.nextElement())
+						.questionElementDown(event);
+				break;
+			default:
+				return;
+			}
+		}
 	}
 
 	private void createMenu() {
 		menuPanel = new JPanel();
-		JButton up = new JButton("nach oben");
-		JButton down = new JButton("nach unten");
+		menuPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+		JButton up = new JButton("<");
+		up.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				fireEvent(QuestionElementEvent.QELEUP);
+			}
+		});
+		JButton down = new JButton(">");
+		down.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				fireEvent(QuestionElementEvent.QELEDOWN);
+			}
+		});
 		close = new JLabel("x");
 		close.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
-				fireEvent();
+				fireEvent(QuestionElementEvent.QELECLOSED);
 			}
 		});
 		menuPanel.add(up);
 		menuPanel.add(down);
 		menuPanel.add(close);
+		/*
+		 * 
+		 * 
+		 * 
+		 * 
+		 * 
+		 * 
+		 * 
+		 * 
+		 * 
+		 * 
+		 * 
+		 * 
+		 */
+		if(menuSize == null){
+			menuSize = menuPanel.getPreferredSize();
+		} else {
+			menuPanel.setPreferredSize(menuSize);
+			menuPanel.setMaximumSize(menuSize);
+			menuPanel.setMinimumSize(menuSize);
+		}
+		menuPanel.setBackground(Color.RED);
 	}
 
 	private void createContent(String text, int selection) {
 		contentPanel = new JPanel();
+		contentPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 		String[] texte = text.split("\n");
 		switch (selection) {
 		case LABEL:
-			contentPanel.add(new JLabel(text));
+			JLabel label = new JLabel(text);		
+			contentPanel.add(label);
 			break;
 		case TEXTFIELD:
 			contentPanel.add(new JTextField(text));
@@ -124,6 +198,14 @@ public class QuestionElement extends JPanel {
 		default:
 			break;
 		}
+		Dimension componentSize = contentPanel.getPreferredSize();
+		System.out.println("Component: " + componentSize);
+		System.out.println("Menu: " + menuSize);
+		Dimension absoluteSize = new Dimension((int) (componentSize.getWidth() + menuSize.getWidth() + 100), (int) (Math.max(componentSize.getHeight(), menuSize.getHeight()) + 25));
+		super.setPreferredSize(absoluteSize);
+		super.setMinimumSize(absoluteSize);
+		super.setMaximumSize(absoluteSize);
+		System.out.println(absoluteSize);
 	}
 
 	public int getSelection() {

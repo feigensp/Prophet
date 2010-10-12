@@ -2,6 +2,9 @@ package experimentQuestionCreator;
 
 
 public interface QuestionElementListener {
-	void questionElementClosed(QuestionElementEvent e);
-	//noch die up und down events reinnehmen
+	void questionElementClose(QuestionElementEvent e);
+
+	void questionElementUp(QuestionElementEvent e);
+	
+	void questionElementDown(QuestionElementEvent e);
 }
