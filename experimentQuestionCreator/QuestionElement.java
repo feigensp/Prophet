@@ -1,8 +1,7 @@
 package experimentQuestionCreator;
 
 import java.awt.AWTEvent;
-import java.awt.FlowLayout;
-import java.awt.event.AWTEventListener;
+import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Enumeration;
@@ -18,8 +17,8 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-public class QuestionElement extends JPanel implements AWTEventListener {
-	
+public class QuestionElement extends JPanel {
+
 	Vector<QuestionElementListener> questionElementListeners;
 
 	public static final int LABEL = 0;
@@ -32,40 +31,41 @@ public class QuestionElement extends JPanel implements AWTEventListener {
 	private JPanel menuPanel;
 	private JPanel contentPanel;
 	private JLabel close;
+	private int selection;
+	private String text;
 
 	public QuestionElement(String text, int selection) {
 		super();
-		setLayout(new FlowLayout());
+		this.selection = selection;
+		this.text = text;
+		setLayout(new GridLayout(1, 2, 10, 0));
 		createContent(text, selection);
 		createMenu();
 		add(contentPanel);
 		add(menuPanel);
 		enableEvents(AWTEvent.MOUSE_EVENT_MASK);
 	}
-	
-//	public void processEvent(AWTEvent e) {
-//		if(e.getID() == MouseEvent.MOUSE_CLICKED) {
-//			System.out.println("im processEvent");
-//			fireEvent();
-//		}
-//		super.processEvent(e);
-//	}
-	
+
 	public void addQuestionElementListener(QuestionElementListener listener) {
-		if(questionElementListeners == null)
+		if (questionElementListeners == null)
 			questionElementListeners = new Vector<QuestionElementListener>();
 		questionElementListeners.addElement(listener);
 	}
+
 	public void removeQuestionelementListener(QuestionElementListener listener) {
-		if(questionElementListeners != null) 
+		if (questionElementListeners != null)
 			questionElementListeners.removeElement(listener);
 	}
+
 	private void fireEvent() {
-		if(questionElementListeners == null)
+		if (questionElementListeners == null)
 			return;
-		QuestionElementEvent event = new QuestionElementEvent(this, QuestionElementEvent.QELECLOSED, this);
-		for (Enumeration<QuestionElementListener> e = questionElementListeners.elements(); e.hasMoreElements(); )
-			((QuestionElementListener)e.nextElement()).questionElementClosed(event);
+		QuestionElementEvent event = new QuestionElementEvent(this,
+				QuestionElementEvent.QELECLOSED, this);
+		for (Enumeration<QuestionElementListener> e = questionElementListeners
+				.elements(); e.hasMoreElements();)
+			((QuestionElementListener) e.nextElement())
+					.questionElementClosed(event);
 	}
 
 	private void createMenu() {
@@ -101,6 +101,7 @@ public class QuestionElement extends JPanel implements AWTEventListener {
 			break;
 		case CHECKBOX:
 			JPanel chkPanel = new JPanel();
+			chkPanel.setLayout(new GridLayout(texte.length, 1));
 			ButtonGroup chkGroup = new ButtonGroup();
 			for (int i = 0; i < texte.length; i++) {
 				JCheckBox chkbox = new JCheckBox(texte[i]);
@@ -111,6 +112,7 @@ public class QuestionElement extends JPanel implements AWTEventListener {
 			break;
 		case RADIOBUTTON:
 			JPanel radioPanel = new JPanel();
+			radioPanel.setLayout(new GridLayout(texte.length, 1));
 			ButtonGroup radioGroup = new ButtonGroup();
 			for (int i = 0; i < texte.length; i++) {
 				JRadioButton radiobtn = new JRadioButton(texte[i]);
@@ -124,13 +126,30 @@ public class QuestionElement extends JPanel implements AWTEventListener {
 		}
 	}
 
-	@Override
-	public void eventDispatched(AWTEvent arg0) {
-		if (arg0 instanceof MouseEvent) {
-			MouseEvent me = (MouseEvent) arg0;
-			if(me.getSource() == close) {
-				System.out.println("test");				
-			}
+	public int getSelection() {
+		return selection;
+	}
+
+	public String getSelectionString() {
+		switch (selection) {
+		case LABEL:
+			return "label";
+		case TEXTFIELD:
+			return "textfield";
+		case TEXTAREA:
+			return "textarea";
+		case COMBOBOX:
+			return "combobox";
+		case CHECKBOX:
+			return "checkbox";
+		case RADIOBUTTON:
+			return "radiobutton";
+		default:
+			return "";
 		}
+	}
+
+	public String getText() {
+		return text;
 	}
 }

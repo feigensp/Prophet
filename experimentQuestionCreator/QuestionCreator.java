@@ -8,7 +8,10 @@ import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
@@ -17,12 +20,25 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.TransformerFactoryConfigurationError;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 public class QuestionCreator extends JFrame {
 
@@ -45,6 +61,9 @@ public class QuestionCreator extends JFrame {
 	private JPanel panel;
 	private JComboBox creatorMenuComboBox;
 	private JButton creatorMenuAdd;
+	private JPanel exportPanel;
+	private JButton exportButton;
+	private JPanel textAreaPanel;
 
 	/**
 	 * Launch the application.
@@ -116,12 +135,74 @@ public class QuestionCreator extends JFrame {
 				overviewList.requestFocusInWindow();
 			}
 		});
-		//Neues Frageelement hinzufügen
+		// Neues Frageelement hinzufügen
 		creatorMenuAdd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				int selection = creatorMenuComboBox.getSelectedIndex();
 				String text = creatorMenuTextArea.getText();
-				questions.get(overviewList.getSelectedIndex()).addComponent(text, selection);
+				questions.get(overviewList.getSelectedIndex()).addComponent(
+						text, selection);
+			}
+		});
+
+		// Fragebogen als XML Dokument exportieren
+		exportButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Document questionnaire = null;
+				try {
+					//Dokument erstellen
+					questionnaire = DocumentBuilderFactory.newInstance()
+							.newDocumentBuilder().newDocument();
+					//Wurzelknoten
+					Element root = questionnaire.createElement("questionnaire");
+					questionnaire.appendChild(root);
+					// Alle Fragen hinzufügen
+					for (int i = 0; i < questions.size(); i++) {
+						Element question = questionnaire
+								.createElement(((String) listModel.get(i)).replace(" ", ""));
+						root.appendChild(question);
+						//Elemente der Fragen hinzufügen
+						LinkedList<QuestionElement> elements = questions.get(i)
+								.getElements();
+						for (QuestionElement ele : elements) {
+							Element component = questionnaire
+									.createElement("component");
+							question.appendChild(component);
+							component.setAttribute("model",
+									ele.getSelectionString());
+							component.setAttribute("text", ele.getText().replace("\n", "<br>"));
+						}
+					}
+				} catch (ParserConfigurationException e1) {
+					e1.printStackTrace();
+				}
+				try {
+					if (questionnaire != null) {
+						TransformerFactory
+								.newInstance()
+								.newTransformer()
+								.transform(new DOMSource(questionnaire),
+										new StreamResult("Fragebogen.xml"));
+					}
+				} catch (TransformerConfigurationException e1) {
+					e1.printStackTrace();
+				} catch (TransformerException e1) {
+					e1.printStackTrace();
+				} catch (TransformerFactoryConfigurationError e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
+		
+		newTextField.addKeyListener(new KeyAdapter() {
+			public void keyPressed(KeyEvent e) {
+				newTextField.setText(newTextField.getText().replace(" ", ""));
+				
+			}
+			public void keyReleased(KeyEvent e) {
+				//if(e.getKeyChar() == ' ') {
+					newTextField.setText(newTextField.getText().replace(" ", ""));
+				//}
 			}
 		});
 	}
@@ -197,13 +278,14 @@ public class QuestionCreator extends JFrame {
 
 		overviewSouth = new JPanel();
 		overviewPanel.add(overviewSouth, BorderLayout.SOUTH);
-		overviewSouth.setLayout(new GridLayout(2, 1, 0, 0));
+		overviewSouth.setLayout(new GridLayout(3, 1, 0, 0));
 
 		overviewTextPanel = new JPanel();
 		overviewSouth.add(overviewTextPanel);
 
 		newTextField = new JTextField();
 		newTextField.setColumns(10);
+		newTextField.setDocument(new TextFieldDoc());
 		overviewTextPanel.add(newTextField);
 
 		overviewActionPanel = new JPanel();
@@ -216,6 +298,12 @@ public class QuestionCreator extends JFrame {
 		removeButton.setEnabled(false);
 		overviewActionPanel.add(removeButton);
 
+		exportPanel = new JPanel();
+		overviewSouth.add(exportPanel);
+
+		exportButton = new JButton("Export");
+		exportPanel.add(exportButton);
+
 		// rechte Seite
 		creatorPanel = new JPanel();
 		contentPane.add(creatorPanel, BorderLayout.CENTER);
@@ -225,22 +313,25 @@ public class QuestionCreator extends JFrame {
 		creatorPanel.add(creatorOverviewPanel, BorderLayout.CENTER);
 		cardLayout = new CardLayout();
 		creatorOverviewPanel.setLayout(cardLayout);
-
+		
 		creatorMenuPanel = new JPanel();
 		creatorPanel.add(creatorMenuPanel, BorderLayout.SOUTH);
-		creatorMenuPanel.setMinimumSize(new Dimension(10, 75));
-		creatorMenuPanel.setPreferredSize(new Dimension(10, 75));
-
+		creatorMenuPanel.setMinimumSize(new Dimension(10, 90));
+		creatorMenuPanel.setPreferredSize(new Dimension(10, 90));
+		
+		textAreaPanel = new JPanel();
+		textAreaPanel.setPreferredSize(new Dimension(250, 60));
+		textAreaPanel.setMinimumSize(new Dimension(250, 60));
+		textAreaPanel.setLayout(new BorderLayout());
 		creatorMenuTextArea = new JTextArea();
-		creatorMenuTextArea.setPreferredSize(new Dimension(250, 60));
-		creatorMenuTextArea.setMinimumSize(new Dimension(250, 60));
-		creatorMenuPanel.add(creatorMenuTextArea);
+		textAreaPanel.add(new JScrollPane(creatorMenuTextArea), BorderLayout.CENTER);
+		creatorMenuPanel.add(textAreaPanel);
 
 		panel = new JPanel();
 		panel.setPreferredSize(new Dimension(100, 60));
 		panel.setMinimumSize(new Dimension(100, 60));
 		creatorMenuPanel.add(panel);
-		panel.setLayout(new GridLayout(2, 1, 0, 0));
+		panel.setLayout(new GridLayout(2, 1, 0, 10));
 
 		creatorMenuComboBox = new JComboBox();
 		creatorMenuComboBox.setModel(new DefaultComboBoxModel(new String[] {

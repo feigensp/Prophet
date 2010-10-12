@@ -32,7 +32,7 @@ public class ExtendedPanel extends JPanel implements QuestionElementListener{
 		add(headline, BorderLayout.NORTH);
 		questionHolder = new JPanel();
 		add(questionHolder, BorderLayout.CENTER);
-		gridLayout = new GridLayout(0, 1);
+		gridLayout = new GridLayout(0, 1, 0, 20);
 		questionHolder.setLayout(gridLayout);
 	}
 
@@ -51,7 +51,11 @@ public class ExtendedPanel extends JPanel implements QuestionElementListener{
 	public int getId() {
 		return id;
 	}
-
+	
+	public LinkedList<QuestionElement> getElements() {
+		return elements;
+	}
+	
 	// Methoden um neue Komponenten hinzuzufügen
 	public void addComponent(String text, int selection) {
 		QuestionElement qEle = new QuestionElement(text, selection);
