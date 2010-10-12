@@ -1,7 +1,5 @@
 package test;
 
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.LinkedList;
 
 import javax.swing.JPanel;

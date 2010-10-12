@@ -7,9 +7,19 @@ import javax.swing.JTabbedPane;
 
 @SuppressWarnings("serial")
 public class EditorTabbedPane extends JTabbedPane {
+	boolean searchable;
+	boolean editable;
 	
 	public EditorTabbedPane() {
 		super(JTabbedPane.TOP);
+		searchable = true;
+		editable = false;
+	}
+	
+	public EditorTabbedPane(boolean searchable, boolean editable) {
+		super(JTabbedPane.TOP);
+		this.searchable = searchable;
+		this.editable = editable;		
 	}
 	
 	public void openFile(File file) {
@@ -21,9 +31,10 @@ public class EditorTabbedPane extends JTabbedPane {
 				return;
 			}
 		}
-		EditorPanel myPanel = new EditorPanel(file);
+		EditorPanel myPanel = new EditorPanel(file, searchable, editable);
 		add(file.getName(), myPanel);
 		setSelectedIndex(indexOfComponent(myPanel));
+		this.setTabComponentAt(this.getTabCount()-1, new ButtonTabComponent(this));
 		myPanel.grabFocus();
 	}
 }

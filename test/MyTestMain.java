@@ -9,7 +9,6 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JSplitPane;
-import javax.swing.UIManager;
 
 import EditorTabbedPane.EditorTabbedPane;
 import FileTree.FileEvent;
@@ -70,7 +69,7 @@ public class MyTestMain extends JFrame implements FileListener {
 		myTree.addFileListener(this);
 		splitPane.setLeftComponent(myTree);
 		
-		tabbedPane = new EditorTabbedPane();
+		tabbedPane = new EditorTabbedPane(true, true);
 		splitPane.setRightComponent(tabbedPane);
 		
 		setContentPane(splitPane);
