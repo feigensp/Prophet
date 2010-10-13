@@ -45,7 +45,6 @@ public class ExtendedPanel extends JPanel implements QuestionElementListener {
 		add(new JScrollPane(questionHolder), BorderLayout.CENTER);
 		boxLayout = new BoxLayout(questionHolder, BoxLayout.Y_AXIS);
 		questionHolder.setLayout(boxLayout);
-		//questionHolder.setLayout(new GridLayout(0, 1, 10, 20));
 	}
 
 	public static int nextFreeId() {

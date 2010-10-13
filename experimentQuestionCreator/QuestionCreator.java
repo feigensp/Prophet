@@ -1,6 +1,5 @@
 package experimentQuestionCreator;
 
-
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Dimension;
@@ -52,7 +51,7 @@ import javax.swing.KeyStroke;
 import java.awt.event.InputEvent;
 
 public class QuestionCreator extends JFrame {
-	
+
 	private static JFileChooser fc = new JFileChooser();
 
 	private JList overviewList;
@@ -116,13 +115,12 @@ public class QuestionCreator extends JFrame {
 		addQuestion(0, 0, "Frage1");
 		overviewList.setSelectedIndex(0);
 
-
 		newMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				restart();
 			}
 		});
-		
+
 		overviewList.addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent e) {
 				if (e.getValueIsAdjusting() == false) {
@@ -200,26 +198,26 @@ public class QuestionCreator extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				fc = new JFileChooser();
 				int returnVal = fc.showSaveDialog(null);
-		        if (returnVal == JFileChooser.APPROVE_OPTION) {
-		            File file = fc.getSelectedFile();
-		            save(file.getName());
-		            //save(file.getAbsolutePath());
-		        }
+				if (returnVal == JFileChooser.APPROVE_OPTION) {
+					File file = fc.getSelectedFile();
+					save(file.getName());
+					// save(file.getAbsolutePath());
+				}
 			}
 		});
 		saveMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				fc = new JFileChooser();
 				int returnVal = fc.showSaveDialog(null);
-		        if (returnVal == JFileChooser.APPROVE_OPTION) {
-		            File file = fc.getSelectedFile();
-		            save(file.getName());
-		            //save(file.getAbsolutePath());
-		        }
+				if (returnVal == JFileChooser.APPROVE_OPTION) {
+					File file = fc.getSelectedFile();
+					save(file.getName());
+					// save(file.getAbsolutePath());
+				}
 			}
 		});
-		
-		//Titeländerungslistener
+
+		// Titeländerungslistener
 		overviewList.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent me) {
 				if (me.getClickCount() == 2) {
@@ -234,15 +232,15 @@ public class QuestionCreator extends JFrame {
 				}
 			}
 		});
-		
-		//Programm beenden
+
+		// Programm beenden
 		closeMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				System.exit(0);
 			}
 		});
 	}
-	
+
 	/**
 	 * setzt alle relevanten Variablen zurück
 	 */
@@ -252,7 +250,7 @@ public class QuestionCreator extends JFrame {
 		addQuestion(0, 0, "Frage1");
 		overviewList.setSelectedIndex(0);
 	}
-	
+
 	/**
 	 * Exportiert Fragebogen in XML-Form
 	 */
@@ -268,8 +266,8 @@ public class QuestionCreator extends JFrame {
 			// Alle Fragen hinzufügen
 			for (int i = 0; i < questions.size(); i++) {
 				Element question = questionnaire
-						.createElement(((String) listModel.get(i))
-								.replace(" ", ""));
+						.createElement(((String) listModel.get(i)).replace(" ",
+								""));
 				root.appendChild(question);
 				// Elemente der Fragen hinzufügen
 				LinkedList<QuestionElement> elements = questions.get(i)
@@ -278,17 +276,20 @@ public class QuestionCreator extends JFrame {
 					Element component = questionnaire
 							.createElement("component");
 					question.appendChild(component);
-					component.setAttribute("model",
-							ele.getSelectionString());
-					component.setAttribute("text", ele.getText()
-							.replace("\n", "<br>"));
+					component.setAttribute("x", ""
+							+ ele.getElementSize().getWidth());
+					component.setAttribute("y", ""
+							+ ele.getElementSize().getHeight());
+					component.setAttribute("model", ele.getSelectionString());
+					component.setAttribute("text",
+							ele.getText().replace("\n", "<br>"));
 				}
 			}
 		} catch (ParserConfigurationException e1) {
 			e1.printStackTrace();
 		}
 		try {
-			//Fragebogen in Datei speichern
+			// Fragebogen in Datei speichern
 			if (questionnaire != null) {
 				TransformerFactory
 						.newInstance()
@@ -302,7 +303,7 @@ public class QuestionCreator extends JFrame {
 			e1.printStackTrace();
 		} catch (TransformerFactoryConfigurationError e1) {
 			e1.printStackTrace();
-		}		
+		}
 	}
 
 	/**
@@ -362,21 +363,25 @@ public class QuestionCreator extends JFrame {
 
 		fileMenu = new JMenu("Datei");
 		menuBar.add(fileMenu);
-		
+
 		newMenuItem = new JMenuItem("Neu");
-		newMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_MASK));
+		newMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N,
+				InputEvent.CTRL_MASK));
 		fileMenu.add(newMenuItem);
 
 		openMenuItem = new JMenuItem("\u00D6ffnen");
-		openMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_MASK));
+		openMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O,
+				InputEvent.CTRL_MASK));
 		fileMenu.add(openMenuItem);
 
 		saveMenuItem = new JMenuItem("Speichern");
-		saveMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_MASK));
+		saveMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S,
+				InputEvent.CTRL_MASK));
 		fileMenu.add(saveMenuItem);
 
 		closeMenuItem = new JMenuItem("Beenden");
-		closeMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F4, InputEvent.ALT_MASK));
+		closeMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F4,
+				InputEvent.ALT_MASK));
 		fileMenu.add(closeMenuItem);
 
 		contentPane = new JPanel();
