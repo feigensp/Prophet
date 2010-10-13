@@ -8,6 +8,7 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.InputEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -15,6 +16,7 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.Vector;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
@@ -31,24 +33,12 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.TransformerFactoryConfigurationError;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import javax.swing.KeyStroke;
-import java.awt.event.InputEvent;
 
 public class QuestionCreator extends JFrame {
 
@@ -200,8 +190,8 @@ public class QuestionCreator extends JFrame {
 				int returnVal = fc.showSaveDialog(null);
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
 					File file = fc.getSelectedFile();
-					save(file.getName());
 					// save(file.getAbsolutePath());
+					XMLHandler.writeXMLTree(createTree(), file.getName());
 				}
 			}
 		});
@@ -211,9 +201,23 @@ public class QuestionCreator extends JFrame {
 				int returnVal = fc.showSaveDialog(null);
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
 					File file = fc.getSelectedFile();
-					save(file.getName());
 					// save(file.getAbsolutePath());
+					XMLHandler.writeXMLTree(createTree(), file.getName());
 				}
+			}
+		});
+		
+		//Fragebogen aus XML importieren
+		openMenuItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+//				fc = new JFileChooser();
+//				int returnVal = fc.showSaveDialog(null);
+//				if (returnVal == JFileChooser.APPROVE_OPTION) {
+//					File file = fc.getSelectedFile();
+//					XMLHandler.loadXMLTree(file.getName());
+//				}
+				TreeNode root = XMLHandler.loadXMLTree("test.xml");
+				loadTree(root);
 			}
 		});
 
@@ -254,56 +258,45 @@ public class QuestionCreator extends JFrame {
 	/**
 	 * Exportiert Fragebogen in XML-Form
 	 */
-	private void save(String path) {
-		Document questionnaire = null;
-		try {
-			// Dokument erstellen
-			questionnaire = DocumentBuilderFactory.newInstance()
-					.newDocumentBuilder().newDocument();
-			// Wurzelknoten
-			Element root = questionnaire.createElement("questionnaire");
-			questionnaire.appendChild(root);
-			// Alle Fragen hinzufügen
-			for (int i = 0; i < questions.size(); i++) {
-				Element question = questionnaire
-						.createElement(((String) listModel.get(i)).replace(" ",
-								""));
-				root.appendChild(question);
-				// Elemente der Fragen hinzufügen
-				LinkedList<QuestionElement> elements = questions.get(i)
-						.getElements();
-				for (QuestionElement ele : elements) {
-					Element component = questionnaire
-							.createElement("component");
-					question.appendChild(component);
-					component.setAttribute("x", ""
-							+ ele.getElementSize().getWidth());
-					component.setAttribute("y", ""
-							+ ele.getElementSize().getHeight());
-					component.setAttribute("model", ele.getSelectionString());
-					component.setAttribute("text",
-							ele.getText().replace("\n", "<br>"));
-				}
+	private TreeNode createTree() {
+		TreeNode root = new TreeNode();
+		for (int i = 0; i < questions.size(); i++) {
+			TreeNode question = new TreeNode(root,
+					((String) listModel.get(i)).replace(" ", ""));
+			root.addChild(question);
+			// Elemente der Fragen hinzufügen
+			LinkedList<QuestionElement> elements = questions.get(i)
+					.getElements();
+			for (QuestionElement ele : elements) {
+				TreeNode element = new TreeNode(question, ele.getText(),
+						ele.getSelection(), (int) ele.getElementSize()
+								.getWidth(), (int) ele.getElementSize()
+								.getHeight());
+				question.addChild(element);
 			}
-		} catch (ParserConfigurationException e1) {
-			e1.printStackTrace();
 		}
-		try {
-			// Fragebogen in Datei speichern
-			if (questionnaire != null) {
-				TransformerFactory
-						.newInstance()
-						.newTransformer()
-						.transform(new DOMSource(questionnaire),
-								new StreamResult(path + ".xml"));
+		return root;
+	}
+	
+	private void loadTree(TreeNode root) {
+		listModel.clear();
+		questions.clear();
+		Vector<TreeNode> treeQuestions = root.getChildren();
+		int i = 0;
+		//Seiten hinzufügen
+		for(TreeNode treeQuestion : treeQuestions) {
+			addQuestion(ExtendedPanel.nextFreeId(), listModel.size(), treeQuestion.getText());
+			//Komponenten hinzufügen
+			Vector<TreeNode> components = treeQuestion.getChildren();
+			for(TreeNode component : components) {
+				int selection = component.getModel();
+				String text = component.getText().replaceAll("<br>", "\n\r");
+				Dimension size = new Dimension(component.getX(), component.getY());
+				questions.get(i).addComponent(text, selection, size);
 			}
-		} catch (TransformerConfigurationException e1) {
-			e1.printStackTrace();
-		} catch (TransformerException e1) {
-			e1.printStackTrace();
-		} catch (TransformerFactoryConfigurationError e1) {
-			e1.printStackTrace();
+			i++;
 		}
+		overviewList.setSelectedIndex(0);
 	}
 
 	/**

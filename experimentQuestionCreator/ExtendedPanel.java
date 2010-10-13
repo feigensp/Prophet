@@ -2,9 +2,9 @@ package experimentQuestionCreator;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.GridLayout;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
@@ -70,6 +70,14 @@ public class ExtendedPanel extends JPanel implements QuestionElementListener {
 	// Methoden um neue Komponenten hinzuzufügen
 	public void addComponent(String text, int selection) {
 		QuestionElement qEle = new QuestionElement(text, selection);
+		qEle.addQuestionElementListener(this);
+		elements.add(qEle);
+		qEle.setAlignmentX(Component.LEFT_ALIGNMENT);
+		questionHolder.add(qEle);
+		questionHolder.updateUI();
+	}
+	public void addComponent(String text, int selection, Dimension size) {
+		QuestionElement qEle = new QuestionElement(text, selection, size);
 		qEle.addQuestionElementListener(this);
 		elements.add(qEle);
 		qEle.setAlignmentX(Component.LEFT_ALIGNMENT);

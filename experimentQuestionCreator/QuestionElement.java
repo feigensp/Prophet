@@ -113,6 +113,69 @@ public class QuestionElement extends JPanel {
 		});
 		enableEvents(AWTEvent.MOUSE_EVENT_MASK);
 	}
+
+	public QuestionElement(String text, int selection, Dimension size) {
+		super();
+		this.selection = selection;
+		this.text = text;
+		dragged = false;
+		oldPos = new Point();
+		super.setLayout(new FlowLayout(FlowLayout.LEFT));
+		createMenu();
+		createContent(text, selection, size);
+		add(menuPanel);
+		add(contentPanel);
+		contentPanel.addMouseMotionListener(new MouseMotionListener() {
+			@Override
+			public void mouseDragged(MouseEvent arg0) {
+				dragged = true;
+			}
+
+			@Override
+			public void mouseMoved(MouseEvent arg0) {
+			}
+
+		});
+		contentPanel.addMouseListener(new MouseListener() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent arg0) {
+			}
+
+			@Override
+			public void mouseExited(MouseEvent arg0) {
+			}
+
+			@Override
+			public void mousePressed(MouseEvent me) {
+				oldPos = me.getPoint();
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent me) {
+				if (dragged) {
+					Dimension oldSize = contentPanel.getPreferredSize();
+					Point newPos = me.getPoint();
+					Dimension change = new Dimension(
+							(int) (newPos.getX() - oldPos.getX()),
+							(int) (newPos.getY() - oldPos.getY()));
+					Dimension newSize = new Dimension(
+							(int) (oldSize.getWidth() + change.getWidth()),
+							(int) (oldSize.getHeight() + change.getHeight()));
+					contentPanel.setPreferredSize(newSize);
+					contentPanel.setMaximumSize(newSize);
+					contentPanel.setMinimumSize(newSize);
+					updateSize(change);
+					dragged = false;
+				}
+
+			}
+		});
+		enableEvents(AWTEvent.MOUSE_EVENT_MASK);
+	}
 	
 	public Dimension getElementSize() {
 		return contentPanel.getPreferredSize();
@@ -264,6 +327,61 @@ public class QuestionElement extends JPanel {
 		Dimension absoluteSize = new Dimension((int) (componentSize.getWidth()
 				+ menuSize.getWidth() + 100), (int) (Math.max(
 				componentSize.getHeight(), menuSize.getHeight()) + 25));
+		super.setPreferredSize(absoluteSize);
+		super.setMinimumSize(absoluteSize);
+		super.setMaximumSize(absoluteSize);
+		contentPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+	}
+	private void createContent(String text, int selection, Dimension size) {
+		contentPanel = new JPanel();
+		//contentPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+		contentPanel.setLayout(new BorderLayout());
+		String[] texte = text.split("\n");
+		switch (selection) {
+		case LABEL:
+			JLabel label = new JLabel(text);
+			contentPanel.add(label, BorderLayout.CENTER);
+			break;
+		case TEXTFIELD:
+			contentPanel.add(new JTextField(text, 10), BorderLayout.CENTER);
+			break;
+		case TEXTAREA:
+			contentPanel.add(new JTextArea(text), BorderLayout.CENTER);
+			break;
+		case COMBOBOX:
+			contentPanel.add(new JComboBox(texte), BorderLayout.CENTER);
+			break;
+		case CHECKBOX:
+			JPanel chkPanel = new JPanel();
+			chkPanel.setLayout(new GridLayout(texte.length, 1));
+			ButtonGroup chkGroup = new ButtonGroup();
+			for (int i = 0; i < texte.length; i++) {
+				JCheckBox chkbox = new JCheckBox(texte[i]);
+				chkPanel.add(chkbox);
+				chkGroup.add(chkbox);
+			}
+			contentPanel.add(chkPanel, BorderLayout.CENTER);
+			break;
+		case RADIOBUTTON:
+			JPanel radioPanel = new JPanel();
+			radioPanel.setLayout(new GridLayout(texte.length, 1));
+			ButtonGroup radioGroup = new ButtonGroup();
+			for (int i = 0; i < texte.length; i++) {
+				JRadioButton radiobtn = new JRadioButton(texte[i]);
+				radioPanel.add(radiobtn);
+				radioGroup.add(radiobtn);
+			}
+			contentPanel.add(radioPanel, BorderLayout.CENTER);
+			break;
+		default:
+			break;
+		}
+		contentPanel.setPreferredSize(size);
+		contentPanel.setMinimumSize(size);
+		contentPanel.setMaximumSize(size);
+		Dimension absoluteSize = new Dimension((int) (size.getWidth()
+				+ menuSize.getWidth() + 100), (int) (Math.max(
+				size.getHeight(), menuSize.getHeight()) + 25));
 		super.setPreferredSize(absoluteSize);
 		super.setMinimumSize(absoluteSize);
 		super.setMaximumSize(absoluteSize);
