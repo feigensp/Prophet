@@ -161,7 +161,7 @@ public class ExtendedPanel extends JPanel implements QuestionElementListener {
 	/**
 	 * Löscht alle Ids
 	 */
-	public void removeIds() {
+	public static void removeIds() {
 		ids.clear();
 	}
 

@@ -51,21 +51,23 @@ public class XMLHandler {
 			for (TreeNode treeQuestion : questions) {
 				Element question = questionnaire.createElement("question");
 				root.appendChild(question);
-				question.setAttribute("text", treeQuestion.getText());
+				//Attribute der Frage setzen
+				Vector<ElementAttribute> questionAttributes = treeQuestion.getAttributes();
+				for(ElementAttribute ea : questionAttributes) {
+					question.setAttribute(ea.getName(), ea.getContent().toString());
+				}
+				
 				// Komponenten einer Frage hinzufügen
 				Vector<TreeNode> components = treeQuestion.getChildren();
 				for (TreeNode treeComponent : components) {
 					Element component = questionnaire
 							.createElement("component");
 					question.appendChild(component);
-					component.setAttribute("text", treeComponent.getText()
-							.replace("\n", "<br>"));
-					component.setAttribute("model",
-							"" + treeComponent.getModel());
-					component.setAttribute("x", ""
-							+ treeComponent.getSize().getWidth());
-					component.setAttribute("y", ""
-							+ treeComponent.getSize().getHeight());
+					//Attribute der Componente setzen
+					Vector<ElementAttribute> componentAttributes = treeComponent.getAttributes();
+					for(ElementAttribute ea : componentAttributes) {
+						component.setAttribute(ea.getName(), ea.getContent().toString());
+					}
 				}
 			}
 		} catch (ParserConfigurationException e1) {
@@ -107,25 +109,28 @@ public class XMLHandler {
 			// Erste Frage holen und diese dann nacheinander durchgehen
 			Node question = doc.getFirstChild().getFirstChild();
 			while (question != null) {
-				String qText = question.getAttributes().getNamedItem("text")
-						.getTextContent();
-				TreeNode treeQuestion = new TreeNode(treeRoot, qText);
+				NamedNodeMap questionAttributes = question.getAttributes();
+				Node questionAttribute;
+				Vector<ElementAttribute> questionTreeAttribute = new Vector<ElementAttribute>();
+				for(int i = 0; i < questionAttributes.getLength(); i++) {
+					questionAttribute = questionAttributes.item(i);
+					questionTreeAttribute.add(new ElementAttribute(questionAttribute.getNodeName(), questionAttribute.getNodeValue()));
+				}
+				TreeNode treeQuestion = new TreeNode(treeRoot, questionTreeAttribute);
 				treeRoot.addChild(treeQuestion);
 				// Bei den Komponenten äquivalentes vorgehen wie bei den Fragen
 				Node component = question.getFirstChild();
 				while (component != null) {
 					// Kinder einlesen
-					NamedNodeMap attr = component.getAttributes();
-					int cModel = Integer.parseInt(attr.getNamedItem("model")
-							.getTextContent());
-					String cText = attr.getNamedItem("text").getTextContent()
-							.replaceAll("<br>", "\n\r");
-					Dimension size = new Dimension();
-					size.setSize(Double.parseDouble(attr.getNamedItem("x")
-							.getTextContent()), Double.parseDouble(attr
-							.getNamedItem("y").getTextContent()));
-					treeQuestion.addChild(new TreeNode(treeQuestion, cText,
-							cModel, size));
+					NamedNodeMap componentAttributes = component.getAttributes();
+					Node componentAttribute;
+					Vector<ElementAttribute> componentTreeAttribute = new Vector<ElementAttribute>();
+					for(int i = 0; i < componentAttributes.getLength(); i++) {
+						componentAttribute = componentAttributes.item(i);
+						componentTreeAttribute.add(new ElementAttribute(componentAttribute.getNodeName(), componentAttribute.getNodeValue()));
+					}
+					TreeNode treeComponent = new TreeNode(treeQuestion, componentTreeAttribute);	
+					treeQuestion.addChild(treeComponent);
 					component = component.getNextSibling();
 				}
 				// nächste Frage

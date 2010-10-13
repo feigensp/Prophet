@@ -13,9 +13,9 @@ import java.util.Vector;
 
 public class TreeNode {	
 	
-	private String text;	//Komponententextinhalt - Zeilenumbrüche in html darstellen
-	private int model;		//Komponentenart (siehe QuestionElement.java) (-1 wenn keine Komponente)
-	private Dimension size;
+	//Attributliste
+	private Vector<ElementAttribute> attributes;
+	
 	private int childCount;	//Anzahl der Kinder
 	private Vector<TreeNode> children;	//Kinder
 	private TreeNode parent;//Vater
@@ -25,35 +25,21 @@ public class TreeNode {
 	 */
 	public TreeNode() {
 		children = new Vector<TreeNode>();
+		this.parent = null;	
+		attributes = new Vector<ElementAttribute>();
+	}
+	
+	/**
+	 * Konstruktor für einen Unterknoten
+	 * @param parent Vater des Knoten
+	 * @param attributes Attributliste des Knoten
+	 */
+	public TreeNode(TreeNode parent, Vector<ElementAttribute> attributes) {
+		children = new Vector<TreeNode>();
 		this.parent = null;
-		this.model = -1;
-	}
-
-	/**
-	 * Konstruktor der ein Frageelement erschafft
-	 * @param parent Wurzel
-	 * @param text Fragetitel
-	 */
-	public TreeNode(TreeNode parent, String text) {
-		children = new Vector<TreeNode>();
-		this.parent = parent;
-		this.model = -1;
-		this.text = text;
-	}
-
-	/**
-	 * Konstruktor der eine Komponente erschafft
-	 * @param parent Frage
-	 * @param text Inhalt (Beschriftung)
-	 * @param component Art der Komponente
-	 * @param size Größe der Komponente
-	 */
-	public TreeNode(TreeNode parent, String text, int component, Dimension size) {
-		children = new Vector<TreeNode>();
-		this.parent = parent;
-		this.text = text.replace("\n", "<br>");
-		this.model = component;
-		this.size = size;
+		
+		this.attributes = attributes;
+		
 	}
 	
 	/**
@@ -81,28 +67,8 @@ public class TreeNode {
 		childCount++;
 	}
 	
-	/**
-	 * Liefert den Text (Beschriftung) zurück
-	 * @return String der den Text repsäsentiert
-	 */
-	public String getText() {
-		return text;
-	}
-	
-	/**
-	 * Liefert den Komponententyp als Integer zurück (siehe QuestionElement.java)
-	 * @return Integer der den Komponententyp repräsentiert, -1 wenn es keine Komponente ist
-	 */
-	public int getModel() {
-		return model;
-	}
-	
-	/**
-	 * Liefert die Größe der Komponente zurück
-	 * @return Breite in Pixeln
-	 */
-	public Dimension getSize() {
-		return size;
+	public Vector<ElementAttribute> getAttributes() {
+		return attributes;
 	}
 	
 	/**

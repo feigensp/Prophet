@@ -258,6 +258,7 @@ public class QuestionCreator extends JFrame {
 	private void restart() {
 		listModel.clear();
 		questions.clear();
+		ExtendedPanel.removeIds();
 	}
 
 	/**
@@ -267,15 +268,22 @@ public class QuestionCreator extends JFrame {
 		// Wurzel erstellen
 		TreeNode root = new TreeNode();
 		for (int i = 0; i < questions.size(); i++) {
-			// Fragen hinzufügen
-			TreeNode question = new TreeNode(root, ((String) listModel.get(i)));
+			// Fragen hinzufügen - dazu Attributliste erstellen
+			Vector<ElementAttribute> questionAttributes = new Vector<ElementAttribute>();
+			questionAttributes.add(new ElementAttribute<String>("text", ((String) listModel.get(i))));
+			TreeNode question = new TreeNode(root, questionAttributes);
 			root.addChild(question);
 			// Elemente der Fragen hinzufügen
 			LinkedList<QuestionElement> elements = questions.get(i)
 					.getElements();
 			for (QuestionElement ele : elements) {
-				TreeNode element = new TreeNode(question, ele.getText(),
-						ele.getSelection(), ele.getElementSize());
+				//Vector für die Attribute der Komponenten
+				Vector<ElementAttribute> componentAttributes = new Vector<ElementAttribute>();
+				componentAttributes.add(new ElementAttribute<String>("text", ele.getText()));
+				componentAttributes.add(new ElementAttribute<Integer>("model", ele.getSelection()));
+				componentAttributes.add(new ElementAttribute<Integer>("x", (int)ele.getElementSize().getWidth()));
+				componentAttributes.add(new ElementAttribute<Integer>("y", (int)ele.getElementSize().getHeight()));
+				TreeNode element = new TreeNode(question, componentAttributes);
 				question.addChild(element);
 			}
 		}
@@ -294,14 +302,44 @@ public class QuestionCreator extends JFrame {
 		int i = 0;
 		// Seiten hinzufügen
 		for (TreeNode treeQuestion : treeQuestions) {
-			addQuestion(ExtendedPanel.nextFreeId(), listModel.size(),
-					treeQuestion.getText());
+			//Attribute der Fragen
+			Vector<ElementAttribute> questionAttributes = treeQuestion.getAttributes();
+			String questionText = "default";
+			for(ElementAttribute questionAttribute : questionAttributes) {
+				//Überschrifts-Attribut
+				if(questionAttribute.getName().equals("text")) {
+					questionText = questionAttribute.getContent().toString();
+				}
+			}
+			addQuestion(ExtendedPanel.nextFreeId(), listModel.size(), questionText);
 			// Komponenten hinzufügen
 			Vector<TreeNode> components = treeQuestion.getChildren();
-			for (TreeNode component : components) {
-				int selection = component.getModel();
-				String text = component.getText().replaceAll("<br>", "\n\r");
-				questions.get(i).addComponent(text, selection, component.getSize());
+			for (TreeNode treeComponent : components) {
+				//Komponent-Attribute
+				Vector<ElementAttribute> componentAttributes = treeComponent.getAttributes();
+				String componentText = "default";
+				int componentModel = 0;
+				int componentWidth = 75;
+				int componentHeight = 25;
+				for(ElementAttribute componentAttribute : componentAttributes) {
+					//Model-Attribute
+					if(componentAttribute.getName().equals("model")) {
+						componentModel = Integer.parseInt(componentAttribute.getContent().toString());
+					} else
+					//Text-Attribut
+					if(componentAttribute.getName().equals("text")) {
+						componentText = componentAttribute.getContent().toString();
+					} else
+					//Breite-Attribut
+					if(componentAttribute.getName().equals("x")) {
+						componentWidth = Integer.parseInt(componentAttribute.getContent().toString());
+					} else
+					//Höhe-Attribut
+					if(componentAttribute.getName().equals("y")) {
+						componentHeight = Integer.parseInt(componentAttribute.getContent().toString());
+					}
+				}
+				questions.get(i).addComponent(componentText, componentModel, new Dimension(componentWidth, componentHeight));
 			}
 			i++;
 		}
