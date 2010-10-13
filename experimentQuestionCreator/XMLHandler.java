@@ -6,6 +6,7 @@
 
 package experimentQuestionCreator;
 
+import java.awt.Dimension;
 import java.io.File;
 import java.io.IOException;
 import java.util.Vector;
@@ -28,7 +29,8 @@ import org.xml.sax.SAXException;
 public class XMLHandler {
 
 	/**
-	 * Schreibt einen Fragebogen in Baumform in eine XML-Datei
+	 * Schreibt einen Fragebogen in Baumform in eine XML-Datei Im text-Attribut
+	 * werden die Zeilenumbrüche in HTML-Form dargestellt
 	 * 
 	 * @param treeRoot
 	 *            Wurzel des Baumes
@@ -60,8 +62,10 @@ public class XMLHandler {
 							.replace("\n", "<br>"));
 					component.setAttribute("model",
 							"" + treeComponent.getModel());
-					component.setAttribute("x", "" + treeComponent.getX());
-					component.setAttribute("y", "" + treeComponent.getY());
+					component.setAttribute("x", ""
+							+ treeComponent.getSize().getWidth());
+					component.setAttribute("y", ""
+							+ treeComponent.getSize().getHeight());
 				}
 			}
 		} catch (ParserConfigurationException e1) {
@@ -88,7 +92,7 @@ public class XMLHandler {
 
 	/**
 	 * Lädt eine XML-Datei und erstellt aus ihr die äquivalente Baumform für den
-	 * Fragebogen
+	 * Fragebogen Die HTML-Zeilenumbrüche werden wieder zurückgewandelt
 	 * 
 	 * @param path
 	 *            Wo sich die XML-Datei befindet
@@ -114,13 +118,14 @@ public class XMLHandler {
 					NamedNodeMap attr = component.getAttributes();
 					int cModel = Integer.parseInt(attr.getNamedItem("model")
 							.getTextContent());
-					String cText = attr.getNamedItem("text").getTextContent();
-					int cX = Integer.parseInt(attr.getNamedItem("x")
-							.getTextContent());
-					int cY = Integer.parseInt(attr.getNamedItem("y")
-							.getTextContent());
+					String cText = attr.getNamedItem("text").getTextContent()
+							.replaceAll("<br>", "\n\r");
+					Dimension size = new Dimension(Integer.parseInt(attr
+							.getNamedItem("x").getTextContent()),
+							Integer.parseInt(attr.getNamedItem("y")
+									.getTextContent()));
 					treeQuestion.addChild(new TreeNode(treeQuestion, cText,
-							cModel, cX, cY));
+							cModel, size));
 					component = component.getNextSibling();
 				}
 				// nächste Frage

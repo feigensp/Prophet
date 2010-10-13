@@ -1,3 +1,9 @@
+/**
+ * Main Klasse für das Programm zur Erstellung neuer Fragebögen
+ * 
+ * @author Markus Köppen, Andreas Hasselberg
+ */
+
 package experimentQuestionCreator;
 
 import java.awt.BorderLayout;
@@ -74,9 +80,13 @@ public class QuestionCreator extends JFrame {
 	private JMenuItem newMenuItem;
 
 	/**
-	 * Launch the application.
+	 * Startet die Applikation
+	 * 
+	 * @param args
+	 *            werden nciht genutzt
 	 */
 	public static void main(String[] args) {
+		// Look and Feel setzen
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (Exception e) {
@@ -105,12 +115,15 @@ public class QuestionCreator extends JFrame {
 		addQuestion(0, 0, "Frage1");
 		overviewList.setSelectedIndex(0);
 
+		// Listener für das Neu-Starten
 		newMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				restart();
+				addQuestion(0, 0, "Frage1");
+				overviewList.setSelectedIndex(0);
 			}
 		});
-
+		// Listener für Änderungen in der JList
 		overviewList.addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent e) {
 				if (e.getValueIsAdjusting() == false) {
@@ -126,7 +139,6 @@ public class QuestionCreator extends JFrame {
 				}
 			}
 		});
-
 		// Eine neue Frage erstellen
 		newButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
@@ -150,7 +162,6 @@ public class QuestionCreator extends JFrame {
 				}
 			}
 		});
-
 		// Eine bestehende Frage löschen
 		removeButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -182,7 +193,6 @@ public class QuestionCreator extends JFrame {
 				}
 			}
 		});
-
 		// Fragebogen als XML Dokument exportieren
 		saveButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -206,21 +216,19 @@ public class QuestionCreator extends JFrame {
 				}
 			}
 		});
-		
-		//Fragebogen aus XML importieren
+		// Fragebogen aus XML importieren
 		openMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-//				fc = new JFileChooser();
-//				int returnVal = fc.showSaveDialog(null);
-//				if (returnVal == JFileChooser.APPROVE_OPTION) {
-//					File file = fc.getSelectedFile();
-//					XMLHandler.loadXMLTree(file.getName());
-//				}
+				// fc = new JFileChooser();
+				// int returnVal = fc.showSaveDialog(null);
+				// if (returnVal == JFileChooser.APPROVE_OPTION) {
+				// File file = fc.getSelectedFile();
+				// XMLHandler.loadXMLTree(file.getName());
+				// }
 				TreeNode root = XMLHandler.loadXMLTree("test.xml");
 				loadTree(root);
 			}
 		});
-
 		// Titeländerungslistener
 		overviewList.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent me) {
@@ -236,7 +244,6 @@ public class QuestionCreator extends JFrame {
 				}
 			}
 		});
-
 		// Programm beenden
 		closeMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -251,48 +258,50 @@ public class QuestionCreator extends JFrame {
 	private void restart() {
 		listModel.clear();
 		questions.clear();
-		addQuestion(0, 0, "Frage1");
-		overviewList.setSelectedIndex(0);
 	}
 
 	/**
-	 * Exportiert Fragebogen in XML-Form
+	 * Exportiert Fragebogen in Baumstrukturform
 	 */
 	private TreeNode createTree() {
+		// Wurzel erstellen
 		TreeNode root = new TreeNode();
 		for (int i = 0; i < questions.size(); i++) {
-			TreeNode question = new TreeNode(root,
-					((String) listModel.get(i)).replace(" ", ""));
+			// Fragen hinzufügen
+			TreeNode question = new TreeNode(root, ((String) listModel.get(i)));
 			root.addChild(question);
 			// Elemente der Fragen hinzufügen
 			LinkedList<QuestionElement> elements = questions.get(i)
 					.getElements();
 			for (QuestionElement ele : elements) {
 				TreeNode element = new TreeNode(question, ele.getText(),
-						ele.getSelection(), (int) ele.getElementSize()
-								.getWidth(), (int) ele.getElementSize()
-								.getHeight());
+						ele.getSelection(), ele.getElementSize());
 				question.addChild(element);
 			}
 		}
 		return root;
 	}
 	
+	/**
+	 * Importiert Fragebogen aus Baumstrukturform
+	 * @param root Wurzelelement des Baumes
+	 */
 	private void loadTree(TreeNode root) {
-		listModel.clear();
-		questions.clear();
+		//Alles Leeren
+		restart();
+		
 		Vector<TreeNode> treeQuestions = root.getChildren();
 		int i = 0;
-		//Seiten hinzufügen
-		for(TreeNode treeQuestion : treeQuestions) {
-			addQuestion(ExtendedPanel.nextFreeId(), listModel.size(), treeQuestion.getText());
-			//Komponenten hinzufügen
+		// Seiten hinzufügen
+		for (TreeNode treeQuestion : treeQuestions) {
+			addQuestion(ExtendedPanel.nextFreeId(), listModel.size(),
+					treeQuestion.getText());
+			// Komponenten hinzufügen
 			Vector<TreeNode> components = treeQuestion.getChildren();
-			for(TreeNode component : components) {
+			for (TreeNode component : components) {
 				int selection = component.getModel();
 				String text = component.getText().replaceAll("<br>", "\n\r");
-				Dimension size = new Dimension(component.getX(), component.getY());
-				questions.get(i).addComponent(text, selection, size);
+				questions.get(i).addComponent(text, selection, component.getSize());
 			}
 			i++;
 		}
