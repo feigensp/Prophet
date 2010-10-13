@@ -21,6 +21,7 @@ import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
@@ -53,6 +54,9 @@ public class QuestionElement extends JPanel {
 	// Variablen für Drag and Drop
 	private boolean dragged;
 	private Point oldPos;
+	
+	//Komponente die erstellt werden wird
+	private JComponent comp;
 
 	/**
 	 * Konstruktor für das erstellen einer Komponente mit Standartgröße
@@ -233,43 +237,39 @@ public class QuestionElement extends JPanel {
 		// Komponente erstellen
 		switch (selection) {
 		case LABEL:
-			JLabel label = new JLabel(text);
-			contentPanel.add(label, BorderLayout.CENTER);
+			comp = new JLabel(text);
 			break;
 		case TEXTFIELD:
-			contentPanel.add(new JTextField(text, 10), BorderLayout.CENTER);
+			comp = new JTextField(text, 10);
 			break;
 		case TEXTAREA:
-			contentPanel.add(new JTextArea(text), BorderLayout.CENTER);
+			comp = new JTextArea(text);
 			break;
 		case COMBOBOX:
-			contentPanel.add(new JComboBox(texte), BorderLayout.CENTER);
+			comp = new JComboBox(texte);
 			break;
 		case CHECKBOX:
-			JPanel chkPanel = new JPanel();
-			chkPanel.setLayout(new GridLayout(texte.length, 1));
-			ButtonGroup chkGroup = new ButtonGroup();
+			comp = new JPanel();
+			comp.setLayout(new GridLayout(texte.length, 1));
 			for (int i = 0; i < texte.length; i++) {
 				JCheckBox chkbox = new JCheckBox(texte[i]);
-				chkPanel.add(chkbox);
-				chkGroup.add(chkbox);
+				comp.add(chkbox);
 			}
-			contentPanel.add(chkPanel, BorderLayout.CENTER);
 			break;
 		case RADIOBUTTON:
-			JPanel radioPanel = new JPanel();
-			radioPanel.setLayout(new GridLayout(texte.length, 1));
+			comp = new JPanel();
+			comp.setLayout(new GridLayout(texte.length, 1));
 			ButtonGroup radioGroup = new ButtonGroup();
 			for (int i = 0; i < texte.length; i++) {
 				JRadioButton radiobtn = new JRadioButton(texte[i]);
-				radioPanel.add(radiobtn);
+				comp.add(radiobtn);
 				radioGroup.add(radiobtn);
 			}
-			contentPanel.add(radioPanel, BorderLayout.CENTER);
 			break;
 		default:
 			break;
 		}
+		contentPanel.add(comp, BorderLayout.CENTER);
 	}
 
 	/**

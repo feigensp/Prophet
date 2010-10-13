@@ -120,10 +120,10 @@ public class XMLHandler {
 							.getTextContent());
 					String cText = attr.getNamedItem("text").getTextContent()
 							.replaceAll("<br>", "\n\r");
-					Dimension size = new Dimension(Integer.parseInt(attr
-							.getNamedItem("x").getTextContent()),
-							Integer.parseInt(attr.getNamedItem("y")
-									.getTextContent()));
+					Dimension size = new Dimension();
+					size.setSize(Double.parseDouble(attr.getNamedItem("x")
+							.getTextContent()), Double.parseDouble(attr
+							.getNamedItem("y").getTextContent()));
 					treeQuestion.addChild(new TreeNode(treeQuestion, cText,
 							cModel, size));
 					component = component.getNextSibling();
