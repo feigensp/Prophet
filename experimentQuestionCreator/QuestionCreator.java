@@ -58,22 +58,10 @@ public class QuestionCreator extends JFrame {
 	private CardLayout cardLayout;
 	private ArrayList<ExtendedPanel> questions;
 	private JButton newButton;
-	private JPanel contentPane;
-	private JPanel overviewPanel;
-	private JPanel overviewSouth;
-	private JPanel overviewTextPanel;
-	private JPanel overviewActionPanel;
-	private JPanel creatorPanel;
-	private JPanel creatorMenuPanel;
 	private JTextArea creatorMenuTextArea;
-	private JPanel panel;
 	private JComboBox creatorMenuComboBox;
 	private JButton creatorMenuAdd;
-	private JPanel exportPanel;
 	private JButton saveButton;
-	private JPanel textAreaPanel;
-	private JMenuBar menuBar;
-	private JMenu fileMenu;
 	private JMenuItem openMenuItem;
 	private JMenuItem saveMenuItem;
 	private JMenuItem closeMenuItem;
@@ -110,11 +98,16 @@ public class QuestionCreator extends JFrame {
 	 */
 	public QuestionCreator() {
 		initGUI();
-
+		createListener();
 		// "Startfrage" generieren
 		addQuestion(0, 0, "Frage1");
 		overviewList.setSelectedIndex(0);
+	}
 
+	/**
+	 * Erstellt die Listener für die einzelnen Objekte
+	 */
+	private void createListener() {
 		// Listener für das Neu-Starten
 		newMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -239,7 +232,7 @@ public class QuestionCreator extends JFrame {
 						int index = overviewList.getSelectedIndex();
 						overviewList.getSelectedIndex();
 						listModel.set(index, str);
-						questions.get(index).setName(str);
+						questions.get(index).setHeadline(str);
 					}
 				}
 			}
@@ -253,7 +246,8 @@ public class QuestionCreator extends JFrame {
 	}
 
 	/**
-	 * setzt alle relevanten Variablen zurück
+	 * setzt alle relevanten Variablen zurück um einen neuen "Fragebogen"
+	 * beginnen zu können
 	 */
 	private void restart() {
 		listModel.clear();
@@ -270,76 +264,92 @@ public class QuestionCreator extends JFrame {
 		for (int i = 0; i < questions.size(); i++) {
 			// Fragen hinzufügen - dazu Attributliste erstellen
 			Vector<ElementAttribute> questionAttributes = new Vector<ElementAttribute>();
-			questionAttributes.add(new ElementAttribute<String>("text", ((String) listModel.get(i))));
+			questionAttributes.add(new ElementAttribute<String>("text",
+					((String) listModel.get(i))));
 			TreeNode question = new TreeNode(root, questionAttributes);
 			root.addChild(question);
 			// Elemente der Fragen hinzufügen
 			LinkedList<QuestionElement> elements = questions.get(i)
 					.getElements();
 			for (QuestionElement ele : elements) {
-				//Vector für die Attribute der Komponenten
+				// Vector für die Attribute der Komponenten
 				Vector<ElementAttribute> componentAttributes = new Vector<ElementAttribute>();
-				componentAttributes.add(new ElementAttribute<String>("text", ele.getText()));
-				componentAttributes.add(new ElementAttribute<Integer>("model", ele.getSelection()));
-				componentAttributes.add(new ElementAttribute<Integer>("x", (int)ele.getElementSize().getWidth()));
-				componentAttributes.add(new ElementAttribute<Integer>("y", (int)ele.getElementSize().getHeight()));
+				componentAttributes.add(new ElementAttribute<String>("text",
+						ele.getText()));
+				componentAttributes.add(new ElementAttribute<Integer>("model",
+						ele.getSelection()));
+				componentAttributes.add(new ElementAttribute<Integer>("x",
+						(int) ele.getElementSize().getWidth()));
+				componentAttributes.add(new ElementAttribute<Integer>("y",
+						(int) ele.getElementSize().getHeight()));
 				TreeNode element = new TreeNode(question, componentAttributes);
 				question.addChild(element);
 			}
 		}
 		return root;
 	}
-	
+
 	/**
 	 * Importiert Fragebogen aus Baumstrukturform
-	 * @param root Wurzelelement des Baumes
+	 * 
+	 * @param root
+	 *            Wurzelelement des Baumes
 	 */
 	private void loadTree(TreeNode root) {
-		//Alles Leeren
+		// Alles Leeren
 		restart();
-		
+
 		Vector<TreeNode> treeQuestions = root.getChildren();
 		int i = 0;
 		// Seiten hinzufügen
 		for (TreeNode treeQuestion : treeQuestions) {
-			//Attribute der Fragen
-			Vector<ElementAttribute> questionAttributes = treeQuestion.getAttributes();
+			// Attribute der Fragen
+			Vector<ElementAttribute> questionAttributes = treeQuestion
+					.getAttributes();
 			String questionText = "default";
-			for(ElementAttribute questionAttribute : questionAttributes) {
-				//Überschrifts-Attribut
-				if(questionAttribute.getName().equals("text")) {
+			for (ElementAttribute questionAttribute : questionAttributes) {
+				// Überschrifts-Attribut
+				if (questionAttribute.getName().equals("text")) {
 					questionText = questionAttribute.getContent().toString();
 				}
 			}
-			addQuestion(ExtendedPanel.nextFreeId(), listModel.size(), questionText);
+			addQuestion(ExtendedPanel.nextFreeId(), listModel.size(),
+					questionText);
 			// Komponenten hinzufügen
 			Vector<TreeNode> components = treeQuestion.getChildren();
 			for (TreeNode treeComponent : components) {
-				//Komponent-Attribute
-				Vector<ElementAttribute> componentAttributes = treeComponent.getAttributes();
+				// Komponent-Attribute
+				Vector<ElementAttribute> componentAttributes = treeComponent
+						.getAttributes();
 				String componentText = "default";
 				int componentModel = 0;
 				int componentWidth = 75;
 				int componentHeight = 25;
-				for(ElementAttribute componentAttribute : componentAttributes) {
-					//Model-Attribute
-					if(componentAttribute.getName().equals("model")) {
-						componentModel = Integer.parseInt(componentAttribute.getContent().toString());
+				for (ElementAttribute componentAttribute : componentAttributes) {
+					// Model-Attribute
+					if (componentAttribute.getName().equals("model")) {
+						componentModel = Integer.parseInt(componentAttribute
+								.getContent().toString());
 					} else
-					//Text-Attribut
-					if(componentAttribute.getName().equals("text")) {
-						componentText = componentAttribute.getContent().toString();
+					// Text-Attribut
+					if (componentAttribute.getName().equals("text")) {
+						componentText = componentAttribute.getContent()
+								.toString();
 					} else
-					//Breite-Attribut
-					if(componentAttribute.getName().equals("x")) {
-						componentWidth = Integer.parseInt(componentAttribute.getContent().toString());
+					// Breite-Attribut
+					if (componentAttribute.getName().equals("x")) {
+						componentWidth = Integer.parseInt(componentAttribute
+								.getContent().toString());
 					} else
-					//Höhe-Attribut
-					if(componentAttribute.getName().equals("y")) {
-						componentHeight = Integer.parseInt(componentAttribute.getContent().toString());
+					// Höhe-Attribut
+					if (componentAttribute.getName().equals("y")) {
+						componentHeight = Integer.parseInt(componentAttribute
+								.getContent().toString());
 					}
 				}
-				questions.get(i).addComponent(componentText, componentModel, new Dimension(componentWidth, componentHeight));
+				questions.get(i).addComponent(componentText, componentModel,
+						true, new Dimension(componentWidth, componentHeight),
+						true);
 			}
 			i++;
 		}
@@ -398,10 +408,10 @@ public class QuestionCreator extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 638, 458);
 
-		menuBar = new JMenuBar();
+		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
 
-		fileMenu = new JMenu("Datei");
+		JMenu fileMenu = new JMenu("Datei");
 		menuBar.add(fileMenu);
 
 		newMenuItem = new JMenuItem("Neu");
@@ -424,13 +434,13 @@ public class QuestionCreator extends JFrame {
 				InputEvent.ALT_MASK));
 		fileMenu.add(closeMenuItem);
 
-		contentPane = new JPanel();
+		JPanel contentPane = new JPanel();
 		setContentPane(contentPane);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
 
 		// Linke Seite
-		overviewPanel = new JPanel();
+		JPanel overviewPanel = new JPanel();
 		contentPane.add(overviewPanel, BorderLayout.WEST);
 		overviewPanel.setPreferredSize(new Dimension(175, 10));
 		overviewPanel.setMinimumSize(new Dimension(175, 10));
@@ -441,21 +451,21 @@ public class QuestionCreator extends JFrame {
 		overviewList.setModel(listModel);
 		overviewList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-		overviewSouth = new JPanel();
+		JPanel overviewSouth = new JPanel();
 		overviewSouth.setMinimumSize(new Dimension(10, 110));
 		overviewSouth.setPreferredSize(new Dimension(10, 110));
 		overviewPanel.add(overviewSouth, BorderLayout.SOUTH);
 		overviewSouth.setLayout(new GridLayout(3, 1, 0, 0));
 
-		overviewTextPanel = new JPanel();
+		JPanel overviewTextPanel = new JPanel();
 		overviewSouth.add(overviewTextPanel);
 
 		newTextField = new JTextField();
 		newTextField.setColumns(10);
-		newTextField.setDocument(new TextFieldDoc());
+		//newTextField.setDocument(new TextFieldDoc());
 		overviewTextPanel.add(newTextField);
 
-		overviewActionPanel = new JPanel();
+		JPanel overviewActionPanel = new JPanel();
 		overviewSouth.add(overviewActionPanel);
 
 		newButton = new JButton("Neu");
@@ -465,14 +475,14 @@ public class QuestionCreator extends JFrame {
 		removeButton.setEnabled(false);
 		overviewActionPanel.add(removeButton);
 
-		exportPanel = new JPanel();
+		JPanel exportPanel = new JPanel();
 		overviewSouth.add(exportPanel);
 
 		saveButton = new JButton("Speichern");
 		exportPanel.add(saveButton);
 
 		// rechte Seite
-		creatorPanel = new JPanel();
+		JPanel creatorPanel = new JPanel();
 		contentPane.add(creatorPanel, BorderLayout.CENTER);
 		creatorPanel.setLayout(new BorderLayout(0, 0));
 
@@ -481,14 +491,14 @@ public class QuestionCreator extends JFrame {
 		cardLayout = new CardLayout();
 		creatorOverviewPanel.setLayout(cardLayout);
 
-		creatorMenuPanel = new JPanel();
+		JPanel creatorMenuPanel = new JPanel();
 		FlowLayout flowLayout = (FlowLayout) creatorMenuPanel.getLayout();
 		flowLayout.setVgap(10);
 		creatorPanel.add(creatorMenuPanel, BorderLayout.SOUTH);
 		creatorMenuPanel.setMinimumSize(new Dimension(10, 110));
 		creatorMenuPanel.setPreferredSize(new Dimension(10, 110));
 
-		textAreaPanel = new JPanel();
+		JPanel textAreaPanel = new JPanel();
 		textAreaPanel.setPreferredSize(new Dimension(250, 85));
 		textAreaPanel.setMinimumSize(new Dimension(250, 85));
 		textAreaPanel.setLayout(new BorderLayout());
@@ -497,7 +507,7 @@ public class QuestionCreator extends JFrame {
 				BorderLayout.CENTER);
 		creatorMenuPanel.add(textAreaPanel);
 
-		panel = new JPanel();
+		JPanel panel = new JPanel();
 		panel.setPreferredSize(new Dimension(100, 60));
 		panel.setMinimumSize(new Dimension(100, 60));
 		creatorMenuPanel.add(panel);

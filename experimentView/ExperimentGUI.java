@@ -9,21 +9,29 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.LinkedList;
 import java.util.Vector;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JSplitPane;
 import javax.swing.SwingConstants;
+import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
+import test.Watch;
 import experimentQuestionCreator.ElementAttribute;
+import experimentQuestionCreator.ExtendedPanel;
 import experimentQuestionCreator.QuestionElement;
 import experimentQuestionCreator.TreeNode;
 import experimentQuestionCreator.XMLHandler;
@@ -32,17 +40,33 @@ public class ExperimentGUI extends JFrame {
 
 	// Pfad zu den Anfangsfragen
 	private String startPath;
+	private int lastSelection;
 
 	private JButton startButton;
 	private DefaultListModel listModel;
-	private Vector<JPanel> questionPanels;
+	private Vector<ExtendedPanel> questionPanels;
+	private Vector<Watch> timelines;
 	private JPanel questionCollectionPanel;
-	private CardLayout cardLayout;
+	private CardLayout questionCardLayout;
+	private CardLayout timeCardLayout;
+	private JList list;
+	private JButton backButton;
+	private JButton forwardButton;
+	private JPanel timelinePanel;
+	private Watch time;
+	private JButton exportButton;
 
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
+		// Look and Feel setzen
+		try {
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -55,12 +79,159 @@ public class ExperimentGUI extends JFrame {
 		});
 	}
 
+	public void exportData() {
+		// Baum mit Informationen aufbauen
+		TreeNode root = new TreeNode();
+		String s;
+		for (int i = 0; i < questionPanels.size(); i++) {
+			// Fragen hinzufügen - dazu Attributliste erstellen
+			Vector<ElementAttribute> questionAttributes = new Vector<ElementAttribute>();
+			questionAttributes.add(new ElementAttribute<String>("text",
+					((String) listModel.get(i))));
+			TreeNode question = new TreeNode(root, questionAttributes);
+			root.addChild(question);
+			// Elemente der Fragen hinzufügen
+			LinkedList<QuestionElement> elements = questionPanels.get(i)
+					.getElements();
+			for (QuestionElement ele : elements) {
+				// Vector für die Attribute der Komponenten
+				Vector<ElementAttribute> componentAttributes = new Vector<ElementAttribute>();
+				int sel = ele.getSelection();
+				switch (sel) {
+				case 1:
+					componentAttributes.add(new ElementAttribute<String>(
+							"model", "" + 1));
+					componentAttributes.add(new ElementAttribute<String>(
+							"answer", ele.getTextField().getText()));
+					break;
+				case 2:
+					componentAttributes.add(new ElementAttribute<String>(
+							"model", "" + 2));
+					componentAttributes.add(new ElementAttribute<String>(
+							"answer", ele.getTextArea().getText()));
+					break;
+				case 3:
+					componentAttributes.add(new ElementAttribute<String>(
+							"model", "" + 3));
+					componentAttributes.add(new ElementAttribute<String>(
+							"answer", ele.getComboBox().getSelectedItem()
+									.toString()));
+					break;
+				case 4:
+					componentAttributes.add(new ElementAttribute<String>(
+							"model", "" + 4));
+					Component[] checkComp = ele.getCheckBoxPanel()
+							.getComponents();
+					Object check = null;
+					s = "";
+					for (int j = 0; j < checkComp.length; j++) {
+						check = checkComp[j];
+						if (check instanceof JCheckBox) {
+							if (((JCheckBox) check).isSelected()) {
+								s += (((JCheckBox) check).getText());
+							}
+						}
+					}
+					componentAttributes.add(new ElementAttribute<String>(
+							"answer", s));
+					break;
+				case 5:
+					componentAttributes.add(new ElementAttribute<String>(
+							"model", "" + 5));
+					Component[] radioComp = ele.getRadioButtonPanel()
+							.getComponents();
+					Object radio = null;
+					for (int j = 0; j < radioComp.length; j++) {
+						radio = radioComp[j];
+						if (radio instanceof JRadioButton) {
+							if (((JRadioButton) radio).isSelected()) {
+								componentAttributes.add(new ElementAttribute<String>(
+										"answer", ((JRadioButton) radio).getText()));
+							}
+						}
+					}
+					break;
+				}
+				if(componentAttributes.size()>0) {
+					TreeNode element = new TreeNode(question, componentAttributes);
+					question.addChild(element);
+				}
+			}
+		}
+		// Fragen hinzufügen
+
+		XMLHandler.writeXMLTree(root, "answers.xml");
+
+	}
+
 	public void setListener() {
 		startButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				loadList();
-				//Codeworteingabe entfernen
-				//echte fragen einsetzen
+				// Codeworteingabe entfernen
+				questionCollectionPanel.removeAll();
+				int i = 0;
+				for (JPanel question : questionPanels) {
+					questionCollectionPanel.add(question, "" + i);
+					timelines.add(new Watch("Aufgabenzeit: "));
+					timelines.get(i).start();
+					timelines.get(i).pause();
+					timelinePanel.add(timelines.get(i), "" + i);
+					i++;
+				}
+				time.start();
+				timelines.get(0).resume();
+				
+				exportButton.setEnabled(true);
+				list.setSelectedIndex(0);
+			}
+		});
+
+		list.addListSelectionListener(new ListSelectionListener() {
+			public void valueChanged(ListSelectionEvent e) {
+				if (e.getValueIsAdjusting() == false) {
+					int i = list.getSelectedIndex();
+					questionCardLayout.show(questionCollectionPanel, "" + i);
+					// Stoppuhr pausieren, nächste starten
+					timeCardLayout.show(timelinePanel, "" + i);
+					timelines.get(lastSelection).pause();
+					lastSelection = i;
+					timelines.get(i).resume();
+
+					if (listModel.size() >= 1) {
+						forwardButton.setEnabled(true);
+					}
+				}
+			}
+		});
+		backButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				forwardButton.setEnabled(true);
+				int i = list.getSelectedIndex();
+				if (i > 0) {
+					list.setSelectedIndex(i - 1);
+					if (i == 1) {
+						backButton.setEnabled(false);
+					}
+				}
+			}
+		});
+		forwardButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				backButton.setEnabled(true);
+				int i = list.getSelectedIndex();
+				if (i < listModel.size() - 1) {
+					list.setSelectedIndex(i + 1);
+					if (i == listModel.size() - 2) {
+						forwardButton.setEnabled(false);
+					}
+				}
+			}
+		});
+
+		exportButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				exportData();
 			}
 		});
 	}
@@ -84,57 +255,48 @@ public class ExperimentGUI extends JFrame {
 				}
 			}
 			listModel.addElement(questionText);
-			JPanel questionPanel = new JPanel();
-			questionPanel.setLayout(new BorderLayout());
-			JLabel headline = new JLabel(questionText);
-			questionPanel.add(headline, BorderLayout.NORTH);
-			JPanel elementPanel = new JPanel();
-			BoxLayout boxLayout = new BoxLayout(elementPanel, BoxLayout.Y_AXIS);
-			elementPanel.setLayout(boxLayout);
-			questionPanel.add(elementPanel, BorderLayout.CENTER);
-			//Komponenten hinzufügen
+			ExtendedPanel questionPanel = new ExtendedPanel(i, questionText);
+			questionPanel.setOpaque(true);
+			// Komponenten hinzufügen
 			Vector<TreeNode> components = treeQuestion.getChildren();
-			for(TreeNode treeComponent : components) {
-				//Komponent-Attribute
-				Vector<ElementAttribute> componentAttributes = treeComponent.getAttributes();
+			for (TreeNode treeComponent : components) {
+				// Komponent-Attribute
+				Vector<ElementAttribute> componentAttributes = treeComponent
+						.getAttributes();
 				String componentText = "default";
 				int componentModel = 0;
 				int componentWidth = 75;
 				int componentHeight = 25;
-				for(ElementAttribute componentAttribute : componentAttributes) {
-					//Model Attribut
-					if(componentAttribute.getName().equals("model")) {
-						componentModel = Integer.parseInt(componentAttribute.getContent().toString());
+				for (ElementAttribute componentAttribute : componentAttributes) {
+					// Model Attribut
+					if (componentAttribute.getName().equals("model")) {
+						componentModel = Integer.parseInt(componentAttribute
+								.getContent().toString());
 					}
-					//Text Attribut
-					if(componentAttribute.getName().equals("text")) {
+					// Text Attribut
+					if (componentAttribute.getName().equals("text")) {
 						componentText = componentAttribute.getContent()
-						.toString();						
+								.toString();
 					} else
 					// Breite-Attribut
 					if (componentAttribute.getName().equals("x")) {
-							componentWidth = Integer.parseInt(componentAttribute
-									.getContent().toString());
+						componentWidth = Integer.parseInt(componentAttribute
+								.getContent().toString());
 					} else
 					// Höhe-Attribut
 					if (componentAttribute.getName().equals("y")) {
-							componentHeight = Integer.parseInt(componentAttribute
-									.getContent().toString());
-						}
+						componentHeight = Integer.parseInt(componentAttribute
+								.getContent().toString());
+					}
 				}
-				JPanel componentPanel = QuestionElement.createContentHelp(componentText, componentModel);
-				componentPanel.setPreferredSize(new Dimension(componentWidth, componentHeight));
-				elementPanel.add(componentPanel);
+				questionPanel.addComponent(componentText, componentModel,
+						false, new Dimension(componentWidth, componentHeight),
+						false);
 			}
-			//Frage zur Sammlung hinzufügen
+			// Frage zur Sammlung hinzufügen
 			questionPanels.add(questionPanel);
 			i++;
 		}
-		// overviewList.setSelectedIndex(0);
-	}
-
-	private void createQuestionPanel(Vector<TreeNode> components) {
-		JPanel questionPanel = new JPanel();
 	}
 
 	/**
@@ -142,7 +304,9 @@ public class ExperimentGUI extends JFrame {
 	 */
 	public ExperimentGUI() {
 		listModel = new DefaultListModel();
-		questionPanels = new Vector<JPanel>();
+		questionPanels = new Vector<ExtendedPanel>();
+		timelines = new Vector<Watch>();
+		lastSelection = 0;
 
 		JPanel contentPane;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -162,26 +326,38 @@ public class ExperimentGUI extends JFrame {
 		menuPanel.add(backPanel, BorderLayout.WEST);
 		backPanel.setLayout(new BorderLayout(0, 0));
 
-		JButton backButton = new JButton("Zur\u00FCck");
+		backButton = new JButton("Zur\u00FCck");
+		backButton.setEnabled(false);
 		backPanel.add(backButton, BorderLayout.CENTER);
 
 		JPanel forwardPanel = new JPanel();
 		menuPanel.add(forwardPanel, BorderLayout.EAST);
 		forwardPanel.setLayout(new BorderLayout(0, 0));
 
-		JButton forwardButton = new JButton("Vorw\u00E4rts");
+		forwardButton = new JButton("Vorw\u00E4rts");
+		forwardButton.setEnabled(false);
 		forwardPanel.add(forwardButton, BorderLayout.CENTER);
 
 		JPanel centerMenuPanel = new JPanel();
 		FlowLayout flowLayout = (FlowLayout) centerMenuPanel.getLayout();
-		flowLayout.setAlignment(FlowLayout.LEFT);
 		menuPanel.add(centerMenuPanel, BorderLayout.CENTER);
 
-		JLabel timeLabel = new JLabel("Ben\u00F6tigte Zeit:");
-		centerMenuPanel.add(timeLabel);
+		timelinePanel = new JPanel();
+		timeCardLayout = new CardLayout();
+		timelinePanel.setLayout(timeCardLayout);
+		timelinePanel.setPreferredSize(new Dimension(125, 35));
+		centerMenuPanel.add(timelinePanel);
+		
+				exportButton = new JButton("Antworten Sichern");
+				exportButton.setEnabled(false);
+				centerMenuPanel.add(exportButton);
 
-		JLabel showTimeLabel = new JLabel("     ");
-		centerMenuPanel.add(showTimeLabel);
+		JPanel timePanel = new JPanel();
+		timePanel.setLayout(new CardLayout());
+		timePanel.setPreferredSize(new Dimension(125, 35));
+		time = new Watch("Gesamtzeit");
+		timePanel.add(time, "gesamtzeit");
+		centerMenuPanel.add(timePanel);
 
 		JPanel centerPanel = new JPanel();
 		contentPane.add(centerPanel, BorderLayout.CENTER);
@@ -196,17 +372,20 @@ public class ExperimentGUI extends JFrame {
 		centerSplit.setLeftComponent(overviewPanel);
 		overviewPanel.setLayout(new BorderLayout(0, 0));
 
-		JList list = new JList();
+		list = new JList();
 		list.setModel(listModel);
 		overviewPanel.add(list, BorderLayout.CENTER);
-
+		
+		JPanel questionToRightPanel = new JPanel();
+		questionToRightPanel.setLayout(new BorderLayout());
 		questionCollectionPanel = new JPanel();
-		centerSplit.setRightComponent(questionCollectionPanel);	
-		cardLayout = new CardLayout();
-		questionCollectionPanel.setLayout(cardLayout);
+		questionToRightPanel.add(questionCollectionPanel, BorderLayout.CENTER);
+		centerSplit.setRightComponent(questionToRightPanel);
+		questionCardLayout = new CardLayout();
+		questionCollectionPanel.setLayout(questionCardLayout);
 
 		JPanel codePanel = new JPanel();
-		questionCollectionPanel.add(codePanel, "name_23194295593081");
+		questionCollectionPanel.add(codePanel, "start");
 		codePanel.setLayout(new BorderLayout(0, 0));
 
 		JPanel codeNorth = new JPanel();
@@ -242,6 +421,12 @@ public class ExperimentGUI extends JFrame {
 
 		startButton = new JButton("Start");
 		codeCenter.add(startButton);
+		
+		Component horizontalStrut = Box.createHorizontalStrut(20);
+		horizontalStrut.setMaximumSize(new Dimension(40, 32767));
+		horizontalStrut.setMinimumSize(new Dimension(40, 0));
+		horizontalStrut.setPreferredSize(new Dimension(40, 0));
+		questionToRightPanel.add(horizontalStrut, BorderLayout.WEST);
 
 		setListener();
 	}

@@ -24,9 +24,9 @@ import javax.swing.JScrollPane;
 public class ExtendedPanel extends JPanel implements QuestionElementListener {
 
 	private int id; // ID dieses ExtendedPanel
-	private String name; // Überschrift für Frage die das Panel repräsentiert
+	private String headline; // Überschrift für Frage die das Panel repräsentiert
 
-	private JLabel headline;
+	private JLabel headlineLabel;
 	// Panel welches alle Komponenten der Frage beinhalten wird
 	private JPanel questionHolder;
 	private BoxLayout boxLayout;
@@ -37,7 +37,7 @@ public class ExtendedPanel extends JPanel implements QuestionElementListener {
 	// Liste mit allen QuestionElementen auf diesem Panel
 	private LinkedList<QuestionElement> elements = new LinkedList<QuestionElement>();
 
-	private static final Font headlineFont = new Font("monospaced", Font.BOLD,
+	public static final Font HEADLINEFONT = new Font("monospaced", Font.BOLD,
 			14);
 
 	/**
@@ -53,7 +53,7 @@ public class ExtendedPanel extends JPanel implements QuestionElementListener {
 
 		ids.add(id);
 		this.id = id;
-		this.name = name;
+		this.headline = name;
 
 		initialise();
 	}
@@ -66,9 +66,9 @@ public class ExtendedPanel extends JPanel implements QuestionElementListener {
 
 		JPanel headlinePanel = new JPanel();
 		headlinePanel.setLayout(new FlowLayout(FlowLayout.CENTER));
-		headline = new JLabel(name);
-		headline.setFont(headlineFont);
-		headlinePanel.add(headline);
+		headlineLabel = new JLabel(headline);
+		headlineLabel.setFont(HEADLINEFONT);
+		headlinePanel.add(headlineLabel);
 		add(headlinePanel, BorderLayout.NORTH);
 
 		questionHolder = new JPanel();
@@ -95,17 +95,24 @@ public class ExtendedPanel extends JPanel implements QuestionElementListener {
 	}
 
 	/**
-	 * Fügt eine neue Komponente mit spezieller Größe hinzu
+	 * Fügt eine neue Komponente mit speziellen Eigenschaften hinzu
 	 * 
 	 * @param text
 	 *            Inhalt/Beschriftung
 	 * @param selection
 	 *            Komponententyp
+	 * @param menu
+	 *            Gibt an, ob ein Editor-Menu für diese Komponente mit erzeugt
+	 *            werden soll
 	 * @param size
 	 *            Größe
+	 * @param border
+	 *            Gibt an ob die Komponente umrandet sein soll
 	 */
-	public void addComponent(String text, int selection, Dimension size) {
-		QuestionElement qEle = new QuestionElement(text, selection, size);
+	public void addComponent(String text, int selection, boolean menu,
+			Dimension size, boolean border) {
+		QuestionElement qEle = new QuestionElement(text, selection, menu, size,
+				border);
 		qEle.addQuestionElementListener(this);
 		elements.add(qEle);
 		qEle.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -129,7 +136,7 @@ public class ExtendedPanel extends JPanel implements QuestionElementListener {
 	 * Ordnet die Elemente nach der Reihenfolge in der Liste an und aktualisiert
 	 * damit die Sicht
 	 */
-	public void updateView() {
+	private void updateView() {
 		for (QuestionElement ele : elements) {
 			questionHolder.remove(ele);
 		}
@@ -153,7 +160,7 @@ public class ExtendedPanel extends JPanel implements QuestionElementListener {
 	}
 
 	/**
-	 * Löscht eine Id
+	 * Löscht diese Id
 	 */
 	public void removeId() {
 		ids.remove((Integer) id);
@@ -186,12 +193,14 @@ public class ExtendedPanel extends JPanel implements QuestionElementListener {
 
 	/**
 	 * Setzt eine neue Überschrift
+	 * 
+	 * @param headline Überschrift die gesetzt wird
 	 */
-	public void setName(String name) {
-		this.name = name;
-		headline.setText(name);
+	public void setHeadline(String headline) {
+		this.headline = headline;
+		headlineLabel.setText(headline);
 	}
-	
+
 	/**
 	 * Listener für die QuestionElements
 	 */

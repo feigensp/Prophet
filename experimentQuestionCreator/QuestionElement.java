@@ -3,6 +3,7 @@ package experimentQuestionCreator;
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
@@ -28,6 +29,7 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
@@ -58,11 +60,13 @@ public class QuestionElement extends JPanel {
 
 	private int selection;// ausgewählte Komponente
 	private String text;
-
+	
 	// Variablen für Drag and Drop
 	private boolean dragged;
 	private Point oldPos;
 	private Point newPos;
+	
+	private JComponent comp;
 
 	/**
 	 * Konstruktor für das erstellen einer Komponente mit Standartgröße
@@ -84,7 +88,7 @@ public class QuestionElement extends JPanel {
 		
 		createMenu();
 		createEditPanel();		
-		createContent(text, selection);
+		createContent();
 		
 		add(menuPanel);
 		add(contentPanel);
@@ -95,16 +99,21 @@ public class QuestionElement extends JPanel {
 	}
 
 	/**
-	 * Konstruktor für das Erstellen einer Komponente mir bestimmter Größe
+	 * Konstruktor für das Erstellen einer Komponente mir bestimmten Eigenschaften
 	 * 
 	 * @param text
 	 *            Inhalt/Beschriftung der Komponente
 	 * @param selection
 	 *            Komponententyp
+	 * @param menu
+	 *            Gibt an, ob ein Editor-Menu für diese Komponente mit erzeugt
+	 *            werden soll
 	 * @param size
 	 *            Größe der Komponente
+	 * @param border
+	 *            Gibt an ob die Komponente umrandet sein soll
 	 */
-	public QuestionElement(String text, int selection, Dimension size) {
+	public QuestionElement(String text, int selection, boolean menu, Dimension size, boolean border) {
 		super();
 		this.selection = selection;
 		this.text = text;
@@ -113,12 +122,13 @@ public class QuestionElement extends JPanel {
 		oldPos = new Point();
 
 		super.setLayout(new FlowLayout(FlowLayout.LEFT));
-
+		
 		createMenu();
 		createEditPanel();		
-		createContent(text, selection, size);
+		createContent(size, border);
 		
-		add(menuPanel);
+		if(menu)
+			add(menuPanel);
 		add(contentPanel);
 
 		addDragAndDrop();
@@ -214,11 +224,12 @@ public class QuestionElement extends JPanel {
 				text = editTextArea.getText();
 				selection = editComboBox.getSelectedIndex();
 				contentPanel = null;
-				createContent(text, selection);
+				createContent();
 				remove(editPanel);
 				add(contentPanel);
 				updateSize(contentPanel);
 				editCheckBox.setSelected(false);
+				addDragAndDrop();
 				updateUI();
 			}
 		});
@@ -228,29 +239,22 @@ public class QuestionElement extends JPanel {
 
 	/**
 	 * Methode um die eigentliche Komponente zu erstellen
-	 * 
-	 * @param text
-	 *            Inhalt/Beschriftung der Komponente
-	 * @param selection
-	 *            Komponententyp
 	 */
-	private void createContent(String text, int selection) {
-		contentPanel = createContentHelp(text, selection);
+	private void createContent() {
+		createContentHelp(true);
 		updateSize(contentPanel);
 	}
 
 	/**
 	 * Methode um eigentlich Komponente mit spezieller Größe zu erstellen
 	 * 
-	 * @param text
-	 *            Inhalt/Beschriftung der Komponente
-	 * @param selection
-	 *            Komponententyp
 	 * @param size
 	 *            Größe der Komponente
+	 * @param border
+	 *            Gibt an ob die Komponente umrandet sein soll
 	 */
-	private void createContent(String text, int selection, Dimension size) {
-		contentPanel = createContentHelp(text, selection);
+	private void createContent(Dimension size, boolean border) {
+		createContentHelp(border);
 		// Größe der Komponente setzen
 		contentPanel.setPreferredSize(size);
 		contentPanel.setMinimumSize(size);
@@ -261,29 +265,35 @@ public class QuestionElement extends JPanel {
 	/**
 	 * Hilfsfunktion zur CreateContent-Methode, da diese überladen ist und der
 	 * Code übersichtlicher gehalten werden soll
+	 * 
+	 * @param border gibt an ob die Komponente umrandet sein soll
 	 */
-	public static JPanel createContentHelp(String text, int selection) {
-		JPanel content = new JPanel();
-		content.setLayout(new BorderLayout());
-		content.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+	private void createContentHelp(boolean border) {
+		contentPanel = new JPanel();
+		contentPanel.setLayout(new BorderLayout());
+		if(border)
+			contentPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
 		// Text splitten für Componenten wie JRadioButton
 		String[] texte = text.split("\n");
 		
 		// Komponente erstellen
-		JComponent comp = null;
 		switch (selection) {
 		case LABEL:
 			comp = new JLabel(text);
+			contentPanel.add(comp, BorderLayout.CENTER);
 			break;
 		case TEXTFIELD:
 			comp = new JTextField(text, 10);
+			contentPanel.add(comp, BorderLayout.CENTER);
 			break;
 		case TEXTAREA:
 			comp = new JTextArea(text);
+			contentPanel.add(new JScrollPane(comp), BorderLayout.CENTER);
 			break;
 		case COMBOBOX:
 			comp = new JComboBox(texte);
+			contentPanel.add(comp, BorderLayout.CENTER);
 			break;
 		case CHECKBOX:
 			comp = new JPanel();
@@ -292,22 +302,82 @@ public class QuestionElement extends JPanel {
 				JCheckBox chkbox = new JCheckBox(texte[i]);
 				comp.add(chkbox);
 			}
+			contentPanel.add(comp, BorderLayout.CENTER);
 			break;
 		case RADIOBUTTON:
 			comp = new JPanel();
 			comp.setLayout(new GridLayout(texte.length, 1));
-			ButtonGroup radioGroup = new ButtonGroup();
+			ButtonGroup btngroup = new ButtonGroup();
 			for (int i = 0; i < texte.length; i++) {
 				JRadioButton radiobtn = new JRadioButton(texte[i]);
 				comp.add(radiobtn);
-				radioGroup.add(radiobtn);
+				btngroup.add(radiobtn);
 			}
+			contentPanel.add(comp, BorderLayout.CENTER);
 			break;
 		default:
 			break;
 		}
-		content.add(comp, BorderLayout.CENTER);
-		return content;
+	}
+	
+	/**
+	 * Versucht die Textfeld-Komponente zurückzugeben
+	 * @return JTextfield, oder null wenn nicht möglich
+	 */
+	public JTextField getTextField() {
+		if(selection == 1) {
+			return (JTextField) comp;
+		} else {
+			return null;
+		}
+	}
+
+	/**
+	 * Versucht die TextArea-Komponente zurückzugeben
+	 * @return JTextArea, oder null wenn nicht möglich
+	 */
+	public JTextArea getTextArea() {
+		if(selection == 2) {
+			return (JTextArea) comp;
+		} else {
+			return null;
+		}
+	}
+
+	/**
+	 * Versucht die ComboBox-Komponente zurückzugeben
+	 * @return JComboBox, oder null wenn nicht möglich
+	 */
+	public JComboBox getComboBox() {
+		if(selection == 3) {
+			return (JComboBox) comp;
+		} else {
+			return null;
+		}
+	}
+
+	/**
+	 * Versucht das Panel mit den Checkbox-Komponenten zurückzugeben
+	 * @return JPanel, oder null wenn nicht möglich
+	 */
+	public JPanel getCheckBoxPanel() {
+		if(selection == 4) {
+			return (JPanel) comp;
+		} else {
+			return null;
+		}
+	}
+
+	/**
+	 * Versucht das Panel mit den RadioButton-Komponenten zurückzugeben
+	 * @return JPanel, oder null wenn nicht möglich
+	 */
+	public JPanel getRadioButtonPanel() {
+		if(selection == 5) {
+			return (JPanel) comp;
+		} else {
+			return null;
+		}
 	}
 
 	/**
@@ -341,7 +411,7 @@ public class QuestionElement extends JPanel {
 	/**
 	 * Erstellt Listener für das Drag and Drop des contentPanels
 	 */
-	public void addDragAndDrop() {
+	private void addDragAndDrop() {
 		contentPanel.addMouseMotionListener(new MouseMotionListener() {
 			@Override
 			public void mouseDragged(MouseEvent arg0) {

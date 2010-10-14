@@ -6,7 +6,6 @@
 
 package experimentQuestionCreator;
 
-import java.awt.Dimension;
 import java.io.File;
 import java.io.IOException;
 import java.util.Vector;
@@ -29,8 +28,7 @@ import org.xml.sax.SAXException;
 public class XMLHandler {
 
 	/**
-	 * Schreibt einen Fragebogen in Baumform in eine XML-Datei Im text-Attribut
-	 * werden die Zeilenumbrüche in HTML-Form dargestellt
+	 * Schreibt einen Fragebogen/Antworten in Baumform in eine XML-Datei
 	 * 
 	 * @param treeRoot
 	 *            Wurzel des Baumes
@@ -93,8 +91,7 @@ public class XMLHandler {
 	}
 
 	/**
-	 * Lädt eine XML-Datei und erstellt aus ihr die äquivalente Baumform für den
-	 * Fragebogen Die HTML-Zeilenumbrüche werden wieder zurückgewandelt
+	 * Lädt eine XML-Datei und erstellt aus ihr die äquivalente Baumform
 	 * 
 	 * @param path
 	 *            Wo sich die XML-Datei befindet
