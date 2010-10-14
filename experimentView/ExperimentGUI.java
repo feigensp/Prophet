@@ -24,6 +24,7 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
 import experimentQuestionCreator.ElementAttribute;
+import experimentQuestionCreator.QuestionElement;
 import experimentQuestionCreator.TreeNode;
 import experimentQuestionCreator.XMLHandler;
 
@@ -35,6 +36,8 @@ public class ExperimentGUI extends JFrame {
 	private JButton startButton;
 	private DefaultListModel listModel;
 	private Vector<JPanel> questionPanels;
+	private JPanel questionCollectionPanel;
+	private CardLayout cardLayout;
 
 	/**
 	 * Launch the application.
@@ -56,6 +59,8 @@ public class ExperimentGUI extends JFrame {
 		startButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				loadList();
+				//Codeworteingabe entfernen
+				//echte fragen einsetzen
 			}
 		});
 	}
@@ -79,42 +84,50 @@ public class ExperimentGUI extends JFrame {
 				}
 			}
 			listModel.addElement(questionText);
-			// addQuestion(ExtendedPanel.nextFreeId(), listModel.size(),
-			// questionText);
-			// // Komponenten hinzufügen
-			// Vector<TreeNode> components = treeQuestion.getChildren();
-			// for (TreeNode treeComponent : components) {
-			// //Komponent-Attribute
-			// Vector<ElementAttribute> componentAttributes =
-			// treeComponent.getAttributes();
-			// String componentText = "default";
-			// int componentModel = 0;
-			// int componentWidth = 75;
-			// int componentHeight = 25;
-			// for(ElementAttribute componentAttribute : componentAttributes) {
-			// //Model-Attribute
-			// if(componentAttribute.getName().equals("model")) {
-			// componentModel =
-			// Integer.parseInt(componentAttribute.getContent().toString());
-			// } else
-			// //Text-Attribut
-			// if(componentAttribute.getName().equals("text")) {
-			// componentText = componentAttribute.getContent().toString();
-			// } else
-			// //Breite-Attribut
-			// if(componentAttribute.getName().equals("x")) {
-			// componentWidth =
-			// Integer.parseInt(componentAttribute.getContent().toString());
-			// } else
-			// //Höhe-Attribut
-			// if(componentAttribute.getName().equals("y")) {
-			// componentHeight =
-			// Integer.parseInt(componentAttribute.getContent().toString());
-			// }
-			// }
-			// questions.get(i).addComponent(componentText, componentModel, new
-			// Dimension(componentWidth, componentHeight));
-			// }
+			JPanel questionPanel = new JPanel();
+			questionPanel.setLayout(new BorderLayout());
+			JLabel headline = new JLabel(questionText);
+			questionPanel.add(headline, BorderLayout.NORTH);
+			JPanel elementPanel = new JPanel();
+			BoxLayout boxLayout = new BoxLayout(elementPanel, BoxLayout.Y_AXIS);
+			elementPanel.setLayout(boxLayout);
+			questionPanel.add(elementPanel, BorderLayout.CENTER);
+			//Komponenten hinzufügen
+			Vector<TreeNode> components = treeQuestion.getChildren();
+			for(TreeNode treeComponent : components) {
+				//Komponent-Attribute
+				Vector<ElementAttribute> componentAttributes = treeComponent.getAttributes();
+				String componentText = "default";
+				int componentModel = 0;
+				int componentWidth = 75;
+				int componentHeight = 25;
+				for(ElementAttribute componentAttribute : componentAttributes) {
+					//Model Attribut
+					if(componentAttribute.getName().equals("model")) {
+						componentModel = Integer.parseInt(componentAttribute.getContent().toString());
+					}
+					//Text Attribut
+					if(componentAttribute.getName().equals("text")) {
+						componentText = componentAttribute.getContent()
+						.toString();						
+					} else
+					// Breite-Attribut
+					if (componentAttribute.getName().equals("x")) {
+							componentWidth = Integer.parseInt(componentAttribute
+									.getContent().toString());
+					} else
+					// Höhe-Attribut
+					if (componentAttribute.getName().equals("y")) {
+							componentHeight = Integer.parseInt(componentAttribute
+									.getContent().toString());
+						}
+				}
+				JPanel componentPanel = QuestionElement.createContentHelp(componentText, componentModel);
+				componentPanel.setPreferredSize(new Dimension(componentWidth, componentHeight));
+				elementPanel.add(componentPanel);
+			}
+			//Frage zur Sammlung hinzufügen
+			questionPanels.add(questionPanel);
 			i++;
 		}
 		// overviewList.setSelectedIndex(0);
@@ -187,12 +200,13 @@ public class ExperimentGUI extends JFrame {
 		list.setModel(listModel);
 		overviewPanel.add(list, BorderLayout.CENTER);
 
-		JPanel questionPanel = new JPanel();
-		centerSplit.setRightComponent(questionPanel);
-		questionPanel.setLayout(new CardLayout(0, 0));
+		questionCollectionPanel = new JPanel();
+		centerSplit.setRightComponent(questionCollectionPanel);	
+		cardLayout = new CardLayout();
+		questionCollectionPanel.setLayout(cardLayout);
 
 		JPanel codePanel = new JPanel();
-		questionPanel.add(codePanel, "name_23194295593081");
+		questionCollectionPanel.add(codePanel, "name_23194295593081");
 		codePanel.setLayout(new BorderLayout(0, 0));
 
 		JPanel codeNorth = new JPanel();

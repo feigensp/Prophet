@@ -63,9 +63,6 @@ public class QuestionElement extends JPanel {
 	private boolean dragged;
 	private Point oldPos;
 	private Point newPos;
-	
-	//Komponente die erstellt werden wird
-	private JComponent comp;
 
 	/**
 	 * Konstruktor für das erstellen einer Komponente mit Standartgröße
@@ -238,7 +235,7 @@ public class QuestionElement extends JPanel {
 	 *            Komponententyp
 	 */
 	private void createContent(String text, int selection) {
-		createContentHelp(text, selection);
+		contentPanel = createContentHelp(text, selection);
 		updateSize(contentPanel);
 	}
 
@@ -253,7 +250,7 @@ public class QuestionElement extends JPanel {
 	 *            Größe der Komponente
 	 */
 	private void createContent(String text, int selection, Dimension size) {
-		createContentHelp(text, selection);
+		contentPanel = createContentHelp(text, selection);
 		// Größe der Komponente setzen
 		contentPanel.setPreferredSize(size);
 		contentPanel.setMinimumSize(size);
@@ -265,15 +262,16 @@ public class QuestionElement extends JPanel {
 	 * Hilfsfunktion zur CreateContent-Methode, da diese überladen ist und der
 	 * Code übersichtlicher gehalten werden soll
 	 */
-	private void createContentHelp(String text, int selection) {
-		contentPanel = new JPanel();
-		contentPanel.setLayout(new BorderLayout());
-		contentPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+	public static JPanel createContentHelp(String text, int selection) {
+		JPanel content = new JPanel();
+		content.setLayout(new BorderLayout());
+		content.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
 		// Text splitten für Componenten wie JRadioButton
 		String[] texte = text.split("\n");
-
+		
 		// Komponente erstellen
+		JComponent comp = null;
 		switch (selection) {
 		case LABEL:
 			comp = new JLabel(text);
@@ -308,7 +306,8 @@ public class QuestionElement extends JPanel {
 		default:
 			break;
 		}
-		contentPanel.add(comp, BorderLayout.CENTER);
+		content.add(comp, BorderLayout.CENTER);
+		return content;
 	}
 
 	/**
