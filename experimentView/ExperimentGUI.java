@@ -1,3 +1,10 @@
+/**
+ * Diese Klasse stellt eine Oberfläche bereit, in welcher sich Fragen aus XML Dateien angeschaut werden können.
+ * Die Antworten, welche gegeben werden, werden als XML-Dokumente exportiert.
+ * 
+ * @author Markus Köppen, Andreas Hasselberg
+ */
+
 package experimentView;
 
 import java.awt.BorderLayout;
@@ -5,7 +12,6 @@ import java.awt.CardLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.EventQueue;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -40,6 +46,8 @@ public class ExperimentGUI extends JFrame {
 
 	// Pfad zu den Anfangsfragen
 	private String startPath;
+
+	private String codewort;
 	private int lastSelection;
 
 	private JButton startButton;
@@ -79,15 +87,22 @@ public class ExperimentGUI extends JFrame {
 		});
 	}
 
-	public void exportData() {
+	/**
+	 * Wandelt die eingegeben Daten aller Fragen in eine Baumform um
+	 * 
+	 * @return Wurzelelement des erstellten Baumes
+	 */
+	public TreeNode exportData() {
 		// Baum mit Informationen aufbauen
 		TreeNode root = new TreeNode();
 		String s;
+
 		for (int i = 0; i < questionPanels.size(); i++) {
 			// Fragen hinzufügen - dazu Attributliste erstellen
 			Vector<ElementAttribute> questionAttributes = new Vector<ElementAttribute>();
 			questionAttributes.add(new ElementAttribute<String>("text",
 					((String) listModel.get(i))));
+
 			TreeNode question = new TreeNode(root, questionAttributes);
 			root.addChild(question);
 			// Elemente der Fragen hinzufügen
@@ -145,26 +160,31 @@ public class ExperimentGUI extends JFrame {
 						radio = radioComp[j];
 						if (radio instanceof JRadioButton) {
 							if (((JRadioButton) radio).isSelected()) {
-								componentAttributes.add(new ElementAttribute<String>(
-										"answer", ((JRadioButton) radio).getText()));
+								componentAttributes
+										.add(new ElementAttribute<String>(
+												"answer",
+												((JRadioButton) radio)
+														.getText()));
 							}
 						}
 					}
 					break;
 				}
-				if(componentAttributes.size()>0) {
-					TreeNode element = new TreeNode(question, componentAttributes);
+				if (componentAttributes.size() > 0) {
+					TreeNode element = new TreeNode(question,
+							componentAttributes);
 					question.addChild(element);
 				}
 			}
 		}
-		// Fragen hinzufügen
-
-		XMLHandler.writeXMLTree(root, "answers.xml");
-
+		return root;
 	}
 
+	/**
+	 * Listener zu den Objekten hinzufügen
+	 */
 	public void setListener() {
+		// Codeworteingabe --> Fragen werden gestartet
 		startButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				loadList();
@@ -181,12 +201,13 @@ public class ExperimentGUI extends JFrame {
 				}
 				time.start();
 				timelines.get(0).resume();
-				
+
 				exportButton.setEnabled(true);
 				list.setSelectedIndex(0);
 			}
 		});
 
+		// Fragen wechseln
 		list.addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent e) {
 				if (e.getValueIsAdjusting() == false) {
@@ -229,13 +250,17 @@ public class ExperimentGUI extends JFrame {
 			}
 		});
 
+		// Daten exportieren
 		exportButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				exportData();
+				XMLHandler.writeXMLTree(exportData(), "answers.xml");
 			}
 		});
 	}
 
+	/**
+	 * Lädt alle Fragen einer XML-Datei und fügt diese in die Liste ein
+	 */
 	public void loadList() {
 		TreeNode root = XMLHandler.loadXMLTree("test.xml");
 		// Seiten erstellen
@@ -300,7 +325,7 @@ public class ExperimentGUI extends JFrame {
 	}
 
 	/**
-	 * Create the frame.
+	 * GUI erstellen und Variablen initialisieren
 	 */
 	public ExperimentGUI() {
 		listModel = new DefaultListModel();
@@ -339,7 +364,6 @@ public class ExperimentGUI extends JFrame {
 		forwardPanel.add(forwardButton, BorderLayout.CENTER);
 
 		JPanel centerMenuPanel = new JPanel();
-		FlowLayout flowLayout = (FlowLayout) centerMenuPanel.getLayout();
 		menuPanel.add(centerMenuPanel, BorderLayout.CENTER);
 
 		timelinePanel = new JPanel();
@@ -347,10 +371,10 @@ public class ExperimentGUI extends JFrame {
 		timelinePanel.setLayout(timeCardLayout);
 		timelinePanel.setPreferredSize(new Dimension(125, 35));
 		centerMenuPanel.add(timelinePanel);
-		
-				exportButton = new JButton("Antworten Sichern");
-				exportButton.setEnabled(false);
-				centerMenuPanel.add(exportButton);
+
+		exportButton = new JButton("Antworten Sichern");
+		exportButton.setEnabled(false);
+		centerMenuPanel.add(exportButton);
 
 		JPanel timePanel = new JPanel();
 		timePanel.setLayout(new CardLayout());
@@ -375,7 +399,7 @@ public class ExperimentGUI extends JFrame {
 		list = new JList();
 		list.setModel(listModel);
 		overviewPanel.add(list, BorderLayout.CENTER);
-		
+
 		JPanel questionToRightPanel = new JPanel();
 		questionToRightPanel.setLayout(new BorderLayout());
 		questionCollectionPanel = new JPanel();
@@ -421,13 +445,14 @@ public class ExperimentGUI extends JFrame {
 
 		startButton = new JButton("Start");
 		codeCenter.add(startButton);
-		
+
 		Component horizontalStrut = Box.createHorizontalStrut(20);
 		horizontalStrut.setMaximumSize(new Dimension(40, 32767));
 		horizontalStrut.setMinimumSize(new Dimension(40, 0));
 		horizontalStrut.setPreferredSize(new Dimension(40, 0));
 		questionToRightPanel.add(horizontalStrut, BorderLayout.WEST);
-
+		
+		//Listener setzen
 		setListener();
 	}
 }
