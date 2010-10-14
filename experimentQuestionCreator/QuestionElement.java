@@ -9,6 +9,8 @@ import java.awt.GridLayout;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -18,6 +20,7 @@ import java.util.Vector;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -44,9 +47,14 @@ public class QuestionElement extends JPanel {
 	// Größe des Menus - Konstant, gilt für alle --> static
 	private static Dimension menuSize;
 
+	private JPanel contentPanel;// Panel für Inhalt der Komponente	
+	
 	private JPanel menuPanel; // Panel für menu der Komponente
-	private JPanel contentPanel;// Panel für Inhalt der Komponente
-	private JLabel close;
+	private JCheckBox editCheckBox;
+
+	private JPanel editPanel; //Panel für das editieren einzelner Komponenten
+	private JTextArea editTextArea;
+	private JComboBox editComboBox;
 
 	private int selection;// ausgewählte Komponente
 	private String text;
@@ -54,6 +62,7 @@ public class QuestionElement extends JPanel {
 	// Variablen für Drag and Drop
 	private boolean dragged;
 	private Point oldPos;
+	private Point newPos;
 	
 	//Komponente die erstellt werden wird
 	private JComponent comp;
@@ -75,8 +84,11 @@ public class QuestionElement extends JPanel {
 		oldPos = new Point();
 
 		super.setLayout(new FlowLayout(FlowLayout.LEFT));
+		
 		createMenu();
+		createEditPanel();		
 		createContent(text, selection);
+		
 		add(menuPanel);
 		add(contentPanel);
 
@@ -104,8 +116,11 @@ public class QuestionElement extends JPanel {
 		oldPos = new Point();
 
 		super.setLayout(new FlowLayout(FlowLayout.LEFT));
+
 		createMenu();
+		createEditPanel();		
 		createContent(text, selection, size);
+		
 		add(menuPanel);
 		add(contentPanel);
 
@@ -136,14 +151,33 @@ public class QuestionElement extends JPanel {
 			}
 		});
 		// schliessen-Label und Listener
-		close = new JLabel("x");
+		JLabel close = new JLabel("x");
 		close.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				fireEvent(QuestionElementEvent.QELECLOSED);
 			}
 		});
+		//CheckBox für das Aktivieren des Editiervorgangs
+		editCheckBox = new JCheckBox();
+		editCheckBox.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				if(editCheckBox.isSelected()) {
+					remove(contentPanel);
+					editTextArea.setText(text);
+					editComboBox.setSelectedIndex(selection);
+					add(editPanel);
+					updateSize(editPanel);
+				} else {
+					remove(editPanel);
+					add(contentPanel);
+					updateSize(contentPanel);
+				}
+				updateUI();
+			}
+		});
 
 		menuPanel.add(up);
+		menuPanel.add(editCheckBox);
 		menuPanel.add(down);
 		menuPanel.add(close);
 
@@ -156,22 +190,43 @@ public class QuestionElement extends JPanel {
 			menuPanel.setMinimumSize(menuSize);
 		}
 	}
-
+	
 	/**
-	 * Aktualisiert die Größe der Komponente
-	 * 
-	 * @param change
-	 *            Dimension um die sich die Größe ändern soll
+	 * Methode die das Editierpanel mit seinen Funktionen erstellt
 	 */
-	private void updateSize(Dimension change) {
-		Dimension oldD = getPreferredSize();
-		Dimension newD = new Dimension(
-				(int) (oldD.getWidth() + change.getWidth()),
-				(int) (oldD.getHeight() + change.getHeight()));
-		setPreferredSize(newD);
-		setMaximumSize(newD);
-		setMinimumSize(newD);
-		updateUI();
+	private void createEditPanel() {
+		editPanel = new JPanel();
+		editPanel.setLayout(new BorderLayout());
+		editTextArea = new JTextArea();
+		editTextArea.addKeyListener(new KeyAdapter() {
+			public void keyPressed(KeyEvent ke) {
+				updateSize(editPanel);
+			}
+		});
+		editPanel.add(editTextArea, BorderLayout.CENTER);
+		JPanel south = new JPanel();
+		editPanel.add(south, BorderLayout.SOUTH);
+		editComboBox = new JComboBox();
+		editComboBox.setModel(new DefaultComboBoxModel(new String[] {
+				"JLabel", "JTextField", "JTextArea", "JComboBox", "JCheckBox",
+		"JRadioButton" }));
+		south.add(editComboBox);
+		JButton editButton = new JButton("Übernehmen");
+		editButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				text = editTextArea.getText();
+				selection = editComboBox.getSelectedIndex();
+				contentPanel = null;
+				createContent(text, selection);
+				remove(editPanel);
+				add(contentPanel);
+				updateSize(contentPanel);
+				editCheckBox.setSelected(false);
+				updateUI();
+			}
+		});
+		south.add(editButton);
+		updateSize(editPanel);
 	}
 
 	/**
@@ -184,15 +239,7 @@ public class QuestionElement extends JPanel {
 	 */
 	private void createContent(String text, int selection) {
 		createContentHelp(text, selection);
-		// nötige Größe des gesamten Panels (mit Menu) berechnen
-		Dimension componentSize = contentPanel.getPreferredSize();
-		Dimension absoluteSize = new Dimension((int) (componentSize.getWidth()
-				+ menuSize.getWidth() + 100), (int) (Math.max(
-				componentSize.getHeight(), menuSize.getHeight()) + 25));
-		// Größe setzen
-		super.setPreferredSize(absoluteSize);
-		super.setMinimumSize(absoluteSize);
-		super.setMaximumSize(absoluteSize);
+		updateSize(contentPanel);
 	}
 
 	/**
@@ -211,15 +258,7 @@ public class QuestionElement extends JPanel {
 		contentPanel.setPreferredSize(size);
 		contentPanel.setMinimumSize(size);
 		contentPanel.setMaximumSize(size);
-		// nötige Größe des gesamten Panels (mit Menu) berechnen
-		Dimension componentSize = contentPanel.getPreferredSize();
-		Dimension absoluteSize = new Dimension((int) (componentSize.getWidth()
-				+ menuSize.getWidth() + 100), (int) (Math.max(
-				componentSize.getHeight(), menuSize.getHeight()) + 25));
-		// Größe setzen
-		super.setPreferredSize(absoluteSize);
-		super.setMinimumSize(absoluteSize);
-		super.setMaximumSize(absoluteSize);
+		updateSize(contentPanel);
 	}
 
 	/**
@@ -352,6 +391,39 @@ public class QuestionElement extends JPanel {
 				oldPos = me.getPoint();
 			}
 		});
+	}	
+
+	/**
+	 * Aktualisiert die Größe der Komponente
+	 * 
+	 * @param change
+	 *            Dimension um die sich die Größe ändern soll
+	 */
+	private void updateSize(Dimension change) {
+		Dimension oldD = getPreferredSize();
+		Dimension newD = new Dimension(
+				(int) (oldD.getWidth() + change.getWidth()),
+				(int) (oldD.getHeight() + change.getHeight()));
+		setPreferredSize(newD);
+		setMaximumSize(newD);
+		setMinimumSize(newD);
+		updateUI();
+	}
+	
+	/**
+	 * Aktualisiert die Größe der Komponente auf seine Standartgröße
+	 * @param selection
+	 */
+	private void updateSize(JPanel selection) {
+		//Größe der Komponente herausfinden		
+		Dimension componentSize = selection.getPreferredSize();
+		Dimension absoluteSize = new Dimension((int) (componentSize.getWidth()
+				+ menuSize.getWidth() + 100), (int) (Math.max(
+				componentSize.getHeight(), menuSize.getHeight()) + 25));
+		// Größe setzen
+		setPreferredSize(absoluteSize);
+		setMinimumSize(absoluteSize);
+		setMaximumSize(absoluteSize);		
 	}
 
 	/**
