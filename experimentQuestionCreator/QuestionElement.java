@@ -3,13 +3,14 @@ package experimentQuestionCreator;
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -32,13 +33,14 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.event.ChangeListener;
 
 public class QuestionElement extends JPanel {
 
 	// Vector der alle Listener beherbergt
 	Vector<QuestionElementListener> questionElementListeners;
 
-	// Konstanten, für die jeweiligen Komponenten stehen
+	// Konstanten, für die jeweiligen Komponenten stehen (in Enum ändern?)
 	public static final int LABEL = 0;
 	public static final int TEXTFIELD = 1;
 	public static final int TEXTAREA = 2;
@@ -49,23 +51,25 @@ public class QuestionElement extends JPanel {
 	// Größe des Menus - Konstant, gilt für alle --> static
 	private static Dimension menuSize;
 
-	private JPanel contentPanel;// Panel für Inhalt der Komponente	
-	
+	private JPanel contentPanel;// Panel für Inhalt der Komponente
+
 	private JPanel menuPanel; // Panel für menu der Komponente
 	private JCheckBox editCheckBox;
 
-	private JPanel editPanel; //Panel für das editieren einzelner Komponenten
+	private JPanel editPanel; // Panel für das editieren einzelner Komponenten
 	private JTextArea editTextArea;
 	private JComboBox editComboBox;
 
 	private int selection;// ausgewählte Komponente
 	private String text;
-	
+	// Extra antwort String, muss noch eingebaut werden
+	private String answer;
+
 	// Variablen für Drag and Drop
 	private boolean dragged;
 	private Point oldPos;
 	private Point newPos;
-	
+
 	private JComponent comp;
 
 	/**
@@ -80,16 +84,17 @@ public class QuestionElement extends JPanel {
 		super();
 		this.selection = selection;
 		this.text = text;
+		this.answer = "";
 
 		dragged = false;
 		oldPos = new Point();
 
 		super.setLayout(new FlowLayout(FlowLayout.LEFT));
-		
+
 		createMenu();
-		createEditPanel();		
+		createEditPanel();
 		createContent();
-		
+
 		add(menuPanel);
 		add(contentPanel);
 
@@ -99,7 +104,8 @@ public class QuestionElement extends JPanel {
 	}
 
 	/**
-	 * Konstruktor für das Erstellen einer Komponente mir bestimmten Eigenschaften
+	 * Konstruktor für das Erstellen einer Komponente mir bestimmten
+	 * Eigenschaften
 	 * 
 	 * @param text
 	 *            Inhalt/Beschriftung der Komponente
@@ -113,22 +119,29 @@ public class QuestionElement extends JPanel {
 	 * @param border
 	 *            Gibt an ob die Komponente umrandet sein soll
 	 */
-	public QuestionElement(String text, int selection, boolean menu, Dimension size, boolean border) {
+	public QuestionElement(String text, int selection, boolean menu,
+			Dimension size, boolean border) {
 		super();
 		this.selection = selection;
 		this.text = text;
+		this.answer = "";
 
 		dragged = false;
 		oldPos = new Point();
 
 		super.setLayout(new FlowLayout(FlowLayout.LEFT));
-		
+
 		createMenu();
-		createEditPanel();		
+		createEditPanel();
 		createContent(size, border);
-		
-		if(menu)
+
+		if (menu) {
 			add(menuPanel);
+		} else {
+			JPanel filler = new JPanel();
+			filler.setPreferredSize(menuSize);
+			add(filler);
+		}
 		add(contentPanel);
 
 		addDragAndDrop();
@@ -164,11 +177,11 @@ public class QuestionElement extends JPanel {
 				fireEvent(QuestionElementEvent.QELECLOSED);
 			}
 		});
-		//CheckBox für das Aktivieren des Editiervorgangs
+		// CheckBox für das Aktivieren des Editiervorgangs
 		editCheckBox = new JCheckBox();
 		editCheckBox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				if(editCheckBox.isSelected()) {
+				if (editCheckBox.isSelected()) {
 					remove(contentPanel);
 					editTextArea.setText(text);
 					editComboBox.setSelectedIndex(selection);
@@ -197,7 +210,7 @@ public class QuestionElement extends JPanel {
 			menuPanel.setMinimumSize(menuSize);
 		}
 	}
-	
+
 	/**
 	 * Methode die das Editierpanel mit seinen Funktionen erstellt
 	 */
@@ -214,9 +227,9 @@ public class QuestionElement extends JPanel {
 		JPanel south = new JPanel();
 		editPanel.add(south, BorderLayout.SOUTH);
 		editComboBox = new JComboBox();
-		editComboBox.setModel(new DefaultComboBoxModel(new String[] {
-				"JLabel", "JTextField", "JTextArea", "JComboBox", "JCheckBox",
-		"JRadioButton" }));
+		editComboBox.setModel(new DefaultComboBoxModel(new String[] { "JLabel",
+				"JTextField", "JTextArea", "JComboBox", "JCheckBox",
+				"JRadioButton" }));
 		south.add(editComboBox);
 		JButton editButton = new JButton("Übernehmen");
 		editButton.addActionListener(new ActionListener() {
@@ -266,17 +279,18 @@ public class QuestionElement extends JPanel {
 	 * Hilfsfunktion zur CreateContent-Methode, da diese überladen ist und der
 	 * Code übersichtlicher gehalten werden soll
 	 * 
-	 * @param border gibt an ob die Komponente umrandet sein soll
+	 * @param border
+	 *            gibt an ob die Komponente umrandet sein soll
 	 */
 	private void createContentHelp(boolean border) {
 		contentPanel = new JPanel();
 		contentPanel.setLayout(new BorderLayout());
-		if(border)
+		if (border)
 			contentPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
 		// Text splitten für Componenten wie JRadioButton
 		String[] texte = text.split("\n");
-		
+
 		// Komponente erstellen
 		switch (selection) {
 		case LABEL:
@@ -293,6 +307,14 @@ public class QuestionElement extends JPanel {
 			break;
 		case COMBOBOX:
 			comp = new JComboBox(texte);
+			((JComboBox) comp).addItemListener(new ItemListener() {
+				public void itemStateChanged(ItemEvent arg0) {
+					answer = "" + ((JComboBox) comp).getSelectedIndex();
+				}
+			});
+			if (!answer.equals("")) {
+				((JComboBox) comp).setSelectedIndex(Integer.parseInt(answer));
+			}
 			contentPanel.add(comp, BorderLayout.CENTER);
 			break;
 		case CHECKBOX:
@@ -306,12 +328,22 @@ public class QuestionElement extends JPanel {
 			break;
 		case RADIOBUTTON:
 			comp = new JPanel();
-			comp.setLayout(new GridLayout(texte.length, 1));
 			ButtonGroup btngroup = new ButtonGroup();
+			comp.setLayout(new GridLayout(texte.length, 1));
 			for (int i = 0; i < texte.length; i++) {
 				JRadioButton radiobtn = new JRadioButton(texte[i]);
 				comp.add(radiobtn);
 				btngroup.add(radiobtn);
+				if (!answer.equals("")) {
+					if (i == Integer.parseInt(answer)) {
+						radiobtn.setSelected(true);
+					}
+				}
+				radiobtn.addItemListener(new ItemListener() {
+					public void itemStateChanged(ItemEvent e) {
+						//index im comp herausfinden --> alle durchlaufen
+					}
+				});
 			}
 			contentPanel.add(comp, BorderLayout.CENTER);
 			break;
@@ -319,13 +351,14 @@ public class QuestionElement extends JPanel {
 			break;
 		}
 	}
-	
+
 	/**
 	 * Versucht die Textfeld-Komponente zurückzugeben
+	 * 
 	 * @return JTextfield, oder null wenn nicht möglich
 	 */
 	public JTextField getTextField() {
-		if(selection == 1) {
+		if (selection == TEXTFIELD) {
 			return (JTextField) comp;
 		} else {
 			return null;
@@ -334,10 +367,11 @@ public class QuestionElement extends JPanel {
 
 	/**
 	 * Versucht die TextArea-Komponente zurückzugeben
+	 * 
 	 * @return JTextArea, oder null wenn nicht möglich
 	 */
 	public JTextArea getTextArea() {
-		if(selection == 2) {
+		if (selection == TEXTAREA) {
 			return (JTextArea) comp;
 		} else {
 			return null;
@@ -346,10 +380,11 @@ public class QuestionElement extends JPanel {
 
 	/**
 	 * Versucht die ComboBox-Komponente zurückzugeben
+	 * 
 	 * @return JComboBox, oder null wenn nicht möglich
 	 */
 	public JComboBox getComboBox() {
-		if(selection == 3) {
+		if (selection == COMBOBOX) {
 			return (JComboBox) comp;
 		} else {
 			return null;
@@ -358,10 +393,11 @@ public class QuestionElement extends JPanel {
 
 	/**
 	 * Versucht das Panel mit den Checkbox-Komponenten zurückzugeben
+	 * 
 	 * @return JPanel, oder null wenn nicht möglich
 	 */
 	public JPanel getCheckBoxPanel() {
-		if(selection == 4) {
+		if (selection == CHECKBOX) {
 			return (JPanel) comp;
 		} else {
 			return null;
@@ -370,10 +406,11 @@ public class QuestionElement extends JPanel {
 
 	/**
 	 * Versucht das Panel mit den RadioButton-Komponenten zurückzugeben
+	 * 
 	 * @return JPanel, oder null wenn nicht möglich
 	 */
 	public JPanel getRadioButtonPanel() {
-		if(selection == 5) {
+		if (selection == RADIOBUTTON) {
 			return (JPanel) comp;
 		} else {
 			return null;
@@ -397,6 +434,15 @@ public class QuestionElement extends JPanel {
 	 */
 	public String getText() {
 		return text;
+	}
+
+	/**
+	 * Liefert die Vorgegebene Antwort für diese Komponente zurück
+	 * 
+	 * @return Antwort als String
+	 */
+	public String getAnswer() {
+		return answer;
 	}
 
 	/**
@@ -460,7 +506,7 @@ public class QuestionElement extends JPanel {
 				oldPos = me.getPoint();
 			}
 		});
-	}	
+	}
 
 	/**
 	 * Aktualisiert die Größe der Komponente
@@ -478,13 +524,14 @@ public class QuestionElement extends JPanel {
 		setMinimumSize(newD);
 		updateUI();
 	}
-	
+
 	/**
 	 * Aktualisiert die Größe der Komponente auf seine Standartgröße
+	 * 
 	 * @param selection
 	 */
 	private void updateSize(JPanel selection) {
-		//Größe der Komponente herausfinden		
+		// Größe der Komponente herausfinden
 		Dimension componentSize = selection.getPreferredSize();
 		Dimension absoluteSize = new Dimension((int) (componentSize.getWidth()
 				+ menuSize.getWidth() + 100), (int) (Math.max(
@@ -492,7 +539,7 @@ public class QuestionElement extends JPanel {
 		// Größe setzen
 		setPreferredSize(absoluteSize);
 		setMinimumSize(absoluteSize);
-		setMaximumSize(absoluteSize);		
+		setMaximumSize(absoluteSize);
 	}
 
 	/**

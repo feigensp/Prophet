@@ -23,10 +23,20 @@ public class Watch extends JLabel implements Runnable {
 	 */
 
 	/**
-	 * Standartkonstruktor
+	 * Konstruktor durch welchen aktuelle Uhrzeit im Label angezeigt wird
+	 * 
+	 * @param label Beschriftung die vor der Uhrzeit stehen soll
 	 */
 	public Watch(String label) {
 		this.label = label;
+		t = new Thread(this);
+	}
+	
+	/**
+	 * Konstruktor für eine "unsichtbare" Uhr
+	 */
+	public Watch() {
+		this.label = null;
 		t = new Thread(this);
 	}
 
@@ -84,18 +94,20 @@ public class Watch extends JLabel implements Runnable {
 	public void run() {
 		while (true) {
 			clock = (System.currentTimeMillis() - time) / 1000;
-			// Zeiten ins display schreiben
-			if (clock / 60 < 10) {
-				if (clock < 10) {
-					setText(label + ": 0" + (clock / 60) + ":0" + clock);
+			if (label != null) {
+				// Zeiten ins display schreiben
+				if (clock / 60 < 10) {
+					if (clock < 10) {
+						setText(label + ": 0" + (clock / 60) + ":0" + clock);
+					} else {
+						setText(label + ": 0" + (clock / 60) + ":" + clock);
+					}
 				} else {
-					setText(label + ": 0" + (clock / 60) + ":" + clock);
-				}
-			} else {
-				if (clock < 10) {
-					setText(label + ": " + (clock / 60) + ":0" + clock);
-				} else {
-					setText(label + ": " + (clock / 60) + ":" + clock);
+					if (clock < 10) {
+						setText(label + ": " + (clock / 60) + ":0" + clock);
+					} else {
+						setText(label + ": " + (clock / 60) + ":" + clock);
+					}
 				}
 			}
 			try {
@@ -110,5 +122,12 @@ public class Watch extends JLabel implements Runnable {
 			}
 		}
 	}
-
+	
+	/**
+	 * Gibt die aktuell gestoppte Zeit zurück
+	 * @return Zeit Sekunden
+	 */
+	public long getTime() {
+		return clock;
+	}
 }

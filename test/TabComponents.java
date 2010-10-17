@@ -7,6 +7,7 @@ import javax.swing.JTextArea;
 
 import EditorTabbedPane.SearchBar;
 
+
 public class TabComponents {
 	private static LinkedList<JPanel> panels;
 	private static LinkedList<JTextArea> textareas;

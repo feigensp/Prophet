@@ -276,6 +276,10 @@ public class QuestionCreator extends JFrame {
 				Vector<ElementAttribute> componentAttributes = new Vector<ElementAttribute>();
 				componentAttributes.add(new ElementAttribute<String>("text",
 						ele.getText()));
+				if (!ele.getAnswer().equals("")) {
+					componentAttributes.add(new ElementAttribute<String>(
+							"answer", ele.getAnswer()));
+				}
 				componentAttributes.add(new ElementAttribute<Integer>("model",
 						ele.getSelection()));
 				componentAttributes.add(new ElementAttribute<Integer>("x",
@@ -322,6 +326,7 @@ public class QuestionCreator extends JFrame {
 				Vector<ElementAttribute> componentAttributes = treeComponent
 						.getAttributes();
 				String componentText = "default";
+				String componentAnswer = "";
 				int componentModel = 0;
 				int componentWidth = 75;
 				int componentHeight = 25;
@@ -336,6 +341,11 @@ public class QuestionCreator extends JFrame {
 						componentText = componentAttribute.getContent()
 								.toString();
 					} else
+					// Antwort-Attribut
+					if (componentAttribute.getName().equals("answer")) {
+						componentAnswer = componentAttribute.getContent()
+								.toString();
+					} else
 					// Breite-Attribut
 					if (componentAttribute.getName().equals("x")) {
 						componentWidth = Integer.parseInt(componentAttribute
@@ -347,9 +357,23 @@ public class QuestionCreator extends JFrame {
 								.getContent().toString());
 					}
 				}
-				questions.get(i).addComponent(componentText, componentModel,
-						true, new Dimension(componentWidth, componentHeight),
-						true);
+				if (!componentAnswer.equals("")) {
+					switch (componentModel) {
+					case QuestionElement.TEXTFIELD:
+						break;
+					case QuestionElement.COMBOBOX:
+						break;
+					case QuestionElement.CHECKBOX:
+						break;
+					case QuestionElement.RADIOBUTTON:
+						break;
+					}
+				} //else {
+					questions.get(i).addComponent(componentText,
+							componentModel, true,
+							new Dimension(componentWidth, componentHeight),
+							true);
+				//}
 			}
 			i++;
 		}
@@ -462,7 +486,7 @@ public class QuestionCreator extends JFrame {
 
 		newTextField = new JTextField();
 		newTextField.setColumns(10);
-		//newTextField.setDocument(new TextFieldDoc());
+		// newTextField.setDocument(new TextFieldDoc());
 		overviewTextPanel.add(newTextField);
 
 		JPanel overviewActionPanel = new JPanel();

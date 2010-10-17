@@ -113,28 +113,28 @@ public class ExperimentGUI extends JFrame {
 				Vector<ElementAttribute> componentAttributes = new Vector<ElementAttribute>();
 				int sel = ele.getSelection();
 				switch (sel) {
-				case 1:
+				case QuestionElement.TEXTFIELD:
 					componentAttributes.add(new ElementAttribute<String>(
-							"model", "" + 1));
+							"model", "" + QuestionElement.TEXTFIELD));
 					componentAttributes.add(new ElementAttribute<String>(
 							"answer", ele.getTextField().getText()));
 					break;
-				case 2:
+				case QuestionElement.TEXTAREA:
 					componentAttributes.add(new ElementAttribute<String>(
-							"model", "" + 2));
+							"model", "" + QuestionElement.TEXTAREA));
 					componentAttributes.add(new ElementAttribute<String>(
 							"answer", ele.getTextArea().getText()));
 					break;
-				case 3:
+				case QuestionElement.COMBOBOX:
 					componentAttributes.add(new ElementAttribute<String>(
-							"model", "" + 3));
+							"model", "" + QuestionElement.COMBOBOX));
 					componentAttributes.add(new ElementAttribute<String>(
 							"answer", ele.getComboBox().getSelectedItem()
 									.toString()));
 					break;
-				case 4:
+				case QuestionElement.CHECKBOX:
 					componentAttributes.add(new ElementAttribute<String>(
-							"model", "" + 4));
+							"model", "" + QuestionElement.CHECKBOX));
 					Component[] checkComp = ele.getCheckBoxPanel()
 							.getComponents();
 					Object check = null;
@@ -150,9 +150,9 @@ public class ExperimentGUI extends JFrame {
 					componentAttributes.add(new ElementAttribute<String>(
 							"answer", s));
 					break;
-				case 5:
+				case QuestionElement.RADIOBUTTON:
 					componentAttributes.add(new ElementAttribute<String>(
-							"model", "" + 5));
+							"model", "" + QuestionElement.RADIOBUTTON));
 					Component[] radioComp = ele.getRadioButtonPanel()
 							.getComponents();
 					Object radio = null;
@@ -400,11 +400,8 @@ public class ExperimentGUI extends JFrame {
 		list.setModel(listModel);
 		overviewPanel.add(list, BorderLayout.CENTER);
 
-		JPanel questionToRightPanel = new JPanel();
-		questionToRightPanel.setLayout(new BorderLayout());
 		questionCollectionPanel = new JPanel();
-		questionToRightPanel.add(questionCollectionPanel, BorderLayout.CENTER);
-		centerSplit.setRightComponent(questionToRightPanel);
+		centerSplit.setRightComponent(questionCollectionPanel);
 		questionCardLayout = new CardLayout();
 		questionCollectionPanel.setLayout(questionCardLayout);
 
@@ -445,12 +442,6 @@ public class ExperimentGUI extends JFrame {
 
 		startButton = new JButton("Start");
 		codeCenter.add(startButton);
-
-		Component horizontalStrut = Box.createHorizontalStrut(20);
-		horizontalStrut.setMaximumSize(new Dimension(40, 32767));
-		horizontalStrut.setMinimumSize(new Dimension(40, 0));
-		horizontalStrut.setPreferredSize(new Dimension(40, 0));
-		questionToRightPanel.add(horizontalStrut, BorderLayout.WEST);
 		
 		//Listener setzen
 		setListener();

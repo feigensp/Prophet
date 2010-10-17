@@ -4,11 +4,14 @@ import java.awt.Component;
 import java.io.File;
 
 import javax.swing.JTabbedPane;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 @SuppressWarnings("serial")
 public class EditorTabbedPane extends JTabbedPane {
 	boolean searchable;
 	boolean editable;
+	UserDataRecorder rec;
 	
 	public EditorTabbedPane() {
 		super(JTabbedPane.TOP);
@@ -17,7 +20,7 @@ public class EditorTabbedPane extends JTabbedPane {
 	}
 	
 	public EditorTabbedPane(boolean searchable, boolean editable) {
-		super(JTabbedPane.TOP);
+		super(JTabbedPane.TOP);		
 		this.searchable = searchable;
 		this.editable = editable;		
 	}
@@ -35,6 +38,6 @@ public class EditorTabbedPane extends JTabbedPane {
 		add(file.getName(), myPanel);
 		setSelectedIndex(indexOfComponent(myPanel));
 		this.setTabComponentAt(this.getTabCount()-1, new ButtonTabComponent(this));
-		myPanel.grabFocus();
+		myPanel.grabFocus();		
 	}
 }

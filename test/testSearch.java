@@ -11,6 +11,7 @@ import javax.swing.border.EmptyBorder;
 
 import EditorTabbedPane.SearchBar;
 
+
 @SuppressWarnings("serial")
 public class testSearch extends JFrame {
 

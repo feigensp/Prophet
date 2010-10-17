@@ -11,6 +11,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JSplitPane;
 
 import EditorTabbedPane.EditorTabbedPane;
+
 import FileTree.FileEvent;
 import FileTree.FileListener;
 import FileTree.FileTree;
