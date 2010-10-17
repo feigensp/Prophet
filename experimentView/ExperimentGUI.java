@@ -289,6 +289,7 @@ public class ExperimentGUI extends JFrame {
 				Vector<ElementAttribute> componentAttributes = treeComponent
 						.getAttributes();
 				String componentText = "default";
+				String componentAnswer = "";
 				int componentModel = 0;
 				int componentWidth = 75;
 				int componentHeight = 25;
@@ -303,6 +304,11 @@ public class ExperimentGUI extends JFrame {
 						componentText = componentAttribute.getContent()
 								.toString();
 					} else
+					// Antwort-Attribut
+					if (componentAttribute.getName().equals("answer")) {
+						componentAnswer = componentAttribute.getContent()
+								.toString();
+					} else
 					// Breite-Attribut
 					if (componentAttribute.getName().equals("x")) {
 						componentWidth = Integer.parseInt(componentAttribute
@@ -314,9 +320,9 @@ public class ExperimentGUI extends JFrame {
 								.getContent().toString());
 					}
 				}
-				questionPanel.addComponent(componentText, componentModel,
-						false, new Dimension(componentWidth, componentHeight),
-						false);
+				questionPanel.addComponent(componentText, componentAnswer,
+						componentModel, false, new Dimension(componentWidth,
+								componentHeight), false);
 			}
 			// Frage zur Sammlung hinzufügen
 			questionPanels.add(questionPanel);
@@ -442,8 +448,8 @@ public class ExperimentGUI extends JFrame {
 
 		startButton = new JButton("Start");
 		codeCenter.add(startButton);
-		
-		//Listener setzen
+
+		// Listener setzen
 		setListener();
 	}
 }

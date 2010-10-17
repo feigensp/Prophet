@@ -3,6 +3,7 @@ package experimentQuestionCreator;
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
@@ -17,6 +18,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Vector;
 
@@ -33,7 +35,6 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.event.ChangeListener;
 
 public class QuestionElement extends JPanel {
 
@@ -109,6 +110,8 @@ public class QuestionElement extends JPanel {
 	 * 
 	 * @param text
 	 *            Inhalt/Beschriftung der Komponente
+	 * @param answer
+	 *            Vorgegebene antwort
 	 * @param selection
 	 *            Komponententyp
 	 * @param menu
@@ -119,12 +122,12 @@ public class QuestionElement extends JPanel {
 	 * @param border
 	 *            Gibt an ob die Komponente umrandet sein soll
 	 */
-	public QuestionElement(String text, int selection, boolean menu,
-			Dimension size, boolean border) {
+	public QuestionElement(String text, String answer, int selection,
+			boolean menu, Dimension size, boolean border) {
 		super();
 		this.selection = selection;
 		this.text = text;
-		this.answer = "";
+		this.answer = answer;
 
 		dragged = false;
 		oldPos = new Point();
@@ -183,7 +186,11 @@ public class QuestionElement extends JPanel {
 			public void actionPerformed(ActionEvent ae) {
 				if (editCheckBox.isSelected()) {
 					remove(contentPanel);
-					editTextArea.setText(text);
+					if (selection == TEXTFIELD && !answer.equals("")) {
+						editTextArea.setText(text + "[" + answer + "]");
+					} else {
+						editTextArea.setText(text);
+					}
 					editComboBox.setSelectedIndex(selection);
 					add(editPanel);
 					updateSize(editPanel);
@@ -234,8 +241,18 @@ public class QuestionElement extends JPanel {
 		JButton editButton = new JButton("Übernehmen");
 		editButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				text = editTextArea.getText();
 				selection = editComboBox.getSelectedIndex();
+				text = editTextArea.getText();
+				// Text und Antwort trennen wenn es ein TextField ist (Antwort
+				// wenn ganz hinten etwas in eckigen Klammern)
+				if (selection == TEXTFIELD && text.endsWith("]")
+						&& text.contains("[")) {
+					answer = text.substring(text.lastIndexOf("[") + 1,
+							text.length() - 1);
+					text = text.substring(0, text.lastIndexOf("[") - 1);
+				} else {
+					answer = "";
+				}
 				contentPanel = null;
 				createContent();
 				remove(editPanel);
@@ -320,9 +337,40 @@ public class QuestionElement extends JPanel {
 		case CHECKBOX:
 			comp = new JPanel();
 			comp.setLayout(new GridLayout(texte.length, 1));
+			// Integer-Array mit vorgegeben Antworten versuchen zu erstellen
+			ArrayList<Integer> selectedBoxes = new ArrayList<Integer>();
+			if (!answer.equals("")) {
+				String[] selectedAnswers = answer.split(",");
+				for (int i = 0; i < selectedAnswers.length; i++) {
+					try {
+						selectedBoxes.add(Integer.parseInt(selectedAnswers[i]));
+					} catch (NumberFormatException e) {
+					}
+				}
+			}
 			for (int i = 0; i < texte.length; i++) {
 				JCheckBox chkbox = new JCheckBox(texte[i]);
 				comp.add(chkbox);
+				// Antwort setzen wenn vorgegeben
+				if (selectedBoxes.contains(i)) {
+					chkbox.setSelected(true);
+				}
+				// Listener hinzufügen, der die Antwort aktualisiert
+				chkbox.addItemListener(new ItemListener() {
+					public void itemStateChanged(ItemEvent e) {
+						answer = "";
+						Component[] checkComp = comp.getComponents();
+						Object check = null;
+						for (int i = 0; i < checkComp.length; i++) {
+							check = checkComp[i];
+							if (check instanceof JCheckBox) {
+								if (((JCheckBox) check).isSelected()) {
+									answer += i + ",";
+								}
+							}
+						}
+					}
+				});
 			}
 			contentPanel.add(comp, BorderLayout.CENTER);
 			break;
@@ -330,18 +378,30 @@ public class QuestionElement extends JPanel {
 			comp = new JPanel();
 			ButtonGroup btngroup = new ButtonGroup();
 			comp.setLayout(new GridLayout(texte.length, 1));
+			// Radiobuttons erstellen und hinzufügen
 			for (int i = 0; i < texte.length; i++) {
 				JRadioButton radiobtn = new JRadioButton(texte[i]);
 				comp.add(radiobtn);
 				btngroup.add(radiobtn);
+				// Antwort setzen wenn vorgegeben
 				if (!answer.equals("")) {
 					if (i == Integer.parseInt(answer)) {
 						radiobtn.setSelected(true);
 					}
 				}
+				// Listener hinzufügen, der die Antwort aktualisiert
 				radiobtn.addItemListener(new ItemListener() {
 					public void itemStateChanged(ItemEvent e) {
-						//index im comp herausfinden --> alle durchlaufen
+						Component[] radioComp = comp.getComponents();
+						Object radio = null;
+						for (int i = 0; i < radioComp.length; i++) {
+							radio = radioComp[i];
+							if (radio instanceof JRadioButton) {
+								if (((JRadioButton) radio).isSelected()) {
+									answer = "" + i;
+								}
+							}
+						}
 					}
 				});
 			}

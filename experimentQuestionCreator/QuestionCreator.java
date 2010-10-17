@@ -369,7 +369,7 @@ public class QuestionCreator extends JFrame {
 						break;
 					}
 				} //else {
-					questions.get(i).addComponent(componentText,
+					questions.get(i).addComponent(componentText, componentAnswer,
 							componentModel, true,
 							new Dimension(componentWidth, componentHeight),
 							true);

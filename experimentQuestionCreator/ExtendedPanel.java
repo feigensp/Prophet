@@ -24,7 +24,8 @@ import javax.swing.JScrollPane;
 public class ExtendedPanel extends JPanel implements QuestionElementListener {
 
 	private int id; // ID dieses ExtendedPanel
-	private String headline; // Überschrift für Frage die das Panel repräsentiert
+	private String headline; // Überschrift für Frage die das Panel
+								// repräsentiert
 
 	private JLabel headlineLabel;
 	// Panel welches alle Komponenten der Frage beinhalten wird
@@ -101,6 +102,8 @@ public class ExtendedPanel extends JPanel implements QuestionElementListener {
 	 *            Inhalt/Beschriftung
 	 * @param selection
 	 *            Komponententyp
+	 * @param answer
+	 *            vorgegebene Antwort
 	 * @param menu
 	 *            Gibt an, ob ein Editor-Menu für diese Komponente mit erzeugt
 	 *            werden soll
@@ -109,10 +112,10 @@ public class ExtendedPanel extends JPanel implements QuestionElementListener {
 	 * @param border
 	 *            Gibt an ob die Komponente umrandet sein soll
 	 */
-	public void addComponent(String text, int selection, boolean menu,
-			Dimension size, boolean border) {
-		QuestionElement qEle = new QuestionElement(text, selection, menu, size,
-				border);
+	public void addComponent(String text, String answer, int selection,
+			boolean menu, Dimension size, boolean border) {
+		QuestionElement qEle = new QuestionElement(text, answer, selection,
+				menu, size, border);
 		qEle.addQuestionElementListener(this);
 		elements.add(qEle);
 		qEle.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -194,7 +197,8 @@ public class ExtendedPanel extends JPanel implements QuestionElementListener {
 	/**
 	 * Setzt eine neue Überschrift
 	 * 
-	 * @param headline Überschrift die gesetzt wird
+	 * @param headline
+	 *            Überschrift die gesetzt wird
 	 */
 	public void setHeadline(String headline) {
 		this.headline = headline;
