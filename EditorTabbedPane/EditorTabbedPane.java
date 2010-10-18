@@ -38,6 +38,6 @@ public class EditorTabbedPane extends JTabbedPane {
 		add(file.getName(), myPanel);
 		setSelectedIndex(indexOfComponent(myPanel));
 		this.setTabComponentAt(this.getTabCount()-1, new ButtonTabComponent(this));
-		myPanel.grabFocus();		
+		myPanel.grabFocus();	
 	}
 }
