@@ -45,6 +45,7 @@ import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.JCheckBoxMenuItem;
 
 public class QuestionCreator extends JFrame {
 
@@ -457,6 +458,15 @@ public class QuestionCreator extends JFrame {
 		closeMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F4,
 				InputEvent.ALT_MASK));
 		fileMenu.add(closeMenuItem);
+		
+		JMenu featureMenu = new JMenu("Features");
+		menuBar.add(featureMenu);
+		
+		JCheckBoxMenuItem searchCheckMenuItem = new JCheckBoxMenuItem("Suchfunktion");
+		featureMenu.add(searchCheckMenuItem);
+		
+		JCheckBoxMenuItem highlightChkBox = new JCheckBoxMenuItem("Syntax-Highlighting");
+		featureMenu.add(highlightChkBox);
 
 		JPanel contentPane = new JPanel();
 		setContentPane(contentPane);
