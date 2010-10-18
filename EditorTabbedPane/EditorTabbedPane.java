@@ -4,8 +4,6 @@ import java.awt.Component;
 import java.io.File;
 
 import javax.swing.JTabbedPane;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 @SuppressWarnings("serial")
 public class EditorTabbedPane extends JTabbedPane {
