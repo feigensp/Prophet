@@ -20,12 +20,13 @@ public class UserDataRecorder {
 	private String selectedTitle;
 	private Watch timeLineWatch;
 	private JTabbedPane timeLineTabbedPane;
+	private ArrayList<String> tabs;
 
 	private ArrayList<FileTime> fileTimes;
 	private ArrayList<Watch> clocks;
 	private JTabbedPane fileTimesTabbedPane;
 	private int lastClock;
-	
+
 	/**
 	 * Standartkonstruktor
 	 */
@@ -36,12 +37,20 @@ public class UserDataRecorder {
 
 	/**
 	 * Methode um einen Zeitlinienaufbau bzgl. einer tabbedPane aufzubauen
-	 * @param tabbedPane TabbedPane zu der ein Zeistrahl aufgebaut werden soll
+	 * 
+	 * @param tabbedPane
+	 *            TabbedPane zu der ein Zeistrahl aufgebaut werden soll
 	 */
 	public void startTimeLine(JTabbedPane tabbedPane) {
 		timeLineWatch = new Watch();
 		timeLineTabbedPane = tabbedPane;
 		int selected = timeLineTabbedPane.getSelectedIndex();
+		tabs = new ArrayList<String>();
+
+		// alle derzeitigen Tab-Titel hinzufügen
+		for (int i = 0; i < timeLineTabbedPane.getComponentCount(); i++) {
+			tabs.add(timeLineTabbedPane.getTitleAt(i));
+		}
 
 		timeLineWatch.start();
 		timeLineWatch.pause();
@@ -53,6 +62,7 @@ public class UserDataRecorder {
 		}
 		timeLineTabbedPane.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
+				// Tab wurde hinzugefügt
 				if (!selectedTitle.equals("")) {
 					timeLine.add(new FileTime(selectedTitle, timeLineWatch
 							.getTime()));
@@ -67,6 +77,7 @@ public class UserDataRecorder {
 
 	/**
 	 * Gibt den Zeistrahl zu einer TabbedPane zurück
+	 * 
 	 * @return ArrayList mit dem Zeistrahl
 	 */
 	public ArrayList<FileTime> getTimeLine() {
@@ -80,7 +91,7 @@ public class UserDataRecorder {
 	 * @param tabbedPane
 	 *            die TabbedPane, welche überwacht werden soll
 	 */
-	public void setFileTime(JTabbedPane tabbedPane) {
+	public void startFileTime(JTabbedPane tabbedPane) {
 		clocks = new ArrayList<Watch>();
 		this.fileTimesTabbedPane = tabbedPane;
 		startTimeMeasure();
@@ -99,29 +110,35 @@ public class UserDataRecorder {
 
 		fileTimesTabbedPane.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent arg0) {
-				// letzte Clock pausieren und neue starten
-				String title = fileTimesTabbedPane
-						.getTitleAt(fileTimesTabbedPane.getSelectedIndex());
-				int index = fileTimesTabbedPane.getSelectedIndex();
-				for (int i = 0; i < fileTimes.size(); i++) {
-					if (title.equals(fileTimes.get(i).getFile())) {
-						index = i;
+				//Prüfen ob noch ein Tab offen
+				if(fileTimesTabbedPane.getComponentCount()>=1) {
+					// letzte Clock pausieren und neue starten
+					String title = fileTimesTabbedPane
+							.getTitleAt(fileTimesTabbedPane.getSelectedIndex());
+					int index = fileTimesTabbedPane.getSelectedIndex();
+					for (int i = 0; i < fileTimes.size(); i++) {
+						if (title.equals(fileTimes.get(i).getFile())) {
+							index = i;
+						}
 					}
+	
+					// int i = tabbedPane.getSelectedIndex();
+					if (lastClock >= 0) {
+						clocks.get(lastClock).pause();
+						fileTimes.get(lastClock).setTime(
+								clocks.get(lastClock).getTime());
+					}
+	
+					lastClock = index;
+	
+					if (index >= fileTimes.size()) {
+						addFileTime(index);
+					}
+					clocks.get(index).resume();
+				} else {
+					//letzte Uhrzeit setzen
+					fileTimes.get(lastClock).setTime(clocks.get(lastClock).getTime());					
 				}
-
-				// int i = tabbedPane.getSelectedIndex();
-				if (lastClock >= 0) {
-					clocks.get(lastClock).pause();
-					fileTimes.get(lastClock).setTime(
-							clocks.get(lastClock).getTime());
-				}
-
-				lastClock = index;
-
-				if (index >= fileTimes.size()) {
-					addFileTime(index);
-				}
-				clocks.get(index).resume();
 			}
 		});
 

@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<editmodel:ClassDiagramEditModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:editmodel="editmodel.xmi" xmlns:options="options.xmi" size="1204,683" id="EditorTabbedPane" metadata="uml2-1.0" initialized="true" tag="10" key="32303037303533312D3130205175656C6C7465787450726F6A">
+  <children xsi:type="editmodel:ClassEditModel" targetConnections="//@children.1/@sourceConnections.2" name="UserDataRecorder" location="51,15" size="181,362" id="EditorTabbedPane/UserDataRecorder" runTimeClassModel="EditorTabbedPane.UserDataRecorder.FileTime,getTimeLine(),startFileTime(Ljavax.swing.JTabbedPane;),getFileTime(),UserDataRecorder(),timeLine,startTimeLine(Ljavax.swing.JTabbedPane;)">
+    <children xsi:type="editmodel:CompartmentEditModel" size="158,18">
+      <children xsi:type="editmodel:AttributeEditModel" name="timeLine" id="EditorTabbedPane/UserDataRecorder#timeLine"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel" size="120,90">
+      <children xsi:type="editmodel:MethodEditModel" name="UserDataRecorder" id="EditorTabbedPane/UserDataRecorder#UserDataRecorder()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getFileTime" id="EditorTabbedPane/UserDataRecorder#getFileTime()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getTimeLine" id="EditorTabbedPane/UserDataRecorder#getTimeLine()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="startFileTime" id="EditorTabbedPane/UserDataRecorder#startFileTime(Ljavax.swing.JTabbedPane;)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="startTimeLine" id="EditorTabbedPane/UserDataRecorder#startTimeLine(Ljavax.swing.JTabbedPane;)"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel" size="98,195">
+      <children xsi:type="editmodel:ClassEditModel" targetConnections="//@children.0/@sourceConnections.0" name="FileTime" location="295,358" size="98,193" id="EditorTabbedPane/UserDataRecorder$FileTime" runTimeClassModel="getTime(),FileTime(Ljava.lang.String;J),setTime(J),time,getFile(),file,FileTime(),toString()">
+        <children xsi:type="editmodel:CompartmentEditModel" size="67,36">
+          <children xsi:type="editmodel:AttributeEditModel" name="file" id="EditorTabbedPane/UserDataRecorder$FileTime#file"/>
+          <children xsi:type="editmodel:AttributeEditModel" name="time" id="EditorTabbedPane/UserDataRecorder$FileTime#time"/>
+        </children>
+        <children xsi:type="editmodel:CompartmentEditModel" size="68,108">
+          <children xsi:type="editmodel:MethodEditModel" name="FileTime" id="EditorTabbedPane/UserDataRecorder$FileTime#FileTime()"/>
+          <children xsi:type="editmodel:MethodEditModel" name="FileTime" id="EditorTabbedPane/UserDataRecorder$FileTime#FileTime(Ljava.lang.String;J)"/>
+          <children xsi:type="editmodel:MethodEditModel" name="getFile" id="EditorTabbedPane/UserDataRecorder$FileTime#getFile()"/>
+          <children xsi:type="editmodel:MethodEditModel" name="getTime" id="EditorTabbedPane/UserDataRecorder$FileTime#getTime()"/>
+          <children xsi:type="editmodel:MethodEditModel" name="setTime" id="EditorTabbedPane/UserDataRecorder$FileTime#setTime(J)"/>
+          <children xsi:type="editmodel:MethodEditModel" name="toString" id="EditorTabbedPane/UserDataRecorder$FileTime#toString()"/>
+        </children>
+        <children xsi:type="editmodel:CompartmentEditModel" size="0,0"/>
+        <classifierPreferences xsi:type="editmodel:UMLClassDiagramClassifierPreference" showStereotype="true" attributeSorter="Natural" methodSorter="Natural" innerClassSorter="Natural" showPublicAttributes="true" showPackageAttributes="true" showStaticAttributes="true" showPublicMethods="true" showPackageMethods="true" showStaticMethods="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showStaticInnerClasses="true" packageIndication="3" showAttributeProperty="true"/>
+      </children>
+    </children>
+    <sourceConnections xsi:type="editmodel:DependencyEditModel" autoLocated="true" id="EditorTabbedPane/UserDataRecorder-Soyatec::Import->EditorTabbedPane/UserDataRecorder$FileTime" source="//@children.0" target="//@children.0/@children.2/@children.0" targetEnd="//@children.0/@sourceConnections.0/@children.2" label="//@children.0/@sourceConnections.0/@children.0" sourceEnd="//@children.0/@sourceConnections.0/@children.1" connectionRouterKind="Manual">
+      <children xsi:type="editmodel:WireLabelEditModel" name="«Import»" size="41,14" anchorKind="MiddlePart"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="181,360" attachSource="true"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="0,2"/>
+    </sourceConnections>
+    <sourceConnections xsi:type="editmodel:DependencyEditModel" autoLocated="true" id="EditorTabbedPane/UserDataRecorder-Standard::Call->test/Watch*EditorTabbedPane/UserDataRecorder-Standard::Instantiate->test/Watch*EditorTabbedPane/UserDataRecorder-Soyatec::Import->test/Watch" source="//@children.0" target="//@children.7" targetEnd="//@children.0/@sourceConnections.1/@children.2" label="//@children.0/@sourceConnections.1/@children.0" sourceEnd="//@children.0/@sourceConnections.1/@children.1" connectionRouterKind="Manual">
+      <children xsi:type="editmodel:WireLabelEditModel" name="«Call, Import, Instantiate»" size="119,14" anchorKind="MiddlePart"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="90,362" attachSource="true"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="66,0"/>
+    </sourceConnections>
+    <classifierPreferences xsi:type="editmodel:UMLClassDiagramClassifierPreference" showStereotype="true" attributeSorter="Natural" methodSorter="Natural" innerClassSorter="Natural" showPublicAttributes="true" showPackageAttributes="true" showStaticAttributes="true" showPublicMethods="true" showPackageMethods="true" showStaticMethods="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showStaticInnerClasses="true" packageIndication="3" showAttributeProperty="true"/>
+  </children>
+  <children xsi:type="editmodel:ClassEditModel" name="EditorTabbedPane" location="330,15" size="159,139" id="EditorTabbedPane/EditorTabbedPane" runTimeClassModel="openFile(Ljava.io.File;),EditorTabbedPane(),searchable,editable,EditorTabbedPane(ZZ)">
+    <children xsi:type="editmodel:CompartmentEditModel" size="117,36">
+      <children xsi:type="editmodel:AttributeEditModel" name="editable" id="EditorTabbedPane/EditorTabbedPane#editable"/>
+      <children xsi:type="editmodel:AttributeEditModel" name="searchable" id="EditorTabbedPane/EditorTabbedPane#searchable"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel" size="116,54">
+      <children xsi:type="editmodel:MethodEditModel" name="EditorTabbedPane" id="EditorTabbedPane/EditorTabbedPane#EditorTabbedPane(ZZ)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="EditorTabbedPane" id="EditorTabbedPane/EditorTabbedPane#EditorTabbedPane()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="openFile" id="EditorTabbedPane/EditorTabbedPane#openFile(Ljava.io.File;)"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel" size="0,0"/>
+    <sourceConnections xsi:type="editmodel:DependencyEditModel" autoLocated="true" id="EditorTabbedPane/EditorTabbedPane-Standard::Call->EditorTabbedPane/EditorPanel*EditorTabbedPane/EditorTabbedPane-Standard::Instantiate->EditorTabbedPane/EditorPanel*EditorTabbedPane/EditorTabbedPane-Soyatec::Import->EditorTabbedPane/EditorPanel" source="//@children.1" target="//@children.3" targetEnd="//@children.1/@sourceConnections.0/@children.2" label="//@children.1/@sourceConnections.0/@children.0" sourceEnd="//@children.1/@sourceConnections.0/@children.1" connectionRouterKind="Manual">
+      <children xsi:type="editmodel:WireLabelEditModel" name="«Call, Import, Instantiate»" size="0,14" anchorKind="MiddlePart"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="159,69" attachSource="true"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="0,75"/>
+    </sourceConnections>
+    <sourceConnections xsi:type="editmodel:DependencyEditModel" autoLocated="true" id="EditorTabbedPane/EditorTabbedPane-Standard::Instantiate->EditorTabbedPane/ButtonTabComponent" source="//@children.1" target="//@children.2" targetEnd="//@children.1/@sourceConnections.1/@children.2" label="//@children.1/@sourceConnections.1/@children.0" sourceEnd="//@children.1/@sourceConnections.1/@children.1" connectionRouterKind="Manual">
+      <children xsi:type="editmodel:WireLabelEditModel" name="«Instantiate»" size="61,14" anchorKind="MiddlePart"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="79,139" attachSource="true"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="99,0"/>
+    </sourceConnections>
+    <sourceConnections xsi:type="editmodel:DependencyEditModel" autoLocated="true" id="EditorTabbedPane/EditorTabbedPane-Soyatec::Import->EditorTabbedPane/UserDataRecorder*EditorTabbedPane/EditorTabbedPane-Standard::Call->EditorTabbedPane/UserDataRecorder*EditorTabbedPane/EditorTabbedPane-Standard::Instantiate->EditorTabbedPane/UserDataRecorder" source="//@children.1" target="//@children.0" targetEnd="//@children.1/@sourceConnections.2/@children.2" label="//@children.1/@sourceConnections.2/@children.0" sourceEnd="//@children.1/@sourceConnections.2/@children.1" connectionRouterKind="Manual">
+      <children xsi:type="editmodel:WireLabelEditModel" name="«Call, Import, Instantiate»" size="0,14" anchorKind="MiddlePart"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="0,69" attachSource="true"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="181,69"/>
+    </sourceConnections>
+    <classifierPreferences xsi:type="editmodel:UMLClassDiagramClassifierPreference" showStereotype="true" attributeSorter="Natural" methodSorter="Natural" innerClassSorter="Natural" showPublicAttributes="true" showPackageAttributes="true" showStaticAttributes="true" showPublicMethods="true" showPackageMethods="true" showStaticMethods="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showStaticInnerClasses="true" packageIndication="3" showAttributeProperty="true"/>
+  </children>
+  <children xsi:type="editmodel:ClassEditModel" targetConnections="//@children.1/@sourceConnections.1" name="ButtonTabComponent" location="310,195" size="179,67" id="EditorTabbedPane/ButtonTabComponent" runTimeClassModel="ButtonTabComponent(Ljavax.swing.JTabbedPane;)">
+    <children xsi:type="editmodel:CompartmentEditModel" size="0,0"/>
+    <children xsi:type="editmodel:CompartmentEditModel" size="132,18">
+      <children xsi:type="editmodel:MethodEditModel" name="ButtonTabComponent" id="EditorTabbedPane/ButtonTabComponent#ButtonTabComponent(Ljavax.swing.JTabbedPane;)"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel" size="0,0"/>
+    <classifierPreferences xsi:type="editmodel:UMLClassDiagramClassifierPreference" showStereotype="true" attributeSorter="Natural" methodSorter="Natural" innerClassSorter="Natural" showPublicAttributes="true" showPackageAttributes="true" showStaticAttributes="true" showPublicMethods="true" showPackageMethods="true" showStaticMethods="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showStaticInnerClasses="true" packageIndication="3" showAttributeProperty="true"/>
+  </children>
+  <children xsi:type="editmodel:ClassEditModel" targetConnections="//@children.1/@sourceConnections.0" name="EditorPanel" location="630,9" size="116,157" id="EditorTabbedPane/EditorPanel" runTimeClassModel="initialise(Ljava.io.File;),EditorPanel(Ljava.io.File;ZZ),getFile(),file,grabFocus(),EditorPanel(Ljava.io.File;)">
+    <children xsi:type="editmodel:CompartmentEditModel" size="55,18">
+      <children xsi:type="editmodel:AttributeEditModel" name="file" id="EditorTabbedPane/EditorPanel#file"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel" size="83,90">
+      <children xsi:type="editmodel:MethodEditModel" name="EditorPanel" id="EditorTabbedPane/EditorPanel#EditorPanel(Ljava.io.File;)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="EditorPanel" id="EditorTabbedPane/EditorPanel#EditorPanel(Ljava.io.File;ZZ)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getFile" id="EditorTabbedPane/EditorPanel#getFile()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="grabFocus" id="EditorTabbedPane/EditorPanel#grabFocus()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="initialise" id="EditorTabbedPane/EditorPanel#initialise(Ljava.io.File;)"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel" size="0,0"/>
+    <sourceConnections xsi:type="editmodel:DependencyEditModel" autoLocated="true" id="EditorTabbedPane/EditorPanel-Standard::Call->EditorTabbedPane/SearchBar*EditorTabbedPane/EditorPanel-Standard::Instantiate->EditorTabbedPane/SearchBar*EditorTabbedPane/EditorPanel-Soyatec::Import->EditorTabbedPane/SearchBar" source="//@children.3" target="//@children.5" targetEnd="//@children.3/@sourceConnections.0/@children.2" label="//@children.3/@sourceConnections.0/@children.0" sourceEnd="//@children.3/@sourceConnections.0/@children.1" connectionRouterKind="Manual">
+      <children xsi:type="editmodel:WireLabelEditModel" name="«Call, Import, Instantiate»" size="119,14" anchorKind="MiddlePart"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="116,78" attachSource="true"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="0,78"/>
+    </sourceConnections>
+    <sourceConnections xsi:type="editmodel:DependencyEditModel" autoLocated="true" id="EditorTabbedPane/EditorPanel-Standard::Instantiate->EditorTabbedPane/LineNumbers*EditorTabbedPane/EditorPanel-Soyatec::Import->EditorTabbedPane/LineNumbers" source="//@children.3" target="//@children.4" targetEnd="//@children.3/@sourceConnections.1/@children.2" label="//@children.3/@sourceConnections.1/@children.0" sourceEnd="//@children.3/@sourceConnections.1/@children.1" connectionRouterKind="Manual">
+      <children xsi:type="editmodel:WireLabelEditModel" name="«Import, Instantiate»" size="96,14" anchorKind="MiddlePart"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="57,157" attachSource="true"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="57,0"/>
+    </sourceConnections>
+    <classifierPreferences xsi:type="editmodel:UMLClassDiagramClassifierPreference" showStereotype="true" attributeSorter="Natural" methodSorter="Natural" innerClassSorter="Natural" showPublicAttributes="true" showPackageAttributes="true" showStaticAttributes="true" showPublicMethods="true" showPackageMethods="true" showStaticMethods="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showStaticInnerClasses="true" packageIndication="3" showAttributeProperty="true"/>
+  </children>
+  <children xsi:type="editmodel:ClassEditModel" targetConnections="//@children.3/@sourceConnections.1 //@children.6/@sourceConnections.0" name="LineNumbers" location="630,255" size="141,193" id="EditorTabbedPane/LineNumbers" runTimeClassModel="lineHeight,paintComponent(Ljava.awt.Graphics;),getStartOffset(),setFont(Ljava.awt.Font;),setLineHeight(I),setPreferredWidth(I),getLineHeight(),LineNumbers(Ljavax.swing.JComponent;)">
+    <children xsi:type="editmodel:CompartmentEditModel" size="82,18">
+      <children xsi:type="editmodel:AttributeEditModel" name="lineHeight" id="EditorTabbedPane/LineNumbers#lineHeight"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel" size="118,126">
+      <children xsi:type="editmodel:MethodEditModel" name="LineNumbers" id="EditorTabbedPane/LineNumbers#LineNumbers(Ljavax.swing.JComponent;)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getLineHeight" id="EditorTabbedPane/LineNumbers#getLineHeight()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getStartOffset" id="EditorTabbedPane/LineNumbers#getStartOffset()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="paintComponent" id="EditorTabbedPane/LineNumbers#paintComponent(Ljava.awt.Graphics;)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="setFont" id="EditorTabbedPane/LineNumbers#setFont(Ljava.awt.Font;)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="setLineHeight" id="EditorTabbedPane/LineNumbers#setLineHeight(I)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="setPreferredWidth" id="EditorTabbedPane/LineNumbers#setPreferredWidth(I)"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel" size="0,0"/>
+    <classifierPreferences xsi:type="editmodel:UMLClassDiagramClassifierPreference" showStereotype="true" attributeSorter="Natural" methodSorter="Natural" innerClassSorter="Natural" showPublicAttributes="true" showPackageAttributes="true" showStaticAttributes="true" showPublicMethods="true" showPackageMethods="true" showStaticMethods="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showStaticInnerClasses="true" packageIndication="3" showAttributeProperty="true"/>
+  </children>
+  <children xsi:type="editmodel:ClassEditModel" targetConnections="//@children.3/@sourceConnections.0" name="SearchBar" location="870,9" size="195,409" id="EditorTabbedPane/SearchBar" runTimeClassModel="SearchBar(Ljavax.swing.JTextPane;),hILIT_COLOR_GRAY,textpane,SearchBar(Ljavax.swing.JTextArea;),setWord(Ljava.lang.String;),getPos(Z),cancelSearch(),hideHighlights(),sEARCH_BACKWARD,sEARCH_FORWARD,initialise(),showHighlights(),hILIT_COLOR_YELLOW,textarea,painterGray,hilit,grabFocus(),word,setVisible(Z),painterYellow">
+    <children xsi:type="editmodel:CompartmentEditModel" size="172,180">
+      <children xsi:type="editmodel:AttributeEditModel" name="hILIT_COLOR_GRAY" id="EditorTabbedPane/SearchBar#hILIT_COLOR_GRAY"/>
+      <children xsi:type="editmodel:AttributeEditModel" name="hILIT_COLOR_YELLOW" id="EditorTabbedPane/SearchBar#hILIT_COLOR_YELLOW"/>
+      <children xsi:type="editmodel:AttributeEditModel" name="hilit" id="EditorTabbedPane/SearchBar#hilit"/>
+      <children xsi:type="editmodel:AttributeEditModel" name="painterGray" id="EditorTabbedPane/SearchBar#painterGray"/>
+      <children xsi:type="editmodel:AttributeEditModel" name="painterYellow" id="EditorTabbedPane/SearchBar#painterYellow"/>
+      <children xsi:type="editmodel:AttributeEditModel" name="sEARCH_BACKWARD" id="EditorTabbedPane/SearchBar#sEARCH_BACKWARD"/>
+      <children xsi:type="editmodel:AttributeEditModel" name="sEARCH_FORWARD" id="EditorTabbedPane/SearchBar#sEARCH_FORWARD"/>
+      <children xsi:type="editmodel:AttributeEditModel" name="textarea" id="EditorTabbedPane/SearchBar#textarea"/>
+      <children xsi:type="editmodel:AttributeEditModel" name="textpane" id="EditorTabbedPane/SearchBar#textpane"/>
+      <children xsi:type="editmodel:AttributeEditModel" name="word" id="EditorTabbedPane/SearchBar#word"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel" size="104,180">
+      <children xsi:type="editmodel:MethodEditModel" name="SearchBar" id="EditorTabbedPane/SearchBar#SearchBar(Ljavax.swing.JTextPane;)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="SearchBar" id="EditorTabbedPane/SearchBar#SearchBar(Ljavax.swing.JTextArea;)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="cancelSearch" id="EditorTabbedPane/SearchBar#cancelSearch()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getPos" id="EditorTabbedPane/SearchBar#getPos(Z)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="grabFocus" id="EditorTabbedPane/SearchBar#grabFocus()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="hideHighlights" id="EditorTabbedPane/SearchBar#hideHighlights()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="initialise" id="EditorTabbedPane/SearchBar#initialise()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="setVisible" id="EditorTabbedPane/SearchBar#setVisible(Z)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="setWord" id="EditorTabbedPane/SearchBar#setWord(Ljava.lang.String;)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="showHighlights" id="EditorTabbedPane/SearchBar#showHighlights()"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel" size="0,0"/>
+    <classifierPreferences xsi:type="editmodel:UMLClassDiagramClassifierPreference" showStereotype="true" attributeSorter="Natural" methodSorter="Natural" innerClassSorter="Natural" showPublicAttributes="true" showPackageAttributes="true" showStaticAttributes="true" showPublicMethods="true" showPackageMethods="true" showStaticMethods="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showStaticInnerClasses="true" packageIndication="3" showAttributeProperty="true"/>
+  </children>
+  <children xsi:type="editmodel:ClassEditModel" name="TextSyntax" location="630,525" size="113,85" id="EditorTabbedPane/TextSyntax" runTimeClassModel="main([Ljava.lang.String;),TextSyntax()">
+    <children xsi:type="editmodel:CompartmentEditModel" size="0,0"/>
+    <children xsi:type="editmodel:CompartmentEditModel" size="84,36">
+      <children xsi:type="editmodel:MethodEditModel" name="TextSyntax" id="EditorTabbedPane/TextSyntax#TextSyntax()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="main" id="EditorTabbedPane/TextSyntax#main([Ljava.lang.String;)"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel" size="0,0"/>
+    <sourceConnections xsi:type="editmodel:DependencyEditModel" autoLocated="true" id="EditorTabbedPane/TextSyntax-Standard::Instantiate->EditorTabbedPane/LineNumbers*EditorTabbedPane/TextSyntax-Soyatec::Import->EditorTabbedPane/LineNumbers" source="//@children.6" target="//@children.4" targetEnd="//@children.6/@sourceConnections.0/@children.2" label="//@children.6/@sourceConnections.0/@children.0" sourceEnd="//@children.6/@sourceConnections.0/@children.1" connectionRouterKind="Manual">
+      <children xsi:type="editmodel:WireLabelEditModel" name="«Import, Instantiate»" size="96,14" anchorKind="MiddlePart"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="56,0" attachSource="true"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="56,193"/>
+    </sourceConnections>
+    <classifierPreferences xsi:type="editmodel:UMLClassDiagramClassifierPreference" showStereotype="true" attributeSorter="Natural" methodSorter="Natural" innerClassSorter="Natural" showPublicAttributes="true" showPackageAttributes="true" showStaticAttributes="true" showPublicMethods="true" showPackageMethods="true" showStaticMethods="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showStaticInnerClasses="true" packageIndication="3" showAttributeProperty="true"/>
+  </children>
+  <children xsi:type="editmodel:ClassEditModel" targetConnections="//@children.0/@sourceConnections.1" name="Watch" location="75,402" size="133,261" id="test/Watch" runTimeClassModel="getTime(),Watch(),time,stop(),isRunning,resume(),run(),isActive(),start(),Watch(Ljava.lang.String;),pause()">
+    <children xsi:type="editmodel:CompartmentEditModel" size="110,36">
+      <children xsi:type="editmodel:AttributeEditModel" name="isRunning" id="test/Watch#isRunning"/>
+      <children xsi:type="editmodel:AttributeEditModel" name="time" id="test/Watch#time"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel" size="69,162">
+      <children xsi:type="editmodel:MethodEditModel" name="Watch" id="test/Watch#Watch(Ljava.lang.String;)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="Watch" id="test/Watch#Watch()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getTime" id="test/Watch#getTime()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="isActive" id="test/Watch#isActive()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="pause" id="test/Watch#pause()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="resume" id="test/Watch#resume()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="run" id="test/Watch#run()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="start" id="test/Watch#start()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="stop" id="test/Watch#stop()"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel" size="0,0"/>
+    <classifierPreferences xsi:type="editmodel:UMLClassDiagramClassifierPreference" showStereotype="true" attributeSorter="Natural" methodSorter="Natural" innerClassSorter="Natural" showPublicAttributes="true" showPackageAttributes="true" showStaticAttributes="true" showPublicMethods="true" showPackageMethods="true" showStaticMethods="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showStaticInnerClasses="true" packageIndication="3" showAttributeProperty="true"/>
+  </children>
+  <diagramOptions xsi:type="options:ClassDiagramOptions" properties="wireOptions=7;Product=eUML2" autoName="false"/>
+  <boardSetting snapToGeometry="true" gridEnabled="true" gridSpacing="15,15" gridOrigin="0,0" rulerUnit="pixel" gridVisibility="false">
+    <leftRuler/>
+    <topRuler/>
+  </boardSetting>
+  <classDiagramPreferences xsi:type="editmodel:UMLClassDiagramPreference" showPopupBars="true" showConnectionHandles="true" attributeSorter="Natural" methodSorter="Natural" showClassStereotype="true" showPackageStereotype="true" showDependencyStereotype="true" showInterfaceStereotype="true" innerClassSorter="Natural" showPublicAttributes="true" showPackageAttributes="true" showStaticAttributes="true" showPublicMethods="true" showPackageMethods="true" showStaticMethods="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showStaticInnerClasses="true" packageIndication="3" showAttributeProperty="true"/>
+</editmodel:ClassDiagramEditModel>
