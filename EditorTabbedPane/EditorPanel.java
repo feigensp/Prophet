@@ -5,7 +5,7 @@ import java.awt.Font;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.File;
-import java.io.FileReader;
+import java.io.FileInputStream;
 import java.io.IOException;
 
 import javax.swing.JPanel;
@@ -20,57 +20,52 @@ public class EditorPanel extends JPanel {
 	private JScrollPane scrollPane;
 	private JTextPane textPane;
 	private SearchBar searchBar;
-
-    private HighlightedDocument document;
+	
+	boolean searchable;
+	boolean editable;
 
 	/**
 	 * Create the panel.
 	 */
 	public EditorPanel(File f, boolean searchable, boolean editable) {
-		document = new HighlightedDocument();
-		document.setHighlightStyle(HighlightedDocument.JAVA_STYLE);
-		textPane = new JTextPane(document);
-		textPane.setFont(new Font("monospaced", Font.PLAIN, 12));
-		if(searchable) {
-			textPane.addKeyListener(new KeyAdapter() {
-				@Override
-				public void keyPressed(KeyEvent e) {
-					if (e.isControlDown() && (e.getKeyCode() == KeyEvent.VK_F)) {
-						searchBar.setVisible(true);
-						searchBar.grabFocus();
-					}
-				}
-			});
-		}
-		textPane.setEditable(editable);	
-		initialise(f);
+		this.searchable = searchable;
+		this.editable=editable;
+		file=f;
+		initialize();
 	}
 	
 	public EditorPanel(File f) {
+		this.searchable=false;
+		this.editable=false;
+		file=f;
+		initialize();
+	}
+	
+	private void initialize() {
+		HighlightedDocument document = null;
 		document = new HighlightedDocument();
 		document.setHighlightStyle(HighlightedDocument.JAVA_STYLE);
 		textPane = new JTextPane(document);
 		textPane.setFont(new Font("monospaced", Font.PLAIN, 12));
+		//textPane.setText("public static void main()");
+		
 		textPane.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				if (e.isControlDown() && (e.getKeyCode() == KeyEvent.VK_F)) {
-					searchBar.setVisible(true);
+					searchBar.setVisible(searchable);
 					searchBar.grabFocus();
 				}
 			}
 		});
-		textPane.setEditable(false);
-		initialise(f);
-	}
-	
-	public void initialise(File f) {
-		file = f;
+		textPane.setEditable(editable);
 		setLayout(new BorderLayout());
 		try {
-			FileReader fr = new FileReader(file);
-			textPane.read(fr, null);
-			fr.close();
+			byte[] buffer = new byte[(int) file.length()];
+		    FileInputStream f = new FileInputStream(file);
+		    f.read(buffer);
+		    textPane.setText(new String(buffer));
+		    textPane.setCaretPosition(0);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -96,5 +91,9 @@ public class EditorPanel extends JPanel {
 
 	public void grabFocus() {
 		textPane.grabFocus();
+	}
+	
+	public JTextPane getTextPane() {
+		return textPane;
 	}
 }

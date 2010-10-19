@@ -41,6 +41,8 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.plaf.basic.BasicButtonUI;
 
+import com.Ostermiller.Syntax.HighlightedDocument;
+
 /**
  * Component to be used as tabComponent; Contains a JLabel to show the text and
  * a JButton to close the tab it belongs to

@@ -3,11 +3,13 @@ package EditorTabbedPane;
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.ScrollPane;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 import javax.swing.border.EmptyBorder;
 
@@ -58,7 +60,11 @@ public class TextSyntax extends JFrame {
 		textPane.setEditable(true);
 
 		LineNumbers lineNumbers = new LineNumbers(textPane);
-		contentPane.add(textPane, BorderLayout.CENTER);
+		JScrollPane scrollPane = new JScrollPane(textPane,
+				JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+				JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+		scrollPane.setRowHeaderView(lineNumbers);
+		contentPane.add(scrollPane, BorderLayout.CENTER);
 	}
 
 }

@@ -1,4 +1,6 @@
 /**
+
+
  * Diese Klasse repräsentiert eine Stoppuhr.
  * @author Markus Köppen, Andreas Hasselberg
  */
@@ -119,6 +121,7 @@ public class Watch extends JLabel implements Runnable {
 				}
 			} catch (InterruptedException e) {
 				e.printStackTrace();
+				break;
 			}
 		}
 	}
