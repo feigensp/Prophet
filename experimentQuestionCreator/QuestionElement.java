@@ -576,9 +576,10 @@ public class QuestionElement extends JPanel {
 	 */
 	private void updateSize(Dimension change) {
 		Dimension oldD = getPreferredSize();
-		Dimension newD = new Dimension(
-				(int) (oldD.getWidth() + change.getWidth()),
-				(int) (oldD.getHeight() + change.getHeight()));
+		double x = (oldD.getWidth() + change.getWidth()) < menuSize.getWidth() ? menuSize.getWidth() : (oldD.getWidth() + change.getWidth());
+		double y = (oldD.getHeight() + change.getHeight()) < menuSize.getHeight() ? menuSize.getHeight() : (oldD.getHeight() + change.getHeight());
+		System.out.println("x: " + x + " - y: " + y);
+		Dimension newD = new Dimension((int)x, (int)y);
 		setPreferredSize(newD);
 		setMaximumSize(newD);
 		setMinimumSize(newD);
