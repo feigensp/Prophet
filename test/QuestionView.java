@@ -38,5 +38,16 @@ public class QuestionView extends JPanel{
 	public PanelContainer getRow(int i) {
 		return rows.get(i);
 	}
+	
+	public int getRowCount() {
+		return rows.size();
+	}
+	
+	public boolean removeComponent(int col, int row) {
+		if(row < rows.size()) {
+			return rows.get(row).removeComponent(col);
+		}
+		return false;
+	}
 
 }
