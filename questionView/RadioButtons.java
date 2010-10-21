@@ -1,4 +1,4 @@
-package test;
+package questionView;
 
 /**
  * Erstellt ein Panel mit RadioButtons.

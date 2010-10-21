@@ -5,7 +5,7 @@
  * @author Markus Köppen, Andreas Hasselberg
  */
 
-package test;
+package questionView;
 
 import java.awt.Dimension;
 import java.util.ArrayList;

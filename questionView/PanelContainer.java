@@ -6,7 +6,7 @@
  * @author Markus Köppen, Andreas Hasselberg
  */
 
-package test;
+package questionView;
 
 import java.awt.FlowLayout;
 import java.util.ArrayList;

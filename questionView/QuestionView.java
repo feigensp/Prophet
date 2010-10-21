@@ -6,7 +6,7 @@
  * @author Markus Köppen, Andreas Hasselberg
  */
 
-package test;
+package questionView;
 
 import java.awt.Dimension;
 import java.util.ArrayList;
@@ -15,6 +15,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+
 
 public class QuestionView extends JPanel {
 

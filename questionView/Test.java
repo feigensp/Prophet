@@ -1,4 +1,4 @@
-package test;
+package questionView;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -17,6 +17,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.border.EmptyBorder;
+
 
 public class Test extends JFrame {
 
