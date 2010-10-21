@@ -20,20 +20,26 @@ import com.jgoodies.forms.layout.FormLayout;
 public class Table extends JPanel {
 
 	private int x, y; // Anzahl der Spalten und Zeilen
-	private int hgap, vgap;
+	private int hgap, vgap; // Anzahl der Lücken zwischen den Spalten
+	// Speichert intern alle Komponenten
 	private ArrayList<ArrayList<JComponent>> components;
-	private ArrayList<Integer> cellWidth;
-	private ArrayList<Integer> cellHeight;
 
+	/**
+	 * Konstruktor der ein neues Tabellenobjekt erstellt. In diesem können dann
+	 * Elemente eingefügt oder ersetzt werden.
+	 * 
+	 * @param hgap
+	 *            Horizontale Lücke zwischen zwei Zellen
+	 * @param vgap
+	 *            Vertikale Lücke zwischen zwei Zellen
+	 */
 	public Table(int hgap, int vgap) {
 		super();
-		x = 0;
-		y = 0;
+		x = -1;
+		y = -1;
 		this.hgap = hgap;
 		this.vgap = vgap;
 		components = new ArrayList<ArrayList<JComponent>>();
-		cellWidth = new ArrayList<Integer>();
-		cellHeight = new ArrayList<Integer>();
 	}
 
 	/**
@@ -49,18 +55,17 @@ public class Table extends JPanel {
 	public void addComponent(JComponent comp, int x, int y) {
 		// Zuerst wird das Element in die verschachtelte ArrayList eingefügt
 		// dazu muss getestet werden ob sie den jetzigen Bereich überschreitet
-		// eventuell überzählige Spalten auffüllen
-		for (int i = this.x; i <= x; i++) {
+		for (int i = this.x; i < x; i++) {
 			ArrayList<JComponent> list = new ArrayList<JComponent>();
-			for(int j=0; j<=y; j++) {
+			for (int j = -1; j < this.y; j++) {
 				list.add(null);
-			}			
+			}
 			components.add(list);
 		}
 		this.x = Math.max(x, this.x);
 		// evtl. überzählige Zellen in allen Spalten einfügen
 		for (int i = 0; i <= this.x; i++) {
-			for (int j = this.y; j <= y; j++) {
+			for (int j = this.y; j < y; j++) {
 				components.get(i).add(null);
 			}
 		}
@@ -68,51 +73,50 @@ public class Table extends JPanel {
 		// Element das derzeit dort ist löschen und dann neues einfügen
 		components.get(x).remove(y);
 		components.get(x).add(y, comp);
-		System.out.println("x: " + this.x + " - y: " + this.y + " - Text: " + ((JLabel)comp).getText());
 		// Tabelle neu malen
 		createTable();
 	}
 
+	/**
+	 * Fügt alle Komponenten mit FormLayout in Tabellenform in das Panel ein
+	 */
 	private void createTable() {
 		// Alle elemente Löschen
 		this.removeAll();
 		// Größte Abmaße für die Zellengrößen herausfinden
 		Dimension compSize;
 		int max;
-		//Zellenbreiten
-		cellWidth.clear();
+		// Zellenbreiten
+		String cols = "";
+		int width = ((x + 1) * hgap);
 		for (int i = 0; i <= x; i++) {
 			max = 0;
 			for (int j = 0; j <= y; j++) {
 				if (components.get(i).get(j) != null) {
-					max = Math.max(max, (int) components.get(i).get(j).getPreferredSize().getWidth());
+					max = Math.max(max, (int) components.get(i).get(j)
+							.getPreferredSize().getWidth());
 				}
 			}
-			cellWidth.add(max);
+			cols += (max + hgap) + "px, ";
+			width += max;
 		}
-		//Zellenhöhen
-		cellHeight.clear();
+		cols = cols.substring(0, cols.length() - 2);
+		// Zellenhöhen
+		String rows = "";
+		int height = ((y + 1) * vgap);
 		for (int i = 0; i <= y; i++) {
 			max = 0;
 			for (int j = 0; j <= x; j++) {
 				if (components.get(j).get(i) != null) {
-					//Zellenbreiten
-					max = Math.max(max, (int) components.get(j).get(i).getPreferredSize().getHeight());
+					// Zellenbreiten
+					max = Math.max(max, (int) components.get(j).get(i)
+							.getPreferredSize().getHeight());
 				}
 			}
-			cellHeight.add(max);
+			rows += (max + vgap) + "px, ";
+			height += max;
 		}
-		// Formlayout aufbauen
-		String cols = "";
-		for (int i = 0; i <= x; i++) {
-			cols += (cellWidth.get(i)+hgap) + "px, ";
-		}
-		cols = cols.substring(0, cols.length() - 2);
-		String rows = "";
-		for (int i = 0; i <= y; i++) {
-			rows += (cellHeight.get(i)+vgap) + "px, ";
-		}
-		rows = rows.substring(0, rows.length() - 2);		
+		rows = rows.substring(0, rows.length() - 2);
 		FormLayout formLayout = new FormLayout(cols, rows);
 		// Componenten hinzufügen
 		this.setLayout(formLayout);
@@ -125,17 +129,100 @@ public class Table extends JPanel {
 				}
 			}
 		}
-		//Größe dieser Komponente setzen
-		int width = ((x+1)*hgap);
-		for(int i=0; i<=x; i++) {
-			width += cellWidth.get(i);
-		}
-		int height = ((y+1)*vgap);
-		for(int i=0; i<=y; i++) {
-			height += cellHeight.get(i);
-		}
-		this.setPreferredSize(new Dimension(width, height));
+//		this.setPreferredSize(new Dimension(width, height));
 		this.setMaximumSize(new Dimension(width, height));
 	}
 
+	/**
+	 * Gibt Die Anzahl der Spalten der Tabelle zurück
+	 * @return Anzahl der Spalten
+	 */
+	public int getX() {
+		return x + 1;
+	}
+
+	/**
+	 * Setzt die Anzahl der Spalten neu (schneidet ab oder fügt hinzu)
+	 * 
+	 * @param x
+	 *            neue Anzahl der Spalten
+	 */
+	public void setX(int x) {
+		// Spalten abschneiden
+		for (int i = this.x; i > x; i--) {
+			components.remove(i);
+		}
+		// Spalten hinzufügen
+		for (int i = this.x; i <= x; i++) {
+			ArrayList<JComponent> list = new ArrayList<JComponent>();
+			for (int j = 0; j <= y; j++) {
+				list.add(null);
+			}
+			components.add(list);
+		}
+		this.x = x;
+	}
+
+	/**
+	 * Gibt die Anzahl der Zeilen der Tabelle zurück
+	 * @return Anzahl der Zeilen
+	 */
+	public int getY() {
+		return y;
+	}
+
+	/**
+	 * Setzt die Anzahl der Zeilen neu (schneidet ab oder fügt hinzu)
+	 * 
+	 * @param y neue anzahl der Zeilen
+	 */
+	public void setY(int y) {
+		for (int i = 0; i <= x; i++) {
+			//Zeilen abschneiden
+			for (int j = this.y; j > y; j--) {
+				components.get(i).remove(j);
+			}
+			//Zeilen hinzufügen
+			for (int j = this.y; j <= y; j++) {
+				components.get(i).add(null);
+			}
+		}
+		this.y = y;
+	}
+
+	/**
+	 * Gibt den Horizontalen abstand zwischen Zellen zurück
+	 * @return Horizontaler abstand in Pixeln
+	 */
+	public int getHgap() {
+		return hgap;
+	}
+
+	/**
+	 * Setzt den horizontalen Abstand zwischen Zellen
+	 * Baut dazu auch die Tabelle neu auf.
+	 * @param hgap Horizontaler abstand in Pixeln
+	 */
+	public void setHgap(int hgap) {
+		this.hgap = hgap;
+		createTable();
+	}
+
+	/**
+	 * Liefert den vertikalen Abstand zwischen Zellen zurück
+	 * @return Vertikaler abstand in Pixeln
+	 */
+	public int getVgap() {
+		return vgap;
+	}
+
+	/**
+	 * Setzt den Vertikalen abstand zwischen Zellen
+	 * Baut dazu auch die Tabelle neu auf.
+	 * @param vgap Vertikaler abstand in Pixeln
+	 */
+	public void setVgap(int vgap) {
+		this.vgap = vgap;
+		createTable();
+	}
 }

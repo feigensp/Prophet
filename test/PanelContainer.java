@@ -1,20 +1,18 @@
 /**
  * Diese Klasse stellt ein Panel dar, in welcher Elemente nach dem BoxLayout angeordnet werden (horizontal).
  * Zudem kann eine Tabelle hinzugefügt werden, dies geschieht indem ein Panel mit FormLayout hinzugefügt wird.
+ * Es werden spezielle "add-Methoden" bereitgestellt um Elemente Formatiert hinzuzufügen
  * 
  * @author Markus Köppen, Andreas Hasselberg
  */
 
 package test;
 
-import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.util.ArrayList;
 
-import javax.swing.BoxLayout;
 import javax.swing.JComponent;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 
 public class PanelContainer extends JPanel {
 
@@ -23,79 +21,64 @@ public class PanelContainer extends JPanel {
 
 	private ArrayList<JComponent> components;
 
+	/**
+	 * Standartkonstruktor, es wird ein leeres Panel mit horizontalem BoxLayout
+	 * erstellt.
+	 */
 	public PanelContainer() {
 		super();
-		this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+		this.setLayout(new FlowLayout(FlowLayout.LEFT));
 		this.setAlignmentX(LEFT_ALIGNMENT);
 		this.setAlignmentY(TOP_ALIGNMENT);
 		components = new ArrayList<JComponent>();
 	}
 
-	public void addTable(Table t) {
-		Table table = t;
-		table.setAlignmentX(LEFT_ALIGNMENT);
-		table.setAlignmentY(TOP_ALIGNMENT);
-		this.add(table);
-		components.add(table);
-		updateUI();
-	}
-
-	public void addLabel(String caption) {
-		JLabel label = new JLabel(caption);
-		label.setAlignmentX(LEFT_ALIGNMENT);
-		label.setAlignmentY(TOP_ALIGNMENT);
-		this.add(label);
-		components.add(label);
-		updateUI();
-	}
-
-	public void addRadioButtons(String[] captions, boolean alignment) {
-		RadioButtons buttons = new RadioButtons(captions, alignment);
-		buttons.setAlignmentX(LEFT_ALIGNMENT);
-		buttons.setAlignmentY(TOP_ALIGNMENT);
-		this.add(buttons);
-		components.add(buttons);
-		updateUI();
-	}
-
-	public void addTextField(int columns) {
-		JTextField textField = new JTextField("", columns);
-		textField.setMaximumSize(textField.getPreferredSize());
-		textField.setAlignmentX(LEFT_ALIGNMENT);
-		textField.setAlignmentY(TOP_ALIGNMENT);
-		this.add(textField);
-		components.add(textField);
-		updateUI();
-	}
-
-	public void addDivider(int size, boolean alignment) {
-		JPanel panel = new JPanel();
-		if (alignment == HORIZONTAL) {
-			panel.setPreferredSize(new Dimension(size, 1));
-			panel.setMinimumSize(new Dimension(size, 1));
-			panel.setMaximumSize(new Dimension(size, 1));
-		} else {
-			panel.setPreferredSize(new Dimension(1, size));
-			panel.setMinimumSize(new Dimension(1, size));
-			panel.setMaximumSize(new Dimension(1, size));
-		}
-		this.add(panel);
-		components.add(panel);
-		updateUI();
-	}
-	
+	/**
+	 * Löscht eine Komponente an einem Index Ist dieser zu groß wird false
+	 * zurückgegeben
+	 * 
+	 * @param index
+	 *            Index der Komponente die gelöscht werden soll
+	 * @return true wenn Löschung vorgenommen, false wenn nicht
+	 */
 	public boolean removeComponent(int index) {
-		if(index < components.size()) {
-			//Element aus der KomponentenListe löschen
+		if (index < components.size()) {
 			components.remove(index);
-			//Panel neu aufbauen
-			this.removeAll();
-			for(int i=0; i<components.size(); i++) {
-				this.add(components.get(i));
-			}
+			this.remove(index);
 			updateUI();
 			return true;
 		}
 		return false;
+	}
+
+	/**
+	 * Gibt die Anzahl der Komponenten im PanelContainer zurück
+	 * 
+	 * @return Anzahl der Komponenten
+	 */
+	public int getComponentCount() {
+		return components.size();
+	}
+
+	/**
+	 * Fügt eine Komponente an der Position i ein
+	 * 
+	 * @param comp
+	 *            Komponente die eingefügt werden soll
+	 * @param i
+	 *            Einfügeposition (indexbasiert)
+	 */
+	public void addComponent(JComponent comp, int i) {
+		components.add(i, comp);
+	}
+
+	/**
+	 * Fügt eine Komponente am Ende an
+	 * 
+	 * @param comp
+	 *            Komponente die eingefügt werden soll
+	 */
+	public void addComponent(JComponent comp) {
+		components.add(comp);
 	}
 }
