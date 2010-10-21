@@ -22,32 +22,19 @@ public class EditorPanel extends JPanel {
 	private SearchBar searchBar;
 	
 	boolean searchable;
-	boolean editable;
 
 	/**
 	 * Create the panel.
 	 */
-	public EditorPanel(File f, boolean searchable, boolean editable) {
-		this.searchable = searchable;
-		this.editable=editable;
-		file=f;
-		initialize();
-	}
-	
 	public EditorPanel(File f) {
-		this.searchable=false;
-		this.editable=false;
 		file=f;
-		initialize();
-	}
-	
-	private void initialize() {
+		this.searchable=false;
+		
 		HighlightedDocument document = null;
 		document = new HighlightedDocument();
 		document.setHighlightStyle(HighlightedDocument.JAVA_STYLE);
 		textPane = new JTextPane(document);
 		textPane.setFont(new Font("monospaced", Font.PLAIN, 12));
-		//textPane.setText("public static void main()");
 		
 		textPane.addKeyListener(new KeyAdapter() {
 			@Override
@@ -58,12 +45,11 @@ public class EditorPanel extends JPanel {
 				}
 			}
 		});
-		textPane.setEditable(editable);
 		setLayout(new BorderLayout());
 		try {
 			byte[] buffer = new byte[(int) file.length()];
-		    FileInputStream f = new FileInputStream(file);
-		    f.read(buffer);
+		    FileInputStream fileStream = new FileInputStream(file);
+		    fileStream.read(buffer);
 		    textPane.setText(new String(buffer));
 		    textPane.setCaretPosition(0);
 		} catch (IOException e) {
@@ -95,5 +81,15 @@ public class EditorPanel extends JPanel {
 	
 	public JTextPane getTextPane() {
 		return textPane;
+	}
+	
+	public void setEditable(boolean editable) {
+		textPane.setEditable(editable);
+	}
+	public boolean isEditable() {
+		return textPane.isEditable();
+	}
+	public void setSearchable(boolean s) {
+		searchable=s;
 	}
 }

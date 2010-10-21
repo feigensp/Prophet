@@ -23,7 +23,6 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.SwingConstants;
@@ -37,129 +36,103 @@ import javax.swing.text.Highlighter;
 
 @SuppressWarnings("serial")
 public class SearchBar extends JPanel {
-	private String text;	//Text der Suchsucht wird
-	private String word;	//Wort das gesucht wird
-	JTextArea textarea = null;
-	JTextPane textpane = null;
-	private Vector<Integer> v; // Vector für die Positionen der Vorkommen
-	private int lastPos; // Position des aktuellen Vorkommen
+	JTextPane textPane = null;
+	private Vector<Integer> positions = new Vector<Integer>();
+	private int wordLength = 0;
+	private boolean hasPositions = false;	
 
 	static final Color HILIT_COLOR_GRAY = Color.LIGHT_GRAY;
 	static final Color HILIT_COLOR_YELLOW = Color.YELLOW;
 	static final boolean SEARCH_FORWARD = true;
 	static final boolean SEARCH_BACKWARD = false;
 
-	Highlighter hilit;
-	Highlighter.HighlightPainter painterGray;
-	Highlighter.HighlightPainter painterYellow;
+	Highlighter hilit = new DefaultHighlighter();;
+	Highlighter.HighlightPainter painterGray = new DefaultHighlighter.DefaultHighlightPainter(
+			HILIT_COLOR_GRAY);
+	Highlighter.HighlightPainter painterYellow= new DefaultHighlighter.DefaultHighlightPainter(
+			HILIT_COLOR_YELLOW);
 
-	private JTextField searchField;
-	private JButton forwardButton;
-	private JButton backwardButton;
-	private JLabel hideButton;
-	private JLabel infoLabel;
-	private JCheckBox caseSensitivityCheckbox;
-
-	/**
-	 * Konstruktor wenn eine JTextPane durchsucht werden soll
-	 * @wbp.parser.constructor
-	 */
-	public SearchBar(JTextPane textpane) {
-		this.textpane = textpane;
-		initialise();
-		textpane.setHighlighter(hilit);
-	}
+	private JTextField searchField = new JTextField();
+	private JButton forwardButton = new JButton("Abw\u00E4rts");
+	private JButton backwardButton = new JButton("Aufw\u00E4rts");
+	private JLabel hideButton = new JLabel("X");
+	private JLabel infoLabel = new JLabel("");
+	private JCheckBox caseSensitivityCheckbox = new JCheckBox("Gro\u00DF-/Kleinschreibung");
 
 	/**
-	 * Konstruktor wenn eine JTextArea durchsucht werden soll
+	 * Konstruktor
 	 */
-	public SearchBar(JTextArea textarea) {
-		this.textarea = textarea;
-		initialise();
-		textarea.setHighlighter(hilit);
-	}
-
-	/**
-	 * Variablen-/ und Objektinitialisierung, sowie setzen des Layouts
-	 */
-	public void initialise() {
-		this.word = "";
-		lastPos = -1;
-		v = new Vector<Integer>();
+	public SearchBar(JTextPane textPane) {
+		this.textPane = textPane;
+		
 		JLabel searchFieldLabel = new JLabel("Suchen:");
-		searchField = new JTextField();
 		searchField.addKeyListener(new KeyAdapter() {
 			public void keyPressed(KeyEvent ke) {
 				if (ke.getKeyCode() == KeyEvent.VK_ENTER) {
-					if (setWord(searchField.getText())) {
-						getPos(SEARCH_FORWARD);
-					}
-				}
-				if (ke.getKeyCode() == KeyEvent.VK_ESCAPE) {
+					find(SEARCH_FORWARD);
+				} else if (ke.getKeyCode() == KeyEvent.VK_ESCAPE) {
 					setVisible(false);
 				}
 			}
 		});
+		
 		searchField.getDocument().addDocumentListener(new DocumentListener() {
-			public void searchwordChanged() {
+			public void inputChanged() {
 				cancelSearch();
-				if (setWord(searchField.getText())) {
-					getPos(SEARCH_FORWARD);
-				}
+				find(SEARCH_FORWARD);
 			}
-
+			
 			@Override
 			public void changedUpdate(DocumentEvent arg0) {
-
+				inputChanged();
 			}
 
 			@Override
 			public void insertUpdate(DocumentEvent arg0) {
-				searchwordChanged();
+				inputChanged();
 			}
 
 			@Override
 			public void removeUpdate(DocumentEvent arg0) {
-				searchwordChanged();
+				inputChanged();
 			}
 		});
 		searchField.setColumns(10);
-		forwardButton = new JButton("Abw\u00E4rts");
+		
 		forwardButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				getPos(SEARCH_FORWARD);
+				find(SEARCH_FORWARD);
 			}
 		});
-		backwardButton = new JButton("Aufw\u00E4rts");
+		
 		backwardButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				getPos(SEARCH_BACKWARD);
+				find(SEARCH_BACKWARD);
 			}
 		});
-		infoLabel = new JLabel("");
-		caseSensitivityCheckbox = new JCheckBox("Gro\u00DF-/Kleinschreibung");
+		
 		caseSensitivityCheckbox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				cancelSearch();
-				setWord(searchField.getText());
-				getPos(SEARCH_FORWARD);
+				find(SEARCH_FORWARD);
 			}
 		});
 
 		setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
+
+		hideButton.setHorizontalAlignment(SwingConstants.CENTER);
+		hideButton.setPreferredSize(new Dimension(20, 20));
+		hideButton.setMinimumSize(new Dimension(20, 20));
+		hideButton.setMaximumSize(new Dimension(20, 20));
+		hideButton.setBorder(new TitledBorder(null, "", TitledBorder.LEADING,
+				TitledBorder.TOP, null, null));
+		hideButton.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent arg0) {
+				setVisible(false);
+			}
+		});
 		
-				hideButton = new JLabel("X");
-				hideButton.setHorizontalAlignment(SwingConstants.CENTER);
-				hideButton.setPreferredSize(new Dimension(20, 20));
-				hideButton.setMinimumSize(new Dimension(20, 20));
-				hideButton.setMaximumSize(new Dimension(20, 20));
-				add(hideButton);
-				hideButton.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-				hideButton.addMouseListener(new MouseAdapter() {
-					public void mouseClicked(MouseEvent arg0) {
-						setVisible(false);
-					}
-				});
+		add(hideButton);
 		add(searchFieldLabel);
 		add(searchField);
 		add(forwardButton);
@@ -167,11 +140,7 @@ public class SearchBar extends JPanel {
 		add(caseSensitivityCheckbox);
 		add(infoLabel);
 
-		hilit = new DefaultHighlighter();
-		painterGray = new DefaultHighlighter.DefaultHighlightPainter(
-				HILIT_COLOR_GRAY);
-		painterYellow = new DefaultHighlighter.DefaultHighlightPainter(
-				HILIT_COLOR_YELLOW);
+		textPane.setHighlighter(hilit);
 	}
 
 	/**
@@ -186,112 +155,95 @@ public class SearchBar extends JPanel {
 	 * 
 	 * @return true wenn was gefunden, sonst false
 	 */
-	public boolean getPos(boolean forward) {
-		if (word.equals("")) {
-			cancelSearch();
-			return false;
-		}
-		// Unterscheidung Groß- und Kleinschreibung
-		if (textpane == null) {
-			text = caseSensitivityCheckbox.isSelected() ? textarea.getText()
-					: textarea.getText().toLowerCase();
-		} else {
+	public void find(boolean forward) {
+		// liste aller vorkommen aufbauen (nur wenn nötig)
+		if (!hasPositions) {
+			String text;
+			String word;
+
+			// Unterscheidung Groß- und Kleinschreibung
 			try {
-				Document doc = textpane.getDocument();
+				Document doc = textPane.getDocument();
 				text = caseSensitivityCheckbox.isSelected() ? doc.getText(0,
 						doc.getLength()) : doc.getText(0, doc.getLength())
 						.toLowerCase();
 			} catch (BadLocationException e) {
 				e.printStackTrace();
+				return;
 			}
-		}
-		word = caseSensitivityCheckbox.isSelected() ? word : word.toLowerCase();
-		// liste aller vorkommen aufbauen (nur wenn nötig)
-		if (lastPos == -1) {
-			v.removeAllElements();
+			word = caseSensitivityCheckbox.isSelected() ? searchField.getText() : searchField.getText().toLowerCase();
+			wordLength = word.length();
+			if (wordLength==0) {
+				return;
+			}
+			positions.clear();
 			int pos = text.indexOf(word);
-			int i = 0;
 			while (pos != -1) {
-				i++;
-				v.add(pos);
+				positions.add(pos);
 				pos = text.indexOf(word, pos + 1);
 			}
+			hasPositions=true;
 		}
-		if (!v.isEmpty()) {
+		if (positions.isEmpty()) {
+			searchField.setForeground(Color.WHITE);
+			searchField.setBackground(Color.RED);
+		} else {
+			int pos;
 			// Vorwärtseinstellung
 			if (forward) {
-				if (lastPos >= v.size() - 1) {
-					infoLabel
-							.setText("Textende erreicht. Die Suche wurde vom Textanfang neu gestartet.");
+				int i=0;
+				while (i<positions.size()) {
+					if (positions.get(i)>textPane.getCaretPosition()) {
+						break;
+					}
+					i++;
+				}
+				if (i==positions.size()) {
+					infoLabel.setText("Textende erreicht. Die Suche wurde vom Textanfang neu gestartet.");
+					i=0;
 				} else {
 					infoLabel.setText("");
 				}
-				lastPos = (lastPos >= v.size() - 1) ? 0 : lastPos + 1;
-			}
-			// Rückwärtseinstellung
-			if (!forward) {
-				if (lastPos <= 0) {
-					infoLabel
-							.setText("Textanfang erreicht. Die Suche wurde vom Textende neu gestartet.");
+				pos = positions.get(i);
+			} else {
+				int i=positions.size()-1;
+				while (i>=0) {
+					if (positions.get(i)<textPane.getCaretPosition()) {
+						break;
+					}
+					i--;
+				}
+				if (i==-1) {
+					infoLabel.setText("Textanfang erreicht. Die Suche wurde vom Textende neu gestartet.");
+					i=positions.size()-1;
 				} else {
 					infoLabel.setText("");
 				}
-				lastPos = lastPos <= 0 ? v.size() - 1 : lastPos - 1;
+				pos = positions.get(i);
 			}
 			// Ergebnisse einfärben und Cursor setzen
-			showHighlights();
-			searchField.setForeground(Color.BLACK);
-			searchField.setBackground(Color.WHITE);
-			if (textpane == null) {
-				textarea.setCaretPosition(v.get(lastPos));
-			} else {
-				textpane.setCaretPosition(v.get(lastPos));
-			}
-			return true;
+			showHighlights(positions, pos, wordLength);
+			textPane.setCaretPosition(pos);
 		}
-		searchField.setForeground(Color.WHITE);
-		searchField.setBackground(Color.RED);
-		return false;
 	}
 
 	/**
 	 * Lässt alle Suchergebnissfarbhinterlegungen im Farbschema anzeigen
 	 */
-	public void showHighlights() {
+	public void showHighlights(Vector<Integer> positions, int currPos, int length) {
 		hilit.removeAllHighlights();
-		for (int j = 0; j < v.size(); j++) {
+		for (int i = 0; i < positions.size(); i++) {
 			try {
-				if (j == lastPos) {
-					hilit.addHighlight(v.get(j), v.get(j) + word.length(),
-							painterYellow);
+				int pos = positions.get(i);
+				if (pos==currPos) {
+					hilit.addHighlight(pos, pos + length, painterYellow);
 				} else {
-					hilit.addHighlight(v.get(j), v.get(j) + word.length(),
-							painterGray);
+					hilit.addHighlight(pos, pos + length, painterGray);
 				}
 			} catch (BadLocationException e) {
 				e.printStackTrace();
 			}
 		}
-	}
-
-	/**
-	 * Lässt alle Suchergebnissfarbhinterlegungen verschwinden
-	 */
-	public void hideHighlights() {
-		hilit.removeAllHighlights();
-	}
-
-	/**
-	 * Setzt das derzeitige Suchwort
-	 * 
-	 * @param word Das Wort was nun gesucht werden soll
-	 * 
-	 * @return true wenn es ein echtes Wort ist, false wenn es ein Leerstring
-	 * ist
-	 */
-	public boolean setWord(String word) {
-		this.word = word;
-		return word.equals("") ? false : true;
 	}
 
 	/**
@@ -300,9 +252,11 @@ public class SearchBar extends JPanel {
 	public void cancelSearch() {
 		searchField.setForeground(Color.BLACK);
 		searchField.setBackground(Color.WHITE);
-		hideHighlights();
-		setWord("");
-		lastPos = -1;
+		hilit.removeAllHighlights();
+		
+		positions.clear();
+		hasPositions = false;
+		wordLength=0;
 	}
 
 	/**
@@ -315,16 +269,10 @@ public class SearchBar extends JPanel {
 		}
 		super.setVisible(show);
 		if (show) {
-			lastPos = 0;
-			infoLabel.setText("");
-			showHighlights();
+			find(SEARCH_FORWARD);
 		} else {
-			hideHighlights();
-			if (textarea == null) {
-				textpane.grabFocus();
-			} else {
-				textarea.grabFocus();
-			}
+			cancelSearch();
+			textPane.grabFocus();
 		}
 	}
 
