@@ -36,9 +36,7 @@ public class EditorTabbedPane extends JTabbedPane {
 				return;
 			}
 		}
-		EditorPanel myPanel = new EditorPanel(file);
-		myPanel.setSearchable(searchable);
-		myPanel.setEditable(editable);
+		EditorPanel myPanel = new EditorPanel(file, searchable, editable);
 		add(file.getName(), myPanel);
 		setSelectedIndex(indexOfComponent(myPanel));
 		this.setTabComponentAt(this.getTabCount() - 1, new ButtonTabComponent(

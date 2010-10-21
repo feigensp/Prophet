@@ -22,19 +22,32 @@ public class EditorPanel extends JPanel {
 	private SearchBar searchBar;
 	
 	boolean searchable;
+	boolean editable;
 
 	/**
 	 * Create the panel.
 	 */
+	public EditorPanel(File f, boolean searchable, boolean editable) {
+		file=f;
+		this.searchable=searchable;
+		this.editable=editable;
+		initialize();
+	}
+	
 	public EditorPanel(File f) {
 		file=f;
 		this.searchable=false;
-		
+		this.editable=false;
+		initialize();
+	}
+	
+	private void initialize() {		
 		HighlightedDocument document = null;
 		document = new HighlightedDocument();
 		document.setHighlightStyle(HighlightedDocument.JAVA_STYLE);
 		textPane = new JTextPane(document);
 		textPane.setFont(new Font("monospaced", Font.PLAIN, 12));
+		//textPane.setText("public static void main()");
 		
 		textPane.addKeyListener(new KeyAdapter() {
 			@Override
@@ -45,11 +58,11 @@ public class EditorPanel extends JPanel {
 				}
 			}
 		});
-		setLayout(new BorderLayout());
+		textPane.setEditable(editable);
 		try {
 			byte[] buffer = new byte[(int) file.length()];
-		    FileInputStream fileStream = new FileInputStream(file);
-		    fileStream.read(buffer);
+		    FileInputStream f = new FileInputStream(file);
+		    f.read(buffer);
 		    textPane.setText(new String(buffer));
 		    textPane.setCaretPosition(0);
 		} catch (IOException e) {
@@ -61,14 +74,16 @@ public class EditorPanel extends JPanel {
 				JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
 				JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 		scrollPane.getVerticalScrollBar().setUnitIncrement(textPane.getFontMetrics(textPane.getFont()).getHeight());
-		add(scrollPane, BorderLayout.CENTER);
 
 		LineNumbers lineNumbers = new LineNumbers(textPane);
 		scrollPane.setRowHeaderView(lineNumbers);
-
+		
+		setLayout(new BorderLayout());
+		add(scrollPane, BorderLayout.CENTER);
+		
 		searchBar = new SearchBar(textPane);
+		searchBar.setVisible(false);
 		add(searchBar, BorderLayout.SOUTH);
-		searchBar.setVisible(false);	
 	}
 
 	public File getFile() {
@@ -77,19 +92,8 @@ public class EditorPanel extends JPanel {
 
 	public void grabFocus() {
 		textPane.grabFocus();
-	}
-	
+	}	
 	public JTextPane getTextPane() {
 		return textPane;
-	}
-	
-	public void setEditable(boolean editable) {
-		textPane.setEditable(editable);
-	}
-	public boolean isEditable() {
-		return textPane.isEditable();
-	}
-	public void setSearchable(boolean s) {
-		searchable=s;
 	}
 }

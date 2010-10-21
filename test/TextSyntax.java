@@ -1,4 +1,4 @@
-package EditorTabbedPane;
+package test;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
@@ -12,6 +12,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 import javax.swing.border.EmptyBorder;
+
+import EditorTabbedPane.LineNumbers;
 
 import com.Ostermiller.Syntax.HighlightedDocument;
 
