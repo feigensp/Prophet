@@ -159,7 +159,7 @@ public class QuestionView extends JPanel {
 		}
 		// Componente hinzufügen
 		PanelContainer pc = rows.get(row);
-		JLabel label = new JLabel(caption);
+		WordWrapLabel label = new WordWrapLabel(caption);
 		label.setAlignmentX(LEFT_ALIGNMENT);
 		label.setAlignmentY(TOP_ALIGNMENT);
 		if (col < pc.getComponentCount()) {
@@ -188,7 +188,7 @@ public class QuestionView extends JPanel {
 		}
 		// Componente hinzufügen
 		PanelContainer pc = rows.get(row);
-		JLabel label = new JLabel(caption);
+		WordWrapLabel label = new WordWrapLabel(caption);
 		label.setAlignmentX(LEFT_ALIGNMENT);
 		label.setAlignmentY(TOP_ALIGNMENT);
 		pc.add(label);

@@ -62,7 +62,7 @@ public class Test extends JFrame {
 		contentPane.setLayout(new BorderLayout(0, 0));
 
 		qv = new QuestionView();
-		contentPane.add(new JScrollPane(qv), BorderLayout.CENTER);
+		contentPane.add(/*new JScrollPane(*/qv/*)*/, BorderLayout.CENTER);
 
 		JPanel panel_1 = new JPanel();
 		contentPane.add(panel_1, BorderLayout.WEST);
