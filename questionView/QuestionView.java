@@ -16,7 +16,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-
 public class QuestionView extends JPanel {
 
 	public static final boolean HORIZONTAL = true;
@@ -41,10 +40,10 @@ public class QuestionView extends JPanel {
 	 */
 	public void addRow() {
 		PanelContainer pc = new PanelContainer();
+		pc.setAlignmentX(LEFT_ALIGNMENT);
+		pc.setAlignmentY(TOP_ALIGNMENT);
 		rows.add(pc);
 		this.add(pc);
-		this.setAlignmentX(LEFT_ALIGNMENT);
-		this.setAlignmentY(TOP_ALIGNMENT);
 	}
 
 	/**
@@ -113,6 +112,7 @@ public class QuestionView extends JPanel {
 			pc.add(table);
 			pc.addComponent(table);
 		}
+		pc.setMaximumSize(pc.getPreferredSize());
 		updateUI();
 	}
 
@@ -137,6 +137,7 @@ public class QuestionView extends JPanel {
 		table.setAlignmentY(TOP_ALIGNMENT);
 		pc.add(table);
 		pc.addComponent(table);
+		pc.setMaximumSize(pc.getPreferredSize());
 		updateUI();
 	}
 
@@ -169,6 +170,7 @@ public class QuestionView extends JPanel {
 			pc.add(label);
 			pc.addComponent(label);
 		}
+		pc.setMaximumSize(pc.getPreferredSize());
 		updateUI();
 	}
 
@@ -193,6 +195,7 @@ public class QuestionView extends JPanel {
 		label.setAlignmentY(TOP_ALIGNMENT);
 		pc.add(label);
 		pc.addComponent(label);
+		pc.setMaximumSize(pc.getPreferredSize());
 		updateUI();
 	}
 
@@ -228,6 +231,7 @@ public class QuestionView extends JPanel {
 			pc.add(buttons);
 			pc.addComponent(buttons);
 		}
+		pc.setMaximumSize(pc.getPreferredSize());
 		updateUI();
 	}
 
@@ -254,6 +258,7 @@ public class QuestionView extends JPanel {
 		buttons.setAlignmentY(TOP_ALIGNMENT);
 		pc.add(buttons);
 		pc.addComponent(buttons);
+		pc.setMaximumSize(pc.getPreferredSize());
 		updateUI();
 	}
 
@@ -287,6 +292,7 @@ public class QuestionView extends JPanel {
 			pc.add(textField);
 			pc.addComponent(textField);
 		}
+		pc.setMaximumSize(pc.getPreferredSize());
 		updateUI();
 	}
 
@@ -312,6 +318,7 @@ public class QuestionView extends JPanel {
 		textField.setAlignmentY(TOP_ALIGNMENT);
 		pc.add(textField);
 		pc.addComponent(textField);
+		pc.setMaximumSize(pc.getPreferredSize());
 		updateUI();
 	}
 
@@ -354,6 +361,7 @@ public class QuestionView extends JPanel {
 			pc.add(panel);
 			pc.addComponent(panel);
 		}
+		pc.setMaximumSize(pc.getPreferredSize());
 		updateUI();
 	}
 
@@ -387,6 +395,7 @@ public class QuestionView extends JPanel {
 		}
 		pc.add(panel);
 		pc.addComponent(panel);
+		pc.setMaximumSize(pc.getPreferredSize());
 		updateUI();
 	}
 }

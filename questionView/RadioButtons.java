@@ -46,6 +46,16 @@ public class RadioButtons extends JPanel {
 			buttons[i].setAlignmentY(TOP_ALIGNMENT);
 		}
 	}
+	
+	public RadioButtons(String[] captions) {
+		ButtonGroup btnGroup = new ButtonGroup();
+		buttons = new JRadioButton[captions.length];
+		
+		for (int i = 0; i < captions.length; i++) {
+			buttons[i] = new JRadioButton(captions[i]);
+			btnGroup.add(buttons[i]);
+		}		
+	}
 
 	/**
 	 * Liefert den Index zurück, welcher RadioButton markiert ist
@@ -74,5 +84,9 @@ public class RadioButtons extends JPanel {
 			}
 		}
 		return "";
+	}
+	
+	public JRadioButton[] getRadioButtons() {
+		return buttons;
 	}
 }

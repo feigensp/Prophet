@@ -8,9 +8,11 @@
 
 package questionView;
 
+import java.awt.Color;
 import java.awt.FlowLayout;
 import java.util.ArrayList;
 
+import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 

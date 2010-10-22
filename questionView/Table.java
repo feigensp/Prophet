@@ -11,8 +11,8 @@ import java.awt.Dimension;
 import java.util.ArrayList;
 
 import javax.swing.JComponent;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
@@ -23,6 +23,7 @@ public class Table extends JPanel {
 	private int hgap, vgap; // Anzahl der Lücken zwischen den Spalten
 	// Speichert intern alle Komponenten
 	private ArrayList<ArrayList<JComponent>> components;
+	private ArrayList<RadioButtons> radioButtonRows;
 
 	/**
 	 * Konstruktor der ein neues Tabellenobjekt erstellt. In diesem können dann
@@ -40,6 +41,7 @@ public class Table extends JPanel {
 		this.hgap = hgap;
 		this.vgap = vgap;
 		components = new ArrayList<ArrayList<JComponent>>();
+		radioButtonRows = new ArrayList<RadioButtons>();
 	}
 
 	/**
@@ -131,6 +133,25 @@ public class Table extends JPanel {
 		}
 //		this.setPreferredSize(new Dimension(width, height));
 		this.setMaximumSize(new Dimension(width, height));
+	}
+	
+	/**
+	 * Fügt eine von zusammenhängenden RadioButtons hinzu.
+	 * wird ab eine Zelle x,y mit dem einfügen begonnen, existieren diese Zellen noch nciht (oder Teile)
+	 * werden sie neu erstellt.
+	 * Existieren sie bereits mit Inhalt, so wird dieser überschrieben.
+	 * Die RadioButtonReihe wird in einer ExtraLokalen ArrayList gespeichert um später
+	 * einfach auf sie zugreifen zu können.
+	 * @param captions Beschriftungen der RadioButtons
+	 * @param x Spalteneinfügeposition
+	 * @param y Zeileneinfügeposition
+	 */
+	public void addRadioRow(String[] captions, int x, int y) {
+		radioButtonRows.add(new RadioButtons(captions));
+		JRadioButton[] buttons = radioButtonRows.get(radioButtonRows.size()-1).getRadioButtons();
+		for(int i=0; i< buttons.length; i++) {
+			this.addComponent(buttons[i], x, y+i);
+		}
 	}
 
 	/**

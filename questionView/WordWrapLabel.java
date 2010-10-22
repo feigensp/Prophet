@@ -15,17 +15,22 @@ public class WordWrapLabel extends JPanel {
 
 	/**
 	 * Standartkonstruktor, welcher ein Panel mit einem Text (JLabels) erstellt
-	 * @param s Text welcher dargestellt werden soll
+	 * 
+	 * @param s
+	 *            Text welcher dargestellt werden soll
 	 */
 	public WordWrapLabel(String s) {
 		super();
-		//this.setLayout(new BorderLayout());
-		setText(s);
+		this.setLayout(new BorderLayout());
+		this.add(new JLabel("<html>" + s + "</html>"), BorderLayout.CENTER);
+		//setText(s);
 	}
 
 	/**
 	 * Setzt den Text (JLabel's) des Panels neu
-	 * @param s Text, welcher gesetzt werden soll
+	 * 
+	 * @param s
+	 *            Text, welcher gesetzt werden soll
 	 */
 	public void setText(String s) {
 		this.removeAll();
@@ -34,10 +39,26 @@ public class WordWrapLabel extends JPanel {
 		for (String labelCaption : captionElements) {
 			add(new JLabel(labelCaption));
 		}
+
+//		ArrayList<JLabel> labels = new ArrayList<JLabel>();
+//		double panelWidth = this.getSize().getWidth();
+//		JLabel label = new JLabel("");
+//		String part1 = s;
+//		String part2 = "";
+//		if()
+//			do {
+//				
+//				//Solange durchführen, wie LabelText zu groß, oder der 2. Teil nicht leer 
+//			} while (panelWidth < label.getGraphics().getFontMetrics()
+//					.getStringBounds(part1, 0, part1.length(), getGraphics())
+//					.getWidth()
+//					|| !part2.equals(""));
+//			int whitespacePos = s.lastIndexOf(" ");
 	}
 
 	/**
 	 * Liefert den gesamten Text des Panels zurück
+	 * 
 	 * @return Text der einzelnen JLabels
 	 */
 	public String getText() {
