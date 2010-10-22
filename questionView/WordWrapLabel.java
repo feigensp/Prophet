@@ -4,8 +4,7 @@
 
 package questionView;
 
-import java.awt.BorderLayout;
-
+import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -21,9 +20,9 @@ public class WordWrapLabel extends JPanel {
 	 */
 	public WordWrapLabel(String s) {
 		super();
-		this.setLayout(new BorderLayout());
-		this.add(new JLabel("<html>" + s + "</html>"), BorderLayout.CENTER);
-		//setText(s);
+		this.setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
+		//this.add(new JLabel("<html>" + s + "</html>"), BorderLayout.CENTER);
+		setText(s);
 	}
 
 	/**
@@ -37,7 +36,7 @@ public class WordWrapLabel extends JPanel {
 		caption = s;
 		String[] captionElements = s.split(" ");
 		for (String labelCaption : captionElements) {
-			add(new JLabel(labelCaption));
+			add(new JLabel(labelCaption + " "));
 		}
 
 //		ArrayList<JLabel> labels = new ArrayList<JLabel>();
