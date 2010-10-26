@@ -11,10 +11,10 @@ To Create: > jflex lcalc.flex
 
 /* import these classes:
         java_cup.runtime.*
-        sym                     --class we create with CUP
 */
+package lexerTest;
+
 import java_cup.runtime.*;
-import sym;
  
  
 

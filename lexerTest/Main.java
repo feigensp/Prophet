@@ -12,6 +12,7 @@ package lexerTest;
 
 /* Import classes needed.  The class we created for the parser, the standard
  runtime class for java, and an io class.*/
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
@@ -20,22 +21,18 @@ class Main {
 	static boolean do_debug_parse = false;
 
 	static public void main(String argv[]) {
-
-		/* Start the parser */
 		FileReader fr = null;
 		try {
 			fr = new FileReader("src\\lexerTest\\test.txt");
-
-		} catch (Exception e) {
-			System.out.println("Fehler");
-		} finally {
+		} catch (FileNotFoundException e1) {
+			System.out.println("Fehler beim erstellen des File Reader");
 		}
-		parser p = new parser(new Lexer(fr));
 		try {
+			parser p = new parser(fr);
 			Object result = p.parse().value;
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("Fehler beim parsen");
 		}
 	}
+
 }
