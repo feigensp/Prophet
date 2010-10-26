@@ -8,11 +8,10 @@
 
 package questionView;
 
-import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.util.ArrayList;
 
-import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
@@ -32,6 +31,9 @@ public class PanelContainer extends JPanel {
 		this.setLayout(new FlowLayout(FlowLayout.LEFT));
 		this.setAlignmentX(LEFT_ALIGNMENT);
 		this.setAlignmentY(TOP_ALIGNMENT);
+//		this.setPreferredSize(new Dimension(300, 300));
+//		this.setMinimumSize(new Dimension(300, 300));
+//		this.setMaximumSize(new Dimension(300, 300));
 		components = new ArrayList<JComponent>();
 	}
 

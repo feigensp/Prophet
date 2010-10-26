@@ -4,6 +4,8 @@
 
 package questionView;
 
+import java.awt.FlowLayout;
+
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -22,6 +24,10 @@ public class WordWrapLabel extends JPanel {
 		super();
 		this.setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
 		//this.add(new JLabel("<html>" + s + "</html>"), BorderLayout.CENTER);
+		/**
+		 * langer Text:
+		 * Ich bin nun ein ganz langer Text. Geboren wurde ich im Jahre  87 vor christus. Mein Vater war das Alte Testament und meine Mutter war ein Buch Von den elementen. Als Pythagoras mich das erste mal sah, wunderte er sich, dass er noch lebte und noch nicht tot war. Mich selber irritierte das nciht so sehr wie ihn, denn ich wusste das nicht alles sinn ergeben muss. Dennoch wunderte es auch mich ein wenig. Ein paar Sekunden starb er wieder und wurde nie mehr gesehen.
+		 */
 		setText(s);
 	}
 

@@ -9,6 +9,7 @@
 package questionView;
 
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.util.ArrayList;
 
 import javax.swing.BoxLayout;
@@ -40,6 +41,7 @@ public class QuestionView extends JPanel {
 	 */
 	public void addRow() {
 		PanelContainer pc = new PanelContainer();
+		pc.setLayout(new WrapLayout(FlowLayout.LEFT));
 		pc.setAlignmentX(LEFT_ALIGNMENT);
 		pc.setAlignmentY(TOP_ALIGNMENT);
 		rows.add(pc);
@@ -160,15 +162,19 @@ public class QuestionView extends JPanel {
 		}
 		// Componente hinzufügen
 		PanelContainer pc = rows.get(row);
-		WordWrapLabel label = new WordWrapLabel(caption);
-		label.setAlignmentX(LEFT_ALIGNMENT);
-		label.setAlignmentY(TOP_ALIGNMENT);
-		if (col < pc.getComponentCount()) {
-			pc.add(label, col);
-			pc.addComponent(label, col);
-		} else {
-			pc.add(label);
-			pc.addComponent(label);
+
+		String[] captionElements = caption.split(" ");
+		for (String labelCaption : captionElements) {
+			JLabel label = new JLabel(labelCaption);
+			label.setAlignmentX(LEFT_ALIGNMENT);
+			label.setAlignmentY(TOP_ALIGNMENT);
+			if (col < pc.getComponentCount()) {
+				pc.add(label, col);
+				pc.addComponent(label, col);
+			} else {
+				pc.add(label);
+				pc.addComponent(label);
+			}
 		}
 		pc.setMaximumSize(pc.getPreferredSize());
 		updateUI();
@@ -190,11 +196,15 @@ public class QuestionView extends JPanel {
 		}
 		// Componente hinzufügen
 		PanelContainer pc = rows.get(row);
-		WordWrapLabel label = new WordWrapLabel(caption);
-		label.setAlignmentX(LEFT_ALIGNMENT);
-		label.setAlignmentY(TOP_ALIGNMENT);
-		pc.add(label);
-		pc.addComponent(label);
+
+		String[] captionElements = caption.split(" ");
+		for (String labelCaption : captionElements) {
+			JLabel label = new JLabel(labelCaption);
+			label.setAlignmentX(LEFT_ALIGNMENT);
+			label.setAlignmentY(TOP_ALIGNMENT);
+			pc.add(label);
+			pc.addComponent(label);
+		}
 		pc.setMaximumSize(pc.getPreferredSize());
 		updateUI();
 	}
