@@ -22,6 +22,7 @@ public class HTMLFormular extends JEditorPane{
                             if (kind == HTML.Tag.INPUT )
                                 return new FormView(elem) {
                                     protected void submitData(String data) {
+                                    	System.out.println("geklickt");
                                         setData(data);
                                     }
                                 };

@@ -5,12 +5,17 @@ package test;
  * Das HTML Formular ist eine interessante Alternative zu einem reinen Swing Formular.
  *
  */
+import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Map;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.WindowConstants;
 public class Html_Form extends JFrame {
@@ -31,7 +36,17 @@ public class Html_Form extends JFrame {
                 showData();
             }
         });
-        getContentPane().add(new JScrollPane(formular));
+        JPanel contentPane = new JPanel();
+        getContentPane().add(contentPane);
+        contentPane.setLayout(new BorderLayout());
+        JButton bla = new JButton("Test");
+        bla.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		System.out.println(vorname);
+        	}
+        });
+        contentPane.add(bla, BorderLayout.SOUTH);
+        contentPane.add(new JScrollPane(formular), BorderLayout.CENTER);
     }
     private void showData(){
         JOptionPane.showMessageDialog(null,
