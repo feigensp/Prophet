@@ -10,6 +10,9 @@ import java.util.Vector;
 public class EditorData {
 	private static ArrayList<SettingsDialog> settingsDialogs = new ArrayList<SettingsDialog>();
 	private static TreeNode dataRoot = new TreeNode("Übersicht");
+	
+	public static final String HTMLSTART = "<html><head></head><body>";
+	public static final String HTMLEND = "<br><br><br><input type='submit'></body></html>";
 
 	// Allgemeine reste-Methode
 	public static void reset() {
@@ -42,11 +45,12 @@ public class EditorData {
 		for (int i = 0; i < dataRoot.getChildCount(); i++) {
 			Vector<TreeNode> children = dataRoot.getChild(i).getChildren();
 			for (TreeNode child : children) {
+				String content = HTMLSTART + child.getContent() + HTMLEND;
 				try {
 					File newHTMLFile = new File(child.getName() + ".html");
 					FileWriter fw = new FileWriter(newHTMLFile);
 					BufferedWriter bw = new BufferedWriter(fw);
-					bw.write(child.getContent());
+					bw.write(content);
 					bw.close();
 				} catch (IOException ioe) {
 					ioe.printStackTrace();

@@ -6,8 +6,6 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.ArrayList;
-import java.util.Vector;
 
 import javax.swing.JComponent;
 import javax.swing.JMenuItem;
@@ -24,14 +22,14 @@ public class PopupTree extends JTree implements ActionListener, MouseListener {
 
 	private int x, y;
 
-	//private TreeNode dataRoot;
+	// private TreeNode dataRoot;
 
 	private JTextPane textPane;
 	private String editableNodePath;
 
 	public PopupTree(DefaultMutableTreeNode root, final JTextPane textPane) {
 		super(root);
-		
+
 		this.textPane = textPane;
 		EditorData.getDataRoot().setName(root.toString());
 		// PopupFenster erstellen
@@ -60,7 +58,8 @@ public class PopupTree extends JTree implements ActionListener, MouseListener {
 				if (textPane.isEditable()) {
 					String path = editableNodePath;
 					String[] pathElements = path.split(", ");
-					EditorData.getNode(pathElements).setContent(textPane.getText().replaceAll("\n", "\r\n"));
+					EditorData.getNode(pathElements).setContent(
+							textPane.getText().replaceAll("\n", "\r\n"));
 				}
 			}
 		});
@@ -91,7 +90,8 @@ public class PopupTree extends JTree implements ActionListener, MouseListener {
 					textPane.setEditable(false);
 					textPane.setText("");
 				} else {
-					textPane.setText(EditorData.getNode(pathElements).getContent().replaceAll("\r\n", "\n"));
+					textPane.setText(EditorData.getNode(pathElements)
+							.getContent().replaceAll("\r\n", "\n"));
 					textPane.setEditable(true);
 				}
 			}
@@ -129,8 +129,9 @@ public class PopupTree extends JTree implements ActionListener, MouseListener {
 			TreePath tp = this.getClosestPathForLocation(x, y);
 			DefaultMutableTreeNode currentNode = (DefaultMutableTreeNode) tp
 					.getLastPathComponent();
-			SettingsDialog dia = EditorData.getSettingsDialogs(currentNode.toString());
-			if(dia!= null) {
+			SettingsDialog dia = EditorData.getSettingsDialogs(currentNode
+					.toString());
+			if (dia != null) {
 				dia.setVisible(true);
 			}
 		}
@@ -152,8 +153,8 @@ public class PopupTree extends JTree implements ActionListener, MouseListener {
 			EditorData.getSettingsDialogs(pathElements[1]).setId(name);
 			break;
 		case 3: // Frage
-			EditorData.getDataRoot().getChild(pathElements[1]).getChild(pathElements[2])
-					.setName(name);
+			EditorData.getDataRoot().getChild(pathElements[1])
+					.getChild(pathElements[2]).setName(name);
 			break;
 		}
 		currentNode.setUserObject(name);
@@ -176,7 +177,8 @@ public class PopupTree extends JTree implements ActionListener, MouseListener {
 			EditorData.removeSettingsDialog(pathElements[1]);
 			break;
 		case 3: // Es wird eine Frage gelöscht
-			EditorData.getDataRoot().getChild(pathElements[1]).removeChild(pathElements[2]);
+			EditorData.getDataRoot().getChild(pathElements[1])
+					.removeChild(pathElements[2]);
 			break;
 		}
 		// Child aus dem JTree löschen
@@ -207,7 +209,9 @@ public class PopupTree extends JTree implements ActionListener, MouseListener {
 			currentNode.add(child);
 			((DefaultTreeModel) this.getModel())
 					.nodeStructureChanged((javax.swing.tree.TreeNode) currentNode);
-			EditorData.addSettingsDialog(new SettingsDialog(name));
+			SettingsDialog dia = new SettingsDialog(name);
+			EditorData.addSettingsDialog(dia);
+			dia.setVisible(true);
 			break;
 		case 2: // Neue Frage
 			EditorData.getDataRoot().getChild(pathElements[1]).addChild(tn);
@@ -227,13 +231,13 @@ public class PopupTree extends JTree implements ActionListener, MouseListener {
 
 	public String getFreeName(String name) {
 		String ret = name.replaceAll(" ", "");
-		if(ret.equals("")) {
+		if (ret.equals("")) {
 			ret += "_";
 		}
 		while (EditorData.getDataRoot().nameExist(ret)) {
 			ret += "_";
 		}
-		
+
 		return ret;
 	}
 

@@ -152,6 +152,8 @@ public class editorView extends JFrame {
 		//Laden
 		loadMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				tree.removeAll();
+				tree.updateUI();
 			}
 		});
 	}

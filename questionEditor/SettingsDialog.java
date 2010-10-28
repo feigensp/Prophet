@@ -102,6 +102,8 @@ public class SettingsDialog extends JDialog implements ActionListener {
 	public void setId(String id) {
 		this.id = id;
 	}
+	
+//	public void setSettings(Vector)
 
 	public void saveSettings() {
 		TreeNode node = EditorData.getNode(id);
