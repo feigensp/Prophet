@@ -59,7 +59,7 @@ public class SettingsDialog extends JDialog implements ActionListener {
 			contentPanel.add(featurePanel, BorderLayout.CENTER);
 			featurePanel
 					.setLayout(new BoxLayout(featurePanel, BoxLayout.Y_AXIS));
-			for (String ea : Settings.getSettings()) {
+			for (String ea : Settings.settings) {
 				JCheckBox check = new JCheckBox(ea);
 				check.setSelected(true);
 				featurePanel.add(check);
@@ -104,13 +104,13 @@ public class SettingsDialog extends JDialog implements ActionListener {
 		this.id = id;
 	}
 
-	public void setSettings(String path, ArrayList<Boolean> checkings) {
+	public void setSettings(String path, Boolean[] checkings) {
 		pathTextField.setText(path);
 		int i = 0;
 		for(Component comp : featurePanel.getComponents()) {
 			if(comp instanceof JCheckBox) {
-				if(i < checkings.size()) {
-					((JCheckBox)comp).setSelected(checkings.get(i));
+				if(i < checkings.length) {
+					((JCheckBox)comp).setSelected(checkings[i]);
 					i++;
 				}
 			}

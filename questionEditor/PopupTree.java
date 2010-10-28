@@ -6,6 +6,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
 
 import javax.swing.JComponent;
 import javax.swing.JMenuItem;
@@ -81,6 +82,15 @@ public class PopupTree extends JTree implements ActionListener, MouseListener {
 			//Kategorien einfügen
 			DefaultMutableTreeNode cat = new DefaultMutableTreeNode(categorie.getName());
 			SettingsDialog dia = new SettingsDialog(categorie.getName());
+			Boolean[] newSettings = new Boolean[Settings.settings.size()];
+			for(ElementAttribute categorieAttribute : categorie.getAttributes()) {
+				int pos = Settings.settings.indexOf(categorieAttribute.getName());
+				if(pos != -1 && pos < newSettings.length) {
+					newSettings[pos] = categorieAttribute.getContent().equals("true") ? true : false;
+				}					
+			}
+			String path = (String) categorie.getAttribute("path").getContent();
+			dia.setSettings(path, newSettings);
 			
 			EditorData.addSettingsDialog(dia);			
 			rootNode.add(cat);
