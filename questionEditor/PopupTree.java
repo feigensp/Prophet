@@ -28,11 +28,13 @@ public class PopupTree extends JTree implements ActionListener, MouseListener {
 	// private TreeNode dataRoot;
 
 	private JTextPane textPane;
+	private JTextPane viewPane;
 	private String editableNodePath;
 
-	public PopupTree(DefaultMutableTreeNode root, final JTextPane textPane) {
+	public PopupTree(DefaultMutableTreeNode root, final JTextPane textPane, JTextPane viewPane) {
 		super(root);
 
+		this.viewPane = viewPane;
 		this.textPane = textPane;
 		EditorData.getDataRoot().setName(root.toString());
 		// PopupFenster erstellen
@@ -137,6 +139,7 @@ public class PopupTree extends JTree implements ActionListener, MouseListener {
 				} else {
 					textPane.setText(EditorData.getNode(pathElements)
 							.getContent().replaceAll("\r\n", "\n"));
+					viewPane.setText(EditorData.HTMLSTART + textPane.getText() + EditorData.FAKEHTMLEND);
 					textPane.setEditable(true);
 				}
 			}

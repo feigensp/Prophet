@@ -11,8 +11,19 @@ public class EditorData {
 	private static ArrayList<SettingsDialog> settingsDialogs = new ArrayList<SettingsDialog>();
 	private static TreeNode dataRoot = new TreeNode("Übersicht");
 	
+	private static String htmlContent = "";
+	
 	public static final String HTMLSTART = "<html><head></head><body>";
-	public static final String HTMLEND = "<br><br><br><input type='submit'></body></html>";
+	public static final String HTMLEND = "<br><br><br><input type='submit' value='Weiter'></body></html>";
+	public static final String FAKEHTMLEND = "<br><br><br><input type='submit' value='Weiter' disabled></body></html>";
+		
+	public static String getHtmlContent() {
+		return htmlContent;
+	}
+	
+	public static void setHtmlContent(String content) {
+		htmlContent = content;
+	}
 
 	// Allgemeine reste-Methode
 	public static void reset() {

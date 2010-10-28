@@ -16,8 +16,12 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import javax.swing.JTextPane;
 import javax.swing.JToolBar;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 public class editorView extends JFrame {
@@ -32,6 +36,8 @@ public class editorView extends JFrame {
 	private JPanel optionPanel;
 	private JScrollPane treeScrollPane;
 	private JPanel contentPane;
+	private JTextPane viewPane;
+	private JTabbedPane editViewTabbedPane;
 
 	/**
 	 * Launch the application.
@@ -96,7 +102,9 @@ public class editorView extends JFrame {
 
 		textPane = new EditArea();
 
-		tree = new PopupTree(new DefaultMutableTreeNode("Übersicht"), textPane);
+		viewPane = new JTextPane();
+		viewPane.setEditorKit(new HTMLEditorKit());
+		tree = new PopupTree(new DefaultMutableTreeNode("Übersicht"), textPane, viewPane);
 		treeScrollPane = new JScrollPane(tree);
 		optionPanel.add(treeScrollPane, BorderLayout.CENTER);
 
@@ -104,7 +112,7 @@ public class editorView extends JFrame {
 		contentPane.add(editViewPanel, BorderLayout.CENTER);
 		editViewPanel.setLayout(new BorderLayout(0, 0));
 
-		JTabbedPane editViewTabbedPane = new JTabbedPane(JTabbedPane.TOP);
+		editViewTabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		editViewPanel.add(editViewTabbedPane);
 
 		editPanel = new JPanel();
@@ -114,6 +122,10 @@ public class editorView extends JFrame {
 
 		JPanel viewPanel = new JPanel();
 		editViewTabbedPane.addTab("Betrachter", null, viewPanel, null);
+		viewPanel.setLayout(new BorderLayout(0, 0));
+		
+		viewPane.setEditable(false);
+		viewPanel.add(viewPane, BorderLayout.CENTER);
 
 		JToolBar toolBar = new JToolBar();
 		editViewPanel.add(toolBar, BorderLayout.NORTH);
@@ -177,6 +189,14 @@ public class editorView extends JFrame {
 				}
 			}
 		});
+		//JTabbedPane
+		editViewTabbedPane.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent evt) { 
+				if(editViewTabbedPane.getSelectedIndex() == 1) {
+					//viewPane.setText(EditorData.HTMLSTART + EditorData.getHtmlContent() + EditorData.HTMLEND);
+				}
+			} 
+		}); 
 	}
 
 }
