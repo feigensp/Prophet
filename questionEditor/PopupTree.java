@@ -24,17 +24,16 @@ public class PopupTree extends JTree implements ActionListener, MouseListener {
 
 	private int x, y;
 
-	private TreeNode dataRoot;
+	//private TreeNode dataRoot;
 
-	private ArrayList<SettingsDialog> settingsDialogs;
 	private JTextPane textPane;
 	private String editableNodePath;
 
 	public PopupTree(DefaultMutableTreeNode root, final JTextPane textPane) {
 		super(root);
+		
 		this.textPane = textPane;
-		this.dataRoot = new TreeNode(root.toString());
-		settingsDialogs = new ArrayList<SettingsDialog>();
+		EditorData.getDataRoot().setName(root.toString());
 		// PopupFenster erstellen
 		JMenuItem mi;
 		treePopup = new JPopupMenu();
@@ -61,14 +60,7 @@ public class PopupTree extends JTree implements ActionListener, MouseListener {
 				if (textPane.isEditable()) {
 					String path = editableNodePath;
 					String[] pathElements = path.split(", ");
-					Vector<ElementAttribute> v = dataRoot
-							.getChild(pathElements[1])
-							.getChild(pathElements[2]).getAttributes();
-					for (ElementAttribute ea : v) {
-						if (ea.getName().equals("content")) {
-							ea.setContent(textPane.getText());
-						}
-					}
+					EditorData.getNode(pathElements).setContent(textPane.getText().replaceAll("\n", "\r\n"));
 				}
 			}
 		});
@@ -99,14 +91,7 @@ public class PopupTree extends JTree implements ActionListener, MouseListener {
 					textPane.setEditable(false);
 					textPane.setText("");
 				} else {
-					Vector<ElementAttribute> v = dataRoot
-							.getChild(pathElements[1])
-							.getChild(pathElements[2]).getAttributes();
-					for (ElementAttribute ea : v) {
-						if (ea.getName().equals("content")) {
-							textPane.setText((String) ea.getContent());
-						}
-					}
+					textPane.setText(EditorData.getNode(pathElements).getContent().replaceAll("\r\n", "\n"));
 					textPane.setEditable(true);
 				}
 			}
@@ -144,9 +129,12 @@ public class PopupTree extends JTree implements ActionListener, MouseListener {
 			TreePath tp = this.getClosestPathForLocation(x, y);
 			DefaultMutableTreeNode currentNode = (DefaultMutableTreeNode) tp
 					.getLastPathComponent();
-			System.out.println(currentNode.toString());
+			SettingsDialog dia = EditorData.getSettingsDialogs(currentNode.toString());
+			if(dia!= null) {
+				dia.setVisible(true);
+			}
 		}
-		System.out.println(dataRoot.toString());
+		System.out.println(EditorData.getDataRoot().toString());
 	}
 
 	private void renameChild(String nameProposal) {
@@ -160,16 +148,11 @@ public class PopupTree extends JTree implements ActionListener, MouseListener {
 		// TreeNode umbenennen
 		switch (pathElements.length) {
 		case 2: // Kategorie
-			dataRoot.getChild(pathElements[1]).setName(name);
-			for (int i = 0; i < settingsDialogs.size(); i++) {
-				if (settingsDialogs.get(i).getId().equals(pathElements[1])) {
-					settingsDialogs.get(i).setId(name);
-					break;
-				}
-			}
+			EditorData.getDataRoot().getChild(pathElements[1]).setName(name);
+			EditorData.getSettingsDialogs(pathElements[1]).setId(name);
 			break;
 		case 3: // Frage
-			dataRoot.getChild(pathElements[1]).getChild(pathElements[2])
+			EditorData.getDataRoot().getChild(pathElements[1]).getChild(pathElements[2])
 					.setName(name);
 			break;
 		}
@@ -189,16 +172,11 @@ public class PopupTree extends JTree implements ActionListener, MouseListener {
 		// Child aus dem TreeNode löschen
 		switch (pathElements.length) {
 		case 2: // Es wird eine Fragenkategorie gelöscht
-			dataRoot.removeChild(pathElements[1]);
-			for (int i = 0; i < settingsDialogs.size(); i++) {
-				if (settingsDialogs.get(i).getId().equals(pathElements[1])) {
-					settingsDialogs.remove(i);
-					break;
-				}
-			}
+			EditorData.getDataRoot().removeChild(pathElements[1]);
+			EditorData.removeSettingsDialog(pathElements[1]);
 			break;
 		case 3: // Es wird eine Frage gelöscht
-			dataRoot.getChild(pathElements[1]).removeChild(pathElements[2]);
+			EditorData.getDataRoot().getChild(pathElements[1]).removeChild(pathElements[2]);
 			break;
 		}
 		// Child aus dem JTree löschen
@@ -225,22 +203,20 @@ public class PopupTree extends JTree implements ActionListener, MouseListener {
 		TreeNode tn = new TreeNode(name);
 		switch (pathElements.length) {
 		case 1: // Es wird eine neue Fragenkategorie hinzugefügt
-			dataRoot.addChild(tn);
+			EditorData.getDataRoot().addChild(tn);
 			currentNode.add(child);
 			((DefaultTreeModel) this.getModel())
 					.nodeStructureChanged((javax.swing.tree.TreeNode) currentNode);
-			settingsDialogs.add(new SettingsDialog(name));
+			EditorData.addSettingsDialog(new SettingsDialog(name));
 			break;
 		case 2: // Neue Frage
-			tn.addAttributes(new ElementAttribute("content", ""));
-			dataRoot.getChild(pathElements[1]).addChild(tn);
+			EditorData.getDataRoot().getChild(pathElements[1]).addChild(tn);
 			currentNode.add(child);
 			((DefaultTreeModel) this.getModel())
 					.nodeStructureChanged((javax.swing.tree.TreeNode) currentNode);
 			break;
 		case 3: // Auch neue Frage
-			tn.addAttributes(new ElementAttribute("content", ""));
-			dataRoot.getChild(pathElements[1]).addChild(tn);
+			EditorData.getDataRoot().getChild(pathElements[1]).addChild(tn);
 			((DefaultMutableTreeNode) currentNode.getParent()).add(child);
 			((DefaultTreeModel) this.getModel())
 					.nodeStructureChanged((javax.swing.tree.TreeNode) currentNode
@@ -251,14 +227,14 @@ public class PopupTree extends JTree implements ActionListener, MouseListener {
 
 	public String getFreeName(String name) {
 		String ret = name.replaceAll(" ", "");
-		while (dataRoot.nameExist(ret)) {
+		if(ret.equals("")) {
 			ret += "_";
 		}
-		return ret;
-	}
-	
-	public void exportToXML() {
+		while (EditorData.getDataRoot().nameExist(ret)) {
+			ret += "_";
+		}
 		
+		return ret;
 	}
 
 	@Override

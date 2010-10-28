@@ -21,16 +21,16 @@ public class SettingsDialog extends JDialog implements ActionListener {
 	private JTextField pathTextField;
 
 	private Vector<ElementAttribute<Boolean>> settings;
-	private String path;
-	
+
 	private String id;
+	private String content;
 
 	/**
 	 * Create the dialog.
 	 */
 	public SettingsDialog(String id) {
 		this.id = id;
-		
+
 		settings = new Vector<ElementAttribute<Boolean>>();
 
 		setTitle("Feature Einstellungen");
@@ -94,27 +94,54 @@ public class SettingsDialog extends JDialog implements ActionListener {
 		}
 		this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 	}
-	
+
 	public String getId() {
 		return id;
 	}
-	
+
 	public void setId(String id) {
 		this.id = id;
 	}
 
-	public Vector<ElementAttribute<Boolean>> getSettings() {
-		return settings;
-	}
+	public void saveSettings() {
+		TreeNode node = EditorData.getNode(id);
+		if (node != null) {
+			boolean exist;
+			for (ElementAttribute setting : settings) {
+				exist = false;
+				// schauen ob Attribut bereits existiert
+				Vector<ElementAttribute> attributes = node.getAttributes();
+				for (ElementAttribute attribute : attributes) {
+					if (attribute.getName().equals(setting.getName())) {
+						exist = true;
+						attribute.setContent(setting.getContent());
+					}
+				}
+				if (!exist) {
+					node.addAttribute(setting);
+				}
+			}
+			// Pfad speichern
+			exist = false;
+			Vector<ElementAttribute> attributes = node.getAttributes();
+			for (ElementAttribute attribute : attributes) {
+				if (attribute.getName().equals("path")) {
+					exist = true;
+					attribute.setContent(pathTextField.getText());
+				}
+			}
+			if (!exist) {
+				node.addAttribute(new ElementAttribute("path", pathTextField
+						.getText()));
+			}
 
-	public String getPath() {
-		return path;
+		}
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent ae) {
 		if (ae.getActionCommand().equals("OK")) {
-			path = pathTextField.getText();
+			saveSettings();
 			this.setVisible(false);
 		} else if (ae.getActionCommand().equals("Cancel")) {
 			this.setVisible(false);
@@ -123,7 +150,7 @@ public class SettingsDialog extends JDialog implements ActionListener {
 			fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 			if (fc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
 				pathTextField.setText(fc.getSelectedFile().getPath());
-			}			
+			}
 		}
 	}
 

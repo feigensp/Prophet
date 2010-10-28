@@ -20,6 +20,7 @@ public class TreeNode {
 	private int childCount;	//Anzahl der Kinder
 	private Vector<TreeNode> children;	//Kinder
 	private TreeNode parent;//Vater
+	private String content;
 	
 	/**
 	 * Konstruktor der ein Wurzelelement erschafft
@@ -30,6 +31,7 @@ public class TreeNode {
 		this.children = new Vector<TreeNode>();
 		this.parent = null;	
 		this.attributes = new Vector<ElementAttribute>();
+		this.content = "";
 	}
 	
 	/**
@@ -44,7 +46,15 @@ public class TreeNode {
 		this.parent = null;
 		
 		this.attributes = attributes;
-		
+		this.content = "";
+	}
+	
+	public String getContent() {
+		return content;
+	}
+	
+	public void setContent(String content) {
+		this.content = content;
 	}
 	
 	/**
@@ -92,7 +102,27 @@ public class TreeNode {
 		return attributes;
 	}
 	
-	public void addAttributes(ElementAttribute attribute) {
+	public ElementAttribute getAttribute(String name) {
+		for(ElementAttribute attribute : attributes) {
+			if(attribute.getName().equals(name)) {
+				return attribute;
+			}
+		}
+		return null;
+	}
+	
+	public boolean removeAttribute(String name) {
+		for(ElementAttribute attribute : attributes) {
+			if(attribute.getName().equals(name)) {
+				attributes.remove(attribute);
+				return true;
+			}
+		}
+		return false;
+		
+	}
+	
+	public void addAttribute(ElementAttribute attribute) {
 		this.attributes.add(attribute);
 	}
 	

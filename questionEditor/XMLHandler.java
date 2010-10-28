@@ -28,7 +28,7 @@ import org.xml.sax.SAXException;
 
 public class XMLHandler {
 
-	public static void addChildsToXML(Vector<TreeNode> treeChilds, Element xmlParent, Document xmlTree) {
+	private static void addChildsToXML(Vector<TreeNode> treeChilds, Element xmlParent, Document xmlTree) {
 		//Kinder hinzufügen
 		for(TreeNode treeChild : treeChilds) {
 			Element xmlChild = xmlTree.createElement(treeChild.getName());
@@ -92,7 +92,7 @@ public class XMLHandler {
 	}
 
 	
-	public static void addChildsToTree(NodeList xmlChilds, TreeNode treeParent) {
+	private static void addChildsToTree(NodeList xmlChilds, TreeNode treeParent) {
 		//Kinder hinzufügen
 		for(int i=0; i<xmlChilds.getLength(); i++) {
 			Node xmlChild = xmlChilds.item(i);
@@ -101,7 +101,7 @@ public class XMLHandler {
 			NamedNodeMap childAttributes = xmlChild.getAttributes();
 			for(int j=0; j<childAttributes.getLength(); j++) {
 				Node childAttribute = childAttributes.item(i);
-				treeChild.addAttributes(new ElementAttribute(childAttribute.getNodeName(), childAttribute.getNodeValue()));
+				treeChild.addAttribute(new ElementAttribute(childAttribute.getNodeName(), childAttribute.getNodeValue()));
 			}
 			//Kind hinzufügen
 			treeParent.addChild(treeChild);
@@ -132,7 +132,7 @@ public class XMLHandler {
 			NamedNodeMap rootAttributes = xmlRoot.getAttributes();
 			for(int i=0; i<rootAttributes.getLength(); i++) {
 				Node rootAttribute = rootAttributes.item(i);
-				treeRoot.addAttributes(new ElementAttribute(rootAttribute.getNodeName(), rootAttribute.getNodeValue()));
+				treeRoot.addAttribute(new ElementAttribute(rootAttribute.getNodeName(), rootAttribute.getNodeValue()));
 			}
 			//Kinder hinzufügen
 			addChildsToTree(xmlRoot.getChildNodes(), treeRoot);
