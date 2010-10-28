@@ -6,7 +6,9 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.ArrayList;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
 
 import javax.swing.JComponent;
 import javax.swing.JMenuItem;
@@ -82,6 +84,7 @@ public class PopupTree extends JTree implements ActionListener, MouseListener {
 			//Kategorien einfügen
 			DefaultMutableTreeNode cat = new DefaultMutableTreeNode(categorie.getName());
 			SettingsDialog dia = new SettingsDialog(categorie.getName());
+			
 			Boolean[] newSettings = new Boolean[Settings.settings.size()];
 			for(ElementAttribute categorieAttribute : categorie.getAttributes()) {
 				int pos = Settings.settings.indexOf(categorieAttribute.getName());
@@ -97,7 +100,19 @@ public class PopupTree extends JTree implements ActionListener, MouseListener {
 
 			//Kinder hinzufügen
 			for(TreeNode question : categorie.getChildren()) {
-				cat.add(new DefaultMutableTreeNode(question.getName()));
+				DefaultMutableTreeNode quest = new DefaultMutableTreeNode(question.getName());
+				cat.add(quest);
+	            String con = "";
+				try {
+		            Scanner scanner = new Scanner(new File(question.getName() + ".html"));
+		            while(scanner.hasNextLine()) {
+		            	con += scanner.nextLine() + "\n";
+		            }
+		            con = con.substring(EditorData.HTMLSTART.length(), con.length()-EditorData.HTMLEND.length()-1);
+				} catch (FileNotFoundException e) {
+					System.out.println("Quelldatei nicht gefunden");
+				}
+				question.setContent(con);
 			}
 		}
 	}

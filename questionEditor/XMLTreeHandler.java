@@ -100,7 +100,7 @@ public class XMLTreeHandler {
 			//Attribute hinzufügen
 			NamedNodeMap childAttributes = xmlChild.getAttributes();
 			for(int j=0; j<childAttributes.getLength(); j++) {
-				Node childAttribute = childAttributes.item(i);
+				Node childAttribute = childAttributes.item(j);
 				treeChild.addAttribute(new ElementAttribute(childAttribute.getNodeName(), childAttribute.getNodeValue()));
 			}
 			//Kind hinzufügen
