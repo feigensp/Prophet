@@ -5,8 +5,10 @@ import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -137,14 +139,13 @@ public class editorView extends JFrame {
 		saveMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				EditorData.extractHTMLContent();
-				XMLHandler.writeXMLTree(EditorData.getDataRoot(), "test");
+				XMLTreeHandler.writeXMLTree(EditorData.getDataRoot(), "test");
 			}
 		});
 		//Neu
 		newMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {				
-				EditorData.reset();
-				
+				EditorData.reset();				
 				contentPane.removeAll();
 				build();
 			}
@@ -152,8 +153,28 @@ public class editorView extends JFrame {
 		//Laden
 		loadMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				tree.removeAll();
-				tree.updateUI();
+				TreeNode newRoot = null;
+				
+				JFileChooser fc = new JFileChooser();
+				int returnVal = fc.showSaveDialog(null);
+				if (returnVal == JFileChooser.APPROVE_OPTION) {
+					File file = fc.getSelectedFile();
+					// save(file.getAbsolutePath());
+					newRoot = XMLTreeHandler.loadXMLTree("test.xml");
+				}
+				
+				if(newRoot == null) {
+					System.out.println("Datei nicht gefunden...");
+				} else {
+					//Alles neu starten			
+					EditorData.reset();					
+					contentPane.removeAll();
+					build();
+					//neue Wurzel setzen
+					EditorData.setDataRoot(newRoot);
+					//Baum und Dialoge neu aufbauen
+					tree.rootUpdated();
+				}
 			}
 		});
 	}

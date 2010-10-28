@@ -25,6 +25,11 @@ public class EditorData {
 	public static TreeNode getDataRoot() {
 		return dataRoot;
 	}
+	
+	public static void setDataRoot(TreeNode newRoot) {
+		dataRoot = newRoot;
+		System.out.println("Neue Wurzel: " + dataRoot);
+	}
 
 	public static TreeNode getNode(String name) {
 		for (int i = 0; i < dataRoot.getChildCount(); i++) {

@@ -26,7 +26,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-public class XMLHandler {
+public class XMLTreeHandler {
 
 	private static void addChildsToXML(Vector<TreeNode> treeChilds, Element xmlParent, Document xmlTree) {
 		//Kinder hinzufügen

@@ -1,19 +1,19 @@
 package questionEditor;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Vector;
+import java.util.ArrayList;
 
 public class Settings {
 	
-	private static ElementAttribute[] ea = {
-		new ElementAttribute<String>("edit", "Editierbar"), 
-		new ElementAttribute<String>("search", "Suchfunktion"),
-		new ElementAttribute<String>("linecount", "Zeilennummern"),
-		new ElementAttribute<String>("synhigh", "Syntaxhighlighting")};
-	private static Vector<ElementAttribute<String>> settings = new Vector<ElementAttribute<String>>((Collection<? extends ElementAttribute<String>>) Arrays.asList(ea));
+	private static ArrayList<String> settings = new ArrayList<String>() {
+		{
+			add("Editierbar");
+			add("Suchfunktion");
+			add("Syntaxhighlighting");
+			add("Zeilennummern");
+		}
+	};
 	
-	public static Vector<ElementAttribute<String>> getSettings() {
+	public static ArrayList<String> getSettings() {
 		return settings;
 	}
 }

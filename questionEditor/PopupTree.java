@@ -71,6 +71,26 @@ public class PopupTree extends JTree implements ActionListener, MouseListener {
 		x = 0;
 		y = 0;
 	}
+	
+	public void rootUpdated() {
+		for(TreeNode categorie : EditorData.getDataRoot().getChildren()) {
+			//Wurzel holen
+			TreePath tp = this.getClosestPathForLocation(0, 0);
+			DefaultMutableTreeNode rootNode = (DefaultMutableTreeNode) tp
+					.getLastPathComponent();
+			//Kategorien einfügen
+			DefaultMutableTreeNode cat = new DefaultMutableTreeNode(categorie.getName());
+			SettingsDialog dia = new SettingsDialog(categorie.getName());
+			
+			EditorData.addSettingsDialog(dia);			
+			rootNode.add(cat);
+
+			//Kinder hinzufügen
+			for(TreeNode question : categorie.getChildren()) {
+				cat.add(new DefaultMutableTreeNode(question.getName()));
+			}
+		}
+	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {

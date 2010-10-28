@@ -1,9 +1,11 @@
 package questionEditor;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.Vector;
 
 import javax.swing.BoxLayout;
@@ -19,11 +21,11 @@ public class SettingsDialog extends JDialog implements ActionListener {
 
 	private final JPanel contentPanel = new JPanel();
 	private JTextField pathTextField;
+	private JPanel featurePanel;
 
 	private Vector<ElementAttribute<Boolean>> settings;
 
 	private String id;
-	private String content;
 
 	/**
 	 * Create the dialog.
@@ -53,17 +55,16 @@ public class SettingsDialog extends JDialog implements ActionListener {
 			pathButton.addActionListener(this);
 		}
 		{
-			JPanel featurePanel = new JPanel();
+			featurePanel = new JPanel();
 			contentPanel.add(featurePanel, BorderLayout.CENTER);
 			featurePanel
 					.setLayout(new BoxLayout(featurePanel, BoxLayout.Y_AXIS));
-			for (ElementAttribute<String> ea : Settings.getSettings()) {
-				JCheckBox check = new JCheckBox(ea.getContent());
+			for (String ea : Settings.getSettings()) {
+				JCheckBox check = new JCheckBox(ea);
 				check.setSelected(true);
 				featurePanel.add(check);
 
-				settings.add(new ElementAttribute<Boolean>(ea.getContent(),
-						true));
+				settings.add(new ElementAttribute<Boolean>(ea, true));
 				check.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent ae) {
 						String feature = ((JCheckBox) ae.getSource()).getText();
@@ -102,8 +103,19 @@ public class SettingsDialog extends JDialog implements ActionListener {
 	public void setId(String id) {
 		this.id = id;
 	}
-	
-//	public void setSettings(Vector)
+
+	public void setSettings(String path, ArrayList<Boolean> checkings) {
+		pathTextField.setText(path);
+		int i = 0;
+		for(Component comp : featurePanel.getComponents()) {
+			if(comp instanceof JCheckBox) {
+				if(i < checkings.size()) {
+					((JCheckBox)comp).setSelected(checkings.get(i));
+					i++;
+				}
+			}
+		}
+	}
 
 	public void saveSettings() {
 		TreeNode node = EditorData.getNode(id);
