@@ -1,5 +1,12 @@
 package questionEditor;
 
+/**
+ * this class is contains the main for the editor to create and edit questions
+ * furthermore it creates the view and some listeners
+ * 
+ * @author Markus Köppen, Andreas Hasselberg
+ */
+
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.EventQueue;
@@ -32,15 +39,13 @@ public class editorView extends JFrame {
 	private JMenuItem newMenuItem;
 	private JMenuItem loadMenuItem;
 	private PopupTree tree;
-	private JPanel editPanel;
-	private JPanel optionPanel;
-	private JScrollPane treeScrollPane;
 	private JPanel contentPane;
-	private JTextPane viewPane;
-	private JTabbedPane editViewTabbedPane;
 
 	/**
-	 * Launch the application.
+	 * the main method to launch the application
+	 * 
+	 * @param args
+	 *            not used
 	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -56,27 +61,31 @@ public class editorView extends JFrame {
 	}
 
 	/**
-	 * Create the frame.
+	 * the constructor, sets some basic settings and start the method to create
+	 * the view
 	 */
 	public editorView() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 611, 431);
-		
+
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(new BorderLayout(0, 0));
-		
+
 		build();
 	}
-	
+
+	/**
+	 * creates the view and starts the method which adds the listener
+	 */
 	private void build() {
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
 
 		JMenu fileMenu = new JMenu("Datei");
 		menuBar.add(fileMenu);
-		
+
 		newMenuItem = new JMenuItem("Neu");
 		fileMenu.add(newMenuItem);
 
@@ -95,27 +104,28 @@ public class editorView extends JFrame {
 		JMenuItem tableMenuItem = new JMenuItem("Tabelle einf\u00FCgen");
 		editMenu.add(tableMenuItem);
 
-		optionPanel = new JPanel();
+		JPanel optionPanel = new JPanel();
 		optionPanel.setPreferredSize(new Dimension(175, 10));
 		contentPane.add(optionPanel, BorderLayout.WEST);
 		optionPanel.setLayout(new BorderLayout(0, 0));
 
 		textPane = new EditArea();
 
-		viewPane = new JTextPane();
+		JTextPane viewPane = new JTextPane();
 		viewPane.setEditorKit(new HTMLEditorKit());
-		tree = new PopupTree(new DefaultMutableTreeNode("Übersicht"), textPane, viewPane);
-		treeScrollPane = new JScrollPane(tree);
+		tree = new PopupTree(new DefaultMutableTreeNode("Übersicht"), textPane,
+				viewPane);
+		JScrollPane treeScrollPane = new JScrollPane(tree);
 		optionPanel.add(treeScrollPane, BorderLayout.CENTER);
 
 		JPanel editViewPanel = new JPanel();
 		contentPane.add(editViewPanel, BorderLayout.CENTER);
 		editViewPanel.setLayout(new BorderLayout(0, 0));
 
-		editViewTabbedPane = new JTabbedPane(JTabbedPane.TOP);
+		JTabbedPane editViewTabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		editViewPanel.add(editViewTabbedPane);
 
-		editPanel = new JPanel();
+		JPanel editPanel = new JPanel();
 		editViewTabbedPane.addTab("Editor", null, editPanel, null);
 		editPanel.setLayout(new BorderLayout(0, 0));
 		editPanel.add(textPane, BorderLayout.CENTER);
@@ -123,7 +133,7 @@ public class editorView extends JFrame {
 		JPanel viewPanel = new JPanel();
 		editViewTabbedPane.addTab("Betrachter", null, viewPanel, null);
 		viewPanel.setLayout(new BorderLayout(0, 0));
-		
+
 		viewPane.setEditable(false);
 		viewPanel.add(viewPane, BorderLayout.CENTER);
 
@@ -137,9 +147,12 @@ public class editorView extends JFrame {
 		MacroBox macroBox = new MacroBox(textPane);
 		toolBar.add(macroBox);
 
-		setListener();		
+		setListener();
 	}
 
+	/**
+	 * method which sets the listener
+	 */
 	private void setListener() {
 		// toolbar buttons
 		boldButton.addActionListener(new ActionListener() {
@@ -147,26 +160,26 @@ public class editorView extends JFrame {
 				textPane.setTag("b");
 			}
 		});
-		//Speichern
+		// save
 		saveMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				EditorData.extractHTMLContent();
 				XMLTreeHandler.writeXMLTree(EditorData.getDataRoot(), "test");
 			}
 		});
-		//Neu
+		// new
 		newMenuItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ae) {				
-				EditorData.reset();				
+			public void actionPerformed(ActionEvent ae) {
+				EditorData.reset();
 				contentPane.removeAll();
 				build();
 			}
 		});
-		//Laden
+		// load
 		loadMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				DataTreeNode newRoot = null;
-				
+
 				JFileChooser fc = new JFileChooser();
 				int returnVal = fc.showSaveDialog(null);
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
@@ -174,29 +187,18 @@ public class editorView extends JFrame {
 					// save(file.getAbsolutePath());
 					newRoot = XMLTreeHandler.loadXMLTree("test.xml");
 				}
-				
-				if(newRoot == null) {
+
+				if (newRoot == null) {
 					System.out.println("Datei nicht gefunden...");
 				} else {
-					//Alles neu starten			
-					EditorData.reset();					
+					EditorData.reset();
 					contentPane.removeAll();
 					build();
-					//neue Wurzel setzen
 					EditorData.setDataRoot(newRoot);
-					//Baum und Dialoge neu aufbauen
 					tree.rootUpdated();
 				}
 			}
 		});
-		//JTabbedPane
-		editViewTabbedPane.addChangeListener(new ChangeListener() {
-			public void stateChanged(ChangeEvent evt) { 
-				if(editViewTabbedPane.getSelectedIndex() == 1) {
-					//viewPane.setText(EditorData.HTMLSTART + EditorData.getHtmlContent() + EditorData.HTMLEND);
-				}
-			} 
-		}); 
 	}
 
 }
