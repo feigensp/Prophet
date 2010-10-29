@@ -1,148 +1,93 @@
 /**
- * Repräsentiert einen Knoten eines Baumes, durch den auf den gesamten Baum zugegriffen werden kann
- * Der Inhalt eines Knoten repräsentiert dabei die Informationen eines QuestionElement
+ * This class represents a node with childs
+ * the node has a identifier (name), and content.
+ * Furthermore ist consist of a list of attributes
  * 
  * @author Markus Köppen, Andreas Hasselberg
  */
 
 package questionEditor;
 
-import java.awt.Dimension;
 import java.util.Vector;
 
 
 public class DataTreeNode {	
 	
-	//Attributliste
+	//list of attributes
 	private Vector<ElementAttribute> attributes;
 	
-	private String name;	//Name des Knoten
-	private int childCount;	//Anzahl der Kinder
-	private Vector<DataTreeNode> children;	//Kinder
-	private DataTreeNode parent;//Vater
-	private String content;
+	private String name;	//string identifier
+	private int childCount;	//amount of childs
+	private Vector<DataTreeNode> children;	// childs
+	private String content; //some possible content
 	
 	/**
-	 * Konstruktor der ein Wurzelelement erschafft
-	 * @param name Name des Knoten
+	 * Constructor to create a new node
+	 * @param name string identifier
 	 */	
 	public DataTreeNode(String name) {
 		this.name = name;
 		this.children = new Vector<DataTreeNode>();
-		this.parent = null;	
 		this.attributes = new Vector<ElementAttribute>();
 		this.content = "";
 	}
 	
 	/**
-	 * Konstruktor für einen Unterknoten
-	 * @param name Name des Knoten
-	 * @param parent Vater des Knoten
-	 * @param attributes Attributliste des Knoten
-	 */
-	public DataTreeNode(String name,  DataTreeNode parent, Vector<ElementAttribute> attributes) {
-		this.name = name;
-		this.children = new Vector<DataTreeNode>();
-		this.parent = null;
-		
-		this.attributes = attributes;
-		this.content = "";
-	}
-	
-	public String getContent() {
-		return content;
-	}
-	
-	public void setContent(String content) {
-		this.content = content;
-	}
-	
-	/**
-	 * Returns the Name of the Node
-	 * @return Name of the Node
+	 * Returns the name of the node
+	 * @return name of the node
 	 */
 	public String getName() {
 		return name;
 	}
 	
 	/**
-	 * Set the Name of a Node
-	 * @param name the new Name of the Node
+	 * Set the name of a node
+	 * @param name the new name of the node
 	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 	
 	/**
-	 * Liefert den Vater des Knoten zurück
-	 * @return Vaterknoten
+	 * Return the content of the node
+	 * @return content
 	 */
-	public DataTreeNode getParent() {
-		return parent;
+	public String getContent() {
+		return content;
 	}
 	
 	/**
-	 * Testet ob es die Wurzel des Baumes ist
-	 * @return true wenn es eine Wurzel ist, sonst false
+	 * set the content of the Node
+	 * @param content new content
 	 */
-	public boolean isRoot() {
-		return (parent == null);
+	public void setContent(String content) {
+		this.content = content;
 	}
 	
 	/**
-	 * Fügt dem Knoten ein Kind hinzu
-	 * @param child Knoten der als Kind hinzugefügt wird 
+	 * adds a new Child to this node
+	 * @param child child which should be added
+	 * @param index position between all childs
 	 */
 	public void addChild(DataTreeNode child, int index) {
 		children.add(index, child);
 		childCount++;
 	}
 	
-	public Vector<ElementAttribute> getAttributes() {
-		return attributes;
-	}
-	
-	public ElementAttribute getAttribute(String name) {
-		for(ElementAttribute attribute : attributes) {
-			if(attribute.getName().equals(name)) {
-				return attribute;
-			}
-		}
-		return null;
-	}
-	
-	public boolean removeAttribute(String name) {
-		for(ElementAttribute attribute : attributes) {
-			if(attribute.getName().equals(name)) {
-				attributes.remove(attribute);
-				return true;
-			}
-		}
-		return false;
-		
-	}
-	
-	public void addAttribute(ElementAttribute attribute) {
-		this.attributes.add(attribute);
-	}
-	
 	/**
-	 * Gibt einen Vector mit allen Kindern zurück
-	 * @return Vector der alle TreeNode, welche kinder sind, enthält
-	 */
-	public Vector<DataTreeNode> getChildren() {
-		return children;
-	}
-	
-	/**
-	 * Gibt spezielles Kind zurück
-	 * @param index Position an welcher das Kind im Vector steht
-	 * @return TreeNode, welcher an der gewünschten Position im Vector ist
+	 * returns the child at index
+	 * @param index position of the child in the child-vector
+	 * @return child node at the index
 	 */
 	public DataTreeNode getChild(int index) {
 		return children.get(index);
 	}
 	
+	/**
+	 * returns a child by a string identifier
+	 * @param name string identifier of the child
+	 * @return child-node with the string as identifier or null if not found
+	 */
 	public DataTreeNode getChild(String name) {
 		for(DataTreeNode child : children) {
 			if(child.getName().equals(name)) {
@@ -153,21 +98,18 @@ public class DataTreeNode {
 	}
 	
 	/**
-	 * Gibt die Anzahl der kinder dieses Knotens zurück
-	 * @return Anzahl der Kinder
+	 * returns a vector with all childs of this node
+	 * @return vector with all childs
 	 */
-	public int getChildCount() {
-		return childCount;
+	public Vector<DataTreeNode> getChildren() {
+		return children;
 	}
 	
 	/**
-	 * Testet ob dieser Knoten ein Blatt ist
-	 * @return true wenn ja, false sonst
+	 * removes a child from this node - identified bye name
+	 * @param name name of the child which should be deleted
+	 * @return true if found, false if not
 	 */
-	public boolean isLeaf() {
-		return (childCount == 0);
-	}
-	
 	public boolean removeChild(String name) {
 		int i = 0;
 		for(DataTreeNode child : children) {
@@ -181,18 +123,49 @@ public class DataTreeNode {
 		return false;
 	}
 	
-	public String toString() {
-		String ret = this.name;
-		if(childCount > 0) {
-			ret += " { ";
-			for(DataTreeNode child : children) {
-				ret += child.toString() + "|";
-			}
-			ret += " } ";
-		}
-		return ret;
+	/**
+	 * returns the mount of childs from this node
+	 * @return amount of the childs
+	 */
+	public int getChildCount() {
+		return childCount;
 	}
 	
+	/**
+	 * adds a new Attribute to the list of attributes from this node
+	 * @param attribute new attribute
+	 */
+	public void addAttribute(ElementAttribute attribute) {
+		this.attributes.add(attribute);
+	}
+	
+	/**
+	 * returns a special attribute - identified by name
+	 * @param name name of the attribute
+	 * @return attribute (or null if not found)
+	 */
+	public ElementAttribute getAttribute(String name) {
+		for(ElementAttribute attribute : attributes) {
+			if(attribute.getName().equals(name)) {
+				return attribute;
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * returns the whole list of attribute from this node
+	 * @return vector which consists all attributes
+	 */
+	public Vector<ElementAttribute> getAttributes() {
+		return attributes;
+	}
+	
+	/**
+	 * Looks if this node or a child (childs... child) node has the string identifier name
+	 * @param name string identifier which should be looked at
+	 * @return true if found, false if not
+	 */
 	public boolean nameExist(String name) {
 		if(this.name.equals(name)) {
 			return true;
@@ -204,5 +177,20 @@ public class DataTreeNode {
 			}
 		}
 		return false;
+	}
+	
+	/**
+	 * gives this node with his childs... child back as a String representation
+	 */
+	public String toString() {
+		String ret = this.name;
+		if(childCount > 0) {
+			ret += " { ";
+			for(DataTreeNode child : children) {
+				ret += child.toString() + "|";
+			}
+			ret += " } ";
+		}
+		return ret;
 	}
 }
