@@ -1,5 +1,6 @@
 /**
- * Klasse die sich mit dem ein-/auslesen sowie dem umwandeln von XML-Dateien beschäftigt
+ * this class consist methods which could write an DataTreeNode to an xml file 
+ * or read an xml file into a DataTreeNode
  * 
  * @author Markus Köppen, Andreas Hasselberg
  */
@@ -28,48 +29,61 @@ import org.xml.sax.SAXException;
 
 public class XMLTreeHandler {
 
-	private static void addChildsToXML(Vector<DataTreeNode> treeChilds, Element xmlParent, Document xmlTree) {
-		//Kinder hinzufügen
-		for(DataTreeNode treeChild : treeChilds) {
+	/**
+	 * method which adds recursively the childs (to an xml file)
+	 * 
+	 * @param treeChilds
+	 *            childs which should bye added
+	 * @param xmlParent
+	 *            the parent who should get the childs
+	 * @param xmlTree
+	 *            the xml-document
+	 */
+	private static void addChildsToXML(Vector<DataTreeNode> treeChilds,
+			Element xmlParent, Document xmlTree) {
+		// Kinder hinzufügen
+		for (DataTreeNode treeChild : treeChilds) {
 			Element xmlChild = xmlTree.createElement(treeChild.getName());
 			xmlParent.appendChild(xmlChild);
-			//Attribute hinzufügen
-			Vector<ElementAttribute> childAttributes = treeChild.getAttributes();
-			for(ElementAttribute childAttribute : childAttributes) {
-				xmlChild.setAttribute(childAttribute.getName(), childAttribute.getContent().toString());
+			// Attribute hinzufügen
+			Vector<ElementAttribute> childAttributes = treeChild
+					.getAttributes();
+			for (ElementAttribute childAttribute : childAttributes) {
+				xmlChild.setAttribute(childAttribute.getName(), childAttribute
+						.getContent().toString());
 			}
-			//evtl. neue Kinder hinzufügen
-			if(treeChild.getChildCount() > 0) {
+			// evtl. neue Kinder hinzufügen
+			if (treeChild.getChildCount() > 0) {
 				addChildsToXML(treeChild.getChildren(), xmlChild, xmlTree);
 			}
 		}
 	}
-	
+
 	/**
-	 * Schreibt einen Baum in eine XML-Datei
+	 * writes an DataTreeNode with his childs into an XML-File
 	 * 
 	 * @param treeRoot
-	 *            Wurzel des Baumes
+	 *            DataTreeNode which should be added (with childs)
 	 * @param path
-	 *            Wohin die XML-Datei geschrieben werden soll
+	 *            path for the xml-file
 	 */
 	public static void writeXMLTree(DataTreeNode treeRoot, String path) {
 		Document xmlTree = null;
 		try {
 			// Dokument erstellen
-			xmlTree = DocumentBuilderFactory.newInstance()
-					.newDocumentBuilder().newDocument();
+			xmlTree = DocumentBuilderFactory.newInstance().newDocumentBuilder()
+					.newDocument();
 			// Wurzelknoten erschaffen und Attribute hinzufügen
 			Element xmlRoot = xmlTree.createElement(treeRoot.getName());
 			xmlTree.appendChild(xmlRoot);
 			Vector<ElementAttribute> rootAttributes = treeRoot.getAttributes();
-			for(ElementAttribute ea : rootAttributes) {
+			for (ElementAttribute ea : rootAttributes) {
 				xmlRoot.setAttribute(ea.getName(), ea.getContent().toString());
 			}
-			//Kinder hinzufügen
-			if(treeRoot.getChildCount()>0) {
+			// Kinder hinzufügen
+			if (treeRoot.getChildCount() > 0) {
 				addChildsToXML(treeRoot.getChildren(), xmlRoot, xmlTree);
-			}			
+			}
 		} catch (ParserConfigurationException e1) {
 			e1.printStackTrace();
 		}
@@ -91,50 +105,60 @@ public class XMLTreeHandler {
 		}
 	}
 
-	
-	private static void addChildsToTree(NodeList xmlChilds, DataTreeNode treeParent) {
-		//Kinder hinzufügen
-		for(int i=0; i<xmlChilds.getLength(); i++) {
+	/**
+	 * method which adds recursively the childs (to a DataTreeNode file)
+	 * 
+	 * @param xmlChilds
+	 *            the childs which should be added
+	 * @param treeParent
+	 *            the DataTreeNode which should get the childs
+	 */
+	private static void addChildsToTree(NodeList xmlChilds,
+			DataTreeNode treeParent) {
+		// Kinder hinzufügen
+		for (int i = 0; i < xmlChilds.getLength(); i++) {
 			Node xmlChild = xmlChilds.item(i);
 			DataTreeNode treeChild = new DataTreeNode(xmlChild.getNodeName());
-			//Attribute hinzufügen
+			// Attribute hinzufügen
 			NamedNodeMap childAttributes = xmlChild.getAttributes();
-			for(int j=0; j<childAttributes.getLength(); j++) {
+			for (int j = 0; j < childAttributes.getLength(); j++) {
 				Node childAttribute = childAttributes.item(j);
-				treeChild.addAttribute(new ElementAttribute(childAttribute.getNodeName(), childAttribute.getNodeValue()));
+				treeChild.addAttribute(new ElementAttribute(childAttribute
+						.getNodeName(), childAttribute.getNodeValue()));
 			}
-			//Kind hinzufügen
+			// Kind hinzufügen
 			treeParent.addChild(treeChild, i);
-			//evtl. weitere Kinder hinzufügen
-			if(xmlChild.getChildNodes().getLength()>0) {
+			// evtl. weitere Kinder hinzufügen
+			if (xmlChild.getChildNodes().getLength() > 0) {
 				addChildsToTree(xmlChild.getChildNodes(), treeChild);
 			}
-		}		
+		}
 	}
-	
+
 	/**
-	 * Lädt eine XML-Datei und erstellt aus ihr die äquivalente Baumform
+	 * loads an xml file an creates an corresponding DataTreeNode
 	 * 
 	 * @param path
-	 *            Wo sich die XML-Datei befindet
-	 * @return Wurzel der Baumstruktur
+	 *            path of the file
+	 * @return root of the new tree-structure
 	 */
 	public static DataTreeNode loadXMLTree(String path) {
 		DataTreeNode treeRoot = new DataTreeNode("default");
 		try {
 			// Document lesen
 			Document doc = DocumentBuilderFactory.newInstance()
-					.newDocumentBuilder().parse(new File(path));			
-			//Wurzel holen
+					.newDocumentBuilder().parse(new File(path));
+			// Wurzel holen
 			Node xmlRoot = doc.getFirstChild();
 			treeRoot.setName(xmlRoot.getNodeName());
-			//Wurzelattribute
+			// Wurzelattribute
 			NamedNodeMap rootAttributes = xmlRoot.getAttributes();
-			for(int i=0; i<rootAttributes.getLength(); i++) {
+			for (int i = 0; i < rootAttributes.getLength(); i++) {
 				Node rootAttribute = rootAttributes.item(i);
-				treeRoot.addAttribute(new ElementAttribute(rootAttribute.getNodeName(), rootAttribute.getNodeValue()));
+				treeRoot.addAttribute(new ElementAttribute(rootAttribute
+						.getNodeName(), rootAttribute.getNodeValue()));
 			}
-			//Kinder hinzufügen
+			// Kinder hinzufügen
 			addChildsToTree(xmlRoot.getChildNodes(), treeRoot);
 		} catch (SAXException e) {
 			e.printStackTrace();

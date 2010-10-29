@@ -39,23 +39,28 @@ import javax.swing.tree.TreePath;
 
 public class PopupTree extends JTree implements ActionListener, MouseListener,
 		DropTargetListener {
-	
-	private JPopupMenu treePopup; //the popup-menu of the tree
 
-	private int x, y;	// position when the mouse was released
+	private JPopupMenu treePopup; // the popup-menu of the tree
 
-	private String[] sourcePath;	//path in the tree wenn the mouse was pressed
+	private int x, y; // position when the mouse was released
 
-	private JTextPane textPane;	//there we sill set the content of the lvl 3 nodes
-	private JTextPane viewPane;	// show the same content as above in html
+	private String[] sourcePath; // path in the tree wenn the mouse was pressed
+
+	private JTextPane textPane; // there we sill set the content of the lvl 3
+								// nodes
+	private JTextPane viewPane; // show the same content as above in html
 	private String editableNodePath;
 
 	/**
-	 * The Constructor of the class
-	 * it creates the popup menu and some settings, initialising
-	 * @param root root of the jtree
-	 * @param textPane pane for showing level 3 content
-	 * @param viewPane pane for showing level 3 content in html
+	 * The Constructor of the class it creates the popup menu and some settings,
+	 * initialising
+	 * 
+	 * @param root
+	 *            root of the jtree
+	 * @param textPane
+	 *            pane for showing level 3 content
+	 * @param viewPane
+	 *            pane for showing level 3 content in html
 	 */
 	public PopupTree(DefaultMutableTreeNode root, final JTextPane textPane,
 			JTextPane viewPane) {
@@ -97,8 +102,8 @@ public class PopupTree extends JTree implements ActionListener, MouseListener,
 	}
 
 	/**
-	 * if you will show a new DataTreeNode (as Root) you should call this method.
-	 * It rebuild the JTree so that the new data is shown.
+	 * if you will show a new DataTreeNode (as Root) you should call this
+	 * method. It rebuild the JTree so that the new data is shown.
 	 */
 	public void rootUpdated() {
 		// get Root of the JTree
@@ -133,7 +138,8 @@ public class PopupTree extends JTree implements ActionListener, MouseListener,
 						question.getName());
 				cat.add(quest);
 				String con = "";
-				//tries to get the content out of the corresponding files of the node
+				// tries to get the content out of the corresponding files of
+				// the node
 				try {
 					Scanner scanner = new Scanner(new File(question.getName()
 							+ ".html"));
@@ -151,12 +157,14 @@ public class PopupTree extends JTree implements ActionListener, MouseListener,
 	}
 
 	/**
-	 * this method will rename a level 2 or level 3 node
-	 * the node is selected by the last mouse-button release
-	 * @param nameProposal a proposal for the name of the node
+	 * this method will rename a level 2 or level 3 node the node is selected by
+	 * the last mouse-button release
+	 * 
+	 * @param nameProposal
+	 *            a proposal for the name of the node
 	 */
 	private void renameChild(String nameProposal) {
-		String name = getFreeName(nameProposal); //get a free name if it is not
+		String name = getFreeName(nameProposal); // get a free name if it is not
 		TreePath tp = this.getClosestPathForLocation(x, y);
 		DefaultMutableTreeNode currentNode = (DefaultMutableTreeNode) tp
 				.getLastPathComponent();
@@ -174,15 +182,15 @@ public class PopupTree extends JTree implements ActionListener, MouseListener,
 					.getChild(pathElements[2]).setName(name);
 			break;
 		}
-		//renaming in jtree
+		// renaming in jtree
 		currentNode.setUserObject(name);
 		((DefaultTreeModel) this.getModel())
 				.nodeStructureChanged((javax.swing.tree.TreeNode) currentNode);
 	}
 
 	/**
-	 * this method will rename a child
-	 * the renamed node will be selected after the last mouse-button release
+	 * this method will rename a child the renamed node will be selected after
+	 * the last mouse-button release
 	 */
 	private void removeChild() {
 		TreePath tp = this.getClosestPathForLocation(x, y);
@@ -214,12 +222,14 @@ public class PopupTree extends JTree implements ActionListener, MouseListener,
 	}
 
 	/**
-	 * this method will add a Child to the tree
-	 * the position of the new child will be selected after the last mouse-button release
-	 * @param nameProposal a name proposal for the new Child
+	 * this method will add a Child to the tree the position of the new child
+	 * will be selected after the last mouse-button release
+	 * 
+	 * @param nameProposal
+	 *            a name proposal for the new Child
 	 */
 	private void addChild(String nameProposal) {
-		String name = getFreeName(nameProposal); //free name if it is not
+		String name = getFreeName(nameProposal); // free name if it is not
 		TreePath tp = this.getClosestPathForLocation(x, y);
 		DefaultMutableTreeNode currentNode = (DefaultMutableTreeNode) tp
 				.getLastPathComponent();
@@ -251,7 +261,8 @@ public class PopupTree extends JTree implements ActionListener, MouseListener,
 			((DefaultTreeModel) this.getModel())
 					.nodeStructureChanged((javax.swing.tree.TreeNode) currentNode);
 			break;
-		case 3: // as in case 2 (only different path, so slightly differend code)
+		case 3: // as in case 2 (only different path, so slightly differend
+				// code)
 			EditorData
 					.getDataRoot()
 					.getChild(pathElements[1])
@@ -266,12 +277,14 @@ public class PopupTree extends JTree implements ActionListener, MouseListener,
 			break;
 		}
 	}
-	
+
 	/**
-	 * This methode will get you a unique name from the tree
-	 * it searches after the nameProposal, if it exists (or is blank) it will add an "_"
-	 * this method eliminates all whitespace-characters too
-	 * @param name a proposal for the name
+	 * This methode will get you a unique name from the tree it searches after
+	 * the nameProposal, if it exists (or is blank) it will add an "_" this
+	 * method eliminates all whitespace-characters too
+	 * 
+	 * @param name
+	 *            a proposal for the name
 	 * @return unique name
 	 */
 	public String getFreeName(String name) {
@@ -288,8 +301,8 @@ public class PopupTree extends JTree implements ActionListener, MouseListener,
 	}
 
 	/**
-	 * this method is called if you click on a menuItem of the popupmenu
-	 * it will call the corresponding method oder show the settings dialog
+	 * this method is called if you click on a menuItem of the popupmenu it will
+	 * call the corresponding method oder show the settings dialog
 	 * 
 	 * @param ae
 	 */
@@ -323,10 +336,11 @@ public class PopupTree extends JTree implements ActionListener, MouseListener,
 			}
 		}
 	}
-	
+
 	/**
-	 * this method is called if the mouse-button ist released (on the JTree)
-	 * It will show either the popupmenu or show some Data on the textPane/viewPane
+	 * this method is called if the mouse-button ist released (on the JTree) It
+	 * will show either the popupmenu or show some Data on the textPane/viewPane
+	 * 
 	 * @param e
 	 */
 	public void mouseReleased(MouseEvent e) {
@@ -362,7 +376,8 @@ public class PopupTree extends JTree implements ActionListener, MouseListener,
 	}
 
 	/**
-	 * this method will save the sourcePath when the mouse-button is pressed (as String array)
+	 * this method will save the sourcePath when the mouse-button is pressed (as
+	 * String array)
 	 */
 	public void mousePressed(MouseEvent me) {
 		TreePath tp = getClosestPathForLocation(me.getX(), me.getY());
@@ -372,7 +387,9 @@ public class PopupTree extends JTree implements ActionListener, MouseListener,
 	}
 
 	/**
-	 * this method will test if you can drop the node on the current mouse position
+	 * this method will test if you can drop the node on the current mouse
+	 * position
+	 * 
 	 * @param dtde
 	 */
 	public void dragOver(DropTargetDragEvent dtde) {
@@ -380,9 +397,10 @@ public class PopupTree extends JTree implements ActionListener, MouseListener,
 				.getLastPathComponent();
 		Point p = dtde.getLocation();
 		TreePath path = getClosestPathForLocation(p.x, p.y);
-		DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
+		DefaultMutableTreeNode node = (DefaultMutableTreeNode) path
+				.getLastPathComponent();
 		// only accept some actions
-		// move from level to same level (not important which parent) 
+		// move from level to same level (not important which parent)
 		if ((node.getParent() != null && node.getParent() == source.getParent())
 				|| node == source.getParent()
 				|| (source.getLevel() == 2 && node.getLevel() == 1)) {
@@ -393,12 +411,12 @@ public class PopupTree extends JTree implements ActionListener, MouseListener,
 	}
 
 	/**
-	 * in this method the dropping action is executed
-	 * it is called automatically
+	 * in this method the dropping action is executed it is called automatically
+	 * 
 	 * @param dtde
 	 */
 	public void drop(DropTargetDropEvent dtde) {
-		//it shouldnt work... but IS getting the source node (or looks like)
+		// it shouldnt work... but IS getting the source node (or looks like)
 		DefaultMutableTreeNode source = (DefaultMutableTreeNode) getSelectionPath()
 				.getLastPathComponent();
 		Point p = dtde.getLocation();
@@ -408,14 +426,14 @@ public class PopupTree extends JTree implements ActionListener, MouseListener,
 		DefaultMutableTreeNode parent = (DefaultMutableTreeNode) source
 				.getParent();
 		DefaultTreeModel dtm = (DefaultTreeModel) getModel();
-		//remove from JTree
+		// remove from JTree
 		dtm.removeNodeFromParent(source);
 		int targetIndex = 0;
 		if (target != parent) {
 			targetIndex = parent.getIndex(target) + 1;
 		}
-		//moving from level 3 to 2 to a differend parent
-		if (sourcePath.length==3 && target.getLevel() == 1
+		// moving from level 3 to 2 to a differend parent
+		if (sourcePath.length == 3 && target.getLevel() == 1
 				&& target != parent) {
 			System.out.println("bin ich schon hier");
 			// remove from data
@@ -434,7 +452,7 @@ public class PopupTree extends JTree implements ActionListener, MouseListener,
 				EditorData.getDataRoot().getChild(sourcePath[1])
 						.removeChild(sourcePath[2]);
 			}
-			//new position in data
+			// new position in data
 			if (sourcePath.length == 2) {
 				EditorData.getDataRoot().addChild(
 						new DataTreeNode(sourcePath[1]), targetIndex);
@@ -447,17 +465,21 @@ public class PopupTree extends JTree implements ActionListener, MouseListener,
 		}
 	}
 
-
 	public void mouseClicked(MouseEvent e) {
 	}
+
 	public void mouseEntered(MouseEvent arg0) {
 	}
+
 	public void mouseExited(MouseEvent arg0) {
 	}
+
 	public void dropActionChanged(DropTargetDragEvent arg0) {
 	}
+
 	public void dragExit(DropTargetEvent dte) {
 	}
+
 	public void dragEnter(DropTargetDragEvent arg0) {
 	}
 }

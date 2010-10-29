@@ -10,7 +10,7 @@ package questionEditor;
 import java.util.ArrayList;
 
 public class Settings {
-	
+
 	public static final ArrayList<String> settings = new ArrayList<String>() {
 		{
 			add("Editierbar");

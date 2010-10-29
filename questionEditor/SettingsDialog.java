@@ -107,6 +107,7 @@ public class SettingsDialog extends JDialog implements ActionListener {
 
 	/**
 	 * Returns the String-identifier of the Object
+	 * 
 	 * @return string identifier
 	 */
 	public String getId() {
@@ -115,7 +116,9 @@ public class SettingsDialog extends JDialog implements ActionListener {
 
 	/**
 	 * Sets the String identifier of the Object
-	 * @param id new string identifier
+	 * 
+	 * @param id
+	 *            new string identifier
 	 */
 	public void setId(String id) {
 		this.id = id;
@@ -123,13 +126,16 @@ public class SettingsDialog extends JDialog implements ActionListener {
 
 	/**
 	 * this methods set the settings new
-	 * @param path path-setting
-	 * @param checkings binary-settings
+	 * 
+	 * @param path
+	 *            path-setting
+	 * @param checkings
+	 *            binary-settings
 	 */
 	public void setSettings(String path, Boolean[] checkings) {
-		//path settings
+		// path settings
 		pathTextField.setText(path);
-		//other settings
+		// other settings
 		int i = 0;
 		for (Component comp : featurePanel.getComponents()) {
 			if (comp instanceof JCheckBox) {
@@ -186,6 +192,7 @@ public class SettingsDialog extends JDialog implements ActionListener {
 
 	/**
 	 * Return a String which shows the settings of this Dialog
+	 * 
 	 * @return settings as String
 	 */
 	public String getSettingsString() {
@@ -198,6 +205,7 @@ public class SettingsDialog extends JDialog implements ActionListener {
 
 	/**
 	 * Some action Commands...
+	 * 
 	 * @param ae
 	 */
 	public void actionPerformed(ActionEvent ae) {
