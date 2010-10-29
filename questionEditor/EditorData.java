@@ -9,7 +9,7 @@ import java.util.Vector;
 
 public class EditorData {
 	private static ArrayList<SettingsDialog> settingsDialogs = new ArrayList<SettingsDialog>();
-	private static TreeNode dataRoot = new TreeNode("Übersicht");
+	private static DataTreeNode dataRoot = new DataTreeNode("Übersicht");
 	
 	private static String htmlContent = "";
 	
@@ -29,26 +29,26 @@ public class EditorData {
 	public static void reset() {
 		settingsDialogs.clear();
 		dataRoot = null;
-		dataRoot = new TreeNode("Übersicht");
+		dataRoot = new DataTreeNode("Übersicht");
 	}
 
 	// Für Tree Node
-	public static TreeNode getDataRoot() {
+	public static DataTreeNode getDataRoot() {
 		return dataRoot;
 	}
 	
-	public static void setDataRoot(TreeNode newRoot) {
+	public static void setDataRoot(DataTreeNode newRoot) {
 		dataRoot = newRoot;
 		System.out.println("Neue Wurzel: " + dataRoot);
 	}
 
-	public static TreeNode getNode(String name) {
+	public static DataTreeNode getNode(String name) {
 		for (int i = 0; i < dataRoot.getChildCount(); i++) {
 			if (dataRoot.getChild(i).getName().equals(name)) {
 				return dataRoot.getChild(i);
 			}
-			Vector<TreeNode> children = dataRoot.getChild(i).getChildren();
-			for (TreeNode child : children) {
+			Vector<DataTreeNode> children = dataRoot.getChild(i).getChildren();
+			for (DataTreeNode child : children) {
 				if (child.getName().equals(name)) {
 					return child;
 				}
@@ -59,8 +59,8 @@ public class EditorData {
 
 	public static void extractHTMLContent() {
 		for (int i = 0; i < dataRoot.getChildCount(); i++) {
-			Vector<TreeNode> children = dataRoot.getChild(i).getChildren();
-			for (TreeNode child : children) {
+			Vector<DataTreeNode> children = dataRoot.getChild(i).getChildren();
+			for (DataTreeNode child : children) {
 				String content = HTMLSTART + child.getContent() + HTMLEND;
 				try {
 					File newHTMLFile = new File(child.getName() + ".html");
@@ -75,8 +75,8 @@ public class EditorData {
 		}
 	}
 
-	public static TreeNode getNode(String[] pathElements) {
-		TreeNode tn = dataRoot;
+	public static DataTreeNode getNode(String[] pathElements) {
+		DataTreeNode tn = dataRoot;
 		for (int i = 1; i < pathElements.length; i++) {
 			tn = tn.getChild(pathElements[i]);
 		}
@@ -85,7 +85,7 @@ public class EditorData {
 	
 	public static Vector<ElementAttribute> getNodeAttributes(
 			String[] pathElements) {
-		TreeNode tn = dataRoot;
+		DataTreeNode tn = dataRoot;
 		for (int i = 1; i < pathElements.length; i++) {
 			tn = tn.getChild(pathElements[i]);
 		}

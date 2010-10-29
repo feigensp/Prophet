@@ -111,6 +111,12 @@ public class SettingsDialog extends JDialog implements ActionListener {
 			if(comp instanceof JCheckBox) {
 				if(i < checkings.length) {
 					((JCheckBox)comp).setSelected(checkings[i]);
+					//setting aktualisieren
+					for(ElementAttribute<Boolean> setting : settings) {
+						if(setting.getName().equals(((JCheckBox)comp).getText())) {
+							setting.setContent(checkings[i]);
+						}
+					}
 					i++;
 				}
 			}
@@ -118,7 +124,7 @@ public class SettingsDialog extends JDialog implements ActionListener {
 	}
 
 	public void saveSettings() {
-		TreeNode node = EditorData.getNode(id);
+		DataTreeNode node = EditorData.getNode(id);
 		if (node != null) {
 			boolean exist;
 			for (ElementAttribute setting : settings) {
@@ -150,6 +156,14 @@ public class SettingsDialog extends JDialog implements ActionListener {
 			}
 
 		}
+	}
+	
+	public String getSettingsString() {
+		String ret = "Pfad : " + pathTextField.getText();
+		for (ElementAttribute setting : settings) {
+			ret += "\n" + setting.getName() + ": " + setting.getContent();
+		}
+		return ret;
 	}
 
 	@Override

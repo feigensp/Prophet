@@ -165,7 +165,7 @@ public class editorView extends JFrame {
 		//Laden
 		loadMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				TreeNode newRoot = null;
+				DataTreeNode newRoot = null;
 				
 				JFileChooser fc = new JFileChooser();
 				int returnVal = fc.showSaveDialog(null);

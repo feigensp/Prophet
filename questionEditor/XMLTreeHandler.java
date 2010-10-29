@@ -28,9 +28,9 @@ import org.xml.sax.SAXException;
 
 public class XMLTreeHandler {
 
-	private static void addChildsToXML(Vector<TreeNode> treeChilds, Element xmlParent, Document xmlTree) {
+	private static void addChildsToXML(Vector<DataTreeNode> treeChilds, Element xmlParent, Document xmlTree) {
 		//Kinder hinzufügen
-		for(TreeNode treeChild : treeChilds) {
+		for(DataTreeNode treeChild : treeChilds) {
 			Element xmlChild = xmlTree.createElement(treeChild.getName());
 			xmlParent.appendChild(xmlChild);
 			//Attribute hinzufügen
@@ -53,7 +53,7 @@ public class XMLTreeHandler {
 	 * @param path
 	 *            Wohin die XML-Datei geschrieben werden soll
 	 */
-	public static void writeXMLTree(TreeNode treeRoot, String path) {
+	public static void writeXMLTree(DataTreeNode treeRoot, String path) {
 		Document xmlTree = null;
 		try {
 			// Dokument erstellen
@@ -92,11 +92,11 @@ public class XMLTreeHandler {
 	}
 
 	
-	private static void addChildsToTree(NodeList xmlChilds, TreeNode treeParent) {
+	private static void addChildsToTree(NodeList xmlChilds, DataTreeNode treeParent) {
 		//Kinder hinzufügen
 		for(int i=0; i<xmlChilds.getLength(); i++) {
 			Node xmlChild = xmlChilds.item(i);
-			TreeNode treeChild = new TreeNode(xmlChild.getNodeName());
+			DataTreeNode treeChild = new DataTreeNode(xmlChild.getNodeName());
 			//Attribute hinzufügen
 			NamedNodeMap childAttributes = xmlChild.getAttributes();
 			for(int j=0; j<childAttributes.getLength(); j++) {
@@ -104,7 +104,7 @@ public class XMLTreeHandler {
 				treeChild.addAttribute(new ElementAttribute(childAttribute.getNodeName(), childAttribute.getNodeValue()));
 			}
 			//Kind hinzufügen
-			treeParent.addChild(treeChild);
+			treeParent.addChild(treeChild, i);
 			//evtl. weitere Kinder hinzufügen
 			if(xmlChild.getChildNodes().getLength()>0) {
 				addChildsToTree(xmlChild.getChildNodes(), treeChild);
@@ -119,8 +119,8 @@ public class XMLTreeHandler {
 	 *            Wo sich die XML-Datei befindet
 	 * @return Wurzel der Baumstruktur
 	 */
-	public static TreeNode loadXMLTree(String path) {
-		TreeNode treeRoot = new TreeNode("default");
+	public static DataTreeNode loadXMLTree(String path) {
+		DataTreeNode treeRoot = new DataTreeNode("default");
 		try {
 			// Document lesen
 			Document doc = DocumentBuilderFactory.newInstance()

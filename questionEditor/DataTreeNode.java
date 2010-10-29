@@ -11,24 +11,24 @@ import java.awt.Dimension;
 import java.util.Vector;
 
 
-public class TreeNode {	
+public class DataTreeNode {	
 	
 	//Attributliste
 	private Vector<ElementAttribute> attributes;
 	
 	private String name;	//Name des Knoten
 	private int childCount;	//Anzahl der Kinder
-	private Vector<TreeNode> children;	//Kinder
-	private TreeNode parent;//Vater
+	private Vector<DataTreeNode> children;	//Kinder
+	private DataTreeNode parent;//Vater
 	private String content;
 	
 	/**
 	 * Konstruktor der ein Wurzelelement erschafft
 	 * @param name Name des Knoten
 	 */	
-	public TreeNode(String name) {
+	public DataTreeNode(String name) {
 		this.name = name;
-		this.children = new Vector<TreeNode>();
+		this.children = new Vector<DataTreeNode>();
 		this.parent = null;	
 		this.attributes = new Vector<ElementAttribute>();
 		this.content = "";
@@ -40,9 +40,9 @@ public class TreeNode {
 	 * @param parent Vater des Knoten
 	 * @param attributes Attributliste des Knoten
 	 */
-	public TreeNode(String name, TreeNode parent, Vector<ElementAttribute> attributes) {
+	public DataTreeNode(String name,  DataTreeNode parent, Vector<ElementAttribute> attributes) {
 		this.name = name;
-		this.children = new Vector<TreeNode>();
+		this.children = new Vector<DataTreeNode>();
 		this.parent = null;
 		
 		this.attributes = attributes;
@@ -77,7 +77,7 @@ public class TreeNode {
 	 * Liefert den Vater des Knoten zurück
 	 * @return Vaterknoten
 	 */
-	public TreeNode getParent() {
+	public DataTreeNode getParent() {
 		return parent;
 	}
 	
@@ -93,8 +93,8 @@ public class TreeNode {
 	 * Fügt dem Knoten ein Kind hinzu
 	 * @param child Knoten der als Kind hinzugefügt wird 
 	 */
-	public void addChild(TreeNode child) {
-		children.add(child);
+	public void addChild(DataTreeNode child, int index) {
+		children.add(index, child);
 		childCount++;
 	}
 	
@@ -130,7 +130,7 @@ public class TreeNode {
 	 * Gibt einen Vector mit allen Kindern zurück
 	 * @return Vector der alle TreeNode, welche kinder sind, enthält
 	 */
-	public Vector<TreeNode> getChildren() {
+	public Vector<DataTreeNode> getChildren() {
 		return children;
 	}
 	
@@ -139,12 +139,12 @@ public class TreeNode {
 	 * @param index Position an welcher das Kind im Vector steht
 	 * @return TreeNode, welcher an der gewünschten Position im Vector ist
 	 */
-	public TreeNode getChild(int index) {
+	public DataTreeNode getChild(int index) {
 		return children.get(index);
 	}
 	
-	public TreeNode getChild(String name) {
-		for(TreeNode child : children) {
+	public DataTreeNode getChild(String name) {
+		for(DataTreeNode child : children) {
 			if(child.getName().equals(name)) {
 				return child;
 			}
@@ -170,9 +170,10 @@ public class TreeNode {
 	
 	public boolean removeChild(String name) {
 		int i = 0;
-		for(TreeNode child : children) {
+		for(DataTreeNode child : children) {
 			if(child.getName().equals(name)) {
 				children.removeElementAt(i);
+				childCount--;
 				return true;
 			}
 			i++;
@@ -184,7 +185,7 @@ public class TreeNode {
 		String ret = this.name;
 		if(childCount > 0) {
 			ret += " { ";
-			for(TreeNode child : children) {
+			for(DataTreeNode child : children) {
 				ret += child.toString() + "|";
 			}
 			ret += " } ";
@@ -196,7 +197,7 @@ public class TreeNode {
 		if(this.name.equals(name)) {
 			return true;
 		} else {
-			for(TreeNode child : children) {
+			for(DataTreeNode child : children) {
 				if(child.nameExist(name)) {
 					return true;
 				}
