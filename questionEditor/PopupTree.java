@@ -7,6 +7,8 @@ package questionEditor;
  * The first Level is the root, the child of the root could have childs again, no more Levels are allowed.
  * All Childs of the second Level get a SettingDialog and EditorData will save the informations.
  * All nodes will have a unique name.
+ * 
+ * @author Markus Köppen, Andreas Hasselberg
  */
 
 import java.awt.Point;
