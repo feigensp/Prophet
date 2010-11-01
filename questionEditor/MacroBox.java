@@ -38,6 +38,7 @@ public class MacroBox extends JComboBox implements ActionListener, KeyListener {
 		this.textPane = textPane;
 		this.addItem("Makroauswahl");
 		this.addActionListener(this);
+		textPane.addKeyListener(this);
 		loadMakros();
 	}
 
@@ -56,7 +57,6 @@ public class MacroBox extends JComboBox implements ActionListener, KeyListener {
 				}
 				this.addItem(makroName);
 				makros.add(makroContent);
-				textPane.addKeyListener(this);
 			}
 		} catch (SAXException e) {
 			e.printStackTrace();
@@ -76,57 +76,56 @@ public class MacroBox extends JComboBox implements ActionListener, KeyListener {
 	}
 
 	@Override
-	public void keyPressed(KeyEvent ke) {
+	public void keyReleased(KeyEvent ke) {
 		if (ke.isControlDown()) {
 			switch (ke.getKeyCode()) {
 			case KeyEvent.VK_1:
-				if (makros.size() >= 1 && ke.isControlDown()) {
-					System.out.println("test");
+				if (makros.size() >= 1) {
 					textPane.replaceSelection(makros.get(0));
 				}
 				break;
 			case KeyEvent.VK_2:
-				if (makros.size() >= 1 && ke.isControlDown()) {
+				if (makros.size() >= 2) {
 					textPane.replaceSelection(makros.get(1));
 				}
 				break;
 			case KeyEvent.VK_3:
-				if (makros.size() >= 1 && ke.isControlDown()) {
+				if (makros.size() >= 3) {
 					textPane.replaceSelection(makros.get(2));
 				}
 				break;
 			case KeyEvent.VK_4:
-				if (makros.size() >= 1 && ke.isControlDown()) {
+				if (makros.size() >= 4) {
 					textPane.replaceSelection(makros.get(3));
 				}
 				break;
 			case KeyEvent.VK_5:
-				if (makros.size() >= 1 && ke.isControlDown()) {
+				if (makros.size() >= 5) {
 					textPane.replaceSelection(makros.get(4));
 				}
 				break;
 			case KeyEvent.VK_6:
-				if (makros.size() >= 1 && ke.isControlDown()) {
+				if (makros.size() >= 6) {
 					textPane.replaceSelection(makros.get(5));
 				}
 				break;
 			case KeyEvent.VK_7:
-				if (makros.size() >= 1 && ke.isControlDown()) {
+				if (makros.size() >= 7) {
 					textPane.replaceSelection(makros.get(6));
 				}
 				break;
 			case KeyEvent.VK_8:
-				if (makros.size() >= 1 && ke.isControlDown()) {
+				if (makros.size() >= 8) {
 					textPane.replaceSelection(makros.get(7));
 				}
 				break;
 			case KeyEvent.VK_9:
-				if (makros.size() >= 1 && ke.isControlDown()) {
+				if (makros.size() >= 9) {
 					textPane.replaceSelection(makros.get(8));
 				}
 				break;
 			case KeyEvent.VK_0:
-				if (makros.size() >= 1 && ke.isControlDown()) {
+				if (makros.size() >= 10) {
 					textPane.replaceSelection(makros.get(9));
 				}
 				break;
@@ -135,7 +134,7 @@ public class MacroBox extends JComboBox implements ActionListener, KeyListener {
 	}
 
 	@Override
-	public void keyReleased(KeyEvent ke) {
+	public void keyPressed(KeyEvent ke) {
 	}
 
 	@Override

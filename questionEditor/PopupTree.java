@@ -49,7 +49,7 @@ public class PopupTree extends JTree implements ActionListener, MouseListener,
 	private JTextPane textPane; // there we sill set the content of the lvl 3
 								// nodes
 	private JTextPane viewPane; // show the same content as above in html
-	private String editableNodePath;
+	private String[] editableNodePath;
 
 	/**
 	 * The Constructor of the class it creates the popup menu and some settings,
@@ -63,7 +63,7 @@ public class PopupTree extends JTree implements ActionListener, MouseListener,
 	 *            pane for showing level 3 content in html
 	 */
 	public PopupTree(DefaultMutableTreeNode root, final JTextPane textPane,
-			JTextPane viewPane) {
+			final JTextPane viewPane) {
 		super(root);
 		EditorData.getDataRoot().setName(root.toString());
 
@@ -90,6 +90,14 @@ public class PopupTree extends JTree implements ActionListener, MouseListener,
 		treePopup.add(mi);
 
 		textPane.setEditable(false);
+		textPane.addKeyListener(new KeyAdapter() {
+			public void keyReleased(KeyEvent ke) {
+				//save the content to the right node
+				EditorData.getNode(editableNodePath).setContent(textPane.getText());
+				viewPane.setText(EditorData.HTMLSTART + textPane.getText()
+						+ EditorData.FAKEHTMLEND);
+			}
+		});
 
 		setDragEnabled(true);
 		setDropTarget(new DropTarget(this, this));
@@ -353,19 +361,18 @@ public class PopupTree extends JTree implements ActionListener, MouseListener,
 			if (tp != null) {
 				String path = tp.toString();
 				path = path.substring(1, path.length() - 1);
-				editableNodePath = path;
-				String[] pathElements = path.split(", ");
-				if (pathElements.length != 3) {
+				editableNodePath = path.split(", ");
+				if (editableNodePath.length != 3) {
 					textPane.setEditable(false);
 					textPane.setText("");
 					viewPane.setText("");
 					// keine Frage ausgewählt
-					if (pathElements.length == 2) {
+					if (editableNodePath.length == 2) {
 						textPane.setText(EditorData.getSettingsDialogs(
-								pathElements[1]).getSettingsString());
+								editableNodePath[1]).getSettingsString());
 					}
 				} else {
-					textPane.setText(EditorData.getNode(pathElements)
+					textPane.setText(EditorData.getNode(editableNodePath)
 							.getContent().replaceAll("\r\n", "\n"));
 					viewPane.setText(EditorData.HTMLSTART + textPane.getText()
 							+ EditorData.FAKEHTMLEND);

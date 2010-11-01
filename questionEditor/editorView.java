@@ -12,6 +12,8 @@ import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.io.File;
 
 import javax.swing.JButton;
@@ -26,8 +28,12 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextPane;
 import javax.swing.JToolBar;
 import javax.swing.border.EmptyBorder;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
+import javax.swing.text.Element;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.View;
+import javax.swing.text.ViewFactory;
+import javax.swing.text.html.FormView;
+import javax.swing.text.html.HTML;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.tree.DefaultMutableTreeNode;
 
@@ -112,7 +118,25 @@ public class editorView extends JFrame {
 		textPane = new EditArea();
 
 		JTextPane viewPane = new JTextPane();
-		viewPane.setEditorKit(new HTMLEditorKit());
+		viewPane.setEditorKit(new HTMLEditorKit() {
+            public ViewFactory getViewFactory() {
+                return new HTMLEditorKit.HTMLFactory() {
+                    public View create(Element elem) {
+                        Object o = elem.getAttributes().getAttribute(StyleConstants.NameAttribute);
+                        if (o instanceof HTML.Tag) {
+                            HTML.Tag kind = (HTML.Tag) o;
+                            if (kind == HTML.Tag.INPUT )
+                                return new FormView(elem) {
+                                    protected void submitData(String data) {
+                                    	//nothing should happen if a button is pressed
+                                    }
+                                };
+                        }
+                        return super.create(elem);
+                    }
+                };
+            }
+        });
 		tree = new PopupTree(new DefaultMutableTreeNode("Übersicht"), textPane,
 				viewPane);
 		JScrollPane treeScrollPane = new JScrollPane(tree);
@@ -128,14 +152,14 @@ public class editorView extends JFrame {
 		JPanel editPanel = new JPanel();
 		editViewTabbedPane.addTab("Editor", null, editPanel, null);
 		editPanel.setLayout(new BorderLayout(0, 0));
-		editPanel.add(textPane, BorderLayout.CENTER);
+		editPanel.add(new JScrollPane(textPane), BorderLayout.CENTER);
 
 		JPanel viewPanel = new JPanel();
 		editViewTabbedPane.addTab("Betrachter", null, viewPanel, null);
 		viewPanel.setLayout(new BorderLayout(0, 0));
 
 		viewPane.setEditable(false);
-		viewPanel.add(viewPane, BorderLayout.CENTER);
+		viewPanel.add(new JScrollPane(viewPane), BorderLayout.CENTER);
 
 		JToolBar toolBar = new JToolBar();
 		editViewPanel.add(toolBar, BorderLayout.NORTH);
@@ -196,6 +220,14 @@ public class editorView extends JFrame {
 					build();
 					EditorData.setDataRoot(newRoot);
 					tree.rootUpdated();
+				}
+			}
+		});
+		//textPane
+		textPane.addKeyListener(new KeyAdapter() {
+			public void keyPressed(KeyEvent ke) {
+				if(ke.isShiftDown() && ke.getKeyCode()==KeyEvent.VK_ENTER) {
+					textPane.setText(textPane.getText() + "<br>");
 				}
 			}
 		});
