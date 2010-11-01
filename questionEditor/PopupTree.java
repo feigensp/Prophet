@@ -28,6 +28,7 @@ import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 import javax.swing.JComponent;
+import javax.swing.JFileChooser;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
@@ -35,6 +36,7 @@ import javax.swing.JTextPane;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
 public class PopupTree extends JTree implements ActionListener, MouseListener,
@@ -47,9 +49,9 @@ public class PopupTree extends JTree implements ActionListener, MouseListener,
 	private String[] sourcePath; // path in the tree wenn the mouse was pressed
 
 	private JTextPane textPane; // there we sill set the content of the lvl 3
-								// nodes
+	// nodes
 	private JTextPane viewPane; // show the same content as above in html
-	private String[] editableNodePath;
+	private String[] selectedNodePath;
 
 	/**
 	 * The Constructor of the class it creates the popup menu and some settings,
@@ -76,11 +78,11 @@ public class PopupTree extends JTree implements ActionListener, MouseListener,
 		mi.addActionListener(this);
 		mi.setActionCommand("new");
 		treePopup.add(mi);
-		mi = new JMenuItem("löschen");
+		mi = new JMenuItem("Löschen");
 		mi.addActionListener(this);
 		mi.setActionCommand("remove");
 		treePopup.add(mi);
-		mi = new JMenuItem("umbenennen");
+		mi = new JMenuItem("Umbenennen");
 		mi.addActionListener(this);
 		mi.setActionCommand("rename");
 		treePopup.add(mi);
@@ -88,14 +90,19 @@ public class PopupTree extends JTree implements ActionListener, MouseListener,
 		mi.addActionListener(this);
 		mi.setActionCommand("settings");
 		treePopup.add(mi);
+		mi = new JMenuItem("HTML-Datei importieren");
+		mi.addActionListener(this);
+		mi.setActionCommand("import");
+		treePopup.add(mi);
 
 		textPane.setEditable(false);
 		textPane.addKeyListener(new KeyAdapter() {
 			public void keyReleased(KeyEvent ke) {
-				//save the content to the right node
-				EditorData.getNode(editableNodePath).setContent(textPane.getText());
+				// save the content to the right node
+				EditorData.getNode(selectedNodePath).setContent(
+						textPane.getText());
 				viewPane.setText(EditorData.HTMLSTART + textPane.getText()
-						+ EditorData.FAKEHTMLEND);
+						+ EditorData.HTMLEND);
 			}
 		});
 
@@ -120,8 +127,8 @@ public class PopupTree extends JTree implements ActionListener, MouseListener,
 				.getLastPathComponent();
 		for (DataTreeNode categorie : EditorData.getDataRoot().getChildren()) {
 			// insert level 1 nodes (categories)
-			DefaultMutableTreeNode cat = new DefaultMutableTreeNode(
-					categorie.getName());
+			DefaultMutableTreeNode cat = new DefaultMutableTreeNode(categorie
+					.getName());
 			SettingsDialog dia = new SettingsDialog(categorie.getName());
 
 			Boolean[] newSettings = new Boolean[Settings.settings.size()];
@@ -154,8 +161,9 @@ public class PopupTree extends JTree implements ActionListener, MouseListener,
 					while (scanner.hasNextLine()) {
 						con += scanner.nextLine() + "\n";
 					}
-					con = con.substring(EditorData.HTMLSTART.length(),
-							con.length() - EditorData.HTMLEND.length() - 1);
+					con = con.substring(EditorData.HTMLSTART.length(), con
+							.length()
+							- EditorData.HTMLEND.length() - 1);
 				} catch (FileNotFoundException e) {
 					System.out.println("Quelldatei nicht gefunden");
 				}
@@ -186,8 +194,8 @@ public class PopupTree extends JTree implements ActionListener, MouseListener,
 			EditorData.getSettingsDialogs(pathElements[1]).setId(name);
 			break;
 		case 3: // level 3 (child)
-			EditorData.getDataRoot().getChild(pathElements[1])
-					.getChild(pathElements[2]).setName(name);
+			EditorData.getDataRoot().getChild(pathElements[1]).getChild(
+					pathElements[2]).setName(name);
 			break;
 		}
 		// renaming in jtree
@@ -214,8 +222,8 @@ public class PopupTree extends JTree implements ActionListener, MouseListener,
 			EditorData.removeSettingsDialog(pathElements[1]);
 			break;
 		case 3: // level 3...
-			EditorData.getDataRoot().getChild(pathElements[1])
-					.removeChild(pathElements[2]);
+			EditorData.getDataRoot().getChild(pathElements[1]).removeChild(
+					pathElements[2]);
 			break;
 		}
 		// remove child from JTree
@@ -258,30 +266,23 @@ public class PopupTree extends JTree implements ActionListener, MouseListener,
 			dia.setVisible(true);
 			break;
 		case 2: // new level 3 (question)
-			EditorData
-					.getDataRoot()
-					.getChild(pathElements[1])
-					.addChild(
-							new DataTreeNode(name),
-							EditorData.getDataRoot().getChild(pathElements[1])
-									.getChildCount());
+			EditorData.getDataRoot().getChild(pathElements[1]).addChild(
+					new DataTreeNode(name),
+					EditorData.getDataRoot().getChild(pathElements[1])
+							.getChildCount());
 			currentNode.add(child);
 			((DefaultTreeModel) this.getModel())
-					.nodeStructureChanged((javax.swing.tree.TreeNode) currentNode);
+					.nodeStructureChanged((TreeNode) currentNode);
 			break;
 		case 3: // as in case 2 (only different path, so slightly differend
-				// code)
-			EditorData
-					.getDataRoot()
-					.getChild(pathElements[1])
-					.addChild(
-							new DataTreeNode(name),
-							EditorData.getDataRoot().getChild(pathElements[1])
-									.getChildCount());
+			// code)
+			EditorData.getDataRoot().getChild(pathElements[1]).addChild(
+					new DataTreeNode(name),
+					EditorData.getDataRoot().getChild(pathElements[1])
+							.getChildCount());
 			((DefaultMutableTreeNode) currentNode.getParent()).add(child);
 			((DefaultTreeModel) this.getModel())
-					.nodeStructureChanged((javax.swing.tree.TreeNode) currentNode
-							.getParent());
+					.nodeStructureChanged((TreeNode) currentNode.getParent());
 			break;
 		}
 	}
@@ -306,6 +307,82 @@ public class PopupTree extends JTree implements ActionListener, MouseListener,
 		}
 
 		return ret;
+	}
+
+	/**
+	 * this method imports an html file to the categorie most near to the mouse click
+	 * if the file doesn't consist of a right body it is not importet
+	 * if the file will be importet, it will be tests, if she ends with EditorData.HTMLEnd
+	 * if yes the end ist cuted off
+	 */
+	public void importHTML() {
+		TreePath tp = this.getClosestPathForLocation(x, y);
+		DefaultMutableTreeNode currentNode = (DefaultMutableTreeNode) tp
+				.getLastPathComponent();
+		String path = tp.toString();
+		path = path.substring(1, path.length() - 1);
+		String[] pathElements = path.split(", ");
+		
+		
+		if(pathElements.length < 2 || pathElements.length > 3) {
+			JOptionPane
+			.showMessageDialog(null,
+					"HTML-Dateien können nicht als Kategorie importiert werden.");			
+		} else {
+			JFileChooser fc = new JFileChooser();
+			int returnVal = fc.showSaveDialog(null);
+			if (returnVal == JFileChooser.APPROVE_OPTION) {
+				File file = fc.getSelectedFile();
+				String htmlContent = "";
+				try {
+					Scanner sc = new Scanner(file);
+					while(sc.hasNextLine()) {
+						htmlContent += sc.nextLine();
+					}
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				}
+				int begin = htmlContent.indexOf("<body>");
+				int end = htmlContent.lastIndexOf("</body>");
+				if(begin == -1 || end == -1) {
+					JOptionPane.showMessageDialog(null, "Keine Datei mit gültigem Aufbau");
+				} else {
+					int start = file.toString().lastIndexOf("\\") == -1 ? 0 : file.toString().lastIndexOf("\\")+1;
+					String name = getFreeName(file.toString().substring(start, file.toString().lastIndexOf(".")));
+					DefaultMutableTreeNode child = new DefaultMutableTreeNode(name);					
+					//test if the footer is the same as our html-file standart
+					if(htmlContent.endsWith(EditorData.HTMLEND)) {
+						htmlContent = htmlContent.substring(begin+6, htmlContent.length()-EditorData.HTMLEND.length());
+					} else {
+						htmlContent = htmlContent.substring(begin+6, end);
+					}
+					DataTreeNode dtn = new DataTreeNode(name);
+					dtn.setContent(htmlContent);
+					
+					switch (pathElements.length) {
+					case 2: // new level 3 (question)
+						EditorData.getDataRoot().getChild(pathElements[1]).addChild(
+								dtn,
+								EditorData.getDataRoot().getChild(pathElements[1])
+										.getChildCount());
+						currentNode.add(child);
+						((DefaultTreeModel) this.getModel())
+								.nodeStructureChanged((TreeNode) currentNode);
+						break;
+					case 3: // as in case 2 (only different path, so slightly differend
+						// code)
+						EditorData.getDataRoot().getChild(pathElements[1]).addChild(
+								dtn,
+								EditorData.getDataRoot().getChild(pathElements[1])
+										.getChildCount());
+						((DefaultMutableTreeNode) currentNode.getParent()).add(child);
+						((DefaultTreeModel) this.getModel())
+								.nodeStructureChanged((TreeNode) currentNode.getParent());
+						break;
+					}
+				}
+			}
+		}
 	}
 
 	/**
@@ -342,6 +419,10 @@ public class PopupTree extends JTree implements ActionListener, MouseListener,
 			if (dia != null) {
 				dia.setVisible(true);
 			}
+		} else
+		//import
+		if(ae.getActionCommand().equals("import")) {
+			importHTML();
 		}
 	}
 
@@ -361,21 +442,21 @@ public class PopupTree extends JTree implements ActionListener, MouseListener,
 			if (tp != null) {
 				String path = tp.toString();
 				path = path.substring(1, path.length() - 1);
-				editableNodePath = path.split(", ");
-				if (editableNodePath.length != 3) {
+				selectedNodePath = path.split(", ");
+				if (selectedNodePath.length != 3) {
 					textPane.setEditable(false);
 					textPane.setText("");
 					viewPane.setText("");
 					// keine Frage ausgewählt
-					if (editableNodePath.length == 2) {
+					if (selectedNodePath.length == 2) {
 						textPane.setText(EditorData.getSettingsDialogs(
-								editableNodePath[1]).getSettingsString());
+								selectedNodePath[1]).getSettingsString());
 					}
 				} else {
-					textPane.setText(EditorData.getNode(editableNodePath)
+					textPane.setText(EditorData.getNode(selectedNodePath)
 							.getContent().replaceAll("\r\n", "\n"));
 					viewPane.setText(EditorData.HTMLSTART + textPane.getText()
-							+ EditorData.FAKEHTMLEND);
+							+ EditorData.HTMLEND);
 					textPane.setEditable(true);
 				}
 			}
@@ -444,11 +525,11 @@ public class PopupTree extends JTree implements ActionListener, MouseListener,
 				&& target != parent) {
 			System.out.println("bin ich schon hier");
 			// remove from data
-			EditorData.getDataRoot().getChild(sourcePath[1])
-					.removeChild(sourcePath[2]);
+			EditorData.getDataRoot().getChild(sourcePath[1]).removeChild(
+					sourcePath[2]);
 			// insert to new position in data
-			EditorData.getDataRoot().getChild(target.toString())
-					.addChild(new DataTreeNode(sourcePath[2]), 0);
+			EditorData.getDataRoot().getChild(target.toString()).addChild(
+					new DataTreeNode(sourcePath[2]), 0);
 			// inser to new position in JTree
 			dtm.insertNodeInto(source, target, targetIndex);
 		} else {
@@ -456,16 +537,16 @@ public class PopupTree extends JTree implements ActionListener, MouseListener,
 			if (sourcePath.length == 2) {
 				EditorData.getDataRoot().removeChild(sourcePath[1]);
 			} else {
-				EditorData.getDataRoot().getChild(sourcePath[1])
-						.removeChild(sourcePath[2]);
+				EditorData.getDataRoot().getChild(sourcePath[1]).removeChild(
+						sourcePath[2]);
 			}
 			// new position in data
 			if (sourcePath.length == 2) {
 				EditorData.getDataRoot().addChild(
 						new DataTreeNode(sourcePath[1]), targetIndex);
 			} else {
-				EditorData.getDataRoot().getChild(sourcePath[1])
-						.addChild(new DataTreeNode(sourcePath[2]), targetIndex);
+				EditorData.getDataRoot().getChild(sourcePath[1]).addChild(
+						new DataTreeNode(sourcePath[2]), targetIndex);
 			}
 			// insert to new position in JTree
 			dtm.insertNodeInto(source, parent, targetIndex);

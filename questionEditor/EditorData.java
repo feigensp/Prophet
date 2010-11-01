@@ -24,8 +24,7 @@ public class EditorData {
 	// Constants for creating Html header and footer
 	public static final String HTMLSTART = "<html><head></head><body>";
 	public static final String HTMLEND = "<br><br><br><input type='submit' value='Weiter'></body></html>";
-	public static final String FAKEHTMLEND = "<br><br><br><input type='submit' value='Weiter' disabled></body></html>";
-
+	
 	/**
 	 * this method will reset all Data
 	 */

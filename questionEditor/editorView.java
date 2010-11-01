@@ -15,6 +15,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -22,6 +24,7 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
@@ -46,6 +49,7 @@ public class editorView extends JFrame {
 	private JMenuItem loadMenuItem;
 	private PopupTree tree;
 	private JPanel contentPane;
+	private JMenuItem importMenuItem;
 
 	/**
 	 * the main method to launch the application
@@ -119,24 +123,26 @@ public class editorView extends JFrame {
 
 		JTextPane viewPane = new JTextPane();
 		viewPane.setEditorKit(new HTMLEditorKit() {
-            public ViewFactory getViewFactory() {
-                return new HTMLEditorKit.HTMLFactory() {
-                    public View create(Element elem) {
-                        Object o = elem.getAttributes().getAttribute(StyleConstants.NameAttribute);
-                        if (o instanceof HTML.Tag) {
-                            HTML.Tag kind = (HTML.Tag) o;
-                            if (kind == HTML.Tag.INPUT )
-                                return new FormView(elem) {
-                                    protected void submitData(String data) {
-                                    	//nothing should happen if a button is pressed
-                                    }
-                                };
-                        }
-                        return super.create(elem);
-                    }
-                };
-            }
-        });
+			public ViewFactory getViewFactory() {
+				return new HTMLEditorKit.HTMLFactory() {
+					public View create(Element elem) {
+						Object o = elem.getAttributes().getAttribute(
+								StyleConstants.NameAttribute);
+						if (o instanceof HTML.Tag) {
+							HTML.Tag kind = (HTML.Tag) o;
+							if (kind == HTML.Tag.INPUT)
+								return new FormView(elem) {
+									protected void submitData(String data) {
+										// nothing should happen if a button is
+										// pressed
+									}
+								};
+						}
+						return super.create(elem);
+					}
+				};
+			}
+		});
 		tree = new PopupTree(new DefaultMutableTreeNode("Übersicht"), textPane,
 				viewPane);
 		JScrollPane treeScrollPane = new JScrollPane(tree);
@@ -223,10 +229,10 @@ public class editorView extends JFrame {
 				}
 			}
 		});
-		//textPane
+		// textPane
 		textPane.addKeyListener(new KeyAdapter() {
 			public void keyPressed(KeyEvent ke) {
-				if(ke.isShiftDown() && ke.getKeyCode()==KeyEvent.VK_ENTER) {
+				if (ke.isShiftDown() && ke.getKeyCode() == KeyEvent.VK_ENTER) {
 					textPane.setText(textPane.getText() + "<br>");
 				}
 			}
