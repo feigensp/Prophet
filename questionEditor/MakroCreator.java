@@ -1,11 +1,14 @@
 package questionEditor;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -18,11 +21,13 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.event.MouseInputAdapter;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerConfigurationException;
@@ -37,10 +42,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-import javax.swing.JPopupMenu;
-import java.awt.Component;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.Dimension;
 
 public class MakroCreator extends JFrame {
 
@@ -103,29 +105,18 @@ public class MakroCreator extends JFrame {
 
 		listModel = new DefaultListModel();
 		makroList = new JList(listModel);
+		makroList.setPreferredSize(new Dimension(150, 0));
+
 		overviewPanel.add(makroList, BorderLayout.CENTER);
-		
+
 		JPopupMenu makroMenuPopupMenu = new JPopupMenu();
 		addPopup(makroList, makroMenuPopupMenu);
 		
-		JMenuItem removeMakroMenuItem = new JMenuItem("L\u00F6schen");
+		JMenuItem newMakroMenuItem = new JMenuItem("Neues Makro");
+		makroMenuPopupMenu.add(newMakroMenuItem);
+
+		JMenuItem removeMakroMenuItem = new JMenuItem("Makro L\u00F6schen");
 		makroMenuPopupMenu.add(removeMakroMenuItem);
-
-		JPanel menuPanel = new JPanel();
-		overviewPanel.add(menuPanel, BorderLayout.SOUTH);
-
-		JButton downButton = new JButton("Runter");
-		menuPanel.add(downButton);
-
-		JButton newButton = new JButton("Neu");
-		menuPanel.add(newButton);
-
-		JButton upButton = new JButton("Hoch");
-		upButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-			}
-		});
-		menuPanel.add(upButton);
 
 		JPanel makroPanel = new JPanel();
 		contentPane.add(makroPanel, BorderLayout.CENTER);
@@ -141,10 +132,19 @@ public class MakroCreator extends JFrame {
 		// makroansicht aktualisieren
 		makroList.addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent e) {
-				makroNameTextField.setText(makros.get(
-						makroList.getSelectedIndex()).getName());
-				makroContentTextPane.setText(makros.get(
-						makroList.getSelectedIndex()).getContent());
+				if (makroList.getSelectedIndex() != -1) {
+					makroNameTextField.setText(makros.get(
+							makroList.getSelectedIndex()).getName());
+					makroContentTextPane.setText(makros.get(
+							makroList.getSelectedIndex()).getContent());
+					makroNameTextField.setEnabled(true);
+					makroContentTextPane.setEnabled(true);
+				} else {
+					makroNameTextField.setText("");
+					makroNameTextField.setEnabled(false);
+					makroContentTextPane.setText("");
+					makroContentTextPane.setEnabled(false);
+				}
 			}
 
 		});
@@ -163,48 +163,24 @@ public class MakroCreator extends JFrame {
 			}
 		});
 		// neues Makro
-		newButton.addActionListener(new ActionListener() {
+		newMakroMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				String name = JOptionPane.showInputDialog(null,
 						"Makronamen eingeben: ", "Neues Makro", 1);
 				if (name != null) {
-					addMakro(name, "");
+					addMakro(name.replaceAll(" ", ""), "");
 				}
 			}
 		});
-		//makro löschen
+		// makro löschen
 		removeMakroMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				int selection = makroList.getSelectedIndex();
-				if(selection != -1) {
+				if (selection != -1) {
 					removeMakro(selection);
 				}
 			}
 		});
-//		// makro runter schieben
-//		downButton.addActionListener(new ActionListener() {
-//			public void actionPerformed(ActionEvent arg0) {
-//				int selection = makroList.getSelectedIndex();
-//				if (selection != -1 && selection < listModel.getSize()-1) {
-//					String makroName = makros.get(selection).getName();
-//					String makroContent = makros.get(selection).getContent();
-//					removeMakro(selection);
-//					insertMakro(selection+1, makroName, makroContent);
-//				}
-//			}
-//		});
-//		//makro hoch schieben
-//		upButton.addActionListener(new ActionListener() {
-//			public void actionPerformed(ActionEvent arg0) {
-//				int selection = makroList.getSelectedIndex();
-//				if (selection != -1 && selection > 0) {
-//					String makroName = makros.get(selection).getName();
-//					String makroContent = makros.get(selection).getContent();
-//					removeMakro(selection);
-//					insertMakro(selection-1, makroName, makroContent);
-//				}
-//			}
-//		});
 		// Datei speichern
 		saveMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -244,6 +220,28 @@ public class MakroCreator extends JFrame {
 				}
 			}
 		});
+		//drag and drop
+		MouseInputAdapter mouseHandler = new MouseInputAdapter() {
+			private String makroName, makroContent;
+			private int fromIndex;
+
+			public void mousePressed(final MouseEvent evt) {
+				makroName = makroNameTextField.getText();
+				makroContent = makroContentTextPane.getText();
+				fromIndex = makroList.getSelectedIndex();
+			}
+
+			public void mouseDragged(final MouseEvent evt) {
+				int toIndex = makroList.locationToIndex(evt.getPoint());
+				if (toIndex != fromIndex) {
+					removeMakro(fromIndex);
+					insertMakro(toIndex, makroName, makroContent);
+					fromIndex = toIndex;
+				}
+			}
+		};
+		makroList.addMouseListener(mouseHandler);
+		makroList.addMouseMotionListener(mouseHandler);
 
 		loadMakros();
 	}
@@ -308,4 +306,5 @@ public class MakroCreator extends JFrame {
 			}
 		});
 	}
+
 }
