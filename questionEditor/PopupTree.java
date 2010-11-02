@@ -523,7 +523,6 @@ public class PopupTree extends JTree implements ActionListener, MouseListener,
 		// moving from level 3 to 2 to a differend parent
 		if (sourcePath.length == 3 && target.getLevel() == 1
 				&& target != parent) {
-			System.out.println("bin ich schon hier");
 			// remove from data
 			EditorData.getDataRoot().getChild(sourcePath[1]).removeChild(
 					sourcePath[2]);
