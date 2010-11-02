@@ -504,7 +504,7 @@ public class PopupTree extends JTree implements ActionListener, MouseListener,
 	 * @param dtde
 	 */
 	public void drop(DropTargetDropEvent dtde) {
-		// it shouldnt work... but IS getting the source node (or looks like)
+		// it shouldnt work... but it IS getting the source node (or looks like)
 		DefaultMutableTreeNode source = (DefaultMutableTreeNode) getSelectionPath()
 				.getLastPathComponent();
 		Point p = dtde.getLocation();
