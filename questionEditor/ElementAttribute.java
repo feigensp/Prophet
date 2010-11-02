@@ -25,6 +25,14 @@ public class ElementAttribute<Type> {
 	 * Liefert den Namen zurück
 	 * @return Name als Datum
 	 */
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	/**
+	 * Liefert den Namen zurück
+	 * @return Name als Datum
+	 */
 	public String getName() {
 		return name;
 	}
