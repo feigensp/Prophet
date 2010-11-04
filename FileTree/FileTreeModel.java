@@ -11,16 +11,16 @@ public class FileTreeModel implements TreeModel {
 	FileTreeNode root;
 	
 	public FileTreeModel(File file) {
-		 root = new FileTreeNode(file);
+		 root = new FileTreeNode(file, null);
 	}
 	public Object getChild(Object parent, int index) {
-		return ((FileTreeNode)parent).getChild(index);
+		return ((FileTreeNode)parent).getChildAt(index);
 	}
 	public int getChildCount(Object parent) {
 		return ((FileTreeNode)parent).getChildCount();
 	}
 	public int getIndexOfChild(Object parent, Object child) {
-		return ((FileTreeNode)parent).getIndexOfChild(child);
+		return ((FileTreeNode)parent).getIndex((FileTreeNode)child);
 	}
 	public Object getRoot() {
 		return root;

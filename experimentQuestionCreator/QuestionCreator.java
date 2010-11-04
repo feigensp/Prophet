@@ -219,7 +219,7 @@ public class QuestionCreator extends JFrame {
 				// File file = fc.getSelectedFile();
 				// XMLHandler.loadXMLTree(file.getName());
 				// }
-				TreeNode root = XMLHandler.loadXMLTree("test.xml");
+				MyTreeNode root = XMLHandler.loadXMLTree("test.xml");
 				loadTree(root);
 			}
 		});
@@ -259,15 +259,15 @@ public class QuestionCreator extends JFrame {
 	/**
 	 * Exportiert Fragebogen in Baumstrukturform
 	 */
-	private TreeNode createTree() {
+	private MyTreeNode createTree() {
 		// Wurzel erstellen
-		TreeNode root = new TreeNode();
+		MyTreeNode root = new MyTreeNode();
 		for (int i = 0; i < questions.size(); i++) {
 			// Fragen hinzufügen - dazu Attributliste erstellen
 			Vector<ElementAttribute> questionAttributes = new Vector<ElementAttribute>();
 			questionAttributes.add(new ElementAttribute<String>("text",
 					((String) listModel.get(i))));
-			TreeNode question = new TreeNode(root, questionAttributes);
+			MyTreeNode question = new MyTreeNode(root, questionAttributes);
 			root.addChild(question);
 			// Elemente der Fragen hinzufügen
 			LinkedList<QuestionElement> elements = questions.get(i)
@@ -287,7 +287,7 @@ public class QuestionCreator extends JFrame {
 						(int) ele.getElementSize().getWidth()));
 				componentAttributes.add(new ElementAttribute<Integer>("y",
 						(int) ele.getElementSize().getHeight()));
-				TreeNode element = new TreeNode(question, componentAttributes);
+				MyTreeNode element = new MyTreeNode(question, componentAttributes);
 				question.addChild(element);
 			}
 		}
@@ -300,14 +300,14 @@ public class QuestionCreator extends JFrame {
 	 * @param root
 	 *            Wurzelelement des Baumes
 	 */
-	private void loadTree(TreeNode root) {
+	private void loadTree(MyTreeNode root) {
 		// Alles Leeren
 		restart();
 
-		Vector<TreeNode> treeQuestions = root.getChildren();
+		Vector<MyTreeNode> treeQuestions = root.getChildren();
 		int i = 0;
 		// Seiten hinzufügen
-		for (TreeNode treeQuestion : treeQuestions) {
+		for (MyTreeNode treeQuestion : treeQuestions) {
 			// Attribute der Fragen
 			Vector<ElementAttribute> questionAttributes = treeQuestion
 					.getAttributes();
@@ -321,8 +321,8 @@ public class QuestionCreator extends JFrame {
 			addQuestion(ExtendedPanel.nextFreeId(), listModel.size(),
 					questionText);
 			// Komponenten hinzufügen
-			Vector<TreeNode> components = treeQuestion.getChildren();
-			for (TreeNode treeComponent : components) {
+			Vector<MyTreeNode> components = treeQuestion.getChildren();
+			for (MyTreeNode treeComponent : components) {
 				// Komponent-Attribute
 				Vector<ElementAttribute> componentAttributes = treeComponent
 						.getAttributes();

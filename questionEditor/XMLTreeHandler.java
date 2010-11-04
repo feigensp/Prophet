@@ -9,6 +9,8 @@ package questionEditor;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Map.Entry;
+import java.util.TreeMap;
 import java.util.Vector;
 
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -27,6 +29,10 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import QuestionTree.CategoryNode;
+import QuestionTree.QuestionNode;
+import QuestionTree.QuestionTreeNode;
+
 public class XMLTreeHandler {
 
 	/**
@@ -39,18 +45,21 @@ public class XMLTreeHandler {
 	 * @param xmlTree
 	 *            the xml-document
 	 */
-	private static void addChildsToXML(Vector<DataTreeNode> treeChilds,
+	private static void addChildsToXML(Vector<QuestionTreeNode> treeChilds,
 			Element xmlParent, Document xmlTree) {
 		// Kinder hinzufügen
-		for (DataTreeNode treeChild : treeChilds) {
+		for (QuestionTreeNode treeChild : treeChilds) {
 			Element xmlChild = xmlTree.createElement(treeChild.getName());
 			xmlParent.appendChild(xmlChild);
 			// Attribute hinzufügen
-			Vector<ElementAttribute> childAttributes = treeChild
+			TreeMap<String,String> childAttributes = treeChild
 					.getAttributes();
-			for (ElementAttribute childAttribute : childAttributes) {
-				xmlChild.setAttribute(childAttribute.getName(), childAttribute
-						.getContent().toString());
+			if (treeChild.isQuestion()) {
+				xmlChild.setTextContent(((QuestionNode)treeChild).getContent());
+			}
+			for (Entry<String,String> childAttribute : childAttributes.entrySet()) {
+				xmlChild.setAttribute(childAttribute.getKey(), childAttribute
+						.getValue());
 			}
 			// evtl. neue Kinder hinzufügen
 			if (treeChild.getChildCount() > 0) {
@@ -67,7 +76,7 @@ public class XMLTreeHandler {
 	 * @param path
 	 *            path for the xml-file
 	 */
-	public static void writeXMLTree(DataTreeNode treeRoot, String path) {
+	public static void writeXMLTree(QuestionTreeNode treeRoot, String path) {
 		Document xmlTree = null;
 		try {
 			// Dokument erstellen
@@ -76,9 +85,9 @@ public class XMLTreeHandler {
 			// Wurzelknoten erschaffen und Attribute hinzufügen
 			Element xmlRoot = xmlTree.createElement(treeRoot.getName());
 			xmlTree.appendChild(xmlRoot);
-			Vector<ElementAttribute> rootAttributes = treeRoot.getAttributes();
-			for (ElementAttribute ea : rootAttributes) {
-				xmlRoot.setAttribute(ea.getName(), ea.getContent().toString());
+			TreeMap<String,String> rootAttributes = treeRoot.getAttributes();
+			for (Entry<String,String> rootAttribute : rootAttributes.entrySet()) {
+				xmlRoot.setAttribute(rootAttribute.getKey(), rootAttribute.getValue());
 			}
 			// Kinder hinzufügen
 			if (treeRoot.getChildCount() > 0) {
@@ -108,30 +117,55 @@ public class XMLTreeHandler {
 	/**
 	 * method which adds recursively the childs (to a DataTreeNode file)
 	 * 
-	 * @param xmlChilds
+	 * @param xmlCategories
 	 *            the childs which should be added
-	 * @param treeParent
+	 * @param treeRoot
 	 *            the DataTreeNode which should get the childs
 	 */
-	private static void addChildsToTree(NodeList xmlChilds,
-			DataTreeNode treeParent) {
+	private static void addCategories(QuestionTreeNode treeRoot, NodeList xmlCategories) {
 		// Kinder hinzufügen
-		for (int i = 0; i < xmlChilds.getLength(); i++) {
-			Node xmlChild = xmlChilds.item(i);
-			DataTreeNode treeChild = new DataTreeNode(xmlChild.getNodeName());
+		for (int i = 0; i < xmlCategories.getLength(); i++) {
+			Node xmlCategory = xmlCategories.item(i);
+			CategoryNode category = new CategoryNode(xmlCategory.getNodeName());
 			// Attribute hinzufügen
-			NamedNodeMap childAttributes = xmlChild.getAttributes();
-			for (int j = 0; j < childAttributes.getLength(); j++) {
-				Node childAttribute = childAttributes.item(j);
-				treeChild.addAttribute(new ElementAttribute(childAttribute
-						.getNodeName(), childAttribute.getNodeValue()));
+			NamedNodeMap xmlCategoryAttributes = xmlCategory.getAttributes();
+			TreeMap<String,String> attributes = category.getAttributes();
+			for (int j = 0; j < xmlCategoryAttributes.getLength(); j++) {
+				Node xmlCategoryAttribute = xmlCategoryAttributes.item(j);
+				attributes.put(xmlCategoryAttribute.getNodeName(), xmlCategoryAttribute.getNodeValue());
 			}
 			// Kind hinzufügen
-			treeParent.addChild(treeChild, i);
+			treeRoot.insert(category, i);
 			// evtl. weitere Kinder hinzufügen
-			if (xmlChild.getChildNodes().getLength() > 0) {
-				addChildsToTree(xmlChild.getChildNodes(), treeChild);
+			if (xmlCategory.getChildNodes().getLength() > 0) {
+				addQuestions(category, xmlCategory.getChildNodes());
 			}
+		}
+	}
+	
+	/**
+	 * method which adds recursively the childs (to a DataTreeNode file)
+	 * 
+	 * @param xmlQuestions
+	 *            the childs which should be added
+	 * @param category
+	 *            the DataTreeNode which should get the childs
+	 */
+	private static void addQuestions(CategoryNode category, NodeList xmlQuestions) {
+		// Kinder hinzufügen
+		for (int i = 0; i < xmlQuestions.getLength(); i++) {
+			Node xmlQuestion = xmlQuestions.item(i);
+			QuestionNode question = new QuestionNode(xmlQuestion.getNodeName());
+			// Attribute hinzufügen
+			question.setContent(xmlQuestion.getTextContent());
+			NamedNodeMap xmlQuestionAttributes = xmlQuestion.getAttributes();
+			TreeMap<String,String> attributes = question.getAttributes();
+			for (int j = 0; j < xmlQuestionAttributes.getLength(); j++) {
+				Node xmlQuestionAttribute = xmlQuestionAttributes.item(j);
+				attributes.put(xmlQuestionAttribute.getNodeName(), xmlQuestionAttribute.getNodeValue());
+			}
+			// Kind hinzufügen
+			category.insert(question, i);
 		}
 	}
 
@@ -142,24 +176,25 @@ public class XMLTreeHandler {
 	 *            path of the file
 	 * @return root of the new tree-structure
 	 */
-	public static DataTreeNode loadXMLTree(String path) {
-		DataTreeNode treeRoot = new DataTreeNode("default");
+	public static QuestionTreeNode loadXMLTree(String path) {
 		try {
 			// Document lesen
 			Document doc = DocumentBuilderFactory.newInstance()
 					.newDocumentBuilder().parse(new File(path));
 			// Wurzel holen
 			Node xmlRoot = doc.getFirstChild();
-			treeRoot.setName(xmlRoot.getNodeName());
+			QuestionTreeNode treeRoot = new QuestionTreeNode(xmlRoot.getNodeName());
 			// Wurzelattribute
 			NamedNodeMap rootAttributes = xmlRoot.getAttributes();
+			TreeMap<String,String> attributes = treeRoot.getAttributes();
 			for (int i = 0; i < rootAttributes.getLength(); i++) {
 				Node rootAttribute = rootAttributes.item(i);
-				treeRoot.addAttribute(new ElementAttribute(rootAttribute
-						.getNodeName(), rootAttribute.getNodeValue()));
+				attributes.put(rootAttribute.getNodeName(), rootAttribute.getNodeValue());
 			}
 			// Kinder hinzufügen
-			addChildsToTree(xmlRoot.getChildNodes(), treeRoot);
+			addCategories(treeRoot, xmlRoot.getChildNodes());
+
+			return treeRoot;
 		} catch (SAXException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -167,6 +202,6 @@ public class XMLTreeHandler {
 		} catch (ParserConfigurationException e) {
 			e.printStackTrace();
 		}
-		return treeRoot;
+		return null;
 	}
 }

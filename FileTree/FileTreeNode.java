@@ -2,17 +2,22 @@ package FileTree;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.Enumeration;
 import java.util.Vector;
 
+import javax.swing.tree.TreeNode;
 
-public class FileTreeNode {	
+
+public class FileTreeNode implements TreeNode {	
 	File file;
+	FileTreeNode parent;
 	boolean isFile, extended;
 	int childCount;
 	Vector<FileTreeNode> children;
 	
-	public FileTreeNode(File f) {
+	public FileTreeNode(File f, FileTreeNode p) {
 		file = f;
+		parent = p;
 		isFile = f.isFile();
 		extended = false;
 	}
@@ -32,9 +37,9 @@ public class FileTreeNode {
 		Vector<FileTreeNode> files = new Vector<FileTreeNode>();
 		for (File f : content) {
 			if (f.isDirectory()) {
-				dirs.add(new FileTreeNode(f));
+				dirs.add(new FileTreeNode(f, this));
 			} else {
-				files.add(new FileTreeNode(f));
+				files.add(new FileTreeNode(f, this));
 			}
 		}
 		children=new Vector<FileTreeNode>();
@@ -43,25 +48,42 @@ public class FileTreeNode {
 		childCount=children.size();
 		extended=true;
 	}
-	public FileTreeNode getChild(int index) {
-		if (!extended) {
-			extend();
-		}
-		return children.get(index);
-	}
 	public int getChildCount() {
 		if (!extended) {
 			extend();
 		}
 		return childCount;
 	}
-	public int getIndexOfChild(Object child) {
+	public boolean isLeaf() {
+		return isFile;
+	}
+	@Override
+	public Enumeration<FileTreeNode> children() {
 		if (!extended) {
 			extend();
 		}
-		return children.indexOf(child);
+		return children.elements();
 	}
-	public boolean isLeaf() {
-		return isFile;
+	@Override
+	public boolean getAllowsChildren() {
+		return !isLeaf();
+	}
+	@Override
+	public TreeNode getChildAt(int childIndex) {
+		if (!extended) {
+			extend();
+		}
+		return children.get(childIndex);
+	}
+	@Override
+	public int getIndex(TreeNode node) {
+		if (!extended) {
+			extend();
+		}
+		return children.indexOf(node);
+	}
+	@Override
+	public TreeNode getParent() {
+		return parent;
 	}
 }

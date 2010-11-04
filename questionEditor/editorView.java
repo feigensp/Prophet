@@ -28,6 +28,8 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextPane;
 import javax.swing.JToolBar;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.text.Element;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.View;
@@ -35,16 +37,23 @@ import javax.swing.text.ViewFactory;
 import javax.swing.text.html.FormView;
 import javax.swing.text.html.HTML;
 import javax.swing.text.html.HTMLEditorKit;
-import javax.swing.tree.DefaultMutableTreeNode;
+
+import QuestionTree.QuestionNode;
+import QuestionTree.QuestionTree;
+import QuestionTree.QuestionTreeEvent;
+import QuestionTree.QuestionTreeListener;
+import QuestionTree.QuestionTreeNode;
 
 public class editorView extends JFrame {
 	private JButton boldButton;
 	private JButton tableButton;
 	private EditArea textPane;
+	private JTextPane viewPane;
 	private JMenuItem saveMenuItem;
 	private JMenuItem newMenuItem;
 	private JMenuItem loadMenuItem;
-	private PopupTree tree;
+	private QuestionTree tree;
+	private QuestionTreeNode selected;
 	private JPanel contentPane;
 
 	/**
@@ -78,14 +87,10 @@ public class editorView extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(new BorderLayout(0, 0));
-
 		build();
 	}
-
-	/**
-	 * creates the view and starts the method which adds the listener
-	 */
-	private void build() {
+	
+	public void build() {
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
 
@@ -115,9 +120,7 @@ public class editorView extends JFrame {
 		contentPane.add(optionPanel, BorderLayout.WEST);
 		optionPanel.setLayout(new BorderLayout(0, 0));
 
-		textPane = new EditArea();
-
-		JTextPane viewPane = new JTextPane();
+		viewPane = new JTextPane();
 		viewPane.setEditorKit(new HTMLEditorKit() {
 			public ViewFactory getViewFactory() {
 				return new HTMLEditorKit.HTMLFactory() {
@@ -129,8 +132,7 @@ public class editorView extends JFrame {
 							if (kind == HTML.Tag.INPUT)
 								return new FormView(elem) {
 									protected void submitData(String data) {
-										// nothing should happen if a button is
-										// pressed
+										System.out.println("Test");
 									}
 								};
 						}
@@ -139,10 +141,55 @@ public class editorView extends JFrame {
 				};
 			}
 		});
-		tree = new PopupTree(new DefaultMutableTreeNode("Übersicht"), textPane,
-				viewPane);
-		JScrollPane treeScrollPane = new JScrollPane(tree);
-		optionPanel.add(treeScrollPane, BorderLayout.CENTER);
+		
+		textPane = new EditArea();
+		textPane.getDocument().addDocumentListener(new DocumentListener() {
+			
+			public void myChange() {
+				if (selected!=null) {
+					if (selected.isQuestion()) {
+						((QuestionNode)selected).setContent(textPane.getText());
+						viewPane.setText(EditorData.HTMLSTART + textPane.getText()
+								+ EditorData.HTMLEND);
+					}
+				}
+			}
+			@Override
+			public void changedUpdate(DocumentEvent arg0) {
+				myChange();		
+			}
+
+			@Override
+			public void insertUpdate(DocumentEvent arg0) {
+				myChange();		
+			}
+
+			@Override
+			public void removeUpdate(DocumentEvent arg0) {
+				myChange();
+			}
+		});
+		
+		tree = new QuestionTree();
+		tree.addQuestionTreeListener(new QuestionTreeListener() {
+			public void questionTreeEventOccured(QuestionTreeEvent e) {
+				selected=null;
+				if (e.getID()==QuestionTreeEvent.CATEGORY_OPENED) {
+					textPane.setEditable(false);
+					textPane.setText("");
+					viewPane.setText("");
+					textPane.setText("Category");
+				} else if (e.getID()==QuestionTreeEvent.QUESTION_OPENED) {
+					QuestionNode myNode = (QuestionNode)e.getNode();
+					textPane.setText(myNode.getContent().replaceAll("\r\n", "\n"));
+					viewPane.setText(EditorData.HTMLSTART + textPane.getText()+EditorData.HTMLEND);
+					textPane.setEditable(true);
+				}
+				selected=e.getNode();
+			}			
+		});
+		
+		optionPanel.add(tree, BorderLayout.CENTER);
 
 		JPanel editViewPanel = new JPanel();
 		contentPane.add(editViewPanel, BorderLayout.CENTER);
@@ -190,7 +237,7 @@ public class editorView extends JFrame {
 		saveMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				EditorData.extractHTMLContent();
-				XMLTreeHandler.writeXMLTree(EditorData.getDataRoot(), "test");
+				XMLTreeHandler.writeXMLTree(tree.getRoot(), "test");
 			}
 		});
 		// new
@@ -204,7 +251,7 @@ public class editorView extends JFrame {
 		// load
 		loadMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				DataTreeNode newRoot = null;
+				QuestionTreeNode newRoot = null;
 
 				JFileChooser fc = new JFileChooser();
 				int returnVal = fc.showSaveDialog(null);
@@ -212,17 +259,15 @@ public class editorView extends JFrame {
 					File file = fc.getSelectedFile();
 					// save(file.getAbsolutePath());
 					newRoot = XMLTreeHandler.loadXMLTree("test.xml");
+					tree.setRoot(newRoot);
 				}
 
-				if (newRoot == null) {
-					System.out.println("Datei nicht gefunden...");
-				} else {
-					EditorData.reset();
-					contentPane.removeAll();
-					build();
-					EditorData.setDataRoot(newRoot);
-					tree.rootUpdated();
-				}
+//				if (newRoot == null) {
+//					System.out.println("Datei nicht gefunden...");
+//				} else {
+//					contentPane.removeAll();
+//					build();
+//				}
 			}
 		});
 		// textPane

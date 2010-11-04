@@ -11,20 +11,20 @@ import java.awt.Dimension;
 import java.util.Vector;
 
 
-public class TreeNode {	
+public class MyTreeNode {	
 	
 	//Attributliste
 	private Vector<ElementAttribute> attributes;
 	
 	private int childCount;	//Anzahl der Kinder
-	private Vector<TreeNode> children;	//Kinder
-	private TreeNode parent;//Vater
+	private Vector<MyTreeNode> children;	//Kinder
+	private MyTreeNode parent;//Vater
 	
 	/**
 	 * Konstruktor der ein Wurzelelement erschafft
 	 */
-	public TreeNode() {
-		children = new Vector<TreeNode>();
+	public MyTreeNode() {
+		children = new Vector<MyTreeNode>();
 		this.parent = null;	
 		attributes = new Vector<ElementAttribute>();
 	}
@@ -34,8 +34,8 @@ public class TreeNode {
 	 * @param parent Vater des Knoten
 	 * @param attributes Attributliste des Knoten
 	 */
-	public TreeNode(TreeNode parent, Vector<ElementAttribute> attributes) {
-		children = new Vector<TreeNode>();
+	public MyTreeNode(MyTreeNode parent, Vector<ElementAttribute> attributes) {
+		children = new Vector<MyTreeNode>();
 		this.parent = null;
 		
 		this.attributes = attributes;
@@ -46,7 +46,7 @@ public class TreeNode {
 	 * Liefert den Vater des Knoten zurück
 	 * @return Vaterknoten
 	 */
-	public TreeNode getParent() {
+	public MyTreeNode getParent() {
 		return parent;
 	}
 	
@@ -62,7 +62,7 @@ public class TreeNode {
 	 * Fügt dem Knoten ein Kind hinzu
 	 * @param child Knoten der als Kind hinzugefügt wird 
 	 */
-	public void addChild(TreeNode child) {
+	public void addChild(MyTreeNode child) {
 		children.add(child);
 		childCount++;
 	}
@@ -75,7 +75,7 @@ public class TreeNode {
 	 * Gibt einen Vector mit allen Kindern zurück
 	 * @return Vector der alle TreeNode, welche kinder sind, enthält
 	 */
-	public Vector<TreeNode> getChildren() {
+	public Vector<MyTreeNode> getChildren() {
 		return children;
 	}
 	
@@ -84,7 +84,7 @@ public class TreeNode {
 	 * @param index Position an welcher das Kind im Vector steht
 	 * @return TreeNode, welcher an der gewünschten Position im Vector ist
 	 */
-	public TreeNode getChild(int index) {
+	public MyTreeNode getChild(int index) {
 		return children.get(index);
 	}
 	

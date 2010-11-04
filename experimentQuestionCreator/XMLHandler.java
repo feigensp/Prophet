@@ -35,7 +35,7 @@ public class XMLHandler {
 	 * @param path
 	 *            Wohin die XML-Datei geschrieben werden soll
 	 */
-	public static void writeXMLTree(TreeNode treeRoot, String path) {
+	public static void writeXMLTree(MyTreeNode treeRoot, String path) {
 		Document questionnaire = null;
 		try {
 			// Dokument erstellen
@@ -45,8 +45,8 @@ public class XMLHandler {
 			Element root = questionnaire.createElement("questionnaire");
 			questionnaire.appendChild(root);
 			// Alle Fragen hinzufügen
-			Vector<TreeNode> questions = treeRoot.getChildren();
-			for (TreeNode treeQuestion : questions) {
+			Vector<MyTreeNode> questions = treeRoot.getChildren();
+			for (MyTreeNode treeQuestion : questions) {
 				Element question = questionnaire.createElement("question");
 				root.appendChild(question);
 				//Attribute der Frage setzen
@@ -56,8 +56,8 @@ public class XMLHandler {
 				}
 				
 				// Komponenten einer Frage hinzufügen
-				Vector<TreeNode> components = treeQuestion.getChildren();
-				for (TreeNode treeComponent : components) {
+				Vector<MyTreeNode> components = treeQuestion.getChildren();
+				for (MyTreeNode treeComponent : components) {
 					Element component = questionnaire
 							.createElement("component");
 					question.appendChild(component);
@@ -97,8 +97,8 @@ public class XMLHandler {
 	 *            Wo sich die XML-Datei befindet
 	 * @return Wurzel der Baumstruktur
 	 */
-	public static TreeNode loadXMLTree(String path) {
-		TreeNode treeRoot = new TreeNode();
+	public static MyTreeNode loadXMLTree(String path) {
+		MyTreeNode treeRoot = new MyTreeNode();
 		try {
 			// Document lesen
 			Document doc = DocumentBuilderFactory.newInstance()
@@ -113,7 +113,7 @@ public class XMLHandler {
 					questionAttribute = questionAttributes.item(i);
 					questionTreeAttribute.add(new ElementAttribute(questionAttribute.getNodeName(), questionAttribute.getNodeValue()));
 				}
-				TreeNode treeQuestion = new TreeNode(treeRoot, questionTreeAttribute);
+				MyTreeNode treeQuestion = new MyTreeNode(treeRoot, questionTreeAttribute);
 				treeRoot.addChild(treeQuestion);
 				// Bei den Komponenten äquivalentes vorgehen wie bei den Fragen
 				Node component = question.getFirstChild();
@@ -126,7 +126,7 @@ public class XMLHandler {
 						componentAttribute = componentAttributes.item(i);
 						componentTreeAttribute.add(new ElementAttribute(componentAttribute.getNodeName(), componentAttribute.getNodeValue()));
 					}
-					TreeNode treeComponent = new TreeNode(treeQuestion, componentTreeAttribute);	
+					MyTreeNode treeComponent = new MyTreeNode(treeQuestion, componentTreeAttribute);	
 					treeQuestion.addChild(treeComponent);
 					component = component.getNextSibling();
 				}

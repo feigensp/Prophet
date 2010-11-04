@@ -39,7 +39,7 @@ import test.Watch;
 import experimentQuestionCreator.ElementAttribute;
 import experimentQuestionCreator.ExtendedPanel;
 import experimentQuestionCreator.QuestionElement;
-import experimentQuestionCreator.TreeNode;
+import experimentQuestionCreator.MyTreeNode;
 import experimentQuestionCreator.XMLHandler;
 
 public class ExperimentGUI extends JFrame {
@@ -92,9 +92,9 @@ public class ExperimentGUI extends JFrame {
 	 * 
 	 * @return Wurzelelement des erstellten Baumes
 	 */
-	public TreeNode exportData() {
+	public MyTreeNode exportData() {
 		// Baum mit Informationen aufbauen
-		TreeNode root = new TreeNode();
+		MyTreeNode root = new MyTreeNode();
 		String s;
 
 		for (int i = 0; i < questionPanels.size(); i++) {
@@ -103,7 +103,7 @@ public class ExperimentGUI extends JFrame {
 			questionAttributes.add(new ElementAttribute<String>("text",
 					((String) listModel.get(i))));
 
-			TreeNode question = new TreeNode(root, questionAttributes);
+			MyTreeNode question = new MyTreeNode(root, questionAttributes);
 			root.addChild(question);
 			// Elemente der Fragen hinzufügen
 			LinkedList<QuestionElement> elements = questionPanels.get(i)
@@ -171,7 +171,7 @@ public class ExperimentGUI extends JFrame {
 					break;
 				}
 				if (componentAttributes.size() > 0) {
-					TreeNode element = new TreeNode(question,
+					MyTreeNode element = new MyTreeNode(question,
 							componentAttributes);
 					question.addChild(element);
 				}
@@ -262,13 +262,13 @@ public class ExperimentGUI extends JFrame {
 	 * Lädt alle Fragen einer XML-Datei und fügt diese in die Liste ein
 	 */
 	public void loadList() {
-		TreeNode root = XMLHandler.loadXMLTree("test.xml");
+		MyTreeNode root = XMLHandler.loadXMLTree("test.xml");
 		// Seiten erstellen
 
-		Vector<TreeNode> treeQuestions = root.getChildren();
+		Vector<MyTreeNode> treeQuestions = root.getChildren();
 		int i = 0;
 		// Seiten hinzufügen
-		for (TreeNode treeQuestion : treeQuestions) {
+		for (MyTreeNode treeQuestion : treeQuestions) {
 			// Attribute der Fragen
 			Vector<ElementAttribute> questionAttributes = treeQuestion
 					.getAttributes();
@@ -283,8 +283,8 @@ public class ExperimentGUI extends JFrame {
 			ExtendedPanel questionPanel = new ExtendedPanel(i, questionText);
 			questionPanel.setOpaque(true);
 			// Komponenten hinzufügen
-			Vector<TreeNode> components = treeQuestion.getChildren();
-			for (TreeNode treeComponent : components) {
+			Vector<MyTreeNode> components = treeQuestion.getChildren();
+			for (MyTreeNode treeComponent : components) {
 				// Komponent-Attribute
 				Vector<ElementAttribute> componentAttributes = treeComponent
 						.getAttributes();

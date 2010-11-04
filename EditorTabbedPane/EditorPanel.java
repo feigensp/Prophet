@@ -27,21 +27,11 @@ public class EditorPanel extends JPanel {
 	/**
 	 * Create the panel.
 	 */
-	public EditorPanel(File f, boolean searchable, boolean editable) {
+	public EditorPanel(File f, boolean searchabl, boolean editabl) {
 		file=f;
-		this.searchable=searchable;
-		this.editable=editable;
-		initialize();
-	}
-	
-	public EditorPanel(File f) {
-		file=f;
-		this.searchable=false;
-		this.editable=false;
-		initialize();
-	}
-	
-	private void initialize() {		
+		this.searchable=searchabl;
+		this.editable=editabl;
+
 		HighlightedDocument document = null;
 		document = new HighlightedDocument();
 		document.setHighlightStyle(HighlightedDocument.JAVA_STYLE);
@@ -61,8 +51,8 @@ public class EditorPanel extends JPanel {
 		textPane.setEditable(editable);
 		try {
 			byte[] buffer = new byte[(int) file.length()];
-		    FileInputStream f = new FileInputStream(file);
-		    f.read(buffer);
+		    FileInputStream fileStream = new FileInputStream(file);
+		    fileStream.read(buffer);
 		    textPane.setText(new String(buffer));
 		    textPane.setCaretPosition(0);
 		} catch (IOException e) {
@@ -84,6 +74,10 @@ public class EditorPanel extends JPanel {
 		searchBar = new SearchBar(textPane);
 		searchBar.setVisible(false);
 		add(searchBar, BorderLayout.SOUTH);
+	}
+	
+	public EditorPanel(File f) {
+		this(f, false, false);
 	}
 
 	public File getFile() {
