@@ -78,12 +78,11 @@ public class UndoRedo implements DocumentListener, KeyListener{
 			change.setChange(textPane.getText().substring(de.getOffset(), de.getOffset()+de.getLength()));
 			change.setType(Change.INSERT);
 			pos++;
-			if(pos >= changes.size()) {
-				for(int i=pos; i < changes.size(); i++) {
-					changes.remove(i);				
-				}
+			while(pos < changes.size()) {
+				changes.remove(pos);				
 			}
 			changes.add(change);
+			pos=changes.size();
 			
 			lastText = textPane.getText();
 		}
@@ -96,12 +95,11 @@ public class UndoRedo implements DocumentListener, KeyListener{
 			change.setChange(lastText.substring(de.getOffset(), de.getOffset()+de.getLength()));
 			change.setType(Change.REMOVE);
 			pos++;
-			if(pos >= changes.size()) {
-				for(int i=pos; i < changes.size(); i++) {
-					changes.remove(i);				
-				}
+			while(pos < changes.size()) {
+				changes.remove(pos);				
 			}
 			changes.add(change);
+			pos=changes.size();
 			
 			lastText = textPane.getText();
 		}
