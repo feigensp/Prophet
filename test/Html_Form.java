@@ -26,26 +26,19 @@ public class Html_Form extends JFrame {
         setLocationRelativeTo(null);
         formular = new HTMLFormular();
         formular.setText(FORM_TEXT);
-        formular.addPropertyChangeListener("data", new PropertyChangeListener(){
-            public void propertyChange(PropertyChangeEvent evt) {
-                Map<String, String> result = formular.getResult();
-                vorname = result.get(VORNAME);
-                nachname = result.get(NACHNAME);
-                geschlecht = result.get(GESCHLECHT);
-                bemerkung = result.get(BEMERKUNG);
-                showData();
-            }
-        });
+//        formular.addPropertyChangeListener("data", new PropertyChangeListener(){
+//            public void propertyChange(PropertyChangeEvent evt) {
+//                Map<String, String> result = formular.getResult();
+//                vorname = result.get(VORNAME);
+//                nachname = result.get(NACHNAME);
+//                geschlecht = result.get(GESCHLECHT);
+//                bemerkung = result.get(BEMERKUNG);
+//                showData();
+//            }
+//        });
         JPanel contentPane = new JPanel();
         getContentPane().add(contentPane);
         contentPane.setLayout(new BorderLayout());
-        JButton bla = new JButton("Test");
-        bla.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        		System.out.println(vorname);
-        	}
-        });
-        contentPane.add(bla, BorderLayout.SOUTH);
         contentPane.add(new JScrollPane(formular), BorderLayout.CENTER);
     }
     private void showData(){
@@ -83,7 +76,7 @@ public class Html_Form extends JFrame {
                    "Ich spreche deutsch, französisch und englisch</textarea></td>"+
             "</tr>"+
             "<tr>"+
-            "       <td></td>"+
+            "<td><select name=\"top5\" size=\"3\" multiple><option>Heino</option><option>Michael Jackson</option><option>Tom Waits</option><option>Nina Hagen</option><option>Marianne Rosenberg</option></select></td>"+
             "       <td><hr></td>"+
             "</tr>"+
             "<tr>"+
