@@ -82,21 +82,8 @@ public class QuestionTree extends JScrollPane {
 					if (selPath!=null) {
 						selected = (QuestionTreeNode) selPath.getLastPathComponent();
 						if (selected.isCategory()) {
-						/*	textPane.setEditable(false);
-							textPane.setText("");
-							viewPane.setText("");
-							// keine Frage ausgewählt
-							if (selectedNodePath.length == 2) {
-								textPane.setText(EditorData.getSettingsDialogs(
-									selectedNodePath[1]).getSettingsString());
-							}*/
 							fireCategory((CategoryNode)selected);
 						} else {
-							/*	textPane.setText(EditorData.getNode(selectedNodePath)
-									.getContent().replaceAll("\r\n", "\n"));
-								viewPane.setText(EditorData.HTMLSTART + textPane.getText()
-									+ EditorData.HTMLEND);
-								textPane.setEditable(true); */
 							fireQuestion((QuestionNode)selected);
 						}
 					}
@@ -104,8 +91,6 @@ public class QuestionTree extends JScrollPane {
 			}
 		});
 		
-		//this.viewPane = viewPane;
-		//this.textPane = textPane;
 		// create popup menu
 		JMenuItem myMenuItem;
 		
@@ -133,22 +118,7 @@ public class QuestionTree extends JScrollPane {
 					if ((name = JOptionPane.showInputDialog(this, "Neuer Name:")) != null) {
 						renameNode(selected, name);
 					}
-				} /*else
-				// settings
-				if (ae.getActionCommand().equals("settings")) {
-					TreePath tp = this.getClosestPathForLocation(x, y);
-					DefaultMutableTreeNode currentNode = (DefaultMutableTreeNode) tp
-							.getLastPathComponent();
-					SettingsDialog dia = EditorData.getSettingsDialogs(currentNode
-							.toString());
-					if (dia != null) {
-						dia.setVisible(true);
-					}
-				} else
-				//import
-				if(ae.getActionCommand().equals("import")) {
-					importHTML();
-				}*/
+				}
 			}
 		};
 		
@@ -163,12 +133,7 @@ public class QuestionTree extends JScrollPane {
 		myMenuItem.addActionListener(myActionlistener);
 		myMenuItem.setActionCommand("newquestion");		
 		categoryPopup.add(myMenuItem);
-		/*myMenuItem = new JMenuItem("HTML-Datei importieren");
-		myMenuItem.addActionListener(this);
-		myMenuItem.setActionCommand("import");
-		categoryPopup.add(myMenuItem);*/
-		myMenuItem = new JMenuItem("-");
-		categoryPopup.add(myMenuItem);
+		categoryPopup.addSeparator();
 		myMenuItem = new JMenuItem("Löschen");
 		myMenuItem.addActionListener(myActionlistener);
 		myMenuItem.setActionCommand("remove");
@@ -177,8 +142,7 @@ public class QuestionTree extends JScrollPane {
 		myMenuItem.addActionListener(myActionlistener);
 		myMenuItem.setActionCommand("rename");		
 		categoryPopup.add(myMenuItem);
-		myMenuItem = new JMenuItem("-");	
-		categoryPopup.add(myMenuItem);
+		categoryPopup.addSeparator();
 		myMenuItem = new JMenuItem("Eigenschaften");
 		myMenuItem.addActionListener(myActionlistener);
 		myMenuItem.setActionCommand("settings");
@@ -194,16 +158,6 @@ public class QuestionTree extends JScrollPane {
 		myMenuItem.setActionCommand("rename");		
 		questionPopup.add(myMenuItem);
 
-		/*textPane.setEditable(false);
-		textPane.addKeyListener(new KeyAdapter() {
-			public void keyReleased(KeyEvent ke) {
-				// save the content to the right node
-				EditorData.getNode(selectedNodePath).setContent(
-						textPane.getText());
-				viewPane.setText(EditorData.HTMLSTART + textPane.getText()
-						+ EditorData.HTMLEND);
-			}
-		});*/
 		tree.setDragEnabled(true);
 		tree.setDropTarget(new DropTarget() {
 			public void dragOver(DropTargetDragEvent dtde) {
@@ -243,56 +197,7 @@ public class QuestionTree extends JScrollPane {
 					source.removeFromParent();
 					target.insert(source, target.getChildCount());
 				}
-				//((DefaultTreeModel) tree.getModel()).nodeStructureChanged((javax.swing.tree.TreeNode) parent);
 				tree.updateUI();
-				/*
-				// it shouldnt work... but it IS getting the source node (or looks like)
-				DefaultMutableTreeNode source = (DefaultMutableTreeNode) getSelectionPath()
-						.getLastPathComponent();
-				Point p = dtde.getLocation();
-				TreePath path = getClosestPathForLocation(p.x, p.y);
-				DefaultMutableTreeNode target = (DefaultMutableTreeNode) path
-						.getLastPathComponent();
-				DefaultMutableTreeNode parent = (DefaultMutableTreeNode) source
-						.getParent();
-				DefaultTreeModel dtm = (DefaultTreeModel) getModel();
-				// remove from JTree
-				dtm.removeNodeFromParent(source);
-				int targetIndex = 0;
-				if (target != parent) {
-					targetIndex = parent.getIndex(target) + 1;
-				}
-				// moving from level 3 to 2 to a differend parent
-				if (sourcePath.length == 3 && target.getLevel() == 1
-						&& target != parent) {
-					// remove from data
-					EditorData.getDataRoot().getChild(sourcePath[1]).removeChild(
-							sourcePath[2]);
-					// insert to new position in data
-					EditorData.getDataRoot().getChild(target.toString()).addChild(
-							new DataTreeNode(sourcePath[2]), 0);
-					// inser to new position in JTree
-					dtm.insertNodeInto(source, target, targetIndex);
-				} else {
-					// remove node from data
-					if (sourcePath.length == 2) {
-						EditorData.getDataRoot().removeChild(sourcePath[1]);
-					} else {
-						EditorData.getDataRoot().getChild(sourcePath[1]).removeChild(
-								sourcePath[2]);
-					}
-					// new position in data
-					if (sourcePath.length == 2) {
-						EditorData.getDataRoot().addChild(
-								new DataTreeNode(sourcePath[1]), targetIndex);
-					} else {
-						EditorData.getDataRoot().getChild(sourcePath[1]).addChild(
-								new DataTreeNode(sourcePath[2]), targetIndex);
-					}
-					// insert to new position in JTree
-					dtm.insertNodeInto(source, parent, targetIndex);
-				}
-				*/
 			}
 
 			public void dropActionChanged(DropTargetDragEvent arg0) {
@@ -305,67 +210,9 @@ public class QuestionTree extends JScrollPane {
 			}
 		});
 
-		//tree.setEditable(false);
 		tree.setEditable(true);
 		tree.setRootVisible(false);
 	}
-
-	/**
-	 * if you will show a new DataTreeNode (as Root) you should call this
-	 * method. It rebuild the JTree so that the new data is shown.
-	 */
-	/*public void rootUpdated() {
-		
-		// get Root of the JTree
-		TreePath tp = this.getClosestPathForLocation(0, 0);
-		DefaultMutableTreeNode rootNode = (DefaultMutableTreeNode) tp
-				.getLastPathComponent();
-		for (DataTreeNode categorie : EditorData.getDataRoot().getChildren()) {
-			// insert level 1 nodes (categories)
-			DefaultMutableTreeNode cat = new DefaultMutableTreeNode(categorie
-					.getName());
-			SettingsDialog dia = new SettingsDialog(categorie.getName());
-
-			Boolean[] newSettings = new Boolean[Settings.settings.size()];
-			for (ElementAttribute categorieAttribute : categorie
-					.getAttributes()) {
-				int pos = Settings.settings.indexOf(categorieAttribute
-						.getName());
-				if (pos != -1 && pos < newSettings.length) {
-					newSettings[pos] = categorieAttribute.getContent().equals(
-							"true") ? true : false;
-				}
-			}
-			String path = (String) categorie.getAttribute("path").getContent();
-			dia.setSettings(path, newSettings);
-
-			EditorData.addSettingsDialog(dia);
-			rootNode.add(cat);
-
-			// insert level 3 nodes (childs)
-			for (DataTreeNode question : categorie.getChildren()) {
-				DefaultMutableTreeNode quest = new DefaultMutableTreeNode(
-						question.getName());
-				cat.add(quest);
-				String con = "";
-				// tries to get the content out of the corresponding files of
-				// the node
-				try {
-					Scanner scanner = new Scanner(new File(question.getName()
-							+ ".html"));
-					while (scanner.hasNextLine()) {
-						con += scanner.nextLine() + "\n";
-					}
-					con = con.substring(EditorData.HTMLSTART.length(), con
-							.length()
-							- EditorData.HTMLEND.length() - 1);
-				} catch (FileNotFoundException e) {
-					System.out.println("Quelldatei nicht gefunden");
-				}
-				question.setContent(con);
-			}
-		}
-	}*/
 
 	/**
 	 * this method will rename a level 2 or level 3 node the node is selected by
@@ -375,28 +222,6 @@ public class QuestionTree extends JScrollPane {
 	 *            a proposal for the name of the node
 	 */
 	private boolean renameNode(QuestionTreeNode node, String name) {
-		/*String name = getFreeName(nameProposal); // get a free name if it is not
-		TreePath tp = this.getClosestPathForLocation(x, y);
-		DefaultMutableTreeNode currentNode = (DefaultMutableTreeNode) tp
-				.getLastPathComponent();
-		String path = tp.toString();
-		path = path.substring(1, path.length() - 1);
-		String[] pathElements = path.split(", ");
-		// renaming in data
-		switch (pathElements.length) {
-		case 2: // level 2 (categorie)
-			EditorData.getDataRoot().getChild(pathElements[1]).setName(name);
-			EditorData.getSettingsDialogs(pathElements[1]).setId(name);
-			break;
-		case 3: // level 3 (child)
-			EditorData.getDataRoot().getChild(pathElements[1]).getChild(
-					pathElements[2]).setName(name);
-			break;
-		}
-		// renaming in jtree
-		currentNode.setUserObject(name);
-		((DefaultTreeModel) this.getModel())
-				.nodeStructureChanged((javax.swing.tree.TreeNode) currentNode);*/
 		return node.setName(name);
 	}
 
@@ -405,32 +230,6 @@ public class QuestionTree extends JScrollPane {
 	 * the last mouse-button release
 	 */
 	private void removeNode(QuestionTreeNode node) {
-		/*TreePath tp = this.getClosestPathForLocation(x, y);
-		DefaultMutableTreeNode currentNode = (DefaultMutableTreeNode) tp
-				.getLastPathComponent();
-		String path = tp.toString();
-		path = path.substring(1, path.length() - 1);
-		String[] pathElements = path.split(", ");
-		// remove child from data
-		switch (pathElements.length) {
-		case 2: // level 2...
-			EditorData.getDataRoot().removeChild(pathElements[1]);
-			EditorData.removeSettingsDialog(pathElements[1]);
-			break;
-		case 3: // level 3...
-			EditorData.getDataRoot().getChild(pathElements[1]).removeChild(
-					pathElements[2]);
-			break;
-		}
-		// remove child from JTree
-		if (currentNode.getParent() != null) {
-			int nodeIndex = currentNode.getParent().getIndex(currentNode);
-			currentNode.removeAllChildren();
-			((DefaultMutableTreeNode) currentNode.getParent())
-					.remove(nodeIndex);
-			((DefaultTreeModel) this.getModel())
-					.nodeStructureChanged((javax.swing.tree.TreeNode) currentNode);
-		}*/
 		node.removeFromParent();
 	}
 
@@ -442,191 +241,13 @@ public class QuestionTree extends JScrollPane {
 	 *            a name proposal for the new Child
 	 */
 	private void addCategory(String name) {
-		/*String name = getFreeName(nameProposal); // free name if it is not
-		TreePath tp = this.getClosestPathForLocation(x, y);
-		DefaultMutableTreeNode currentNode = (DefaultMutableTreeNode) tp
-				.getLastPathComponent();
-		DefaultMutableTreeNode child = new DefaultMutableTreeNode(name);
-		String path = tp.toString();
-		path = path.substring(1, path.length() - 1);
-		String[] pathElements = path.split(", ");
-		// adding the child (Data and JTree)
-		switch (pathElements.length) {
-		case 1: // new level 2 (categorie)
-			EditorData.getDataRoot().addChild(new DataTreeNode(name),
-					EditorData.getDataRoot().getChildCount());
-			currentNode.add(child);
-			((DefaultTreeModel) this.getModel())
-					.nodeStructureChanged((javax.swing.tree.TreeNode) currentNode);
-			SettingsDialog dia = new SettingsDialog(name);
-			EditorData.addSettingsDialog(dia);
-			dia.setVisible(true);
-			break;
-		case 2: // new level 3 (question)
-			EditorData.getDataRoot().getChild(pathElements[1]).addChild(
-					new DataTreeNode(name),
-					EditorData.getDataRoot().getChild(pathElements[1])
-							.getChildCount());
-			currentNode.add(child);
-			((DefaultTreeModel) this.getModel())
-					.nodeStructureChanged((TreeNode) currentNode);
-			break;
-		case 3: // as in case 2 (only different path, so slightly differend
-			// code)
-			EditorData.getDataRoot().getChild(pathElements[1]).addChild(
-					new DataTreeNode(name),
-					EditorData.getDataRoot().getChild(pathElements[1])
-							.getChildCount());
-			((DefaultMutableTreeNode) currentNode.getParent()).add(child);
-			((DefaultTreeModel) this.getModel())
-					.nodeStructureChanged((TreeNode) currentNode.getParent());
-			break;
-		}*/
 		QuestionTreeNode root = (QuestionTreeNode)tree.getModel().getRoot();
 		root.insert(new CategoryNode(name), root.getChildCount());
 	}
 	
 	private void addQuestion(CategoryNode category, String name) {
-		/*String name = getFreeName(nameProposal); // free name if it is not
-		TreePath tp = this.getClosestPathForLocation(x, y);
-		DefaultMutableTreeNode currentNode = (DefaultMutableTreeNode) tp
-				.getLastPathComponent();
-		DefaultMutableTreeNode child = new DefaultMutableTreeNode(name);
-		String path = tp.toString();
-		path = path.substring(1, path.length() - 1);
-		String[] pathElements = path.split(", ");
-		// adding the child (Data and JTree)
-		switch (pathElements.length) {
-		case 1: // new level 2 (categorie)
-			EditorData.getDataRoot().addChild(new DataTreeNode(name),
-					EditorData.getDataRoot().getChildCount());
-			currentNode.add(child);
-			((DefaultTreeModel) this.getModel())
-					.nodeStructureChanged((javax.swing.tree.TreeNode) currentNode);
-			SettingsDialog dia = new SettingsDialog(name);
-			EditorData.addSettingsDialog(dia);
-			dia.setVisible(true);
-			break;
-		case 2: // new level 3 (question)
-			EditorData.getDataRoot().getChild(pathElements[1]).addChild(
-					new DataTreeNode(name),
-					EditorData.getDataRoot().getChild(pathElements[1])
-							.getChildCount());
-			currentNode.add(child);
-			((DefaultTreeModel) this.getModel())
-					.nodeStructureChanged((TreeNode) currentNode);
-			break;
-		case 3: // as in case 2 (only different path, so slightly differend
-			// code)
-			EditorData.getDataRoot().getChild(pathElements[1]).addChild(
-					new DataTreeNode(name),
-					EditorData.getDataRoot().getChild(pathElements[1])
-							.getChildCount());
-			((DefaultMutableTreeNode) currentNode.getParent()).add(child);
-			((DefaultTreeModel) this.getModel())
-					.nodeStructureChanged((TreeNode) currentNode.getParent());
-			break;
-		}*/
 		category.insert(new QuestionNode(name),category.getChildCount());
 	}
-
-	/*/**
-	 * This methode will get you a unique name from the tree it searches after
-	 * the nameProposal, if it exists (or is blank) it will add an "_" this
-	 * method eliminates all whitespace-characters too
-	 * 
-	 * @param name
-	 *            a proposal for the name
-	 * @return unique name
-	 */
-	/*public String getFreeName(String name) {
-		String ret = name.replaceAll(" ", "");
-		ret = ret.replaceAll("\t", "");
-		if (ret.equals("")) {
-			ret += "_";
-		}
-		while (EditorData.getDataRoot().nameExist(ret)) {
-			ret += "_";
-		}
-
-		return ret;
-	}*/
-
-	/**
-	 * this method imports an html file to the categorie most near to the mouse click
-	 * if the file doesn't consist of a right body it is not importet
-	 * if the file will be importet, it will be tests, if she ends with EditorData.HTMLEnd
-	 * if yes the end ist cuted off
-	 */
-	/*public void importHTML(CategoryNode node) {
-		TreePath tp = this.getClosestPathForLocation(x, y);
-		DefaultMutableTreeNode currentNode = (DefaultMutableTreeNode) tp
-				.getLastPathComponent();
-		String path = tp.toString();
-		path = path.substring(1, path.length() - 1);
-		String[] pathElements = path.split(", ");
-		
-		
-		if(pathElements.length < 2 || pathElements.length > 3) {
-			JOptionPane
-			.showMessageDialog(null,
-					"HTML-Dateien können nicht als Kategorie importiert werden.");			
-		} else {
-			JFileChooser fc = new JFileChooser();
-			int returnVal = fc.showSaveDialog(null);
-			if (returnVal == JFileChooser.APPROVE_OPTION) {
-				File file = fc.getSelectedFile();
-				String htmlContent = "";
-				try {
-					Scanner sc = new Scanner(file);
-					while(sc.hasNextLine()) {
-						htmlContent += sc.nextLine();
-					}
-				} catch (FileNotFoundException e) {
-					e.printStackTrace();
-				}
-				int begin = htmlContent.indexOf("<body>")+"<body>".length();
-				int end = htmlContent.lastIndexOf("</body>");
-				if(begin == -1 || end == -1) {
-					JOptionPane.showMessageDialog(null, "Keine Datei mit gültigem Aufbau");
-				} else {
-					int start = file.toString().lastIndexOf("\\") == -1 ? 0 : file.toString().lastIndexOf("\\")+1;
-					String name = getFreeName(file.toString().substring(start, file.toString().lastIndexOf(".")));
-					DefaultMutableTreeNode child = new DefaultMutableTreeNode(name);					
-					//test if the footer is the same as our html-file standart
-					if(htmlContent.endsWith(EditorData.HTMLEND)) {
-						htmlContent = htmlContent.substring(begin+6, htmlContent.length()-EditorData.HTMLEND.length());
-					} else {
-						htmlContent = htmlContent.substring(begin+6, end);
-					}
-					DataTreeNode dtn = new DataTreeNode(name);
-					dtn.setContent(htmlContent);
-					
-					switch (pathElements.length) {
-					case 2: // new level 3 (question)
-						EditorData.getDataRoot().getChild(pathElements[1]).addChild(
-								dtn,
-								EditorData.getDataRoot().getChild(pathElements[1])
-										.getChildCount());
-						currentNode.add(child);
-						((DefaultTreeModel) this.getModel())
-								.nodeStructureChanged((TreeNode) currentNode);
-						break;
-					case 3: // as in case 2 (only different path, so slightly differend
-						// code)
-						EditorData.getDataRoot().getChild(pathElements[1]).addChild(
-								dtn,
-								EditorData.getDataRoot().getChild(pathElements[1])
-										.getChildCount());
-						((DefaultMutableTreeNode) currentNode.getParent()).add(child);
-						((DefaultTreeModel) this.getModel())
-								.nodeStructureChanged((TreeNode) currentNode.getParent());
-						break;
-					}
-				}
-			}
-		}
-	}*/
 	
 	public void setRoot(QuestionTreeNode n) {
 		tree.setModel(new DefaultTreeModel(n));
