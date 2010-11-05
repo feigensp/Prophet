@@ -55,8 +55,9 @@ public class QuestionTree extends JScrollPane {
 	 * @param viewPane
 	 *            pane for showing level 3 content in html
 	 */
-	public QuestionTree() {
+	public QuestionTree(QuestionTreeNode root) {
 		tree = new JTree(new DefaultTreeModel(new QuestionTreeNode(), true));
+		setRoot(root);
 		tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 		setViewportView(tree);
 		tree.addMouseListener(new MouseAdapter() {			
@@ -66,6 +67,7 @@ public class QuestionTree extends JScrollPane {
 					if (selPath==null) {
 						treePopup.show(tree, e.getX(), e.getY());
 					} else {
+						tree.setSelectionPath(selPath);
 						selected = (QuestionTreeNode) selPath.getLastPathComponent();
 						if (selected.isCategory()) {
 							categoryPopup.show(tree, e.getX(), e.getY());
@@ -77,16 +79,10 @@ public class QuestionTree extends JScrollPane {
 			}
 			@Override
 			public void mousePressed(MouseEvent e) {
-				if (e.getClickCount() == 2) {
-					TreePath selPath = tree.getPathForLocation(e.getX(), e.getY());
-					if (selPath!=null) {
-						selected = (QuestionTreeNode) selPath.getLastPathComponent();
-						if (selected.isCategory()) {
-							fireCategory((CategoryNode)selected);
-						} else {
-							fireQuestion((QuestionNode)selected);
-						}
-					}
+				TreePath selPath = tree.getPathForLocation(e.getX(), e.getY());
+				if (selPath!=null) {
+					selected = (QuestionTreeNode) selPath.getLastPathComponent();
+					fireEvent(selected);
 				}
 			}
 		});
@@ -103,19 +99,19 @@ public class QuestionTree extends JScrollPane {
 				} else
 				// newcategory
 				if (ae.getActionCommand().equals("newcategory")) {
-					if ((name = JOptionPane.showInputDialog(this, "Name:")) != null) {
+					if ((name = JOptionPane.showInputDialog("Name:", "")) != null) {
 						addCategory(name);
 					}
 				} else
 				// newquestion
 				if (ae.getActionCommand().equals("newquestion")) {
-					if ((name = JOptionPane.showInputDialog(this, "Name:")) != null) {
-						addQuestion((CategoryNode)selected, name);
+					if ((name = JOptionPane.showInputDialog("Name:", "")) != null) {
+						addQuestion(selected, name);
 					}
 				} else
 				// rename
 				if (ae.getActionCommand().equals("rename")) {
-					if ((name = JOptionPane.showInputDialog(this, "Neuer Name:")) != null) {
+					if ((name = JOptionPane.showInputDialog("Neuer Name:", selected.getName())) != null) {
 						renameNode(selected, name);
 					}
 				}
@@ -141,11 +137,6 @@ public class QuestionTree extends JScrollPane {
 		myMenuItem = new JMenuItem("Umbenennen");
 		myMenuItem.addActionListener(myActionlistener);
 		myMenuItem.setActionCommand("rename");		
-		categoryPopup.add(myMenuItem);
-		categoryPopup.addSeparator();
-		myMenuItem = new JMenuItem("Eigenschaften");
-		myMenuItem.addActionListener(myActionlistener);
-		myMenuItem.setActionCommand("settings");
 		categoryPopup.add(myMenuItem);
 		
 		questionPopup = new JPopupMenu();
@@ -222,7 +213,9 @@ public class QuestionTree extends JScrollPane {
 	 *            a proposal for the name of the node
 	 */
 	private boolean renameNode(QuestionTreeNode node, String name) {
-		return node.setName(name);
+		boolean result = node.setName(name);
+		tree.updateUI();
+		return result;
 	}
 
 	/**
@@ -231,6 +224,7 @@ public class QuestionTree extends JScrollPane {
 	 */
 	private void removeNode(QuestionTreeNode node) {
 		node.removeFromParent();
+		tree.updateUI();
 	}
 
 	/**
@@ -242,15 +236,25 @@ public class QuestionTree extends JScrollPane {
 	 */
 	private void addCategory(String name) {
 		QuestionTreeNode root = (QuestionTreeNode)tree.getModel().getRoot();
-		root.insert(new CategoryNode(name), root.getChildCount());
+		QuestionTreeNode newCategory = new QuestionTreeNode(name);
+		newCategory.setCategory(true);
+		root.insert(newCategory, root.getChildCount());
+		tree.updateUI();
 	}
 	
-	private void addQuestion(CategoryNode category, String name) {
-		category.insert(new QuestionNode(name),category.getChildCount());
+	private void addQuestion(QuestionTreeNode category, String name) {
+		QuestionTreeNode newQuestion = new QuestionTreeNode(name);
+		newQuestion.setQuestion(true);
+		category.insert(newQuestion,category.getChildCount());
+		tree.updateUI();
 	}
 	
 	public void setRoot(QuestionTreeNode n) {
+		if (n==null) {
+			n = new QuestionTreeNode("root");
+		}
 		tree.setModel(new DefaultTreeModel(n));
+		tree.updateUI();
 	}
 	public QuestionTreeNode getRoot() {
 		return (QuestionTreeNode)tree.getModel().getRoot();
@@ -270,19 +274,10 @@ public class QuestionTree extends JScrollPane {
 			questionTreeListeners.removeElement(l);
 	}
 
-	private void fireQuestion(QuestionNode question) {
+	private void fireEvent(QuestionTreeNode question) {
 		if (questionTreeListeners == null)
 			return;
 		QuestionTreeEvent event = new QuestionTreeEvent(this, question);
-		for (Enumeration<QuestionTreeListener> e = questionTreeListeners.elements(); e
-				.hasMoreElements();)
-			((QuestionTreeListener) e.nextElement()).questionTreeEventOccured(event);			
-	}
-	
-	private void fireCategory(CategoryNode category) {
-		if (questionTreeListeners == null)
-			return;
-		QuestionTreeEvent event = new QuestionTreeEvent(this, category);
 		for (Enumeration<QuestionTreeListener> e = questionTreeListeners.elements(); e
 				.hasMoreElements();)
 			((QuestionTreeListener) e.nextElement()).questionTreeEventOccured(event);			
