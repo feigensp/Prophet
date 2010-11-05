@@ -48,8 +48,7 @@ public class QuestionViewTest extends JFrame {
 		panel.add(overview, BorderLayout.WEST);
 		
 		HTMLFileView textPane = new HTMLFileView("myTest.xml", overview);
-		panel.add(textPane, BorderLayout.CENTER);
-		
+		panel.add(textPane, BorderLayout.CENTER);		
 	}
 
 }
