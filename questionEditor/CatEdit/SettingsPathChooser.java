@@ -38,6 +38,7 @@ public class SettingsPathChooser extends JPanel implements SettingsComponent {
 				JFileChooser fc = new JFileChooser(new File("."));
 				fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 				if (fc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+					//TODO: hier muss man sich noch was ausdenken...
 					String home = new File ("").getAbsolutePath();
 					String selectedPath = fc.getSelectedFile().getAbsolutePath();
 					System.out.println(home);
