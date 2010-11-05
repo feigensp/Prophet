@@ -1,6 +1,5 @@
 package questionViewer;
 
-import java.awt.event.ActionEvent;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
@@ -8,8 +7,6 @@ import java.util.StringTokenizer;
 
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.text.Element;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.View;
@@ -18,17 +15,41 @@ import javax.swing.text.html.FormView;
 import javax.swing.text.html.HTML;
 import javax.swing.text.html.HTMLEditorKit;
 
-public class HTMLFileView extends JScrollPane implements ListSelectionListener {
+import test.MyTestMain;
+
+/**
+ * This class shows the html files (questions) creates the navigation and
+ * navigates everything...
+ * 
+ * @author hasselbe
+ * 
+ */
+public class HTMLFileView extends JScrollPane {
+
+	public static final int FORWARD = 0;
+	public static final int BACKWARD = 1;
+
+	public static final String FOOTER_FORWARD = "<br><br><input name ='nextQuestion' type='submit' value='Weiter'>";
+	public static final String FOOTER_BACKWARD_FORWARD = "<br><br><input name ='previousQuestion' type='submit' value='Zurück'><input name ='nextQuestion' type='submit' value='Weiter'>";
+	public static final String FOOTER_BACKWARD_END_CATEGORIE = "<br><br><input name ='previousQuestion' type='submit' value='Zurück'><input name ='nextQuestion' type='submit' value='Kategorie Abschließen'>";
+	public static final String FOOTER_END_CATEGORIE = "<br><br><input name ='nextQuestion' type='submit' value='Kategorie Abschließen'>";
 
 	private JTextPane textPane;
 	private QuestionData data;
 	private CategorieQuestionListsPanel cqlp;
 
+	/**
+	 * With the call of the Construktor the data ist loaded and everything is
+	 * initialised. The first question is showed.
+	 * 
+	 * @param path
+	 *            path of the html file with the data
+	 * @param cqlp
+	 *            the categorieQuestionListsPanel where the overview is shown
+	 */
 	public HTMLFileView(String path, CategorieQuestionListsPanel cqlp) {
 		super();
-
 		data = new QuestionData(path);
-
 		this.cqlp = cqlp;
 
 		textPane = new JTextPane();
@@ -44,16 +65,18 @@ public class HTMLFileView extends JScrollPane implements ListSelectionListener {
 							HTML.Tag kind = (HTML.Tag) o;
 							if (kind == HTML.Tag.INPUT)
 								return new FormView(elem) {
-								
+									// What should happen when the buttons are
+									// pressed?
 									protected void submitData(String data) {
-										saveAnswers(data);
-									}
-									
-									public void actionPerformed(ActionEvent ae) {
-										if(ae.getActionCommand().equals("Weiter")) {
+										int action = saveAnswers(data);
+										if (action == FORWARD) {
 											nextQuestion();
-										} else if (ae.getActionCommand().equals("Zurück")) {
-											//lastQuestion();
+											System.out.println("next");
+										} else if (action == BACKWARD) {
+											previousQuestion();
+											System.out.println("previous");
+										} else {
+											System.out.println("fehler");
 										}
 									}
 								};
@@ -63,26 +86,8 @@ public class HTMLFileView extends JScrollPane implements ListSelectionListener {
 				};
 			}
 		});
-
 		refreshListData();
 		start();
-	}
-
-	public CategorieQuestionListsPanel getCategorieQuestionListsPanel() {
-		return cqlp;
-	}
-
-	public void refreshListData() {
-		cqlp.removeAll();
-		for (int i = 0; i < data.getCategorieCount(); i++) {
-			ArrayList<String> questions = new ArrayList<String>();
-			for (int j = 0; j < data.getQuestionCount(i); j++) {
-				questions.add(data.getQuestion(i, j).getKey());
-			}
-			cqlp.addCategorie(questions);
-		}
-		cqlp.selectQuestion(data.getLastCategorieIndex(),
-				data.getLastQuestionIndex());
 	}
 
 	/**
@@ -105,36 +110,63 @@ public class HTMLFileView extends JScrollPane implements ListSelectionListener {
 		return null;
 	}
 
-	// starts the questionnaire with showing the first question
-	public void start() {
+	/**
+	 * starts the questionnaire with the first available Question
+	 */
+	private void start() {
 		QuestionInfos q = getQuestion(0, 0);
-		if (q != null) {
-			if (data.getLastQuestionIndex() > 0) {
-				textPane.setText(q.getValue()
-						+ data.HTML_FOOTER_Backward_FORWARD);
-			} else {
-				textPane.setText(q.getValue() + data.HTML_FOOTER_FORWARD);
-			}
-			cqlp.selectQuestion(data.getLastCategorieIndex(),
-					data.getLastQuestionIndex());
-		} else {
-			endQuestionnaire();
-		}
+		showQuestion(q);
+		
+		MyTestMain frame = new MyTestMain();
+		frame.setVisible(true);
 	}
 
 	/**
-	 * Moves to the next Question loads the next HTML-File in the list if its a
-	 * new categorie it tells the editor to show new files an settings
+	 * moves to the next available question
 	 */
 	private void nextQuestion() {
 		QuestionInfos q = getQuestion(data.getLastCategorieIndex(),
 				data.getLastQuestionIndex() + 1);
+		showQuestion(q);
+	}
+
+	/**
+	 * trys to move to the previous question
+	 */
+	private void previousQuestion() {
+		QuestionInfos q = getQuestion(data.getLastCategorieIndex(),
+				data.getLastQuestionIndex() - 1);
+		showQuestion(q);
+	}
+
+	/**
+	 * loads the question into the textPane
+	 * 
+	 * @param q
+	 */
+	private void showQuestion(QuestionInfos q) {
 		if (q != null) {
-			if (data.getLastQuestionIndex() > 0) {
-				textPane.setText(q.getValue()
-						+ data.HTML_FOOTER_Backward_FORWARD);
+			String questSwitch = data
+					.getCategorieSetting("allowquestionswitching");
+			questSwitch = questSwitch == null ? "false" : questSwitch;
+			if (data.getLastQuestionIndex() > 0 && questSwitch.equals("true")) {
+				if (data.getLastQuestionIndex() == data.getQuestionCount(data
+						.getLastCategorieIndex()) - 1) {
+					textPane.setText("<form>" + q.getValue()
+							+ FOOTER_BACKWARD_END_CATEGORIE + "</form>");
+				} else {
+					textPane.setText("<form>" + q.getValue()
+							+ FOOTER_BACKWARD_FORWARD + "</form>");
+				}
 			} else {
-				textPane.setText(q.getValue() + data.HTML_FOOTER_FORWARD);
+				if (data.getLastQuestionIndex() == data.getQuestionCount(data
+						.getLastCategorieIndex()) - 1) {
+					textPane.setText("<form>" + q.getValue()
+							+ FOOTER_END_CATEGORIE + "</form>");
+				} else {
+					textPane.setText("<form>" + q.getValue() + FOOTER_FORWARD
+							+ "</form>");
+				}
 			}
 			cqlp.selectQuestion(data.getLastCategorieIndex(),
 					data.getLastQuestionIndex());
@@ -144,9 +176,9 @@ public class HTMLFileView extends JScrollPane implements ListSelectionListener {
 	}
 
 	/**
-	 * saves the given answers in Question Data
+	 * saves the given answers in QuestionData
 	 */
-	private void saveAnswers(String data) {
+	private int saveAnswers(String data) {
 		StringTokenizer st = new StringTokenizer(data, "&");
 		while (st.hasMoreTokens()) {
 			String token = st.nextToken();
@@ -161,22 +193,38 @@ public class HTMLFileView extends JScrollPane implements ListSelectionListener {
 			} catch (UnsupportedEncodingException ex) {
 				ex.printStackTrace();
 			}
-			this.data.addAnswers(name, content);
+			if (name.equals("nextQuestion")) {
+				return FORWARD;
+			} else if (name.equals("previousQuestion")) {
+				return BACKWARD;
+			} else {
+				this.data.addAnswers(name, content);
+			}
 		}
+		return -1;
 	}
 
+	/**
+	 * method which is called when the last question is answered
+	 */
 	private void endQuestionnaire() {
 		System.out.println("Beende Befragung");
 	}
 
-	@Override
-	public void valueChanged(ListSelectionEvent arg0) {
-		int categorie = cqlp.getSelectedCategorie();
-		if (categorie != -1) {
-			// Antwort speichern
-			// Frage anzeigen
-			// selection neu setzen nicht nötig?
+	/**
+	 * Refreshes the view of the CategorieQuestionListsPanel
+	 */
+	private void refreshListData() {
+		cqlp.removeAll();
+		for (int i = 0; i < data.getCategorieCount(); i++) {
+			ArrayList<String> questions = new ArrayList<String>();
+			for (int j = 0; j < data.getQuestionCount(i); j++) {
+				questions.add(data.getQuestion(i, j).getKey());
+			}
+			cqlp.addCategorie(questions);
 		}
+		cqlp.selectQuestion(data.getLastCategorieIndex(),
+				data.getLastQuestionIndex());
 	}
 
 }

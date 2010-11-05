@@ -25,9 +25,6 @@ import questionEditor.ElementAttribute;
  */
 public class QuestionData {
 	
-	public static final String HTML_FOOTER_FORWARD = "<br><br><input name =nextQuestion type='submit' value='Weiter'></body></html>";
-	public static final String HTML_FOOTER_Backward_FORWARD = "<br><br><input name =lastQuestion type='submit' value='Zurück'><input name ='nextQuestion' type='submit' value='Weiter'></body></html>";
-		
 	/* consist the questions and the categories
 	 * a categorie is represented by an AttributeArrayList in the ArrayList
 	 */
@@ -112,6 +109,15 @@ public class QuestionData {
 	 */
 	public ArrayList<StringTupel> getCategorieSettings(int categorieIndex) {
 		return data.get(categorieIndex).getAttributes();
+	}
+	
+	/**
+	 * returns a specific setting of the last requestet Categorie by name
+	 * @param name name of the setting
+	 * @return string which represent value of the setting
+	 */
+	public String getCategorieSetting(String name) {
+		return data.get(lastCategorieIndex).getAttribute(name);
 	}
 	
 	/**
