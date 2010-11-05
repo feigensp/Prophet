@@ -1,17 +1,12 @@
 package questionViewer;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import javax.swing.JTree;
-import javax.swing.JTextPane;
-import javax.swing.BoxLayout;
-import javax.swing.JList;
-import javax.swing.AbstractListModel;
-import java.awt.Dimension;
 
 public class QuestionViewTest extends JFrame {
 

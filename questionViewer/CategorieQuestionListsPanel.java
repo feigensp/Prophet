@@ -10,13 +10,13 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
-import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 public class CategorieQuestionListsPanel extends JScrollPane{
 
 	private ArrayList<JList> categorieLists;
 	private JPanel panel;
+	private ListSelectionListener listSelectionListener;
 	
 	public CategorieQuestionListsPanel() {
 		super();
@@ -38,21 +38,14 @@ public class CategorieQuestionListsPanel extends JScrollPane{
 	 * the string sin the ArrayList represent the names from the questions
 	 * @param categorie Strings with the names of the questions
 	 */
-	public void addCategorie(ArrayList<String> categorie, boolean enabled) {
+	public void addCategorie(ArrayList<String> categorie) {
 		DefaultListModel listModel = new DefaultListModel();
 		for(String question : categorie) {
 			listModel.addElement(question);
 		}
 		JList list = new JList(listModel);
 		list.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
-		list.setEnabled(enabled);
-		if(enabled) {
-			list.addListSelectionListener(new ListSelectionListener() {
-				public void valueChanged(ListSelectionEvent arg0) {
-					//event aufrufen
-				}				
-			});
-		}
+		list.setEnabled(false);
 		list.setBorder(BorderFactory.createEtchedBorder());
 		int width = (int) this.getParent().getPreferredSize().getWidth()-5;
 		list.setPreferredSize(new Dimension(width, 75));
@@ -62,6 +55,17 @@ public class CategorieQuestionListsPanel extends JScrollPane{
 		panel.add(list);
 
 		panel.updateUI();
+	}
+	
+	public int getSelectedCategorie() {
+		int i = 0;
+		for(JList list : categorieLists) {
+			if(list.getSelectedIndex() != -1) {
+				return i;
+			}
+			i++;
+		}
+		return -1;
 	}
 	
 	/**

@@ -1,5 +1,6 @@
 package questionViewer;
 
+import java.awt.event.ActionEvent;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
@@ -7,6 +8,8 @@ import java.util.StringTokenizer;
 
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.text.Element;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.View;
@@ -15,7 +18,7 @@ import javax.swing.text.html.FormView;
 import javax.swing.text.html.HTML;
 import javax.swing.text.html.HTMLEditorKit;
 
-public class HTMLFileView extends JScrollPane {
+public class HTMLFileView extends JScrollPane implements ListSelectionListener {
 
 	private JTextPane textPane;
 	private QuestionData data;
@@ -27,7 +30,7 @@ public class HTMLFileView extends JScrollPane {
 		data = new QuestionData(path);
 
 		this.cqlp = cqlp;
-		
+
 		textPane = new JTextPane();
 		this.setViewportView(textPane);
 		textPane.setEditable(false);
@@ -41,9 +44,17 @@ public class HTMLFileView extends JScrollPane {
 							HTML.Tag kind = (HTML.Tag) o;
 							if (kind == HTML.Tag.INPUT)
 								return new FormView(elem) {
+								
 									protected void submitData(String data) {
 										saveAnswers(data);
-										nextQuestion();
+									}
+									
+									public void actionPerformed(ActionEvent ae) {
+										if(ae.getActionCommand().equals("Weiter")) {
+											nextQuestion();
+										} else if (ae.getActionCommand().equals("Zurück")) {
+											//lastQuestion();
+										}
 									}
 								};
 						}
@@ -52,21 +63,26 @@ public class HTMLFileView extends JScrollPane {
 				};
 			}
 		});
-		
+
 		refreshListData();
 		start();
 	}
-	
+
+	public CategorieQuestionListsPanel getCategorieQuestionListsPanel() {
+		return cqlp;
+	}
+
 	public void refreshListData() {
 		cqlp.removeAll();
-		for(int i=0; i<data.getCategorieCount(); i++) {
+		for (int i = 0; i < data.getCategorieCount(); i++) {
 			ArrayList<String> questions = new ArrayList<String>();
-			for(int j=0; j<data.getQuestionCount(i); j++) {
+			for (int j = 0; j < data.getQuestionCount(i); j++) {
 				questions.add(data.getQuestion(i, j).getKey());
 			}
-			cqlp.addCategorie(questions, false);
+			cqlp.addCategorie(questions);
 		}
-		cqlp.selectQuestion(data.getLastCategorieIndex(), data.getLastQuestionIndex());
+		cqlp.selectQuestion(data.getLastCategorieIndex(),
+				data.getLastQuestionIndex());
 	}
 
 	/**
@@ -93,8 +109,14 @@ public class HTMLFileView extends JScrollPane {
 	public void start() {
 		QuestionInfos q = getQuestion(0, 0);
 		if (q != null) {
-			textPane.setText(q.getValue());
-			cqlp.selectQuestion(data.getLastCategorieIndex(), data.getLastQuestionIndex());
+			if (data.getLastQuestionIndex() > 0) {
+				textPane.setText(q.getValue()
+						+ data.HTML_FOOTER_Backward_FORWARD);
+			} else {
+				textPane.setText(q.getValue() + data.HTML_FOOTER_FORWARD);
+			}
+			cqlp.selectQuestion(data.getLastCategorieIndex(),
+					data.getLastQuestionIndex());
 		} else {
 			endQuestionnaire();
 		}
@@ -105,10 +127,17 @@ public class HTMLFileView extends JScrollPane {
 	 * new categorie it tells the editor to show new files an settings
 	 */
 	private void nextQuestion() {
-		QuestionInfos q = getQuestion(data.getLastCategorieIndex(), data.getLastQuestionIndex()+1);
-		if(q != null) {
-			textPane.setText(q.getValue());	
-			cqlp.selectQuestion(data.getLastCategorieIndex(), data.getLastQuestionIndex());		
+		QuestionInfos q = getQuestion(data.getLastCategorieIndex(),
+				data.getLastQuestionIndex() + 1);
+		if (q != null) {
+			if (data.getLastQuestionIndex() > 0) {
+				textPane.setText(q.getValue()
+						+ data.HTML_FOOTER_Backward_FORWARD);
+			} else {
+				textPane.setText(q.getValue() + data.HTML_FOOTER_FORWARD);
+			}
+			cqlp.selectQuestion(data.getLastCategorieIndex(),
+					data.getLastQuestionIndex());
 		} else {
 			endQuestionnaire();
 		}
@@ -138,6 +167,16 @@ public class HTMLFileView extends JScrollPane {
 
 	private void endQuestionnaire() {
 		System.out.println("Beende Befragung");
+	}
+
+	@Override
+	public void valueChanged(ListSelectionEvent arg0) {
+		int categorie = cqlp.getSelectedCategorie();
+		if (categorie != -1) {
+			// Antwort speichern
+			// Frage anzeigen
+			// selection neu setzen nicht nötig?
+		}
 	}
 
 }
