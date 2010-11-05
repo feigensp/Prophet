@@ -1,10 +1,12 @@
-package questionEditor;
+package questionEditor.QuestEdit;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JToolBar;
+
+import questionEditor.EditArea;
 
 @SuppressWarnings("serial")
 public class QuestionEditorToolBar extends JToolBar {

@@ -8,13 +8,13 @@
 
 package questionView;
 
-import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.util.ArrayList;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
+@SuppressWarnings("serial")
 public class PanelContainer extends JPanel {
 
 	public static final boolean HORIZONTAL = true;

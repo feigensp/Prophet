@@ -1,4 +1,4 @@
-package CategorySettingsDialog;
+package questionEditor.CatEdit;
 
 /**
  * A Dialog to adjust some settings.
@@ -13,10 +13,11 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JPanel;
 
-import QuestionTree.QuestionTreeNode;
+import questionEditor.QuestionTree.QuestionTreeNode;
+
 
 @SuppressWarnings("serial")
-public class SettingsDialog extends JPanel {
+public class CategoryEditorPanel extends JPanel {
 	private QuestionTreeNode selected;
 
 	/**
@@ -26,7 +27,7 @@ public class SettingsDialog extends JPanel {
 	 * @param id
 	 *            String identifier of this Dialog
 	 */
-	public SettingsDialog(QuestionTreeNode sel) {
+	public CategoryEditorPanel(QuestionTreeNode sel) {
 		selected=sel;
 		setLayout(new VerticalFlowLayout());
 		

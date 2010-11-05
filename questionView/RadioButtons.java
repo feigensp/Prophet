@@ -12,6 +12,7 @@ import javax.swing.ButtonGroup;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 
+@SuppressWarnings("serial")
 public class RadioButtons extends JPanel {
 
 	public static final boolean HORIZONTAL = true;

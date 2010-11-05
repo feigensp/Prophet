@@ -4,7 +4,7 @@
  * @author Markus Köppen, Andreas Hasselberg
  */
 
-package questionEditor;
+package questionEditor.QuestEdit.macroEditor;
 
 public class ElementAttribute<Type> {
 

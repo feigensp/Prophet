@@ -13,12 +13,11 @@ import java.awt.FlowLayout;
 import java.util.ArrayList;
 
 import javax.swing.BoxLayout;
-import javax.swing.JEditorPane;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.text.View;
 
+@SuppressWarnings("serial")
 public class QuestionView extends JPanel {
 
 	public static final boolean HORIZONTAL = true;

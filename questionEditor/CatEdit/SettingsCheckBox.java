@@ -1,4 +1,4 @@
-package CategorySettingsDialog;
+package questionEditor.CatEdit;
 
 import javax.swing.JCheckBox;
 

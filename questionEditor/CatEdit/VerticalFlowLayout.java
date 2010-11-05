@@ -1,4 +1,4 @@
-package CategorySettingsDialog;
+package questionEditor.CatEdit;
 
 //----------------------------------------------------
 //Image Mover
@@ -6,14 +6,11 @@ package CategorySettingsDialog;
 //distributed under the Artistic License
 //----------------------------------------------------
 
-import java.io.ObjectInputStream;
-import java.io.IOException;
-
-import java.awt.LayoutManager;
 import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.Insets;
+import java.awt.LayoutManager;
 
 /**
 *  A vertical flow layout is similar to a flow layuot but it layouts the

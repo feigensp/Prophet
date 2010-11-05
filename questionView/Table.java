@@ -17,6 +17,7 @@ import javax.swing.JRadioButton;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
+@SuppressWarnings("serial")
 public class Table extends JPanel {
 
 	private int x, y; // Anzahl der Spalten und Zeilen

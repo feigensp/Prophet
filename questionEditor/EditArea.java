@@ -8,6 +8,7 @@ package questionEditor;
 
 import javax.swing.JTextPane;
 
+@SuppressWarnings("serial")
 public class EditArea extends JTextPane {
 
 	/**

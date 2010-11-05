@@ -1,4 +1,4 @@
-package questionEditor;
+package questionEditor.QuestEdit;
 
 /**
  * Todo: makros aus xml datei laden
@@ -22,6 +22,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+@SuppressWarnings("serial")
 public class MacroBox extends JComboBox implements ActionListener, KeyListener {
 
 	public static final String TABLEROWDARK5RADIO = "Tabellenzeile (8 Radio - dunkel)";

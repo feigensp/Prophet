@@ -1,4 +1,4 @@
-package CategorySettingsDialog;
+package questionEditor.CatEdit;
 
 
 public class SettingsOption {

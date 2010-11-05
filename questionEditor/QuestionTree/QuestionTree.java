@@ -1,4 +1,4 @@
-package QuestionTree;
+package questionEditor.QuestionTree;
 
 /**
  * This Class inherits from JTree.

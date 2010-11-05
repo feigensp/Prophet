@@ -28,7 +28,9 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import QuestionTree.QuestionTreeNode;
+import questionEditor.QuestionTree.QuestionTreeNode;
+
+
 
 public class XMLTreeHandler {
 

@@ -1,4 +1,4 @@
-package QuestionTree;
+package questionEditor.QuestionTree;
 
 import java.util.Enumeration;
 import java.util.Map.Entry;

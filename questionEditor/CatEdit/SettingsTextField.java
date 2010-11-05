@@ -1,4 +1,4 @@
-package CategorySettingsDialog;
+package questionEditor.CatEdit;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionListener;

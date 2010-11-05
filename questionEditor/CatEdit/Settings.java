@@ -1,4 +1,4 @@
-package CategorySettingsDialog;
+package questionEditor.CatEdit;
 
 /**
  * A small class, it only stores an final arraylist with strings.
@@ -8,7 +8,6 @@ package CategorySettingsDialog;
  */
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 public class Settings {
 	@SuppressWarnings("serial")

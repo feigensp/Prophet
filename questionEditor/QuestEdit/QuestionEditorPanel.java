@@ -1,4 +1,4 @@
-package questionEditor;
+package questionEditor.QuestEdit;
 
 import java.awt.BorderLayout;
 import java.awt.event.KeyAdapter;
@@ -19,10 +19,12 @@ import javax.swing.text.html.FormView;
 import javax.swing.text.html.HTML;
 import javax.swing.text.html.HTMLEditorKit;
 
-import QuestionTree.QuestionTreeNode;
+import questionEditor.EditArea;
+import questionEditor.QuestionTree.QuestionTreeNode;
+
 
 @SuppressWarnings("serial")
-public class EditViewPanel extends JPanel {
+public class QuestionEditorPanel extends JPanel {
 	public static final String HTMLSTART = "<html><head></head><body>";
 	public static final String HTMLEND = "<br><br><br><input type='submit' value='Weiter'></body></html>";
 	
@@ -30,7 +32,7 @@ public class EditViewPanel extends JPanel {
 	JTextPane viewPane;
 	QuestionTreeNode selected;	
 	
-	public EditViewPanel(QuestionTreeNode sel) {
+	public QuestionEditorPanel(QuestionTreeNode sel) {
 		selected=sel;
 		
 		viewPane = new JTextPane();
