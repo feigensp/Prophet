@@ -1,5 +1,6 @@
 package questionViewer;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
@@ -7,12 +8,14 @@ import java.util.StringTokenizer;
 
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
+import javax.swing.text.BadLocationException;
 import javax.swing.text.Element;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.View;
 import javax.swing.text.ViewFactory;
 import javax.swing.text.html.FormView;
 import javax.swing.text.html.HTML;
+import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
 
 import test.MyTestMain;
@@ -116,7 +119,7 @@ public class HTMLFileView extends JScrollPane {
 	private void start() {
 		QuestionInfos q = getQuestion(0, 0);
 		showQuestion(q);
-		
+
 		MyTestMain frame = new MyTestMain();
 		frame.setVisible(true);
 	}
@@ -146,8 +149,7 @@ public class HTMLFileView extends JScrollPane {
 	 */
 	private void showQuestion(QuestionInfos q) {
 		if (q != null) {
-			String questSwitch = data
-					.getCategorieSetting("allowquestionswitching");
+			String questSwitch = data.getCategorieSetting("allowswitching");
 			questSwitch = questSwitch == null ? "false" : questSwitch;
 			if (data.getLastQuestionIndex() > 0 && questSwitch.equals("true")) {
 				if (data.getLastQuestionIndex() == data.getQuestionCount(data
@@ -164,8 +166,27 @@ public class HTMLFileView extends JScrollPane {
 					textPane.setText("<form>" + q.getValue()
 							+ FOOTER_END_CATEGORIE + "</form>");
 				} else {
-					textPane.setText("<form>" + q.getValue() + FOOTER_FORWARD
-							+ "</form>");
+					textPane.setText("<form>" + q.getValue()
+							+ FOOTER_FORWARD + "</form>");
+					HTMLDocument doc = (HTMLDocument) textPane.getDocument();
+					Element ele = doc.getElement("vorname");
+					try {
+						doc.setOuterHTML(ele,
+								"<input id=\"vorname\" value=\"yay\">");
+						
+					} catch (BadLocationException e) {
+						e.printStackTrace();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+
+//					textPane.setText("<html><head></head><body><script><!--document.write(\"Test\");document.form1.vorname.value=\"testgfhfgili\";--></script></body></html>");
+					// textPane.setText("<html><head></head><body>" +
+					// "<form name='form1'>"
+					// + q.getValue()
+					// + FOOTER_FORWARD
+					// +
+					// "</form>\n\r<script type=\"text/javascript\">\n\rdocument.form1.vorname.value=\"testgfhfgili\";\n\r</script>\n\r</body></html>");
 				}
 			}
 			cqlp.selectQuestion(data.getLastCategorieIndex(),

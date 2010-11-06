@@ -1,7 +1,5 @@
 package questionViewer;
 
-import java.util.Vector;
-
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerConfigurationException;
@@ -13,8 +11,6 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-
-import questionEditor.ElementAttribute;
 
 public class GenerateTestXML {
 	
@@ -31,13 +27,16 @@ public class GenerateTestXML {
 			Element cat2 = xmlTree.createElement("categorie");
 			cat1.setAttribute("name", "cat1");
 			cat1.setAttribute("path", "path1");
-			cat1.setAttribute("name", "cat2");
-			cat1.setAttribute("path", "path2");
+			cat2.setAttribute("name", "cat2");
+			cat2.setAttribute("path", "path2");
+			cat2.setAttribute("allowswitching", "true");
 			xmlRoot.appendChild(cat1);
 			xmlRoot.appendChild(cat2);
 			Element child1 = xmlTree.createElement("q1");
 			child1.setAttribute("name", "q1");
-			child1.setTextContent("frage 1 test<br><input name=\"vorname\" type=\"text\" size=\"30\" value=\"30\">");
+			String s = "frage 1 test<br><input id=\"vorname\" type=\"text\" size=\"30\">";
+			child1.setTextContent(s);
+			//child1.setTextContent("frage 1 test<br><input name=\"vorname\" type=\"text\" size=\"30\">");
 			Element child2 = xmlTree.createElement("q2");
 			child2.setAttribute("name", "q2");
 			child2.setTextContent("frage 2 test");
