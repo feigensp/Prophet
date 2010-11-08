@@ -1,21 +1,20 @@
 package questionViewer;
 
-import java.io.IOException;
+import java.awt.BorderLayout;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
-import javax.swing.text.BadLocationException;
 import javax.swing.text.Element;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.View;
 import javax.swing.text.ViewFactory;
 import javax.swing.text.html.FormView;
 import javax.swing.text.html.HTML;
-import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
 
 import test.MyTestMain;
@@ -27,7 +26,7 @@ import test.MyTestMain;
  * @author hasselbe
  * 
  */
-public class HTMLFileView extends JScrollPane {
+public class HTMLFileView extends JPanel {
 
 	public static final int FORWARD = 0;
 	public static final int BACKWARD = 1;
@@ -37,9 +36,10 @@ public class HTMLFileView extends JScrollPane {
 	public static final String FOOTER_BACKWARD_END_CATEGORIE = "<br><br><input name ='previousQuestion' type='submit' value='Zurück'><input name ='nextQuestion' type='submit' value='Kategorie Abschließen'>";
 	public static final String FOOTER_END_CATEGORIE = "<br><br><input name ='nextQuestion' type='submit' value='Kategorie Abschließen'>";
 
-	private JTextPane textPane;
 	private QuestionData data;
 	private CategorieQuestionListsPanel cqlp;
+	ArrayList<JScrollPane> textPanes;
+	private int maxPos, curPos;
 
 	/**
 	 * With the call of the Construktor the data ist loaded and everything is
@@ -55,8 +55,16 @@ public class HTMLFileView extends JScrollPane {
 		data = new QuestionData(path);
 		this.cqlp = cqlp;
 
-		textPane = new JTextPane();
-		this.setViewportView(textPane);
+		textPanes = new ArrayList<JScrollPane>();
+		this.setLayout(new BorderLayout());
+
+		refreshListData();
+		start();
+	}
+
+	public void addQuestion(QuestionInfos q) {
+		// initialize textPane
+		JTextPane textPane = new JTextPane();
 		textPane.setEditable(false);
 		textPane.setEditorKit(new HTMLEditorKit() {
 			public ViewFactory getViewFactory() {
@@ -74,12 +82,9 @@ public class HTMLFileView extends JScrollPane {
 										int action = saveAnswers(data);
 										if (action == FORWARD) {
 											nextQuestion();
-											System.out.println("next");
 										} else if (action == BACKWARD) {
 											previousQuestion();
-											System.out.println("previous");
 										} else {
-											System.out.println("fehler");
 										}
 									}
 								};
@@ -89,8 +94,39 @@ public class HTMLFileView extends JScrollPane {
 				};
 			}
 		});
-		refreshListData();
-		start();
+
+		// set content to TextPane
+		String questSwitch = data.getCategorieSetting("allowswitching");
+		questSwitch = questSwitch == null ? "false" : questSwitch;
+		if (data.getLastQuestionIndex() > 0 && questSwitch.equals("true")) {
+			if (data.getLastQuestionIndex() == data.getQuestionCount(data
+					.getLastCategorieIndex()) - 1) {
+				textPane.setText("<form>" + q.getValue()
+						+ FOOTER_BACKWARD_END_CATEGORIE + "</form>");
+			} else {
+				textPane.setText("<form>" + q.getValue()
+						+ FOOTER_BACKWARD_FORWARD + "</form>");
+			}
+		} else {
+			if (data.getLastQuestionIndex() == data.getQuestionCount(data
+					.getLastCategorieIndex()) - 1) {
+				textPane.setText("<form>" + q.getValue() + FOOTER_END_CATEGORIE
+						+ "</form>");
+			} else {
+				textPane.setText("<form>" + q.getValue() + FOOTER_FORWARD
+						+ "</form>");
+			}
+		}
+
+		// various settings
+		JScrollPane scrollPane = new JScrollPane(textPane);
+		textPanes.add(scrollPane);
+		this.removeAll();
+		this.add(scrollPane, BorderLayout.CENTER);
+		maxPos++;
+		curPos++;
+		cqlp.selectQuestion(data.getLastCategorieIndex(),
+				data.getLastQuestionIndex());
 	}
 
 	/**
@@ -118,7 +154,8 @@ public class HTMLFileView extends JScrollPane {
 	 */
 	private void start() {
 		QuestionInfos q = getQuestion(0, 0);
-		showQuestion(q);
+		maxPos = curPos = -1;
+		addQuestion(q);
 
 		MyTestMain frame = new MyTestMain();
 		frame.setVisible(true);
@@ -128,72 +165,39 @@ public class HTMLFileView extends JScrollPane {
 	 * moves to the next available question
 	 */
 	private void nextQuestion() {
-		QuestionInfos q = getQuestion(data.getLastCategorieIndex(),
-				data.getLastQuestionIndex() + 1);
-		showQuestion(q);
+		if (curPos < maxPos) {
+			data.incLastQuestionIndex();
+			curPos++;
+			this.removeAll();
+			this.add(textPanes.get(curPos), BorderLayout.CENTER);
+			updateUI();
+			cqlp.selectQuestion(data.getLastCategorieIndex(),
+					data.getLastQuestionIndex());
+		} else {
+			QuestionInfos q = getQuestion(data.getLastCategorieIndex(),
+					(data.getLastQuestionIndex() + 1));
+			if (q == null) {
+				endQuestionnaire();
+			} else {
+				addQuestion(q);
+			}
+		}
+		this.revalidate();
+		data.saveAnswersToXML("answers");
 	}
 
 	/**
 	 * trys to move to the previous question
 	 */
 	private void previousQuestion() {
-		QuestionInfos q = getQuestion(data.getLastCategorieIndex(),
-				data.getLastQuestionIndex() - 1);
-		showQuestion(q);
-	}
-
-	/**
-	 * loads the question into the textPane
-	 * 
-	 * @param q
-	 */
-	private void showQuestion(QuestionInfos q) {
-		if (q != null) {
-			String questSwitch = data.getCategorieSetting("allowswitching");
-			questSwitch = questSwitch == null ? "false" : questSwitch;
-			if (data.getLastQuestionIndex() > 0 && questSwitch.equals("true")) {
-				if (data.getLastQuestionIndex() == data.getQuestionCount(data
-						.getLastCategorieIndex()) - 1) {
-					textPane.setText("<form>" + q.getValue()
-							+ FOOTER_BACKWARD_END_CATEGORIE + "</form>");
-				} else {
-					textPane.setText("<form>" + q.getValue()
-							+ FOOTER_BACKWARD_FORWARD + "</form>");
-				}
-			} else {
-				if (data.getLastQuestionIndex() == data.getQuestionCount(data
-						.getLastCategorieIndex()) - 1) {
-					textPane.setText("<form>" + q.getValue()
-							+ FOOTER_END_CATEGORIE + "</form>");
-				} else {
-					textPane.setText("<form>" + q.getValue()
-							+ FOOTER_FORWARD + "</form>");
-					HTMLDocument doc = (HTMLDocument) textPane.getDocument();
-					Element ele = doc.getElement("vorname");
-					try {
-						doc.setOuterHTML(ele,
-								"<input id=\"vorname\" value=\"yay\">");
-						
-					} catch (BadLocationException e) {
-						e.printStackTrace();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-
-//					textPane.setText("<html><head></head><body><script><!--document.write(\"Test\");document.form1.vorname.value=\"testgfhfgili\";--></script></body></html>");
-					// textPane.setText("<html><head></head><body>" +
-					// "<form name='form1'>"
-					// + q.getValue()
-					// + FOOTER_FORWARD
-					// +
-					// "</form>\n\r<script type=\"text/javascript\">\n\rdocument.form1.vorname.value=\"testgfhfgili\";\n\r</script>\n\r</body></html>");
-				}
-			}
-			cqlp.selectQuestion(data.getLastCategorieIndex(),
-					data.getLastQuestionIndex());
-		} else {
-			endQuestionnaire();
-		}
+		data.decLastQuestionIndex();
+		cqlp.selectQuestion(data.getLastCategorieIndex(),
+				data.getLastQuestionIndex());
+		curPos--;
+		this.removeAll();
+		this.add(textPanes.get(curPos), BorderLayout.CENTER);
+		this.revalidate();
+		data.saveAnswersToXML("answers");
 	}
 
 	/**
@@ -214,12 +218,14 @@ public class HTMLFileView extends JScrollPane {
 			} catch (UnsupportedEncodingException ex) {
 				ex.printStackTrace();
 			}
-			if (name.equals("nextQuestion")) {
+			if (!name.equals("nextQuestion")
+					&& !name.equals("previousQuestion")) {
+				System.out.println("bli");
+				this.data.addAnswers(name, content);
+			} else if (name.equals("nextQuestion")) {
 				return FORWARD;
 			} else if (name.equals("previousQuestion")) {
 				return BACKWARD;
-			} else {
-				this.data.addAnswers(name, content);
 			}
 		}
 		return -1;

@@ -1,5 +1,6 @@
 package questionViewer;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 /**
  * this class stores all infos to a question
@@ -12,7 +13,7 @@ public class QuestionInfos {
 	String key;	//the name of the question
 	String value;	//the content of the question
 	
-	HashMap<String, String> answers;	//all yet given answers
+	ArrayList<StringTupel> answers;	//all yet given answers
 	
 	/**
 	 * creates an empty question
@@ -20,7 +21,7 @@ public class QuestionInfos {
 	public QuestionInfos() {
 		key = "";
 		value = "";		
-		answers = new HashMap<String, String>();
+		answers = new ArrayList<StringTupel>();
 	}
 	
 	/**
@@ -31,7 +32,7 @@ public class QuestionInfos {
 	public QuestionInfos(String key, String value) {
 		this.key = key;
 		this.value = value;			
-		answers = new HashMap<String, String>();	
+		answers = new ArrayList<StringTupel>();	
 	}
 	
 	/**
@@ -56,14 +57,14 @@ public class QuestionInfos {
 	 * @param answer content of the answer
 	 */
 	public void addAnswer(String name, String answer) {
-		answers.put(name, answer);
+		answers.add(new StringTupel(name, answer));
 	}
 	
 	/**
 	 * returns all yet given answers
 	 * @return yet given answers
 	 */
-	public HashMap<String, String> getAnswers() {
+	public ArrayList<StringTupel> getAnswers() {
 		return answers;
 	}
 }

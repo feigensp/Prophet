@@ -34,15 +34,14 @@ public class GenerateTestXML {
 			xmlRoot.appendChild(cat2);
 			Element child1 = xmlTree.createElement("q1");
 			child1.setAttribute("name", "q1");
-			String s = "frage 1 test<br><input id=\"vorname\" type=\"text\" size=\"30\">";
+			String s = "frage 1 test<br><input name=\"vorname\" type=\"text\" size=\"30\">";
 			child1.setTextContent(s);
-			//child1.setTextContent("frage 1 test<br><input name=\"vorname\" type=\"text\" size=\"30\">");
 			Element child2 = xmlTree.createElement("q2");
 			child2.setAttribute("name", "q2");
 			child2.setTextContent("frage 2 test");
 			Element child21 = xmlTree.createElement("q21");
 			child21.setAttribute("name", "q21");
-			child21.setTextContent("frage 21 test");
+			child21.setTextContent("frage 21 test<br>" + s);
 			Element child22 = xmlTree.createElement("q22");
 			child22.setAttribute("name", "q22");
 			child22.setTextContent("frage 22 test");

@@ -76,8 +76,32 @@ public class SearchBar extends JPanel {
 			}
 		});
 		
+		textPane.getDocument().addDocumentListener(new DocumentListener() {
+
+			private void inputChanged() {
+				cancelSearch();
+				find(SEARCH_FORWARD);				
+			}
+			
+			@Override
+			public void changedUpdate(DocumentEvent arg0) {
+				inputChanged();
+			}
+
+			@Override
+			public void insertUpdate(DocumentEvent arg0) {
+				inputChanged();
+			}
+
+			@Override
+			public void removeUpdate(DocumentEvent arg0) {
+				inputChanged();
+			}
+			
+		});
+		
 		searchField.getDocument().addDocumentListener(new DocumentListener() {
-			public void inputChanged() {
+			private void inputChanged() {
 				cancelSearch();
 				find(SEARCH_FORWARD);
 			}
@@ -181,6 +205,9 @@ public class SearchBar extends JPanel {
 			while (pos != -1) {
 				positions.add(pos);
 				pos = text.indexOf(word, pos + 1);
+			}
+			if(!positions.isEmpty()) {
+				textPane.setCaretPosition(0);				
 			}
 			hasPositions=true;
 		}
