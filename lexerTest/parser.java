@@ -6,7 +6,6 @@
 
 package lexerTest;
 
-import java_cup.runtime.*;
 
 /** CUP v0.11a beta 20060608 generated parser.
   * @version Tue Oct 26 10:29:17 CEST 2010

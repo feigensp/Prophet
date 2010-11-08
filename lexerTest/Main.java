@@ -14,7 +14,6 @@ package lexerTest;
  runtime class for java, and an io class.*/
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.IOException;
 
 class Main {
 

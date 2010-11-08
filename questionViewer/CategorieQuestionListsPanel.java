@@ -9,13 +9,11 @@ import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.ListSelectionModel;
-import javax.swing.event.ListSelectionListener;
 
 /**
  * Creates a panel which consits JList's.
  * The Lists represents categories and every item in the list represents a question
- * @author hasselbe
+ * @author Markus Köppen, Andreas Hasselberg
  *
  */
 public class CategorieQuestionListsPanel extends JScrollPane{

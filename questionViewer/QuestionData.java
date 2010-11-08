@@ -3,7 +3,6 @@ package questionViewer;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Vector;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -21,9 +20,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import experimentQuestionCreator.ElementAttribute;
-import experimentQuestionCreator.MyTreeNode;
-
 /**
  * This class contains the data loaded out of an xml file the data represents
  * questions in their categories
@@ -33,24 +29,21 @@ import experimentQuestionCreator.MyTreeNode;
  */
 public class QuestionData {
 
-	/*
-	 * consist the questions and the categories a categorie is represented by an
-	 * AttributeArrayList in the ArrayList
-	 */
-	ArrayList<AttributeArrayList<QuestionInfos>> data;
-	// the last question index (an the corresponding categorie Index) which were
-	// requestet
-	int lastCategorieIndex, lastQuestionIndex;
+	// consist the questions and the categories a categorie is represented by an
+	// AttributeArrayList in the ArrayList
+	private ArrayList<AttributeArrayList<QuestionInfos>> data;
+	// the last question and categorie index
+	private int lastCategoryIndex, lastQuestionIndex;
 
 	/**
-	 * The Construktor which starts the loading of the data
+	 * The Constructor which starts the loading of the data
 	 * 
 	 * @param path
 	 *            the path to the xml file which consist the data
 	 */
 	public QuestionData(String path) {
 		data = new ArrayList<AttributeArrayList<QuestionInfos>>();
-		lastCategorieIndex = lastQuestionIndex = 0;
+		lastCategoryIndex = lastQuestionIndex = 0;
 		loadData(path);
 	}
 
@@ -105,7 +98,7 @@ public class QuestionData {
 	}
 
 	/**
-	 * returns the amount of the level 2 nodes
+	 * returns the amount of the level 2 nodes (categories)
 	 * 
 	 * @return child count of the root
 	 */
@@ -114,11 +107,11 @@ public class QuestionData {
 	}
 
 	/**
-	 * returns the amount of questions in a specific categorie
+	 * returns the amount of questions in a specific category
 	 * 
 	 * @param categorieIndex
-	 *            index to specify the categorie
-	 * @return childcount of the categorie
+	 *            index to specify the category
+	 * @return child count of the category
 	 */
 	public int getQuestionCount(int categorieIndex) {
 		return data.get(categorieIndex).size();
@@ -128,7 +121,7 @@ public class QuestionData {
 	 * return the settings (like path an if searchable is true) as a String
 	 * 
 	 * @param categorieIndex
-	 *            the index of the categorie
+	 *            the index of the category
 	 * @return the String which represents the settings
 	 */
 	public ArrayList<StringTupel> getCategorieSettings(int categorieIndex) {
@@ -136,42 +129,43 @@ public class QuestionData {
 	}
 
 	/**
-	 * returns a specific setting of the last requestet Categorie by name
+	 * returns a specific setting of the last requested category by name
 	 * 
 	 * @param name
 	 *            name of the setting
 	 * @return string which represent value of the setting
 	 */
 	public String getCategorieSetting(String name) {
-		return data.get(lastCategorieIndex).getAttribute(name);
+		return data.get(lastCategoryIndex).getAttribute(name);
 	}
 
 	/**
-	 * returns the HTML content of a question as String
+	 * returns the HTML content of a question as string sets the
+	 * lastCategorieIndex and questionIndex to this index
 	 * 
 	 * @param categorieIndex
-	 *            index of the categorie which consist the question
+	 *            index of the category which consist the question
 	 * @param questionIndex
-	 *            index of the question in the categorie
+	 *            index of the question in the category
 	 * @return String which consist the content of the HTML file
 	 */
 	public QuestionInfos getQuestion(int categorieIndex, int questionIndex) {
-		lastCategorieIndex = categorieIndex;
+		lastCategoryIndex = categorieIndex;
 		lastQuestionIndex = questionIndex;
 		return data.get(categorieIndex).get(questionIndex);
 	}
 
 	/**
-	 * return the categorie from the last requestet question
+	 * return the category from the last requested question
 	 * 
-	 * @return index from the last categorie
+	 * @return index from the last category
 	 */
-	public int getLastCategorieIndex() {
-		return lastCategorieIndex;
+	public int getLastCategoryIndex() {
+		return lastCategoryIndex;
 	}
 
 	/**
-	 * returns the index of the last requestet question
+	 * returns the index of the last requested question
 	 * 
 	 * @return index of the last question
 	 */
@@ -179,29 +173,39 @@ public class QuestionData {
 		return lastQuestionIndex;
 	}
 
+	/**
+	 * decrement the lastQuestionIndex decrement if necessary the
+	 * lastCategoryIndex also
+	 * 
+	 * @return true if it could be decremented, false if not
+	 */
 	public boolean decLastQuestionIndex() {
-		// vorherige Categorie
 		if (lastQuestionIndex == 0) {
-			if (lastCategorieIndex == 0) {
-				return false;
-			} else {
-				lastQuestionIndex = data.get(--lastCategorieIndex).size() - 1;
+			while (data.get(--lastCategoryIndex).size() > 0) {
+				if (lastCategoryIndex == 0)
+					return false;
 			}
+			lastQuestionIndex = data.get(lastCategoryIndex).size() - 1;
 		} else {
-			// eins zurück
 			lastQuestionIndex--;
 		}
 		return true;
 	}
 
+	/**
+	 * increment the lastQuestionIndex increment if necessary the
+	 * lastCategoryIndex also
+	 * 
+	 * @return true if it could be decremented, false if not
+	 */
 	public boolean incLastQuestionIndex() {
-		if (lastQuestionIndex == data.get(lastCategorieIndex).size() - 1) {
-			if (lastCategorieIndex == data.size() - 1) {
-				return false;
-			} else {
-				lastCategorieIndex++;
-				lastQuestionIndex = 0;
+		if (lastQuestionIndex == data.get(lastCategoryIndex).size() - 1) {
+			while (data.get(++lastCategoryIndex).size() > 0) {
+				if (lastCategoryIndex == data.size() - 1) {
+					return false;
+				}
 			}
+			lastQuestionIndex = 0;
 		} else {
 			lastQuestionIndex++;
 		}
@@ -215,31 +219,36 @@ public class QuestionData {
 	 *            answers which would be saved
 	 */
 	public void addAnswers(String name, String answer) {
-		System.out.println("Antwort hinzufügen: " + lastCategorieIndex + ":" + lastQuestionIndex + "-" + name + ":" + answer);
-		data.get(lastCategorieIndex).get(lastQuestionIndex)
+		data.get(lastCategoryIndex).get(lastQuestionIndex)
 				.addAnswer(name, answer);
 	}
 
+	/**
+	 * saves the yet collected answer data to an xml file
+	 * 
+	 * @param path
+	 *            path (+name) of the xml file
+	 */
 	public void saveAnswersToXML(String path) {
 		Document xmlDoc = null;
 		try {
-			// Dokument erstellen
 			xmlDoc = DocumentBuilderFactory.newInstance().newDocumentBuilder()
 					.newDocument();
-			// Wurzelknoten erschaffen
 			Element xmlRoot = xmlDoc.createElement("answers");
 			xmlDoc.appendChild(xmlRoot);
-			//Kategorien
+			// categories
 			for (AttributeArrayList<QuestionInfos> categorie : data) {
-				String catName = categorie.getAttribute("name") == null ? "default" : categorie.getAttribute("name");
+				String catName = categorie.getAttribute("name") == null ? "default"
+						: categorie.getAttribute("name");
 				Element xmlCategorie = xmlDoc.createElement("categorie");
 				xmlCategorie.setAttribute("name", catName);
 				xmlRoot.appendChild(xmlCategorie);
-				// Komponenten einer Frage hinzufügen
-				for(QuestionInfos question : categorie) {
+				// answers
+				for (QuestionInfos question : categorie) {
 					Element xmlQuestion = xmlDoc.createElement("question");
-					for(StringTupel answer : question.getAnswers()) {
-						xmlQuestion.setAttribute(answer.getKey(), answer.getValue());
+					for (StringTupel answer : question.getAnswers()) {
+						xmlQuestion.setAttribute(answer.getKey(),
+								answer.getValue());
 					}
 					xmlCategorie.appendChild(xmlQuestion);
 				}
@@ -247,7 +256,7 @@ public class QuestionData {
 		} catch (ParserConfigurationException e1) {
 			e1.printStackTrace();
 		}
-		// Fragebogen in Datei speichern
+		// save in file
 		try {
 			if (xmlDoc != null) {
 				TransformerFactory

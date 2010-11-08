@@ -38,8 +38,8 @@ import javax.swing.event.ListSelectionListener;
 import test.Watch;
 import experimentQuestionCreator.ElementAttribute;
 import experimentQuestionCreator.ExtendedPanel;
-import experimentQuestionCreator.QuestionElement;
 import experimentQuestionCreator.MyTreeNode;
+import experimentQuestionCreator.QuestionElement;
 import experimentQuestionCreator.XMLHandler;
 
 public class ExperimentGUI extends JFrame {

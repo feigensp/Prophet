@@ -7,7 +7,6 @@
 
 package experimentQuestionCreator;
 
-import java.awt.Dimension;
 import java.util.Vector;
 
 

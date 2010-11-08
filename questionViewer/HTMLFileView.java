@@ -23,30 +23,34 @@ import test.MyTestMain;
  * This class shows the html files (questions) creates the navigation and
  * navigates everything...
  * 
- * @author hasselbe
+ * @author Markus Köppen, Andreas Hasselberg
  * 
  */
 public class HTMLFileView extends JPanel {
 
+	//constants for moving for- or backward
 	public static final int FORWARD = 0;
 	public static final int BACKWARD = 1;
-
+	//constants for the html navigation
 	public static final String FOOTER_FORWARD = "<br><br><input name ='nextQuestion' type='submit' value='Weiter'>";
 	public static final String FOOTER_BACKWARD_FORWARD = "<br><br><input name ='previousQuestion' type='submit' value='Zurück'><input name ='nextQuestion' type='submit' value='Weiter'>";
-	public static final String FOOTER_BACKWARD_END_CATEGORIE = "<br><br><input name ='previousQuestion' type='submit' value='Zurück'><input name ='nextQuestion' type='submit' value='Kategorie Abschließen'>";
+	public static final String FOOTER_BACKWARD_END_CATEGORY = "<br><br><input name ='previousQuestion' type='submit' value='Zurück'><input name ='nextQuestion' type='submit' value='Kategorie Abschließen'>";
 	public static final String FOOTER_END_CATEGORIE = "<br><br><input name ='nextQuestion' type='submit' value='Kategorie Abschließen'>";
-
+	//the data store for everything
 	private QuestionData data;
+	//overview for the user
 	private CategorieQuestionListsPanel cqlp;
-	ArrayList<JScrollPane> textPanes;
+	//the textpane (one is one question)
+	private ArrayList<JScrollPane> textPanes;
+	//current and total size of the panes
 	private int maxPos, curPos;
 
 	/**
-	 * With the call of the Construktor the data ist loaded and everything is
-	 * initialised. The first question is showed.
+	 * With the call of the Constructor the data is loaded and everything is
+	 * initialized. The first question is showed.
 	 * 
 	 * @param path
-	 *            path of the html file with the data
+	 *            path of the xml file with the data
 	 * @param cqlp
 	 *            the categorieQuestionListsPanel where the overview is shown
 	 */
@@ -54,14 +58,28 @@ public class HTMLFileView extends JPanel {
 		super();
 		data = new QuestionData(path);
 		this.cqlp = cqlp;
-
 		textPanes = new ArrayList<JScrollPane>();
 		this.setLayout(new BorderLayout());
-
 		refreshListData();
 		start();
 	}
 
+	/**
+	 * starts the questionnaire with the first available Question
+	 */
+	private void start() {
+		QuestionInfos q = getQuestion(0, 0);
+		maxPos = curPos = -1;
+		addQuestion(q);
+		//starting the editor
+		MyTestMain frame = new MyTestMain();
+		frame.setVisible(true);
+	}
+
+	/**
+	 * creates a JTextPane with the question and adds it
+	 * @param q Question which should be added
+	 */
 	public void addQuestion(QuestionInfos q) {
 		// initialize textPane
 		JTextPane textPane = new JTextPane();
@@ -94,22 +112,21 @@ public class HTMLFileView extends JPanel {
 				};
 			}
 		});
-
 		// set content to TextPane
 		String questSwitch = data.getCategorieSetting("allowswitching");
 		questSwitch = questSwitch == null ? "false" : questSwitch;
 		if (data.getLastQuestionIndex() > 0 && questSwitch.equals("true")) {
 			if (data.getLastQuestionIndex() == data.getQuestionCount(data
-					.getLastCategorieIndex()) - 1) {
+					.getLastCategoryIndex()) - 1) {
 				textPane.setText("<form>" + q.getValue()
-						+ FOOTER_BACKWARD_END_CATEGORIE + "</form>");
+						+ FOOTER_BACKWARD_END_CATEGORY + "</form>");
 			} else {
 				textPane.setText("<form>" + q.getValue()
 						+ FOOTER_BACKWARD_FORWARD + "</form>");
 			}
 		} else {
 			if (data.getLastQuestionIndex() == data.getQuestionCount(data
-					.getLastCategorieIndex()) - 1) {
+					.getLastCategoryIndex()) - 1) {
 				textPane.setText("<form>" + q.getValue() + FOOTER_END_CATEGORIE
 						+ "</form>");
 			} else {
@@ -117,7 +134,6 @@ public class HTMLFileView extends JPanel {
 						+ "</form>");
 			}
 		}
-
 		// various settings
 		JScrollPane scrollPane = new JScrollPane(textPane);
 		textPanes.add(scrollPane);
@@ -125,12 +141,12 @@ public class HTMLFileView extends JPanel {
 		this.add(scrollPane, BorderLayout.CENTER);
 		maxPos++;
 		curPos++;
-		cqlp.selectQuestion(data.getLastCategorieIndex(),
+		cqlp.selectQuestion(data.getLastCategoryIndex(),
 				data.getLastQuestionIndex());
 	}
 
 	/**
-	 * returns the question in categorie with the index cat and the index quest
+	 * returns the question in category with the index cat and the index quest
 	 * itself if it not exist it tries to get the next question if it find no
 	 * next question it returns null
 	 * 
@@ -150,18 +166,6 @@ public class HTMLFileView extends JPanel {
 	}
 
 	/**
-	 * starts the questionnaire with the first available Question
-	 */
-	private void start() {
-		QuestionInfos q = getQuestion(0, 0);
-		maxPos = curPos = -1;
-		addQuestion(q);
-
-		MyTestMain frame = new MyTestMain();
-		frame.setVisible(true);
-	}
-
-	/**
 	 * moves to the next available question
 	 */
 	private void nextQuestion() {
@@ -170,11 +174,10 @@ public class HTMLFileView extends JPanel {
 			curPos++;
 			this.removeAll();
 			this.add(textPanes.get(curPos), BorderLayout.CENTER);
-			updateUI();
-			cqlp.selectQuestion(data.getLastCategorieIndex(),
+			cqlp.selectQuestion(data.getLastCategoryIndex(),
 					data.getLastQuestionIndex());
 		} else {
-			QuestionInfos q = getQuestion(data.getLastCategorieIndex(),
+			QuestionInfos q = getQuestion(data.getLastCategoryIndex(),
 					(data.getLastQuestionIndex() + 1));
 			if (q == null) {
 				endQuestionnaire();
@@ -182,7 +185,7 @@ public class HTMLFileView extends JPanel {
 				addQuestion(q);
 			}
 		}
-		this.revalidate();
+		this.updateUI();
 		data.saveAnswersToXML("answers");
 	}
 
@@ -191,17 +194,20 @@ public class HTMLFileView extends JPanel {
 	 */
 	private void previousQuestion() {
 		data.decLastQuestionIndex();
-		cqlp.selectQuestion(data.getLastCategorieIndex(),
+		cqlp.selectQuestion(data.getLastCategoryIndex(),
 				data.getLastQuestionIndex());
 		curPos--;
 		this.removeAll();
 		this.add(textPanes.get(curPos), BorderLayout.CENTER);
-		this.revalidate();
+		this.updateUI();
 		data.saveAnswersToXML("answers");
 	}
 
 	/**
-	 * saves the given answers in QuestionData
+	 * saves the answers
+	 * returns an integer to know which button was pressed
+	 * @param data data which should be stored an consist the info about which button was pressed
+	 * @return FORWARD if forward button, BACKWARD if backward button, -1 if neither
 	 */
 	private int saveAnswers(String data) {
 		StringTokenizer st = new StringTokenizer(data, "&");
@@ -220,7 +226,6 @@ public class HTMLFileView extends JPanel {
 			}
 			if (!name.equals("nextQuestion")
 					&& !name.equals("previousQuestion")) {
-				System.out.println("bli");
 				this.data.addAnswers(name, content);
 			} else if (name.equals("nextQuestion")) {
 				return FORWARD;
@@ -250,7 +255,7 @@ public class HTMLFileView extends JPanel {
 			}
 			cqlp.addCategorie(questions);
 		}
-		cqlp.selectQuestion(data.getLastCategorieIndex(),
+		cqlp.selectQuestion(data.getLastCategoryIndex(),
 				data.getLastQuestionIndex());
 	}
 
