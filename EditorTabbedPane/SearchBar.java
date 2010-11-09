@@ -107,7 +107,7 @@ public class SearchBar extends JPanel {
 		textPane.getDocument().addDocumentListener(new DocumentListener() {
 			private void inputChanged() {
 				cancelSearch();
-				find(SEARCH_FORWARD);
+//				find(SEARCH_FORWARD);
 			}
 
 			public void changedUpdate(DocumentEvent arg0) {
