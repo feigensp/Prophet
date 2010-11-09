@@ -10,6 +10,8 @@ public class EditorTabbedPane extends JTabbedPane {
 	boolean searchable;
 	boolean editable;
 
+	// UserDataRecorder rec;
+
 	public EditorTabbedPane() {
 		super(JTabbedPane.TOP);
 		searchable = true;
@@ -20,6 +22,8 @@ public class EditorTabbedPane extends JTabbedPane {
 		super(JTabbedPane.TOP);
 		this.searchable = searchable;
 		this.editable = editable;
+		 //rec = new UserDataRecorder();
+		 //rec.startFileTime(this);
 	}
 
 	public void openFile(File file) {
@@ -38,5 +42,6 @@ public class EditorTabbedPane extends JTabbedPane {
 		this.setTabComponentAt(this.getTabCount() - 1, new ButtonTabComponent(
 				this));
 		myPanel.grabFocus();
+		 //System.out.println(rec.getFileTime());
 	}
 }

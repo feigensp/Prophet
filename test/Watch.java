@@ -63,11 +63,13 @@ public class Watch extends JLabel implements Runnable {
 	 * Lässt die Stoppuhr ihre Arbeit wieder aufnehmen
 	 */
 	public void resume() {
-		synchronized (this) {
-			isRunning = true;
-			notify();
+		if(!isRunning) {
+			synchronized (this) {
+				isRunning = true;
+				notify();
+			}
+			time = System.currentTimeMillis() - (clock * 1000);
 		}
-		time = System.currentTimeMillis() - (clock * 1000);
 	}
 
 	/**
@@ -113,7 +115,7 @@ public class Watch extends JLabel implements Runnable {
 				}
 			}
 			try {
-				Thread.sleep(1000);
+				Thread.sleep(200);
 				synchronized (this) {
 					if (!isRunning) {
 						wait();

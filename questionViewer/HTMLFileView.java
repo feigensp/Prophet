@@ -6,6 +6,7 @@ import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
@@ -18,6 +19,7 @@ import javax.swing.text.html.HTML;
 import javax.swing.text.html.HTMLEditorKit;
 
 import test.MyTestMain;
+import test.Watch;
 
 /**
  * This class shows the html files (questions) creates the navigation and
@@ -42,6 +44,10 @@ public class HTMLFileView extends JPanel {
 	private CategorieQuestionListsPanel cqlp;
 	//the textpane (one is one question)
 	private ArrayList<JScrollPane> textPanes;
+	//time objects
+	private JPanel timePanel;
+	private ArrayList<Watch> times;
+	private Watch totalTime;
 	//current and total size of the panes
 	private int maxPos, curPos;
 
@@ -59,6 +65,10 @@ public class HTMLFileView extends JPanel {
 		data = new QuestionData(path);
 		this.cqlp = cqlp;
 		textPanes = new ArrayList<JScrollPane>();
+		times = new ArrayList<Watch>();
+		totalTime = new Watch("Gesamtzeit");
+		totalTime.start();
+		timePanel = new JPanel();
 		this.setLayout(new BorderLayout());
 		refreshListData();
 		start();
@@ -137,12 +147,24 @@ public class HTMLFileView extends JPanel {
 		// various settings
 		JScrollPane scrollPane = new JScrollPane(textPane);
 		textPanes.add(scrollPane);
-		this.removeAll();
-		this.add(scrollPane, BorderLayout.CENTER);
+		times.add(new Watch(q.getKey()));
 		maxPos++;
-		curPos++;
+		curPos++;	
+		times.get(curPos).start();	
+		
+		refresh();
+	}
+	
+	private void refresh() {
+		timePanel.removeAll();
+		this.removeAll();		
+		this.add(textPanes.get(curPos), BorderLayout.CENTER);
+		times.get(curPos).resume();
+		timePanel.add(totalTime);
+		timePanel.add(times.get(curPos));
+		this.add(timePanel, BorderLayout.SOUTH);
 		cqlp.selectQuestion(data.getLastCategoryIndex(),
-				data.getLastQuestionIndex());
+				data.getLastQuestionIndex());		
 	}
 
 	/**
@@ -169,13 +191,11 @@ public class HTMLFileView extends JPanel {
 	 * moves to the next available question
 	 */
 	private void nextQuestion() {
+		times.get(curPos).pause();
 		if (curPos < maxPos) {
 			data.incLastQuestionIndex();
 			curPos++;
-			this.removeAll();
-			this.add(textPanes.get(curPos), BorderLayout.CENTER);
-			cqlp.selectQuestion(data.getLastCategoryIndex(),
-					data.getLastQuestionIndex());
+			refresh();
 		} else {
 			QuestionInfos q = getQuestion(data.getLastCategoryIndex(),
 					(data.getLastQuestionIndex() + 1));
@@ -193,12 +213,10 @@ public class HTMLFileView extends JPanel {
 	 * trys to move to the previous question
 	 */
 	private void previousQuestion() {
+		times.get(curPos).pause();
 		data.decLastQuestionIndex();
-		cqlp.selectQuestion(data.getLastCategoryIndex(),
-				data.getLastQuestionIndex());
 		curPos--;
-		this.removeAll();
-		this.add(textPanes.get(curPos), BorderLayout.CENTER);
+		refresh();
 		this.updateUI();
 		data.saveAnswersToXML("answers");
 	}
