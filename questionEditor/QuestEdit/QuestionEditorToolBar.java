@@ -16,18 +16,11 @@ public class QuestionEditorToolBar extends JToolBar {
 	public QuestionEditorToolBar(EditArea ea) {
 		editArea = ea;
 		setFloatable(false);
-		JButton boldButton = new JButton("<b>");
-		// toolbar buttons
-		boldButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				editArea.setTag("b");
-			}
-		});
-		add(boldButton);
-		JButton tableButton = new JButton("<table>");
-		add(tableButton);
-		MacroBox macroBox = new MacroBox(editArea);
-		add(macroBox);
+
+		add(new FontStyleBox(editArea));
+		add(new FontSizeBox(editArea));
+		add(new FormularBox(editArea));
+		add(new MacroBox(editArea));
 	}
 	
 	public void setEnabled(boolean enabled) {
