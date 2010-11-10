@@ -66,6 +66,7 @@ class IconCellRenderer extends JLabel implements ListCellRenderer {
 				p.addPoint(5, 12);
 				p.addPoint(5, 1);
 				g.drawPolygon(p);
+				g.fillPolygon(p);
 			}
 			if (type == UPDOWNARROW) {
 				// draw arrow up
@@ -78,6 +79,7 @@ class IconCellRenderer extends JLabel implements ListCellRenderer {
 				p.addPoint(13, 4);
 				p.addPoint(15, 4);
 				g.drawPolygon(p);
+				g.fillPolygon(p);
 			}
 		}
 	}
