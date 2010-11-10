@@ -44,6 +44,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import questionViewer.StringTupel;
+
 @SuppressWarnings("serial")
 public class MacroEditor extends JFrame {
 
@@ -54,7 +56,7 @@ public class MacroEditor extends JFrame {
 	private JTextPane macroContentTextPane;
 	private JTextField macroNameTextField;
 
-	private ArrayList<ElementAttribute<String>> macros;
+	private ArrayList<StringTupel> macros;
 
 	/**
 	 * Launch the application.
@@ -135,9 +137,9 @@ public class MacroEditor extends JFrame {
 			public void valueChanged(ListSelectionEvent e) {
 				if (macroList.getSelectedIndex() != -1) {
 					macroNameTextField.setText(macros.get(
-							macroList.getSelectedIndex()).getName());
+							macroList.getSelectedIndex()).getKey());
 					macroContentTextPane.setText(macros.get(
-							macroList.getSelectedIndex()).getContent());
+							macroList.getSelectedIndex()).getValue());
 					macroNameTextField.setEnabled(true);
 					macroContentTextPane.setEnabled(true);
 				} else {
@@ -152,14 +154,14 @@ public class MacroEditor extends JFrame {
 		// makronamen in den Daten aktualisieren
 		macroNameTextField.addKeyListener(new KeyAdapter() {
 			public void keyReleased(KeyEvent arg0) {
-				macros.get(macroList.getSelectedIndex()).setName(
+				macros.get(macroList.getSelectedIndex()).setKey(
 						macroNameTextField.getText());
 			}
 		});
 		// Makroinhalt in Daten aktualisieren
 		macroContentTextPane.addKeyListener(new KeyAdapter() {
 			public void keyReleased(KeyEvent arg0) {
-				macros.get(macroList.getSelectedIndex()).setContent(
+				macros.get(macroList.getSelectedIndex()).setValue(
 						macroContentTextPane.getText());
 			}
 		});
@@ -191,13 +193,13 @@ public class MacroEditor extends JFrame {
 					xmlTree = DocumentBuilderFactory.newInstance()
 							.newDocumentBuilder().newDocument();
 					// Wurzelknoten erschaffen und Attribute hinzufügen
-					Element xmlRoot = xmlTree.createElement("macro");
+					Element xmlRoot = xmlTree.createElement("macros");
 					xmlTree.appendChild(xmlRoot);
 					Element xmlChild;
-					for (ElementAttribute<String> child : macros) {
-						xmlChild = xmlTree.createElement(child.getName());
-						xmlChild.setAttribute("name", child.getName());
-						xmlChild.setTextContent(child.getContent());
+					for (StringTupel child : macros) {
+						xmlChild = xmlTree.createElement("macro");
+						xmlChild.setAttribute("name", child.getKey());
+						xmlChild.setTextContent(child.getValue());
 						xmlRoot.appendChild(xmlChild);
 					}
 				} catch (ParserConfigurationException e1) {
@@ -248,7 +250,7 @@ public class MacroEditor extends JFrame {
 	}
 
 	private void loadMacros() {
-		macros = new ArrayList<ElementAttribute<String>>();
+		macros = new ArrayList<StringTupel>();
 		try {
 			// Document lesen
 			Document doc = DocumentBuilderFactory.newInstance()
@@ -276,7 +278,7 @@ public class MacroEditor extends JFrame {
 	}
 
 	private void addMacro(String macroName, String makroContent) {
-		macros.add(new ElementAttribute<String>(macroName, makroContent));
+		macros.add(new StringTupel(macroName, makroContent));
 		listModel.addElement(macroName);
 	}
 
@@ -286,7 +288,7 @@ public class MacroEditor extends JFrame {
 	}
 
 	private void insertMacro(int index, String macroName, String macroContent) {
-		macros.add(index, new ElementAttribute<String>(macroName, macroContent));
+		macros.add(index, new StringTupel(macroName, macroContent));
 		listModel.add(index, macroName);
 	}
 

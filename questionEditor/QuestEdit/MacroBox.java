@@ -1,9 +1,5 @@
 package questionEditor.QuestEdit;
 
-/**
- * Todo: makros aus xml datei laden
- */
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -22,20 +18,19 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import questionEditor.EditArea;
+
 @SuppressWarnings("serial")
 public class MacroBox extends JComboBox implements ActionListener, KeyListener {
 
-	public static final String TABLEROWDARK5RADIO = "Tabellenzeile (8 Radio - dunkel)";
-	public static final String TABLEROWLIGHT5RADIO = "Tabellenzeile (8 Radio - hell)";
+	private ArrayList<String> macros;
 
-	private ArrayList<String> makros;
+	EditArea textPane;
 
-	JTextPane textPane;
-
-	public MacroBox(JTextPane textPane) {
+	public MacroBox(EditArea textPane) {
 		super();
 
-		makros = new ArrayList<String>();
+		macros = new ArrayList<String>();
 		this.textPane = textPane;
 		this.addItem("Makroauswahl");
 		this.addActionListener(this);
@@ -46,7 +41,7 @@ public class MacroBox extends JComboBox implements ActionListener, KeyListener {
 	private void loadMakros() {
 		try {
 			Document doc = DocumentBuilderFactory.newInstance()
-					.newDocumentBuilder().parse(new File("makro.xml"));
+					.newDocumentBuilder().parse(new File("macro.xml"));
 			Node xmlRoot = doc.getFirstChild();
 			NodeList xmlMakros = xmlRoot.getChildNodes();
 			for (int i = 0; i < xmlMakros.getLength(); i++) {
@@ -57,7 +52,7 @@ public class MacroBox extends JComboBox implements ActionListener, KeyListener {
 					makroName += "\t [Strg + " + (i + 1) % 10 + "]";
 				}
 				this.addItem(makroName);
-				makros.add(makroContent);
+				macros.add(makroContent);
 			}
 		} catch (SAXException e) {
 			e.printStackTrace();
@@ -71,7 +66,13 @@ public class MacroBox extends JComboBox implements ActionListener, KeyListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (this.getSelectedIndex() != 0) {
-			textPane.replaceSelection(makros.get(this.getSelectedIndex() - 1));
+			String s = macros.get(this.getSelectedIndex() - 1);
+			int index = s.indexOf("%s");
+			if(index != -1) {
+				textPane.setEmbedding(s.substring(0, index), s.substring(index+2));
+			} else {
+				textPane.replaceSelection(macros.get(this.getSelectedIndex() - 1));
+			}
 			this.setSelectedIndex(0);
 		}
 	}
@@ -81,53 +82,113 @@ public class MacroBox extends JComboBox implements ActionListener, KeyListener {
 		if (ke.isControlDown()) {
 			switch (ke.getKeyCode()) {
 			case KeyEvent.VK_1:
-				if (makros.size() >= 1) {
-					textPane.replaceSelection(makros.get(0));
+				if (macros.size() >= 1) {
+					String s = macros.get(0);
+					int index = s.indexOf("%s");
+					if(index != -1) {
+						textPane.setEmbedding(s.substring(0, index), s.substring(index+2));
+					} else {
+						textPane.replaceSelection(s);
+					}
 				}
 				break;
 			case KeyEvent.VK_2:
-				if (makros.size() >= 2) {
-					textPane.replaceSelection(makros.get(1));
+				if (macros.size() >= 2) {
+					String s = macros.get(1);
+					int index = s.indexOf("%s");
+					if(index != -1) {
+						textPane.setEmbedding(s.substring(0, index), s.substring(index+2));
+					} else {
+						textPane.replaceSelection(s);
+					}
 				}
 				break;
 			case KeyEvent.VK_3:
-				if (makros.size() >= 3) {
-					textPane.replaceSelection(makros.get(2));
+				if (macros.size() >= 3) {
+					String s = macros.get(2);
+					int index = s.indexOf("%s");
+					if(index != -1) {
+						textPane.setEmbedding(s.substring(0, index), s.substring(index+2));
+					} else {
+						textPane.replaceSelection(s);
+					}
 				}
 				break;
 			case KeyEvent.VK_4:
-				if (makros.size() >= 4) {
-					textPane.replaceSelection(makros.get(3));
+				if (macros.size() >= 4) {
+					String s = macros.get(3);
+					int index = s.indexOf("%s");
+					if(index != -1) {
+						textPane.setEmbedding(s.substring(0, index), s.substring(index+2));
+					} else {
+						textPane.replaceSelection(s);
+					}
 				}
 				break;
 			case KeyEvent.VK_5:
-				if (makros.size() >= 5) {
-					textPane.replaceSelection(makros.get(4));
+				if (macros.size() >= 5) {
+					String s = macros.get(5);
+					int index = s.indexOf("%s");
+					if(index != -1) {
+						textPane.setEmbedding(s.substring(0, index), s.substring(index+2));
+					} else {
+						textPane.replaceSelection(s);
+					}
 				}
 				break;
 			case KeyEvent.VK_6:
-				if (makros.size() >= 6) {
-					textPane.replaceSelection(makros.get(5));
+				if (macros.size() >= 6) {
+					String s = macros.get(5);
+					int index = s.indexOf("%s");
+					if(index != -1) {
+						textPane.setEmbedding(s.substring(0, index), s.substring(index+2));
+					} else {
+						textPane.replaceSelection(s);
+					}
 				}
 				break;
 			case KeyEvent.VK_7:
-				if (makros.size() >= 7) {
-					textPane.replaceSelection(makros.get(6));
+				if (macros.size() >= 7) {
+					String s = macros.get(6);
+					int index = s.indexOf("%s");
+					if(index != -1) {
+						textPane.setEmbedding(s.substring(0, index), s.substring(index+2));
+					} else {
+						textPane.replaceSelection(s);
+					}
 				}
 				break;
 			case KeyEvent.VK_8:
-				if (makros.size() >= 8) {
-					textPane.replaceSelection(makros.get(7));
+				if (macros.size() >= 8) {
+					String s = macros.get(7);
+					int index = s.indexOf("%s");
+					if(index != -1) {
+						textPane.setEmbedding(s.substring(0, index), s.substring(index+2));
+					} else {
+						textPane.replaceSelection(s);
+					}
 				}
 				break;
 			case KeyEvent.VK_9:
-				if (makros.size() >= 9) {
-					textPane.replaceSelection(makros.get(8));
+				if (macros.size() >= 9) {
+					String s = macros.get(8);
+					int index = s.indexOf("%s");
+					if(index != -1) {
+						textPane.setEmbedding(s.substring(0, index), s.substring(index+2));
+					} else {
+						textPane.replaceSelection(s);
+					}
 				}
 				break;
 			case KeyEvent.VK_0:
-				if (makros.size() >= 10) {
-					textPane.replaceSelection(makros.get(9));
+				if (macros.size() >= 10) {
+					String s = macros.get(9);
+					int index = s.indexOf("%s");
+					if(index != -1) {
+						textPane.setEmbedding(s.substring(0, index), s.substring(index+2));
+					} else {
+						textPane.replaceSelection(s);
+					}
 				}
 				break;
 			}
