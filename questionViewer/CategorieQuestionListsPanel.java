@@ -53,6 +53,7 @@ public class CategorieQuestionListsPanel extends JScrollPane{
 			listModel.addElement(question);
 		}
 		JList list = new JList(listModel);
+		//TODO: In Feature kapseln
 		list.setCellRenderer(new IconCellRenderer(list, iconType));
 		list.setEnabled(false);
 		list.setBorder(BorderFactory.createEtchedBorder());
