@@ -1,5 +1,6 @@
 package questionEditor.QuestEdit;
 
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -27,5 +28,12 @@ public class QuestionEditorToolBar extends JToolBar {
 		add(tableButton);
 		MacroBox macroBox = new MacroBox(editArea);
 		add(macroBox);
+	}
+	
+	public void setEnabled(boolean enabled) {
+		Component[] components = this.getComponents();
+		for(int i=0; i<components.length; i++) {
+			components[i].setEnabled(enabled);
+		}
 	}
 }

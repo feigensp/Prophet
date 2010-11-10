@@ -8,6 +8,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextPane;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
@@ -28,9 +30,12 @@ public class QuestionEditorPanel extends JPanel {
 	public static final String HTMLSTART = "<html><head></head><body>";
 	public static final String HTMLEND = "<br><br><br><input type='submit' value='Weiter'></body></html>";
 	
-	EditArea editArea;
-	JTextPane viewPane;
-	QuestionTreeNode selected;	
+	private EditArea editArea;
+	private JTextPane viewPane;
+	private QuestionTreeNode selected;	
+	
+	private JTabbedPane editViewTabbedPane;
+	private QuestionEditorToolBar toolBar;
 	
 	public QuestionEditorPanel(QuestionTreeNode sel) {
 		selected=sel;
@@ -106,7 +111,7 @@ public class QuestionEditorPanel extends JPanel {
 		
 		setLayout(new BorderLayout(0, 0));
 		
-		JTabbedPane editViewTabbedPane = new JTabbedPane(JTabbedPane.TOP);
+		editViewTabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		add(editViewTabbedPane);
 
 		JPanel editPanel = new JPanel();
@@ -121,7 +126,17 @@ public class QuestionEditorPanel extends JPanel {
 		viewPane.setEditable(false);
 		viewPanel.add(new JScrollPane(viewPane), BorderLayout.CENTER);
 		
-		QuestionEditorToolBar toolBar = new QuestionEditorToolBar(editArea);
+		toolBar = new QuestionEditorToolBar(editArea);
 		add(toolBar, BorderLayout.NORTH);
+		
+		editViewTabbedPane.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent arg0) {
+				if(editViewTabbedPane.getSelectedIndex() == 0) {
+					toolBar.setEnabled(true);
+				} else {
+					toolBar.setEnabled(false);
+				}
+			}
+		});
 	}
 }
