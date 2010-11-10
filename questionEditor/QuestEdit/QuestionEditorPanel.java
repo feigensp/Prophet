@@ -116,7 +116,9 @@ public class QuestionEditorPanel extends JPanel {
 
 		JPanel editPanel = new JPanel();
 		editViewTabbedPane.addTab("Editor", null, editPanel, null);
-		editPanel.setLayout(new BorderLayout(0, 0));
+		editPanel.setLayout(new BorderLayout(0, 0));		
+		toolBar = new QuestionEditorToolBar(editArea);
+		editPanel.add(toolBar, BorderLayout.NORTH);
 		editPanel.add(new JScrollPane(editArea), BorderLayout.CENTER);
 
 		JPanel viewPanel = new JPanel();
@@ -125,18 +127,5 @@ public class QuestionEditorPanel extends JPanel {
 
 		viewPane.setEditable(false);
 		viewPanel.add(new JScrollPane(viewPane), BorderLayout.CENTER);
-		
-		toolBar = new QuestionEditorToolBar(editArea);
-		add(toolBar, BorderLayout.NORTH);
-		
-		editViewTabbedPane.addChangeListener(new ChangeListener() {
-			public void stateChanged(ChangeEvent arg0) {
-				if(editViewTabbedPane.getSelectedIndex() == 0) {
-					toolBar.setEnabled(true);
-				} else {
-					toolBar.setEnabled(false);
-				}
-			}
-		});
 	}
 }
