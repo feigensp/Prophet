@@ -47,12 +47,13 @@ public class CategorieQuestionListsPanel extends JScrollPane{
 	 * the strings in the ArrayList represent the names from the questions
 	 * @param categorie Strings with the names of the questions
 	 */
-	public void addCategorie(ArrayList<String> categorie) {
+	public void addCategorie(ArrayList<String> categorie, int iconType) {
 		DefaultListModel listModel = new DefaultListModel();
 		for(String question : categorie) {
 			listModel.addElement(question);
 		}
 		JList list = new JList(listModel);
+		list.setCellRenderer(new IconCellRenderer(list, iconType));
 		list.setEnabled(false);
 		list.setBorder(BorderFactory.createEtchedBorder());
 		//set size

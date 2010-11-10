@@ -18,6 +18,8 @@ import javax.swing.text.html.FormView;
 import javax.swing.text.html.HTML;
 import javax.swing.text.html.HTMLEditorKit;
 
+import questionViewer.IconCellRenderer.ListIcons;
+
 import test.MyTestMain;
 import test.Watch;
 
@@ -271,7 +273,12 @@ public class HTMLFileView extends JPanel {
 			for (int j = 0; j < data.getQuestionCount(i); j++) {
 				questions.add(data.getQuestion(i, j).getKey());
 			}
-			cqlp.addCategorie(questions);
+			String questSwitch = data.getCategorieSetting("allowswitching");
+			if(questSwitch != null && questSwitch.equals("true")) {
+				cqlp.addCategorie(questions, ListIcons.UPDOWNARROW);				
+			} else {
+				cqlp.addCategorie(questions, ListIcons.DOWNARROW);				
+			}
 		}
 		cqlp.selectQuestion(data.getLastCategoryIndex(),
 				data.getLastQuestionIndex());
