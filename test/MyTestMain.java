@@ -11,10 +11,10 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JSplitPane;
 
-import experimentView.EditorTabbedPane.EditorTabbedPane;
-import experimentView.FileTree.FileEvent;
-import experimentView.FileTree.FileListener;
-import experimentView.FileTree.FileTree;
+import experimentViewer.sourceViewer.EditorTabbedPane.EditorTabbedPane;
+import experimentViewer.sourceViewer.FileTree.FileEvent;
+import experimentViewer.sourceViewer.FileTree.FileListener;
+import experimentViewer.sourceViewer.FileTree.FileTree;
 
 import util.StringTupel;
 
