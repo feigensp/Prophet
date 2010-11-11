@@ -39,20 +39,27 @@ public class SettingsPathChooser extends JPanel implements SettingsComponent {
 				fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 				if (fc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
 					//TODO: hier muss man sich noch was ausdenken...
-					String home = new File ("").getAbsolutePath();
+//					String home = new File ("").getAbsolutePath();
+					String currentPath = System.getProperty("user.dir");
 					String selectedPath = fc.getSelectedFile().getAbsolutePath();
-					System.out.println(home);
-					System.out.println(selectedPath);
-					if (selectedPath.startsWith(home)) {
-						String substring = selectedPath.substring(home.length());
-						if (substring.isEmpty()) {
-							textField.setText(".");
-						} else {
-							textField.setText(substring);
-						}
-					} else {
-						textField.setText(fc.getSelectedFile().toString());
+					if(selectedPath.equals(currentPath)) {
+						selectedPath = ".";
+					} else if(selectedPath.indexOf(currentPath) == 0) {
+						selectedPath = selectedPath.substring(currentPath.length()+1) + System.getProperty("file.separator");
 					}
+					textField.setText(selectedPath);
+//					System.out.println(home);
+//					System.out.println(selectedPath);
+//					if (selectedPath.startsWith(home)) {
+//						String substring = selectedPath.substring(home.length());
+//						if (substring.isEmpty()) {
+//							textField.setText(".");
+//						} else {
+//							textField.setText(substring);
+//						}
+//					} else {
+//						textField.setText(fc.getSelectedFile().toString());
+//					}
 				}
 			}
 		});
