@@ -16,7 +16,7 @@ import javax.swing.JTextPane;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
-import questionViewer.StringTupel;
+import util.StringTupel;
 
 public class MultilineDialogs extends JDialog implements ActionListener {
 	

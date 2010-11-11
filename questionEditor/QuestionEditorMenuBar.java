@@ -8,7 +8,8 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
-import questionEditor.QuestionTree.QuestionTreeNode;
+import util.QuestionTreeNode;
+import util.XMLTreeHandler;
 
 @SuppressWarnings("serial")
 public class QuestionEditorMenuBar extends JMenuBar {

@@ -8,7 +8,7 @@ import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 
 import questionEditor.EditArea;
-import questionViewer.StringTupel;
+import util.StringTupel;
 
 public class FormularBox extends JComboBox implements ActionListener {
 

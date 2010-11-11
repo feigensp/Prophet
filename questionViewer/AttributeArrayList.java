@@ -2,6 +2,8 @@ package questionViewer;
 
 import java.util.ArrayList;
 
+import util.StringTupel;
+
 /**
  * This class creates an ArrayList which could get a list of attributes
  * 

@@ -1,6 +1,8 @@
 package questionViewer;
 
 import java.util.ArrayList;
+
+import util.StringTupel;
 /**
  * this class stores all infos to a question
  * the question itself and the yet given answers

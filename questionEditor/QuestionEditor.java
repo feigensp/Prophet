@@ -20,7 +20,7 @@ import questionEditor.QuestEdit.QuestionEditorPanel;
 import questionEditor.QuestionTree.QuestionTree;
 import questionEditor.QuestionTree.QuestionTreeEvent;
 import questionEditor.QuestionTree.QuestionTreeListener;
-import questionEditor.QuestionTree.QuestionTreeNode;
+import util.QuestionTreeNode;
 
 
 @SuppressWarnings("serial")

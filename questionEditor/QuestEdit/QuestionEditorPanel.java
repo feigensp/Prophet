@@ -22,7 +22,7 @@ import javax.swing.text.html.HTML;
 import javax.swing.text.html.HTMLEditorKit;
 
 import questionEditor.EditArea;
-import questionEditor.QuestionTree.QuestionTreeNode;
+import util.QuestionTreeNode;
 
 
 @SuppressWarnings("serial")

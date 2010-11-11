@@ -11,11 +11,12 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JSplitPane;
 
-import questionViewer.StringTupel;
-import EditorTabbedPane.EditorTabbedPane;
-import FileTree.FileEvent;
-import FileTree.FileListener;
-import FileTree.FileTree;
+import experimentView.EditorTabbedPane.EditorTabbedPane;
+import experimentView.FileTree.FileEvent;
+import experimentView.FileTree.FileListener;
+import experimentView.FileTree.FileTree;
+
+import util.StringTupel;
 
 
 @SuppressWarnings("serial")

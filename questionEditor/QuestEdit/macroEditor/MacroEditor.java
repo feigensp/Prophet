@@ -44,7 +44,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import questionViewer.StringTupel;
+import util.StringTupel;
 
 @SuppressWarnings("serial")
 public class MacroEditor extends JFrame {

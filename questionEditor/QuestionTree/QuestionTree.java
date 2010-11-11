@@ -32,6 +32,8 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
+import util.QuestionTreeNode;
+
 @SuppressWarnings("serial")
 public class QuestionTree extends JScrollPane {
 	private JTree tree;

@@ -20,6 +20,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import util.StringTupel;
+
 /**
  * This class contains the data loaded out of an xml file the data represents
  * questions in their categories

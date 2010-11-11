@@ -36,11 +36,11 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import test.Watch;
-import experimentQuestionCreator.ElementAttribute;
-import experimentQuestionCreator.ExtendedPanel;
-import experimentQuestionCreator.MyTreeNode;
-import experimentQuestionCreator.QuestionElement;
-import experimentQuestionCreator.XMLHandler;
+import test.experimentQuestionCreator.ElementAttribute;
+import test.experimentQuestionCreator.ExtendedPanel;
+import test.experimentQuestionCreator.MyTreeNode;
+import test.experimentQuestionCreator.QuestionElement;
+import test.experimentQuestionCreator.XMLHandler;
 
 public class ExperimentGUI extends JFrame {
 

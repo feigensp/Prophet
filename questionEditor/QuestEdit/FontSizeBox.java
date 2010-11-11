@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import javax.swing.JComboBox;
 
 import questionEditor.EditArea;
-import questionViewer.StringTupel;
+import util.StringTupel;
 
 public class FontSizeBox extends JComboBox implements ActionListener{
 	

@@ -13,7 +13,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JPanel;
 
-import questionEditor.QuestionTree.QuestionTreeNode;
+import util.QuestionTreeNode;
 
 
 @SuppressWarnings("serial")
