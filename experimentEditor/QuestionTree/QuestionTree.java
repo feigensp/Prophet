@@ -29,6 +29,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
@@ -37,8 +38,7 @@ import util.QuestionTreeNode;
 @SuppressWarnings("serial")
 public class QuestionTree extends JScrollPane {
 	private JTree tree;
-	
-	QuestionTreeNode selected;
+	private QuestionTreeNode selected;
 	
 	private JPopupMenu treePopup; // the popup-menu of the tree itself
 	private JPopupMenu categoryPopup; // the popup-menu of categories
@@ -57,14 +57,13 @@ public class QuestionTree extends JScrollPane {
 	 * @param viewPane
 	 *            pane for showing level 3 content in html
 	 */
-	public QuestionTree(QuestionTreeNode root) {
-		tree = new JTree(new DefaultTreeModel(new QuestionTreeNode(), true));
-		setRoot(root);
+	public QuestionTree() {
+		tree = new JTree((TreeModel)null);
 		tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 		setViewportView(tree);
 		tree.addMouseListener(new MouseAdapter() {			
 			public void mouseReleased(MouseEvent e) {
-				if (e.isPopupTrigger()) {
+				if (tree.getModel()!=null && e.isPopupTrigger()) {
 					TreePath selPath = tree.getPathForLocation(e.getX(), e.getY());
 					if (selPath==null) {
 						treePopup.show(tree, e.getX(), e.getY());
@@ -238,25 +237,30 @@ public class QuestionTree extends JScrollPane {
 	 */
 	private void addCategory(String name) {
 		QuestionTreeNode root = (QuestionTreeNode)tree.getModel().getRoot();
-		QuestionTreeNode newCategory = new QuestionTreeNode(name);
-		newCategory.setCategory(true);
+		QuestionTreeNode newCategory = new QuestionTreeNode("category",name);
 		root.insert(newCategory, root.getChildCount());
 		tree.updateUI();
 	}
 	
 	private void addQuestion(QuestionTreeNode category, String name) {
-		QuestionTreeNode newQuestion = new QuestionTreeNode(name);
-		newQuestion.setQuestion(true);
+		QuestionTreeNode newQuestion = new QuestionTreeNode("question",name);
 		category.insert(newQuestion,category.getChildCount());
 		tree.updateUI();
 	}
-	
+	public void newRoot() {
+		setRoot(new QuestionTreeNode("root"));
+	}
 	public void setRoot(QuestionTreeNode n) {
-		if (n==null) {
-			n = new QuestionTreeNode("root");
+		selected=null;
+		if (n!=null) {
+			tree.setModel(new DefaultTreeModel(n));
+			tree.setEnabled(true);
+		} else {
+			tree.setModel(new DefaultTreeModel(/*new QuestionTreeNode("")*/null));
+			tree.setEnabled(false);			
 		}
-		tree.setModel(new DefaultTreeModel(n));
 		tree.updateUI();
+		fireEvent(null);
 	}
 	public QuestionTreeNode getRoot() {
 		return (QuestionTreeNode)tree.getModel().getRoot();
@@ -276,10 +280,10 @@ public class QuestionTree extends JScrollPane {
 			questionTreeListeners.removeElement(l);
 	}
 
-	private void fireEvent(QuestionTreeNode question) {
+	private void fireEvent(QuestionTreeNode questionTreeNode) {
 		if (questionTreeListeners == null)
 			return;
-		QuestionTreeEvent event = new QuestionTreeEvent(this, question);
+		QuestionTreeEvent event = new QuestionTreeEvent(this, questionTreeNode);
 		for (Enumeration<QuestionTreeListener> e = questionTreeListeners.elements(); e
 				.hasMoreElements();)
 			((QuestionTreeListener) e.nextElement()).questionTreeEventOccured(event);			

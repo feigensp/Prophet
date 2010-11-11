@@ -46,7 +46,7 @@ public class XMLTreeHandler {
 	private static void addChildrenToXML(Document xmlTree, Element xmlParent, Vector<QuestionTreeNode> treeChilds) {
 		// Kinder hinzufügen
 		for (QuestionTreeNode treeChild : treeChilds) {
-			Element xmlChild = xmlTree.createElement(treeChild.isCategory() ? "category" : treeChild.isQuestion() ? "question" : "general");
+			Element xmlChild = xmlTree.createElement(treeChild.getType());
 			xmlParent.appendChild(xmlChild);
 			xmlChild.setAttribute("name", treeChild.getName());
 			// Attribute hinzufügen
@@ -132,10 +132,8 @@ public class XMLTreeHandler {
 			if (type.equals("#text")) {
 				treeParent.setContent(xmlChild.getTextContent());
 				continue;
-			} else if (type.equals("category")) {
-				treeChild.setCategory(true);
-			} else if (type.equals("question")) {
-				treeChild.setQuestion(true);
+			} else {
+				treeChild.setType(type);
 			}
 			// Attribute hinzufügen
 			if (xmlChild.hasAttributes()) {

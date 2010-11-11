@@ -12,16 +12,21 @@ import javax.swing.tree.TreeNode;
 public class QuestionTreeNode implements MutableTreeNode {
 	private String name = "(default)";
 	private String content = "";
-	private boolean isQ = false;
-	private boolean isC = false;
+	private String type = "(default)";
 	private QuestionTreeNode parent = null;
 	private Vector<QuestionTreeNode> children = new Vector<QuestionTreeNode>();
 	private TreeMap<String,String> attributes = new TreeMap<String,String>();
 	
 	public QuestionTreeNode() {
-		
-	}	
-	public QuestionTreeNode(String n) {
+		this("");
+	}
+	public QuestionTreeNode(String t) {
+		this(t,"");
+	}
+	public QuestionTreeNode(String t, String n) {
+		if (!(t.trim().equals(""))) {
+			type=t;
+		}
 		if (!(n.trim().equals(""))) {
 			name=n;
 		}
@@ -41,17 +46,13 @@ public class QuestionTreeNode implements MutableTreeNode {
 		return name;
 	}
 	public boolean isQuestion() {
-		return isQ;
+		return type.equals("question");
 	}
-	public void setQuestion(boolean q) {
-		isQ=q;
-	}
+	
 	public boolean isCategory() {
-		return isC;
+		return type.equals("category");
 	}
-	public void setCategory(boolean c) {
-		isC=c;
-	}
+	
 	@Override
 	public Enumeration<QuestionTreeNode> children() {
 		return children.elements();
@@ -126,5 +127,11 @@ public class QuestionTreeNode implements MutableTreeNode {
 	}
 	public void setContent(String c) {
 		content=c;
+	}
+	public String getType() {
+		return type;
+	}
+	public void setType(String t) {
+		type=t;
 	}
 }

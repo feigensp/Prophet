@@ -18,10 +18,10 @@ import javax.swing.text.html.FormView;
 import javax.swing.text.html.HTML;
 import javax.swing.text.html.HTMLEditorKit;
 
+import experimentViewer.codeViewer.CodeViewer;
 import experimentViewer.questionViewer.IconCellRenderer.ListIcons;
 
 
-import test.MyTestMain;
 import test.Watch;
 
 /**
@@ -85,7 +85,7 @@ public class HTMLFileView extends JPanel {
 		maxPos = curPos = -1;
 		addQuestion(q);
 		//starting the editor
-		MyTestMain frame = new MyTestMain();
+		CodeViewer frame = new CodeViewer();
 		frame.setVisible(true);
 	}
 

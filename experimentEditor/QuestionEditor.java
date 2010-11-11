@@ -15,22 +15,17 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import experimentEditor.ContentEdit.QuestionEditorPanel;
+import util.QuestionTreeNode;
 import experimentEditor.QuestionTree.QuestionTree;
 import experimentEditor.QuestionTree.QuestionTreeEvent;
 import experimentEditor.QuestionTree.QuestionTreeListener;
-import experimentEditor.SettingsEdit.CategoryEditorPanel;
-
-import util.QuestionTreeNode;
+import experimentEditor.tabbedPane.QuestionEditorTabbedPane;
 
 
 @SuppressWarnings("serial")
 public class QuestionEditor extends JFrame {
 	private QuestionTree tree;
-	private QuestionEditorPanel questionEditorPanel;
-	private CategoryEditorPanel categoryEditorPanel;
-
-	private QuestionTreeNode selected;
+	private QuestionEditorTabbedPane questionEditorTabbedPane;
 
 	private JPanel contentPane;
 
@@ -59,7 +54,7 @@ public class QuestionEditor extends JFrame {
 	 */
 	public QuestionEditor() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 611, 431);
+		setBounds(100, 100, 800, 600);
 
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -69,49 +64,30 @@ public class QuestionEditor extends JFrame {
 		QuestionEditorMenuBar menuBar = new QuestionEditorMenuBar(this);
 		setJMenuBar(menuBar);
 		
-		build(null);
+		build();
 	}
 	
 	public QuestionTree getTree() {
 		return tree;
 	}
-
-	public void removeEditorElements() {
-		if (questionEditorPanel!=null) {
-			contentPane.remove(questionEditorPanel);
-			questionEditorPanel=null;
-		}
-		if (categoryEditorPanel!=null) {
-			contentPane.remove(categoryEditorPanel);
-			categoryEditorPanel=null;
-		}
-		contentPane.updateUI();
-	}
 	
-	public void build(QuestionTreeNode root) {
-		selected=null;
-		contentPane.removeAll();
-		contentPane.updateUI();
-		
-		tree = new QuestionTree(root);
+	public void build() {		
+		tree = new QuestionTree();
 		tree.setPreferredSize(new Dimension(175, 10));
 		tree.addQuestionTreeListener(new QuestionTreeListener() {
 			public void questionTreeEventOccured(QuestionTreeEvent e) {
-				removeEditorElements();
-				selected=e.getNode();
-				if (e.getNode().isCategory()) {
-					categoryEditorPanel = new CategoryEditorPanel(selected);
-					contentPane.add(categoryEditorPanel);
-				} else if (e.getNode().isQuestion()) {	
-					questionEditorPanel = new QuestionEditorPanel(selected); 
-					contentPane.add(questionEditorPanel);
-				}
+				questionEditorTabbedPane.setSelected(e.getNode());
 			}			
 		});		
 		contentPane.add(tree, BorderLayout.WEST);
 
-		questionEditorPanel = new QuestionEditorPanel(null);
-		contentPane.add(questionEditorPanel, BorderLayout.CENTER);
+		questionEditorTabbedPane = new QuestionEditorTabbedPane();
+		contentPane.add(questionEditorTabbedPane, BorderLayout.CENTER);
 	}
-
+	public void newTree() {
+		tree.newRoot();
+	}
+	public void loadTree(QuestionTreeNode root) {
+		tree.setRoot(root);
+	}
 }
