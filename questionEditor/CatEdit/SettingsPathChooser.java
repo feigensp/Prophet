@@ -18,15 +18,15 @@ public class SettingsPathChooser extends JPanel implements SettingsComponent {
 	private JLabel caption;
 	private JTextField textField;
 	private JButton pathButton;
-	
+
 	public SettingsPathChooser() {
 		setLayout(new BorderLayout());
 		caption = new JLabel();
-		add(caption,BorderLayout.NORTH);
+		add(caption, BorderLayout.NORTH);
 		JPanel pathPanel = new JPanel();
 		pathPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 		add(pathPanel, BorderLayout.CENTER);
-		
+
 		textField = new JTextField();
 		textField.setEditable(false);
 		pathPanel.add(textField);
@@ -38,51 +38,46 @@ public class SettingsPathChooser extends JPanel implements SettingsComponent {
 				JFileChooser fc = new JFileChooser(new File("."));
 				fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 				if (fc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
-					//TODO: hier muss man sich noch was ausdenken...
-//					String home = new File ("").getAbsolutePath();
 					String currentPath = System.getProperty("user.dir");
-					String selectedPath = fc.getSelectedFile().getAbsolutePath();
-					if(selectedPath.equals(currentPath)) {
+					String selectedPath = fc.getSelectedFile()
+							.getAbsolutePath();
+					if (selectedPath.equals(currentPath)) {
 						selectedPath = ".";
-					} else if(selectedPath.indexOf(currentPath) == 0) {
-						selectedPath = selectedPath.substring(currentPath.length()+1) + System.getProperty("file.separator");
+					} else if (selectedPath.indexOf(currentPath) == 0) {
+						selectedPath = selectedPath.substring(currentPath
+								.length() + 1) + "/";
 					}
-					textField.setText(selectedPath);
-//					System.out.println(home);
-//					System.out.println(selectedPath);
-//					if (selectedPath.startsWith(home)) {
-//						String substring = selectedPath.substring(home.length());
-//						if (substring.isEmpty()) {
-//							textField.setText(".");
-//						} else {
-//							textField.setText(substring);
-//						}
-//					} else {
-//						textField.setText(fc.getSelectedFile().toString());
-//					}
+					textField.setText(selectedPath.replaceAll("\\\\", "/"));
 				}
 			}
 		});
 	}
+
 	public void setOptionKey(String oK) {
-		optionKey=oK;
-	}	
+		optionKey = oK;
+	}
+
 	public String getOptionKey() {
 		return optionKey;
 	}
+
 	public String getValue() {
 		return textField.getText();
 	}
+
 	public void addActionListener(ActionListener l) {
 		textField.addActionListener(l);
 	}
+
 	public SettingsComponent newInstance() {
 		return new SettingsPathChooser();
 	}
+
 	@Override
 	public void setCaption(String cap) {
 		caption.setText(cap);
 	}
+
 	@Override
 	public void setValue(String value) {
 		textField.setText(value);
