@@ -13,7 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
 import plugins.codeViewer.plugins.CodeViewerPlugin;
-import plugins.codeViewer.plugins.CodeViewerPlugins;
+import plugins.codeViewer.plugins.CodeViewerPluginList;
 import experimentEditor.tabbedPane.settingsEditor.SettingsComponent;
 
 @SuppressWarnings("serial")
@@ -69,7 +69,7 @@ public class CodeViewerSettingsComponent extends SettingsComponent {
 		
 			if (getSelected()!=null) {
 				// adding checkboxes for the given possible settings in Settings.java
-				for (CodeViewerPlugin plugin : CodeViewerPlugins.getPlugins()) {
+				for (CodeViewerPlugin plugin : CodeViewerPluginList.getPlugins()) {
 					SettingsComponent settingsOption = plugin.getSettingsComponentFactory(getSelected()).build();
 					if (settingsOption!=null) {
 						optionPanel.add(settingsOption);

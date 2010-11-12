@@ -8,7 +8,7 @@ import plugins.codeViewer.plugins.SearchBar.SearchBarPlugin;
 import plugins.codeViewer.plugins.SyntaxHighlighting.SyntaxHighlightingPlugin;
 import plugins.codeViewer.plugins.UndoRedo.UndoRedoPlugin;
 
-public class CodeViewerPlugins {
+public class CodeViewerPluginList {
 	private static Vector<CodeViewerPlugin> plugins = new Vector<CodeViewerPlugin>() {
 		{
 			add(new EditabilityPlugin());

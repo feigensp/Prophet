@@ -15,9 +15,9 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import plugins.ExperimentPlugins;
-import plugins.QuestionSwitching.QuestionSwitchingExperimentPlugin;
-import plugins.codeViewer.CodeViewerExperimentPlugin;
+import plugins.ExperimentPluginList;
+import plugins.QuestionSwitching.ExperimentQuestionSwitchingPlugin;
+import plugins.codeViewer.ExperimentCodeViewerPlugin;
 import util.QuestionTreeNode;
 import util.QuestionTreeNodeEvent;
 import util.QuestionTreeNodeListener;

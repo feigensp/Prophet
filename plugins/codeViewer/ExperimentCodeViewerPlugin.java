@@ -1,18 +1,16 @@
-package plugins.QuestionSwitching;
+package plugins.codeViewer;
 
 import plugins.ExperimentPlugin;
 import util.QuestionTreeNode;
 import experimentEditor.ExperimentEditor;
 import experimentEditor.tabbedPane.settingsEditor.SettingsComponentFactory;
-import experimentEditor.tabbedPane.settingsEditor.settingsComponents.SettingsCheckBox;
 import experimentViewer.ExperimentViewer;
 
-public class QuestionSwitchingExperimentPlugin implements ExperimentPlugin {
+public class ExperimentCodeViewerPlugin implements ExperimentPlugin {
 
-	@Override
 	public SettingsComponentFactory getSettingsComponentFactory(QuestionTreeNode selected) {
-		if(selected.isCategory()) {
-			return new SettingsComponentFactory(selected, new SettingsCheckBox(),"questionswitching", "Vor- und Zurückblättern erlauben",selected.getAttribute("questionswitching"));
+		if (selected.isCategory()) {
+			return new SettingsComponentFactory(selected, new CodeViewerSettingsComponent(),"codeviewer","Codeviewer",selected.getAttribute("codeviewer"));
 		}
 		return null;
 	}

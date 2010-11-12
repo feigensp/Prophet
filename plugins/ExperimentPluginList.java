@@ -2,14 +2,14 @@ package plugins;
 
 import java.util.Vector;
 
-import plugins.QuestionSwitching.QuestionSwitchingExperimentPlugin;
-import plugins.codeViewer.CodeViewerExperimentPlugin;
+import plugins.QuestionSwitching.ExperimentQuestionSwitchingPlugin;
+import plugins.codeViewer.ExperimentCodeViewerPlugin;
 
-public class ExperimentPlugins {
+public class ExperimentPluginList {
 	private static Vector<ExperimentPlugin> plugins = new Vector<ExperimentPlugin>() {
 		{
-			add(new CodeViewerExperimentPlugin());
-			add(new QuestionSwitchingExperimentPlugin());
+			add(new ExperimentCodeViewerPlugin());
+			add(new ExperimentQuestionSwitchingPlugin());
 		}
 	};
 	
