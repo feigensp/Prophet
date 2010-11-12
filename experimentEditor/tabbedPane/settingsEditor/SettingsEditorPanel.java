@@ -18,7 +18,6 @@ import experimentEditor.tabbedPane.ExperimentEditorTab;
 
 @SuppressWarnings("serial")
 public class SettingsEditorPanel extends ExperimentEditorTab {
-	private QuestionTreeNode selected;
 
 	/**
 	 * Constructor which defines the appearance and do the initialisation of the
@@ -31,11 +30,7 @@ public class SettingsEditorPanel extends ExperimentEditorTab {
 		setLayout(new VerticalFlowLayout());
 	}
 	
-	public void setSelected(QuestionTreeNode sel) {
-		selected=sel;
-		activate();
-	}
-	public void activate() {
+	public void activate(QuestionTreeNode selected) {
 		removeAll();
 		updateUI();
 		

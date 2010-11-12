@@ -16,6 +16,7 @@ import experimentEditor.tabbedPane.settingsEditor.SettingsEditorPanel;
 
 @SuppressWarnings("serial")
 public class QuestionEditorTabbedPane extends JPanel {
+	QuestionTreeNode selected;
 	JTabbedPane myTabbedPane;
 	
 	public QuestionEditorTabbedPane() {
@@ -25,7 +26,7 @@ public class QuestionEditorTabbedPane extends JPanel {
 		
 		myTabbedPane.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent arg0) {
-				((ExperimentEditorTab)myTabbedPane.getSelectedComponent()).activate();
+				((ExperimentEditorTab)myTabbedPane.getSelectedComponent()).activate(selected);
 			}
 		});
 		
@@ -37,8 +38,7 @@ public class QuestionEditorTabbedPane extends JPanel {
 		myTabbedPane.addTab(caption, null, (Component)panel, null);
 	}
 	public void setSelected(QuestionTreeNode selected) {
-		for (Component panel : myTabbedPane.getComponents()) {
-			((ExperimentEditorTab)panel).setSelected(selected);
-		}
+		this.selected=selected;
+		((ExperimentEditorTab)myTabbedPane.getSelectedComponent()).activate(selected);
 	}
 }

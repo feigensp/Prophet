@@ -48,13 +48,9 @@ public class ContentViewerPanel extends ExperimentEditorTab {
 			}
 		});
 		add(new JScrollPane(viewerPane), BorderLayout.CENTER);
-		activate();
 	}
-	public void setSelected(QuestionTreeNode sel) {
-		selected=sel;
-		activate();
-	}
-	public void activate() {
+	public void activate(QuestionTreeNode selected) {
+		this.selected=selected;
 		if (selected!=null) {
 			viewerPane.setText(HTMLSTART + selected.getContent()+ HTMLEND);
 		} else {

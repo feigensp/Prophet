@@ -59,13 +59,10 @@ public class ContentEditorPanel extends ExperimentEditorTab {
 		toolBar = new ContentEditorToolBar(editArea);
 		add(toolBar, BorderLayout.NORTH);
 		add(new JScrollPane(editArea), BorderLayout.CENTER);
-		activate();
 	}
-	public void setSelected(QuestionTreeNode sel) {
-		selected=sel;
-		activate();
-	}
-	public void activate() {
+	
+	public void activate(QuestionTreeNode selected) {
+		this.selected=selected;
 		if (selected!=null) {
 			editArea.setText(selected.getContent());
 			editArea.setEditable(true);
