@@ -13,8 +13,8 @@ public class LineNumbersPlugin implements CodeViewerPlugin {
 	public List<SettingsComponentFactory> getSettingsComponentFactories(QuestionTreeNode selected) {
 		Vector<SettingsComponentFactory> result = new Vector<SettingsComponentFactory>();
 		if (selected.isCategory()) {
-			result.add(new SettingsComponentFactory(selected, new SettingsCheckBox(),"codeviewer_linenumbers_default", "Zeilennummern anzeigen"));
-			result.add(new SettingsComponentFactory(selected, new SettingsCheckBox(),"codeviewer_linenumbers_toggle", "Zeilennummern ein- und ausschaltbar"));
+			result.add(new SettingsComponentFactory(selected, new SettingsCheckBox(),"linenumbers_default", "Zeilennummern anzeigen"));
+			result.add(new SettingsComponentFactory(selected, new SettingsCheckBox(),"linenumbers_toggle", "Zeilennummern ein- und ausschaltbar"));
 		}
 		return result;
 	}

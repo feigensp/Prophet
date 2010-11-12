@@ -13,7 +13,7 @@ public class SearchBarPlugin implements CodeViewerPlugin {
 	public List<SettingsComponentFactory> getSettingsComponentFactories(QuestionTreeNode selected) {
 		Vector<SettingsComponentFactory> result = new Vector<SettingsComponentFactory>();
 		if (selected.isCategory()) {
-			result.add(new SettingsComponentFactory(selected, new SettingsCheckBox(),"codeviewer_searchable", "Suchfunktion einschalten"));
+			result.add(new SettingsComponentFactory(selected, new SettingsCheckBox(),"searchable", "Suchfunktion einschalten"));
 		}
 		return result;
 	}

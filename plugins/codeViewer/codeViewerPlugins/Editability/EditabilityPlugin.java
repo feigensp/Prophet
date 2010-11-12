@@ -12,7 +12,7 @@ public class EditabilityPlugin implements CodeViewerPlugin {
 	public List<SettingsComponentFactory> getSettingsComponentFactories(QuestionTreeNode selected) {
 		Vector<SettingsComponentFactory> result = new Vector<SettingsComponentFactory>();
 		if (selected.isCategory()) {
-			result.add(new SettingsComponentFactory(selected, new SettingsCheckBox(),"codeviewer_editable", "Quelltext editierbar"));
+			result.add(new SettingsComponentFactory(selected, new SettingsCheckBox(),"editable", "Quelltext editierbar"));
 		}
 		return result;
 	}

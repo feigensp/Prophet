@@ -1,4 +1,4 @@
-package test;
+package plugins.codeViewer.codeViewerPlugins.UndoRedo;
 
 public class Change {
 

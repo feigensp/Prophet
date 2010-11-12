@@ -8,7 +8,6 @@ import javax.swing.JTextPane;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import test.Change;
 
 public class UndoRedo implements DocumentListener, KeyListener{
 

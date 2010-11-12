@@ -72,6 +72,7 @@ public class CodeViewerSettingsComponent extends SettingsComponent {
 					if (factories!=null) {
 						for (SettingsComponentFactory factory : factories) {
 							if (factory!=null) {
+								factory.setKey("codeviewer_"+factory.getKey());
 								optionPanel.add(factory.build());
 							}
 						}

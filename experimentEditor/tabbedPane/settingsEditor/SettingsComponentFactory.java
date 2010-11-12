@@ -16,6 +16,20 @@ public class SettingsComponentFactory {
 		this.caption=caption;
 	}
 	
+	public String getKey() {
+		return key;
+	}
+	public void setKey(String key) {
+		this.key = key;
+	}
+
+	public String getCaption() {
+		return caption;
+	}
+	public void setCaption(String caption) {
+		this.caption = caption;
+	}
+
 	public SettingsComponent build() {
 		SettingsComponent result;
 		try {
