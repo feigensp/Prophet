@@ -7,10 +7,10 @@ package experimentEditor.tabbedPane.settingsEditor;
  * @author Markus Köppen, Andreas Hasselberg
  */
 
-import java.awt.Component;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import plugins.ExperimentPlugin;
+import plugins.ExperimentPlugins;
 import util.QuestionTreeNode;
 import util.VerticalFlowLayout;
 import experimentEditor.tabbedPane.ExperimentEditorTab;
@@ -19,7 +19,6 @@ import experimentEditor.tabbedPane.ExperimentEditorTab;
 @SuppressWarnings("serial")
 public class SettingsEditorPanel extends ExperimentEditorTab {
 	private QuestionTreeNode selected;
-	ActionListener myActionListener;
 
 	/**
 	 * Constructor which defines the appearance and do the initialisation of the
@@ -30,12 +29,6 @@ public class SettingsEditorPanel extends ExperimentEditorTab {
 	 */
 	public SettingsEditorPanel() {
 		setLayout(new VerticalFlowLayout());
-		myActionListener = new ActionListener() {
-			public void actionPerformed(ActionEvent event) {
-				SettingsComponent source = (SettingsComponent) event.getSource();
-				selected.setAttribute(source.getOptionKey(), source.getValue());
-			}
-		};
 	}
 	
 	public void setSelected(QuestionTreeNode sel) {
@@ -48,10 +41,11 @@ public class SettingsEditorPanel extends ExperimentEditorTab {
 		
 		if (selected!=null) {
 			// adding checkboxes for the given possible settings in Settings.java
-			for (SettingsOption setting : Settings.settings) {
-				SettingsComponent opt = setting.newInstance(selected.getAttribute(setting.getKey()));
-				opt.addActionListener(myActionListener);
-				add((Component)opt);			
+			for (ExperimentPlugin plugin : ExperimentPlugins.getPlugins()) {
+				SettingsComponent settingsOption = plugin.getSettingsComponentFactory(selected).build();
+				if (settingsOption!=null) {
+					add(settingsOption);
+				}						
 			}
 		}
 	}

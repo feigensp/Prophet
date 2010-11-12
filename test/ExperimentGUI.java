@@ -35,6 +35,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import experimentViewer.ClockLabel;
+
 import test.experimentQuestionCreator.ElementAttribute;
 import test.experimentQuestionCreator.ExtendedPanel;
 import test.experimentQuestionCreator.MyTreeNode;
@@ -52,7 +54,7 @@ public class ExperimentGUI extends JFrame {
 	private JButton startButton;
 	private DefaultListModel listModel;
 	private Vector<ExtendedPanel> questionPanels;
-	private Vector<Watch> timelines;
+	private Vector<ClockLabel> timelines;
 	private JPanel questionCollectionPanel;
 	private CardLayout questionCardLayout;
 	private CardLayout timeCardLayout;
@@ -60,7 +62,7 @@ public class ExperimentGUI extends JFrame {
 	private JButton backButton;
 	private JButton forwardButton;
 	private JPanel timelinePanel;
-	private Watch time;
+	private ClockLabel time;
 	private JButton exportButton;
 
 	/**
@@ -192,7 +194,7 @@ public class ExperimentGUI extends JFrame {
 				int i = 0;
 				for (JPanel question : questionPanels) {
 					questionCollectionPanel.add(question, "" + i);
-					timelines.add(new Watch("Aufgabenzeit: "));
+					timelines.add(new ClockLabel("Aufgabenzeit: "));
 					timelines.get(i).start();
 					timelines.get(i).pause();
 					timelinePanel.add(timelines.get(i), "" + i);
@@ -335,7 +337,7 @@ public class ExperimentGUI extends JFrame {
 	public ExperimentGUI() {
 		listModel = new DefaultListModel();
 		questionPanels = new Vector<ExtendedPanel>();
-		timelines = new Vector<Watch>();
+		timelines = new Vector<ClockLabel>();
 		lastSelection = 0;
 
 		JPanel contentPane;
@@ -384,7 +386,7 @@ public class ExperimentGUI extends JFrame {
 		JPanel timePanel = new JPanel();
 		timePanel.setLayout(new CardLayout());
 		timePanel.setPreferredSize(new Dimension(125, 35));
-		time = new Watch("Gesamtzeit");
+		time = new ClockLabel("Gesamtzeit");
 		timePanel.add(time, "gesamtzeit");
 		centerMenuPanel.add(timePanel);
 

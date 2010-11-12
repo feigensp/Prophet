@@ -8,24 +8,24 @@ import javax.swing.JComboBox;
 
 import experimentEditor.tabbedPane.contentEditor.EditArea;
 
-import util.StringTupel;
+import util.StringTuple;
 
 @SuppressWarnings("serial")
 public class FontSizeBox extends JComboBox implements ActionListener{
 	
 	private EditArea editArea;
-	private ArrayList<StringTupel> fontSizes;
+	private ArrayList<StringTuple> fontSizes;
 	
 	public FontSizeBox(EditArea editArea) {
 		super();
 		this.editArea = editArea;
-		fontSizes = new ArrayList<StringTupel>();
-		fontSizes.add(new StringTupel("-3", "-3"));
-		fontSizes.add(new StringTupel("-2", "-2"));
-		fontSizes.add(new StringTupel("-1", "-1"));
-		fontSizes.add(new StringTupel("+1", "+1"));
-		fontSizes.add(new StringTupel("+2", "+2"));
-		fontSizes.add(new StringTupel("+3", "+3"));
+		fontSizes = new ArrayList<StringTuple>();
+		fontSizes.add(new StringTuple("-3", "-3"));
+		fontSizes.add(new StringTuple("-2", "-2"));
+		fontSizes.add(new StringTuple("-1", "-1"));
+		fontSizes.add(new StringTuple("+1", "+1"));
+		fontSizes.add(new StringTuple("+2", "+2"));
+		fontSizes.add(new StringTuple("+3", "+3"));
 		
 		this.addItem("Schriftgröße");
 		for(int i=0; i<fontSizes.size(); i++) {

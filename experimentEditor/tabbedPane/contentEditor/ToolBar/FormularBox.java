@@ -9,7 +9,7 @@ import javax.swing.JOptionPane;
 
 import experimentEditor.tabbedPane.contentEditor.EditArea;
 
-import util.StringTupel;
+import util.StringTuple;
 
 @SuppressWarnings("serial")
 public class FormularBox extends JComboBox implements ActionListener {
@@ -56,7 +56,7 @@ public class FormularBox extends JComboBox implements ActionListener {
 			}
 			break;
 		case 3: // liste
-			StringTupel listInfos = MultilineDialogs
+			StringTuple listInfos = MultilineDialogs
 					.showMultilineInputDialog("Listeninformationen");
 			if (listInfos != null) {
 				String[] listEntrys = listInfos.getValue().split(
@@ -73,7 +73,7 @@ public class FormularBox extends JComboBox implements ActionListener {
 			}
 			break;
 		case 4: // Combobox
-			StringTupel comboInfos = MultilineDialogs
+			StringTuple comboInfos = MultilineDialogs
 					.showMultilineInputDialog("Listeninformationen");
 			if (comboInfos != null) {
 				String[] comboEntrys = comboInfos.getValue().split(
@@ -90,7 +90,7 @@ public class FormularBox extends JComboBox implements ActionListener {
 			}
 			break;
 		case 5: // RadioButton
-			StringTupel radioInfos = MultilineDialogs
+			StringTuple radioInfos = MultilineDialogs
 					.showMultilineInputDialog("Listeninformationen");
 			if (radioInfos != null) {
 				String[] radioEntrys = radioInfos.getValue().split(
@@ -106,7 +106,7 @@ public class FormularBox extends JComboBox implements ActionListener {
 			}
 			break;
 		case 6: // CheckBox
-			StringTupel checkInfos = MultilineDialogs
+			StringTuple checkInfos = MultilineDialogs
 					.showMultilineInputDialog("Listeninformationen");
 			if (checkInfos != null) {
 				String[] checkEntrys = checkInfos.getValue().split(

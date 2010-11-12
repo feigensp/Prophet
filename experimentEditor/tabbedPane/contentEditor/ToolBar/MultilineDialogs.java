@@ -15,16 +15,16 @@ import javax.swing.JTextPane;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
-import util.StringTupel;
+import util.StringTuple;
 
 @SuppressWarnings("serial")
 public class MultilineDialogs extends JDialog implements ActionListener {
 	
 	private static JTextPane contentTextPane;
 	private static JTextField nameTextField;
-	private static StringTupel dialogInfos;
+	private static StringTuple dialogInfos;
 	
-	public static StringTupel showMultilineInputDialog(String headline) {
+	public static StringTuple showMultilineInputDialog(String headline) {
 		MultilineDialogs dialog = new MultilineDialogs(headline);
 		dialog.setVisible(true);
 		dialog.dispose();
@@ -70,7 +70,7 @@ public class MultilineDialogs extends JDialog implements ActionListener {
 	
 	public void actionPerformed(ActionEvent ae) {
 		if(ae.getActionCommand().equals("ok")) {
-			dialogInfos = new StringTupel();
+			dialogInfos = new StringTuple();
 			dialogInfos.setKey(nameTextField.getText());
 			dialogInfos.setValue(contentTextPane.getText());
 			this.setVisible(false);

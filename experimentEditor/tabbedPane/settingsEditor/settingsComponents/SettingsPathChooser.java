@@ -14,8 +14,7 @@ import experimentEditor.tabbedPane.settingsEditor.SettingsComponent;
 
 
 @SuppressWarnings("serial")
-public class SettingsPathChooser extends SettingsComponent {
-	private String optionKey;
+public class SettingsPathChooser extends SettingsComponent {	
 	private JLabel caption;
 	private JTextField textField;
 	private JButton pathButton;
@@ -29,6 +28,7 @@ public class SettingsPathChooser extends SettingsComponent {
 		textField.setEditable(false);
 		add(textField,BorderLayout.CENTER);
 		textField.setColumns(20);
+		textField.addActionListener(getDefaultActionListener());
 		pathButton = new JButton("Durchsuchen");
 		add(pathButton,BorderLayout.EAST);
 		pathButton.addActionListener(new ActionListener() {
@@ -51,37 +51,17 @@ public class SettingsPathChooser extends SettingsComponent {
 		});
 	}
 
-	public void setOptionKey(String oK) {
-		optionKey = oK;
-	}
-
-	public String getOptionKey() {
-		return optionKey;
-	}
-
+	public void setValue(String value) {
+		textField.setText(value);
+	}	
 	public String getValue() {
 		return textField.getText();
 	}
 
-	public void addActionListener(ActionListener l) {
-		textField.addActionListener(l);
-	}
-	
-	public void removeActionListener(ActionListener l) {
-		textField.removeActionListener(l);
-	}
-
-	public SettingsComponent newInstance() {
-		return new SettingsPathChooser();
-	}
-
-	@Override
 	public void setCaption(String cap) {
 		caption.setText(cap);
 	}
-
-	@Override
-	public void setValue(String value) {
-		textField.setText(value);
+	public String getCaption() {
+		return caption.getText();
 	}
 }
