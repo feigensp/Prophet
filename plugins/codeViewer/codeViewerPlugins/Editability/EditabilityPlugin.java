@@ -1,6 +1,6 @@
-package plugins.codeViewer.plugins.Editability;
+package plugins.codeViewer.codeViewerPlugins.Editability;
 
-import plugins.codeViewer.plugins.CodeViewerPlugin;
+import plugins.codeViewer.codeViewerPlugins.CodeViewerPlugin;
 import util.QuestionTreeNode;
 import experimentEditor.tabbedPane.settingsEditor.SettingsComponentFactory;
 import experimentEditor.tabbedPane.settingsEditor.settingsComponents.SettingsCheckBox;

@@ -1,4 +1,4 @@
-package plugins.codeViewer.plugins.UndoRedo;
+package plugins.codeViewer.codeViewerPlugins.UndoRedo;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;

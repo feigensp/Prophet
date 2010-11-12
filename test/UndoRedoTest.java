@@ -8,7 +8,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextPane;
 import javax.swing.border.EmptyBorder;
 
-import plugins.codeViewer.plugins.UndoRedo.UndoRedo;
+import plugins.codeViewer.codeViewerPlugins.UndoRedo.UndoRedo;
 
 public class UndoRedoTest extends JFrame {
 

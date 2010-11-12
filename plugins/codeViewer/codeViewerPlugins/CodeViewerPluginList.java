@@ -1,12 +1,12 @@
-package plugins.codeViewer.plugins;
+package plugins.codeViewer.codeViewerPlugins;
 
 import java.util.Vector;
 
-import plugins.codeViewer.plugins.Editability.EditabilityPlugin;
-import plugins.codeViewer.plugins.LineNumbers.LineNumbersPlugin;
-import plugins.codeViewer.plugins.SearchBar.SearchBarPlugin;
-import plugins.codeViewer.plugins.SyntaxHighlighting.SyntaxHighlightingPlugin;
-import plugins.codeViewer.plugins.UndoRedo.UndoRedoPlugin;
+import plugins.codeViewer.codeViewerPlugins.Editability.EditabilityPlugin;
+import plugins.codeViewer.codeViewerPlugins.LineNumbers.LineNumbersPlugin;
+import plugins.codeViewer.codeViewerPlugins.SearchBar.SearchBarPlugin;
+import plugins.codeViewer.codeViewerPlugins.SyntaxHighlighting.SyntaxHighlightingPlugin;
+import plugins.codeViewer.codeViewerPlugins.UndoRedo.UndoRedoPlugin;
 
 public class CodeViewerPluginList {
 	private static Vector<CodeViewerPlugin> plugins = new Vector<CodeViewerPlugin>() {

@@ -1,4 +1,4 @@
-package plugins.codeViewer.plugins.LineNumbers;
+package plugins.codeViewer.codeViewerPlugins.LineNumbers;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;

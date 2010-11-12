@@ -12,8 +12,8 @@ import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
-import plugins.codeViewer.plugins.CodeViewerPlugin;
-import plugins.codeViewer.plugins.CodeViewerPluginList;
+import plugins.codeViewer.codeViewerPlugins.CodeViewerPlugin;
+import plugins.codeViewer.codeViewerPlugins.CodeViewerPluginList;
 import experimentEditor.tabbedPane.settingsEditor.SettingsComponent;
 
 @SuppressWarnings("serial")

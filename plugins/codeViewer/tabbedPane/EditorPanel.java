@@ -12,8 +12,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 
-import plugins.codeViewer.plugins.LineNumbers.LineNumbers;
-import plugins.codeViewer.plugins.SearchBar.SearchBar;
+import plugins.codeViewer.codeViewerPlugins.LineNumbers.LineNumbers;
+import plugins.codeViewer.codeViewerPlugins.SearchBar.SearchBar;
 
 import com.Ostermiller.Syntax.HighlightedDocument;
 

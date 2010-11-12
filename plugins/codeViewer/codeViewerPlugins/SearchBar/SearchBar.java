@@ -1,4 +1,4 @@
-package plugins.codeViewer.plugins.SearchBar;
+package plugins.codeViewer.codeViewerPlugins.SearchBar;
 
 import java.awt.Color;
 import java.awt.Dimension;

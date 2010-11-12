@@ -1,4 +1,4 @@
-package plugins.codeViewer.plugins;
+package plugins.codeViewer.codeViewerPlugins;
 
 import util.QuestionTreeNode;
 import experimentEditor.tabbedPane.settingsEditor.SettingsComponentFactory;
