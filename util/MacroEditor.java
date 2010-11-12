@@ -46,7 +46,12 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-
+/**
+ * A simple editor to create and change the macro.xml
+ * 
+ * @author Markus Köppen, Andreas Hasselberg
+ * 
+ */
 @SuppressWarnings("serial")
 public class MacroEditor extends JFrame {
 
@@ -60,7 +65,10 @@ public class MacroEditor extends JFrame {
 	private ArrayList<StringTupel> macros;
 
 	/**
-	 * Launch the application.
+	 * Main method - launch application
+	 * 
+	 * @param args
+	 *            noch used
 	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -76,88 +84,93 @@ public class MacroEditor extends JFrame {
 	}
 
 	/**
-	 * Create the frame.
+	 * Constructor which creates GUI and sets listener
 	 */
 	public MacroEditor() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 491, 300);
-
 		JMenuBar macroMenuBar = new JMenuBar();
 		setJMenuBar(macroMenuBar);
-
 		JMenu macroMenu = new JMenu("Datei");
 		macroMenuBar.add(macroMenu);
-
 		JMenuItem saveMenuItem = new JMenuItem("Speichern");
 		macroMenu.add(saveMenuItem);
-
 		JMenuItem closeMenuItem = new JMenuItem("Beenden");
-		closeMenuItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				System.exit(0);
-			}
-		});
 		macroMenu.add(closeMenuItem);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(new BorderLayout(0, 0));
-
 		JPanel overviewPanel = new JPanel();
 		contentPane.add(overviewPanel, BorderLayout.WEST);
 		overviewPanel.setLayout(new BorderLayout(0, 0));
-
 		listModel = new DefaultListModel();
 		macroList = new JList(listModel);
 		macroList.setPreferredSize(new Dimension(150, 0));
-
 		overviewPanel.add(macroList, BorderLayout.CENTER);
-
 		JPopupMenu macroMenuPopupMenu = new JPopupMenu();
 		addPopup(macroList, macroMenuPopupMenu);
-		
 		JMenuItem newMacroMenuItem = new JMenuItem("Neues Makro");
 		macroMenuPopupMenu.add(newMacroMenuItem);
-
 		JMenuItem removeMacroMenuItem = new JMenuItem("Makro L\u00F6schen");
 		macroMenuPopupMenu.add(removeMacroMenuItem);
-
 		JPanel macroPanel = new JPanel();
 		contentPane.add(macroPanel, BorderLayout.CENTER);
 		macroPanel.setLayout(new BorderLayout(0, 0));
-
 		macroNameTextField = new JTextField();
 		macroPanel.add(macroNameTextField, BorderLayout.NORTH);
 		macroNameTextField.setColumns(10);
-
 		macroContentTextPane = new JTextPane();
 		macroPanel.add(macroContentTextPane, BorderLayout.CENTER);
+		// close application menu item
+		closeMenuItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				System.exit(0);
+			}
+		});
+		// update macro name in list and data when it changes
+		macroNameTextField.getDocument().addDocumentListener(
+				new DocumentListener() {
+					private void inputChanged() {
+						if (macroList.getSelectedIndex() != -1) {
+							listModel.setElementAt(
+									macroNameTextField.getText(),
+									macroList.getSelectedIndex());
+							macros.get(macroList.getSelectedIndex()).setKey(
+									macroNameTextField.getText());
+						}
+					}
 
-		macroNameTextField.getDocument().addDocumentListener(new DocumentListener() {
+					public void changedUpdate(DocumentEvent arg0) {
+						inputChanged();
+					}
+
+					public void insertUpdate(DocumentEvent arg0) {
+						inputChanged();
+					}
+
+					public void removeUpdate(DocumentEvent arg0) {
+						inputChanged();
+					}
+				});
+		//update macro content in data
+		macroContentTextPane.getDocument().addDocumentListener(new DocumentListener() {
 			private void inputChanged() {
-				if(macroList.getSelectedIndex() != -1) {
-					listModel.setElementAt(macroNameTextField.getText(), macroList.getSelectedIndex());
-				}
+				macros.get(macroList.getSelectedIndex()).setValue(
+						macroContentTextPane.getText());				
 			}
-			
-			@Override
-			public void changedUpdate(DocumentEvent arg0) {
-				inputChanged();
+			public void changedUpdate(DocumentEvent arg0) {	
+				inputChanged();			
 			}
-
-			@Override
 			public void insertUpdate(DocumentEvent arg0) {
 				inputChanged();
 			}
-
-			@Override
 			public void removeUpdate(DocumentEvent arg0) {
 				inputChanged();
 			}
 			
 		});
-		
-		// makroansicht aktualisieren
+		// update which macro-content is showed
 		macroList.addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent e) {
 				if (macroList.getSelectedIndex() != -1) {
@@ -176,21 +189,7 @@ public class MacroEditor extends JFrame {
 			}
 
 		});
-		// makronamen in den Daten aktualisieren
-		macroNameTextField.addKeyListener(new KeyAdapter() {
-			public void keyReleased(KeyEvent arg0) {
-				macros.get(macroList.getSelectedIndex()).setKey(
-						macroNameTextField.getText());
-			}
-		});
-		// Makroinhalt in Daten aktualisieren
-		macroContentTextPane.addKeyListener(new KeyAdapter() {
-			public void keyReleased(KeyEvent arg0) {
-				macros.get(macroList.getSelectedIndex()).setValue(
-						macroContentTextPane.getText());
-			}
-		});
-		// neues Makro
+		//new macro
 		newMacroMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				String name = JOptionPane.showInputDialog(null,
@@ -200,7 +199,7 @@ public class MacroEditor extends JFrame {
 				}
 			}
 		});
-		// makro löschen
+		//remove macro
 		removeMacroMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				int selection = macroList.getSelectedIndex();
@@ -209,15 +208,13 @@ public class MacroEditor extends JFrame {
 				}
 			}
 		});
-		// Datei speichern
+		//save macro
 		saveMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				Document xmlTree = null;
 				try {
-					// Dokument erstellen
 					xmlTree = DocumentBuilderFactory.newInstance()
 							.newDocumentBuilder().newDocument();
-					// Wurzelknoten erschaffen und Attribute hinzufügen
 					Element xmlRoot = xmlTree.createElement("macros");
 					xmlTree.appendChild(xmlRoot);
 					Element xmlChild;
@@ -230,7 +227,6 @@ public class MacroEditor extends JFrame {
 				} catch (ParserConfigurationException e1) {
 					e1.printStackTrace();
 				}
-				// Fragebogen in Datei speichern
 				try {
 					if (xmlTree != null) {
 						TransformerFactory
@@ -248,7 +244,7 @@ public class MacroEditor extends JFrame {
 				}
 			}
 		});
-		//drag and drop
+		// drag and drop
 		MouseInputListener mouseHandler = new MouseInputAdapter() {
 			private String macroName, macroContent;
 			private int fromIndex;
@@ -260,7 +256,7 @@ public class MacroEditor extends JFrame {
 			}
 
 			public void mouseDragged(final MouseEvent evt) {
-				if(macroList.getSelectedIndex() != -1) {
+				if (macroList.getSelectedIndex() != -1) {
 					int toIndex = macroList.locationToIndex(evt.getPoint());
 					if (toIndex != fromIndex) {
 						removeMacro(fromIndex);
@@ -272,17 +268,18 @@ public class MacroEditor extends JFrame {
 		};
 		macroList.addMouseListener(mouseHandler);
 		macroList.addMouseMotionListener(mouseHandler);
-
+		//load data
 		loadMacros();
 	}
 
+	/**
+	 * load the data from macro.xml
+	 */
 	private void loadMacros() {
 		macros = new ArrayList<StringTupel>();
 		try {
-			// Document lesen
 			Document doc = DocumentBuilderFactory.newInstance()
 					.newDocumentBuilder().parse("macro.xml");
-			// Wurzel holen
 			Node xmlRoot = doc.getFirstChild();
 			Node child = null;
 			NodeList children = xmlRoot.getChildNodes();
@@ -304,28 +301,43 @@ public class MacroEditor extends JFrame {
 		}
 	}
 
+	/**
+	 * adds a macro
+	 * @param macroName name of the macro
+	 * @param makroContent content of the macro
+	 */
 	private void addMacro(String macroName, String makroContent) {
 		macros.add(new StringTupel(macroName, makroContent));
 		listModel.addElement(macroName);
 	}
 
+	/**
+	 * removes a macro
+	 * @param index index of the macro in the list
+	 */
 	private void removeMacro(int index) {
 		macros.remove(index);
 		listModel.remove(index);
 	}
 
+	/**
+	 * inserts a macro
+	 * @param index position for insertion
+	 * @param macroName name of the macro
+	 * @param macroContent content of the macro
+	 */
 	private void insertMacro(int index, String macroName, String macroContent) {
 		macros.add(index, new StringTupel(macroName, macroContent));
 		listModel.add(index, macroName);
 	}
 
+	/**
+	 * adds a popup menu
+	 * @param component who should get the popup menu
+	 * @param popup the popup menu which should be added
+	 */
 	private static void addPopup(Component component, final JPopupMenu popup) {
 		component.addMouseListener(new MouseAdapter() {
-			public void mousePressed(MouseEvent e) {
-				if (e.isPopupTrigger()) {
-					showMenu(e);
-				}
-			}
 			public void mouseReleased(MouseEvent e) {
 				if (e.isPopupTrigger()) {
 					showMenu(e);
