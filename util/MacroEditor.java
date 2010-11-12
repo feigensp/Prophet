@@ -25,6 +25,8 @@ import javax.swing.JPopupMenu;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.MouseInputAdapter;
@@ -131,6 +133,30 @@ public class MacroEditor extends JFrame {
 		macroContentTextPane = new JTextPane();
 		macroPanel.add(macroContentTextPane, BorderLayout.CENTER);
 
+		macroNameTextField.getDocument().addDocumentListener(new DocumentListener() {
+			private void inputChanged() {
+				if(macroList.getSelectedIndex() != -1) {
+					listModel.setElementAt(macroNameTextField.getText(), macroList.getSelectedIndex());
+				}
+			}
+			
+			@Override
+			public void changedUpdate(DocumentEvent arg0) {
+				inputChanged();
+			}
+
+			@Override
+			public void insertUpdate(DocumentEvent arg0) {
+				inputChanged();
+			}
+
+			@Override
+			public void removeUpdate(DocumentEvent arg0) {
+				inputChanged();
+			}
+			
+		});
+		
 		// makroansicht aktualisieren
 		macroList.addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent e) {
@@ -170,7 +196,7 @@ public class MacroEditor extends JFrame {
 				String name = JOptionPane.showInputDialog(null,
 						"Makronamen eingeben: ", "Neues Makro", 1);
 				if (name != null) {
-					addMacro(name.replaceAll(" ", ""), "");
+					addMacro(name, "");
 				}
 			}
 		});
@@ -234,11 +260,13 @@ public class MacroEditor extends JFrame {
 			}
 
 			public void mouseDragged(final MouseEvent evt) {
-				int toIndex = macroList.locationToIndex(evt.getPoint());
-				if (toIndex != fromIndex) {
-					removeMacro(fromIndex);
-					insertMacro(toIndex, macroName, macroContent);
-					fromIndex = toIndex;
+				if(macroList.getSelectedIndex() != -1) {
+					int toIndex = macroList.locationToIndex(evt.getPoint());
+					if (toIndex != fromIndex) {
+						removeMacro(fromIndex);
+						insertMacro(toIndex, macroName, macroContent);
+						fromIndex = toIndex;
+					}
 				}
 			}
 		};
