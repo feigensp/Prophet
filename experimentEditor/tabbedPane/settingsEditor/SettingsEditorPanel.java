@@ -7,7 +7,7 @@ package experimentEditor.tabbedPane.settingsEditor;
  * @author Markus Köppen, Andreas Hasselberg
  */
 
-import java.awt.event.ActionListener;
+import java.util.List;
 
 import plugins.ExperimentPlugin;
 import plugins.ExperimentPluginList;
@@ -37,9 +37,13 @@ public class SettingsEditorPanel extends ExperimentEditorTab {
 		if (selected!=null) {
 			// adding checkboxes for the given possible settings in Settings.java
 			for (ExperimentPlugin plugin : ExperimentPluginList.getPlugins()) {
-				SettingsComponent settingsOption = plugin.getSettingsComponentFactory(selected).build();
-				if (settingsOption!=null) {
-					add(settingsOption);
+				List<SettingsComponentFactory> factories = plugin.getSettingsComponentFactories(selected);
+				if (factories!=null) {
+					for (SettingsComponentFactory factory : factories) {
+						if (factory!=null) {
+							add(factory.build());
+						}
+					}
 				}						
 			}
 		}

@@ -3,18 +3,17 @@ package experimentEditor.tabbedPane.settingsEditor;
 import util.QuestionTreeNode;
 
 public class SettingsComponentFactory {
-	QuestionTreeNode selected;
-	SettingsComponent component;
-	String key;
-	String caption;
-	String value;
+	private QuestionTreeNode selected;
+	private SettingsComponent component;
+	private String key;
+	private String caption;
+	private String value;
 	
-	public SettingsComponentFactory(QuestionTreeNode selected, SettingsComponent component, String key, String caption, String value) {
+	public SettingsComponentFactory(QuestionTreeNode selected, SettingsComponent component, String key, String caption) {
 		this.selected=selected;
 		this.component=component;
 		this.key=key;
 		this.caption=caption;
-		this.value=value;
 	}
 	
 	public SettingsComponent build() {
@@ -24,7 +23,9 @@ public class SettingsComponentFactory {
 			result.setSelected(selected);
 			result.setKey(key);
 			result.setCaption(caption);
-			result.setValue(value);
+			if (selected!=null) {
+				result.setValue(selected.getAttribute(key));
+			}
 			return result;
 		} catch (InstantiationException e) {
 			e.printStackTrace();

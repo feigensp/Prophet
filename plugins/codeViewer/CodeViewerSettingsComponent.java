@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 import java.util.Vector;
 
 import javax.swing.BorderFactory;
@@ -15,34 +16,29 @@ import javax.swing.JTabbedPane;
 import plugins.codeViewer.codeViewerPlugins.CodeViewerPlugin;
 import plugins.codeViewer.codeViewerPlugins.CodeViewerPluginList;
 import experimentEditor.tabbedPane.settingsEditor.SettingsComponent;
+import experimentEditor.tabbedPane.settingsEditor.SettingsComponentFactory;
+import experimentEditor.tabbedPane.settingsEditor.settingsComponents.SettingsPathChooser;
 
 @SuppressWarnings("serial")
 public class CodeViewerSettingsComponent extends SettingsComponent {
 	Vector<SettingsComponent> mySettings;
-	JTabbedPane tabbedPane;
-	JPanel myPanel;
 	JPanel optionPanel;
 	JCheckBox activatedCheckBox;
 
 	public CodeViewerSettingsComponent() {
-		setLayout(new BorderLayout());
-		tabbedPane = new JTabbedPane();
-		add(tabbedPane,BorderLayout.CENTER);
-		myPanel = new JPanel();
-		tabbedPane.addTab("", myPanel);
-		myPanel.setLayout(new BorderLayout());		
-		activatedCheckBox = new JCheckBox("Codeviewer aktivieren");
+		setLayout(new BorderLayout());		
+		activatedCheckBox = new JCheckBox("");
 		activatedCheckBox.addActionListener(getDefaultActionListener());
 		activatedCheckBox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				activate(activatedCheckBox.isSelected());				
 			}			
 		});
-		myPanel.add(activatedCheckBox,BorderLayout.NORTH);
+		add(activatedCheckBox,BorderLayout.NORTH);
 		optionPanel = new JPanel();
 		optionPanel.setBorder(BorderFactory.createLineBorder(Color.black));
 		optionPanel.setLayout(new BoxLayout(optionPanel,BoxLayout.Y_AXIS));
-		myPanel.add(optionPanel,BorderLayout.CENTER);
+		add(optionPanel,BorderLayout.CENTER);
 	}
 
 	public void setValue(String value) {
@@ -54,12 +50,12 @@ public class CodeViewerSettingsComponent extends SettingsComponent {
 		return ""+activatedCheckBox.isSelected();
 	}
 
-	public void setCaption(String cap) {
-		tabbedPane.setTitleAt(0, cap);
+	public void setCaption(String caption) {
+		activatedCheckBox.setText(caption);
 	}
 	
 	public String getCaption() {
-		return tabbedPane.getTitleAt(0);
+		return activatedCheckBox.getText();
 	}
 	public void activate(boolean active) {
 		optionPanel.setVisible(active);
@@ -68,12 +64,18 @@ public class CodeViewerSettingsComponent extends SettingsComponent {
 			optionPanel.updateUI();
 		
 			if (getSelected()!=null) {
+				SettingsComponent pathChooser = new SettingsComponentFactory(getSelected(), new SettingsPathChooser(), "codeviewer_path", "Quelltextpfad").build();
+				optionPanel.add(pathChooser);
 				// adding checkboxes for the given possible settings in Settings.java
 				for (CodeViewerPlugin plugin : CodeViewerPluginList.getPlugins()) {
-					SettingsComponent settingsOption = plugin.getSettingsComponentFactory(getSelected()).build();
-					if (settingsOption!=null) {
-						optionPanel.add(settingsOption);
-					}						
+					List<SettingsComponentFactory> factories = plugin.getSettingsComponentFactories(getSelected());
+					if (factories!=null) {
+						for (SettingsComponentFactory factory : factories) {
+							if (factory!=null) {
+								optionPanel.add(factory.build());
+							}
+						}
+					}					
 				}
 			}
 		}

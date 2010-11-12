@@ -1,5 +1,8 @@
 package plugins.codeViewer;
 
+import java.util.List;
+import java.util.Vector;
+
 import plugins.ExperimentPlugin;
 import util.QuestionTreeNode;
 import experimentEditor.ExperimentEditor;
@@ -8,11 +11,12 @@ import experimentViewer.ExperimentViewer;
 
 public class ExperimentCodeViewerPlugin implements ExperimentPlugin {
 
-	public SettingsComponentFactory getSettingsComponentFactory(QuestionTreeNode selected) {
+	public List<SettingsComponentFactory> getSettingsComponentFactories(QuestionTreeNode selected) {
+		Vector<SettingsComponentFactory> result = new Vector<SettingsComponentFactory>();
 		if (selected.isCategory()) {
-			return new SettingsComponentFactory(selected, new CodeViewerSettingsComponent(),"codeviewer","Codeviewer",selected.getAttribute("codeviewer"));
+			result.add(new SettingsComponentFactory(selected, new CodeViewerSettingsComponent(),"codeviewer","Codeviewer aktivieren"));
 		}
-		return null;
+		return result;
 	}
 
 	@Override

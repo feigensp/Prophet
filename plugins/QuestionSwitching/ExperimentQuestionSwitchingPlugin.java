@@ -1,5 +1,8 @@
 package plugins.QuestionSwitching;
 
+import java.util.List;
+import java.util.Vector;
+
 import plugins.ExperimentPlugin;
 import util.QuestionTreeNode;
 import experimentEditor.ExperimentEditor;
@@ -10,11 +13,12 @@ import experimentViewer.ExperimentViewer;
 public class ExperimentQuestionSwitchingPlugin implements ExperimentPlugin {
 
 	@Override
-	public SettingsComponentFactory getSettingsComponentFactory(QuestionTreeNode selected) {
-		if(selected.isCategory()) {
-			return new SettingsComponentFactory(selected, new SettingsCheckBox(),"questionswitching", "Vor- und Zurückblättern erlauben",selected.getAttribute("questionswitching"));
+	public List<SettingsComponentFactory> getSettingsComponentFactories(QuestionTreeNode selected) {
+		Vector<SettingsComponentFactory> result = new Vector<SettingsComponentFactory>();
+		if (selected.isCategory()) {
+			result.add(new SettingsComponentFactory(selected, new SettingsCheckBox(),"questionswitching", "Vor- und Zurückblättern erlauben"));
 		}
-		return null;
+		return result;
 	}
 
 	@Override
