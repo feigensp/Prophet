@@ -10,36 +10,31 @@ import util.QuestionTreeNode;
 @SuppressWarnings("serial")
 public abstract class SettingsComponent extends JPanel {
 	String key;
-	QuestionTreeNode selected;
+	QuestionTreeNode treeNode;
 	
 	private ActionListener defaultActionListener = new ActionListener() {
 		public void actionPerformed(ActionEvent arg0) {
-			if (getSelected()!=null) {
-				getSelected().setAttribute(getKey(), getValue());
-			}
+			saveValue();
+			loadValue();
 		}		
 	};
 	
 	public ActionListener getDefaultActionListener() {
 		return defaultActionListener;
 	}	
-	
-	public String getKey() {
-		return key;
+
+	public QuestionTreeNode getTreeNode() {
+		return treeNode;
 	}
-	public void setKey(String key) {
-		this.key = key;
-	}
-	public QuestionTreeNode getSelected() {
-		return selected;
-	}
-	public void setSelected(QuestionTreeNode selected) {
-		this.selected = selected;
+	public void setTreeNode(QuestionTreeNode treeNode) {
+		this.treeNode = treeNode;
+		loadValue();
+		saveValue();
 	}
 	
 	public abstract void setCaption(String caption);
 	public abstract String getCaption();
 	
-	public abstract void setValue(String value);
-	public abstract String getValue();
+	public abstract void loadValue();
+	public abstract void saveValue();
 }

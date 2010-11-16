@@ -4,17 +4,30 @@ import java.util.List;
 import java.util.Vector;
 
 import plugins.ExperimentPlugin;
+import plugins.codeViewer.codeViewerPlugins.CodeViewerPlugin;
+import plugins.codeViewer.codeViewerPlugins.CodeViewerPluginList;
 import util.QuestionTreeNode;
 import experimentEditor.ExperimentEditor;
-import experimentEditor.tabbedPane.settingsEditor.SettingsComponentFactory;
+import experimentEditor.tabbedPane.settingsEditor.SettingsComponentDescription;
+import experimentEditor.tabbedPane.settingsEditor.settingsComponents.SettingsPathChooser;
+import experimentEditor.tabbedPane.settingsEditor.settingsComponents.SettingsPluginComponent;
 import experimentViewer.ExperimentViewer;
 
 public class ExperimentCodeViewerPlugin implements ExperimentPlugin {
 
-	public List<SettingsComponentFactory> getSettingsComponentFactories(QuestionTreeNode selected) {
-		Vector<SettingsComponentFactory> result = new Vector<SettingsComponentFactory>();
-		if (selected.isCategory()) {
-			result.add(new SettingsComponentFactory(selected, new CodeViewerSettingsComponent(),"codeviewer","Codeviewer aktivieren"));
+	@Override
+	public List<SettingsComponentDescription> getSettingsComponentDescriptions(
+			String type) {
+		Vector<SettingsComponentDescription> result = new Vector<SettingsComponentDescription>();
+		if (type.equals(QuestionTreeNode.TYPE_CATEGORY)) {
+			SettingsComponentDescription desc = new SettingsComponentDescription(SettingsPluginComponent.class, "codeviewer","Codeviewer aktivieren");
+			desc.addSubComponent(new SettingsComponentDescription(SettingsPathChooser.class, "path", "Pfad der Quelltexte:"));
+			for (CodeViewerPlugin plugin : CodeViewerPluginList.getPlugins()) {
+				for (SettingsComponentDescription pluginDescription : plugin.getSettingsComponentDescriptions()) {
+					desc.addSubComponent(pluginDescription);
+				}
+			}
+			result.add(desc);
 		}
 		return result;
 	}
@@ -30,5 +43,4 @@ public class ExperimentCodeViewerPlugin implements ExperimentPlugin {
 		// TODO Auto-generated method stub
 		
 	}
-
 }

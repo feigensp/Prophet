@@ -5,25 +5,15 @@ import java.io.File;
 
 import javax.swing.JTabbedPane;
 
+import util.QuestionTreeNode;
+
 @SuppressWarnings("serial")
 public class EditorTabbedPane extends JTabbedPane {
-	boolean searchable;
-	boolean editable;
-
-	// UserDataRecorder rec;
-
-	public EditorTabbedPane() {
+	QuestionTreeNode selected;
+	
+	public EditorTabbedPane(QuestionTreeNode selected) {
 		super(JTabbedPane.TOP);
-		searchable = true;
-		editable = false;
-	}
-
-	public EditorTabbedPane(boolean searchable, boolean editable) {
-		super(JTabbedPane.TOP);
-		this.searchable = searchable;
-		this.editable = editable;
-		 //rec = new UserDataRecorder();
-		 //rec.startFileTime(this);
+		this.selected=selected;
 	}
 
 	public void openFile(File file) {
@@ -36,7 +26,7 @@ public class EditorTabbedPane extends JTabbedPane {
 				return;
 			}
 		}
-		EditorPanel myPanel = new EditorPanel(file, searchable, editable);
+		EditorPanel myPanel = new EditorPanel(file, selected);
 		add(file.getName(), myPanel);
 		setSelectedIndex(indexOfComponent(myPanel));
 		this.setTabComponentAt(this.getTabCount() - 1, new ButtonTabComponent(

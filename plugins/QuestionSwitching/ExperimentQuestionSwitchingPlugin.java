@@ -6,17 +6,17 @@ import java.util.Vector;
 import plugins.ExperimentPlugin;
 import util.QuestionTreeNode;
 import experimentEditor.ExperimentEditor;
-import experimentEditor.tabbedPane.settingsEditor.SettingsComponentFactory;
+import experimentEditor.tabbedPane.settingsEditor.SettingsComponentDescription;
 import experimentEditor.tabbedPane.settingsEditor.settingsComponents.SettingsCheckBox;
 import experimentViewer.ExperimentViewer;
 
 public class ExperimentQuestionSwitchingPlugin implements ExperimentPlugin {
 
 	@Override
-	public List<SettingsComponentFactory> getSettingsComponentFactories(QuestionTreeNode selected) {
-		Vector<SettingsComponentFactory> result = new Vector<SettingsComponentFactory>();
-		if (selected.isCategory()) {
-			result.add(new SettingsComponentFactory(selected, new SettingsCheckBox(),"questionswitching", "Vor- und Zurückblättern erlauben"));
+	public List<SettingsComponentDescription> getSettingsComponentDescriptions(String type) {
+		Vector<SettingsComponentDescription> result = new Vector<SettingsComponentDescription>();
+		if (type.equals(QuestionTreeNode.TYPE_CATEGORY)) {
+			result.add(new SettingsComponentDescription(SettingsCheckBox.class,"questionswitching", "Vor- und Zurückblättern erlauben"));
 		}
 		return result;
 	}

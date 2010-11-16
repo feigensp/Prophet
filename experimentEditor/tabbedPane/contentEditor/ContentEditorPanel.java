@@ -25,7 +25,7 @@ public class ContentEditorPanel extends ExperimentEditorTab {
 		editArea.getDocument().addDocumentListener(new DocumentListener() {
 			public void myChange() {
 				if (selected!=null) {
-					selected.setContent(editArea.getText());
+					selected.setValue(editArea.getText());
 				}
 			}
 			@Override
@@ -64,7 +64,7 @@ public class ContentEditorPanel extends ExperimentEditorTab {
 	public void activate(QuestionTreeNode selected) {
 		this.selected=selected;
 		if (selected!=null) {
-			editArea.setText(selected.getContent());
+			editArea.setText(selected.getValue());
 			editArea.setEditable(true);
 			toolBar.setEnabled(true);
 		} else {

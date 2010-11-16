@@ -21,18 +21,19 @@ public class SettingsTextField extends SettingsComponent{
 		add(textField, BorderLayout.CENTER);
 		textField.addActionListener(getDefaultActionListener());
 	}
-
-	public void setValue(String value) {
-		textField.setText(value);
-	}
-	public String getValue() {
-		return textField.getText();
-	}
 	
 	public void setCaption(String cap) {
 		caption.setText(cap);
 	}
 	public String getCaption() {
 		return caption.getText();
+	}
+
+	public void loadValue() {
+		textField.setText(getTreeNode().getValue());
+	}
+
+	public void saveValue() {
+		getTreeNode().setValue(textField.getText());
 	}
 }

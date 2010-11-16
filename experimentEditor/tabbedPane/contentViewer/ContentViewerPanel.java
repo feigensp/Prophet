@@ -52,7 +52,7 @@ public class ContentViewerPanel extends ExperimentEditorTab {
 	public void activate(QuestionTreeNode selected) {
 		this.selected=selected;
 		if (selected!=null) {
-			viewerPane.setText(HTMLSTART + selected.getContent()+ HTMLEND);
+			viewerPane.setText(HTMLSTART + selected.getValue()+ HTMLEND);
 		} else {
 			viewerPane.setText("");
 		}

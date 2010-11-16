@@ -85,7 +85,8 @@ public class HTMLFileView extends JPanel {
 		maxPos = curPos = -1;
 		addQuestion(q);
 		//starting the editor
-		CodeViewer frame = new CodeViewer();
+		//TODO: ANPASSEN
+		CodeViewer frame = new CodeViewer(null);
 		frame.setVisible(true);
 	}
 

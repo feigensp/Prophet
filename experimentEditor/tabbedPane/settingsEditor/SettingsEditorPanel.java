@@ -37,14 +37,9 @@ public class SettingsEditorPanel extends ExperimentEditorTab {
 		if (selected!=null) {
 			// adding checkboxes for the given possible settings in Settings.java
 			for (ExperimentPlugin plugin : ExperimentPluginList.getPlugins()) {
-				List<SettingsComponentFactory> factories = plugin.getSettingsComponentFactories(selected);
-				if (factories!=null) {
-					for (SettingsComponentFactory factory : factories) {
-						if (factory!=null) {
-							add(factory.build());
-						}
-					}
-				}						
+				for (SettingsComponentDescription desc : plugin.getSettingsComponentDescriptions(selected.getType())) {
+					add(desc.build(selected));
+				}
 			}
 		}
 	}

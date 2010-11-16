@@ -20,17 +20,17 @@ public class SettingsCheckBox extends SettingsComponent {
 		add(myCheckBox,BorderLayout.CENTER);
 	}
 	
-	public void setValue(String value) {
-		myCheckBox.setSelected(Boolean.parseBoolean(value));
-	}
-	public String getValue() {
-		return ""+myCheckBox.isSelected();
-	}	
-	
 	public void setCaption(String cap) {
 		myCheckBox.setText(cap);		
 	}
 	public String getCaption() {
 		return myCheckBox.getText();
+	}
+	public void loadValue() {
+		myCheckBox.setSelected(Boolean.parseBoolean(getTreeNode().getValue()));
+	}
+
+	public void saveValue() {
+		getTreeNode().setValue(""+myCheckBox.isSelected());
 	}
 }

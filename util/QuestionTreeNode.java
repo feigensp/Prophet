@@ -1,26 +1,22 @@
 package util;
 
-import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.Vector;
+import java.util.TreeMap;
 
-import javax.swing.tree.MutableTreeNode;
-import javax.swing.tree.TreeNode;
+import javax.swing.tree.DefaultMutableTreeNode;
 
-public class QuestionTreeNode implements MutableTreeNode {
+@SuppressWarnings("serial")
+public class QuestionTreeNode extends DefaultMutableTreeNode {
 	public final static String TYPE_EXPERIMENT = "experiment";
 	public final static String TYPE_CATEGORY = "category";
 	public final static String TYPE_QUESTION = "question";
+	public final static String TYPE_ATTRIBUTE = "attribute";
 	
-	private String name = "(default)";
-	private String content = "";
 	private String type = "(default)";
-	private QuestionTreeNode parent = null;
-	private Vector<QuestionTreeNode> children = new Vector<QuestionTreeNode>();
-	private HashMap<String,String> attributes = new HashMap<String,String>();
-	private HashMap<String,Vector<StringTuple>> results;
+	private String name = "(default)";
+	private String value = "";
+
+	private TreeMap<String,QuestionTreeNode> attributes = new TreeMap<String,QuestionTreeNode>();
 	
 	public QuestionTreeNode() {
 		this("");
@@ -45,6 +41,9 @@ public class QuestionTreeNode implements MutableTreeNode {
 	public boolean isQuestion() {
 		return type.equals(TYPE_QUESTION);
 	}
+	public boolean isAttribute() {
+		return type.equals(TYPE_ATTRIBUTE);
+	}
 
 	public String getName() {
 		return name;
@@ -60,85 +59,48 @@ public class QuestionTreeNode implements MutableTreeNode {
 		return name;
 	}
 	
-	@Override
-	public Enumeration<QuestionTreeNode> children() {
-		return children.elements();
-	}
-	@Override
-	public boolean getAllowsChildren() {
-		return !isLeaf();
-	}
-	@Override
-	public TreeNode getChildAt(int childIndex) {
-		return children.get(childIndex);
-	}
-	@Override
-	public int getIndex(TreeNode node) {
-		return children.indexOf(node);
-	}
-	@Override
-	public TreeNode getParent() {
-		return parent;
-	}
-	@Override
 	public boolean isLeaf() {
 		return isQuestion();
-	}
-	@Override
-	public int getChildCount() {
-		return children.size();
-	}
-	@Override
-	public void insert(MutableTreeNode child, int index) {
-		children.insertElementAt((QuestionTreeNode) child, index);
-		child.setParent(this);		
-	}
-	@Override
-	public void remove(int index) {
-		children.remove(index);
-		
-	}
-	@Override
-	public void remove(MutableTreeNode node) {
-		children.remove(node);		
-	}
-	@Override
-	public void removeFromParent() {
-		parent.remove(this);		
-	}
-	@Override
-	public void setParent(MutableTreeNode newParent) {
-		parent=(QuestionTreeNode) newParent;		
 	}
 	@Override
 	public void setUserObject(Object object) {
 		setName((String)object);
 	}
-	public Set<Entry<String,String>> attributes() {
-		return attributes.entrySet();
+	public TreeMap<String,QuestionTreeNode> getAttributes() {
+		return attributes;
 	}
-	public String getAttribute(String key) {
+	public String getAttributeValue(String key) {
+		QuestionTreeNode attribute = attributes.get(key);
+		return attribute == null ? null : attribute.getValue();
+	}
+	public QuestionTreeNode getAddAttribute(String key) {
+		QuestionTreeNode attribute = attributes.get(key);
+		if (attribute == null) {
+			attribute = new QuestionTreeNode(TYPE_ATTRIBUTE, key);
+			attributes.put(key, attribute);
+		}
+		return attribute;
+	}
+	public void setAttribute(String key, QuestionTreeNode attribute) {
+		attributes.put(key, attribute);
+	}
+	public QuestionTreeNode getAttribute(String key) {
 		return attributes.get(key);
 	}
-	public String setAttribute(String key, String value) {
-		return attributes.put(key, value);
+	public String getValue() {
+		return value;
 	}
-	public Vector<QuestionTreeNode> getChildren() {
-		return children;
-	}
-	public boolean hasContent() {
-		return content!=null;
-	}
-	public String getContent() {
-		return content;
-	}
-	public void setContent(String c) {
-		content=c;
+	public void setValue(String v) {
+		value=v;
 	}
 	public String getType() {
 		return type;
 	}
-	public void setType(String t) {
+	public boolean setType(String t) {
+		if (t.trim().equals("")) {
+			return false;
+		}
 		type=t;
+		return true;
 	}
 }
