@@ -7,9 +7,8 @@ import java.util.ArrayList;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 
-import experimentEditor.tabbedPane.contentEditor.EditArea;
-
 import util.StringTuple;
+import experimentEditor.tabbedPane.contentEditor.EditArea;
 
 @SuppressWarnings("serial")
 public class FormularBox extends JComboBox implements ActionListener {

@@ -2,8 +2,6 @@ package plugins.codeViewer.tabbedPane;
 
 import java.awt.BorderLayout;
 import java.awt.Font;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -14,8 +12,6 @@ import javax.swing.JTextPane;
 
 import plugins.codeViewer.codeViewerPlugins.CodeViewerPlugin;
 import plugins.codeViewer.codeViewerPlugins.CodeViewerPluginList;
-import plugins.codeViewer.codeViewerPlugins.LineNumbers.LineNumbers;
-import plugins.codeViewer.codeViewerPlugins.SearchBar.SearchBar;
 import util.QuestionTreeNode;
 
 import com.Ostermiller.Syntax.HighlightedDocument;

@@ -7,8 +7,6 @@ package experimentEditor.tabbedPane.settingsEditor;
  * @author Markus Köppen, Andreas Hasselberg
  */
 
-import java.util.List;
-
 import plugins.ExperimentPlugin;
 import plugins.ExperimentPluginList;
 import util.QuestionTreeNode;

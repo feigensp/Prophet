@@ -9,7 +9,6 @@ import javax.swing.BoxLayout;
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 
-import util.QuestionTreeNode;
 import experimentEditor.tabbedPane.settingsEditor.SettingsComponent;
 
 @SuppressWarnings("serial")

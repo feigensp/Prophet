@@ -3,7 +3,6 @@ package experimentViewer;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.EventQueue;
-import java.util.ArrayList;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -11,7 +10,6 @@ import javax.swing.border.EmptyBorder;
 
 import util.QuestionTreeNode;
 import util.XMLTreeHandler;
-import experimentViewer.IconCellRenderer.ListIcons;
 
 public class QuestionViewer extends JFrame {
 	QuestionTreeNode experimentTree;

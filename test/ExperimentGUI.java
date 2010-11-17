@@ -35,13 +35,12 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import experimentViewer.ClockLabel;
-
 import test.experimentQuestionCreator.ElementAttribute;
 import test.experimentQuestionCreator.ExtendedPanel;
 import test.experimentQuestionCreator.MyTreeNode;
 import test.experimentQuestionCreator.QuestionElement;
 import test.experimentQuestionCreator.XMLHandler;
+import experimentViewer.ClockLabel;
 
 public class ExperimentGUI extends JFrame {
 

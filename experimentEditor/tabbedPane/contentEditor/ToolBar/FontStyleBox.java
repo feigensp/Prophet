@@ -6,9 +6,8 @@ import java.util.ArrayList;
 
 import javax.swing.JComboBox;
 
-import experimentEditor.tabbedPane.contentEditor.EditArea;
-
 import util.StringTuple;
+import experimentEditor.tabbedPane.contentEditor.EditArea;
 
 @SuppressWarnings("serial")
 public class FontStyleBox extends JComboBox implements ActionListener{

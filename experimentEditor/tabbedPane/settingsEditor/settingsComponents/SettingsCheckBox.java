@@ -3,7 +3,6 @@ package experimentEditor.tabbedPane.settingsEditor.settingsComponents;
 import java.awt.BorderLayout;
 
 import javax.swing.JCheckBox;
-import javax.swing.border.EmptyBorder;
 
 import experimentEditor.tabbedPane.settingsEditor.SettingsComponent;
 

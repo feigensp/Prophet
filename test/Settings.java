@@ -7,10 +7,6 @@ package test;
  * @author Markus Köppen, Andreas Hasselberg
  */
 
-import java.util.ArrayList;
-
-import experimentEditor.tabbedPane.settingsEditor.settingsComponents.SettingsCheckBox;
-import experimentEditor.tabbedPane.settingsEditor.settingsComponents.SettingsPathChooser;
 
 public class Settings {
 //	@SuppressWarnings("serial")
