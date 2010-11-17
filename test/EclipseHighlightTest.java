@@ -2,9 +2,9 @@ package test;
 
 import java.awt.BorderLayout;
 
-import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
+import javax.swing.JTextPane;
 import javax.swing.WindowConstants;
 
 import jsyntaxpane.DefaultSyntaxKit;
@@ -19,10 +19,9 @@ public class EclipseHighlightTest {
 		JFrame f = new JFrame("bla");
 		f.setLayout(new BorderLayout());
 		DefaultSyntaxKit.initKit();
-		JEditorPane codeEditor = new JEditorPane();
+		JTextPane codeEditor = new JTextPane(new SyntaxDocument());
 		JScrollPane scrPane = new JScrollPane(codeEditor);
 		f.add(scrPane, BorderLayout.CENTER);
-		codeEditor.setContentType("text/java");
 
 		f.setSize(800, 600);
 		f.setVisible(true);
