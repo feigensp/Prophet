@@ -21,7 +21,6 @@ public class EditabilityPlugin implements CodeViewerPlugin {
 
 	public void onEditorPanelCreate(QuestionTreeNode selected,
 			EditorPanel editorPanel) {
-		//editorPanel.getTextPane().setEditable(Boolean.parseBoolean(selected.getAttributeValue("codeviewer_editable")));	
-		editorPanel.getTextPane().setEditable(true);	
+		editorPanel.getTextPane().setEditable(Boolean.parseBoolean(selected.getAttributeValue("codeviewer_editable")));	
 	}
 }

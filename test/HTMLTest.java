@@ -56,7 +56,7 @@ public class HTMLTest extends JFrame {
 		textPane = new JTextPane();
 		textPane.setEditorKit(new HTMLEditorKit());
 		textPane.setEditable(false);
-		textPane.setText("<form>" + 
+		textPane.setText("<form id=\"formname\">" + 
 				"frage 1 test<br><input id=\"vorname\" type=\"text\" size=\"5\">" +
 				"<br><br><input name ='nextQuestion' type='submit' value='Weiter'>" + 
 				"<form>");
