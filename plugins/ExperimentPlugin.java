@@ -12,6 +12,7 @@ public interface ExperimentPlugin {
 	public List<SettingsComponentDescription> getSettingsComponentDescriptions(QuestionTreeNode node);
 	public void experimentEditorRun(ExperimentEditor experimentEditor);
 	public void experimentViewerRun(ExperimentViewer experimentViewer);
-	public void enterNode(QuestionTreeNode node, HTMLFileView htmlFileView);
-	public void exitNode(QuestionTreeNode node, HTMLFileView htmlFileView);
+	public Object enterNode(QuestionTreeNode node, HTMLFileView htmlFileView);
+	public void exitNode(QuestionTreeNode node, HTMLFileView htmlFileView, Object pluginData);
+	public String getKey();
 }

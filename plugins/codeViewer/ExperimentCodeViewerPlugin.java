@@ -46,16 +46,25 @@ public class ExperimentCodeViewerPlugin implements ExperimentPlugin {
 	}
 
 	@Override
-	public void enterNode(QuestionTreeNode node, HTMLFileView htmlFileView) {
+	public Object enterNode(QuestionTreeNode node, HTMLFileView htmlFileView) {
 		if (Boolean.parseBoolean(node.getAttributeValue("codeviewer"))) {
 			CodeViewer cv = new CodeViewer(node.getAttribute("codeviewer"));
 			cv.setVisible(true);
+			return cv;
+		}
+		return null;
+	}
+
+	@Override
+	public void exitNode(QuestionTreeNode node, HTMLFileView htmlFileView, Object pluginData) {
+		CodeViewer cv = (CodeViewer)pluginData;
+		if (cv!=null) {
+			cv.dispose();
 		}
 	}
 
 	@Override
-	public void exitNode(QuestionTreeNode node, HTMLFileView htmlFileView) {
-		// TODO Auto-generated method stub
-		
+	public String getKey() {
+		return "codeviewer";
 	}
 }

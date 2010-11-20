@@ -4,6 +4,7 @@ import java.util.Vector;
 
 import plugins.QuestionSwitching.ExperimentQuestionSwitchingPlugin;
 import plugins.codeViewer.ExperimentCodeViewerPlugin;
+import plugins.questionLists.QuestionListPlugin;
 
 public class ExperimentPluginList {
 	private static Vector<ExperimentPlugin> plugins = new Vector<ExperimentPlugin>() {
@@ -11,6 +12,7 @@ public class ExperimentPluginList {
 			add(new ExperimentCodeViewerPlugin());
 			add(new ExperimentQuestionSwitchingPlugin());
 			add(new DebugPlugin());
+			add(new QuestionListPlugin());
 		}
 	};
 	

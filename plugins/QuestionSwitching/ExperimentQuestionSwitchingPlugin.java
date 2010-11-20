@@ -35,15 +35,19 @@ public class ExperimentQuestionSwitchingPlugin implements ExperimentPlugin {
 	}
 
 	@Override
-	public void enterNode(QuestionTreeNode node, HTMLFileView htmlFileView) {
+	public Object enterNode(QuestionTreeNode node, HTMLFileView htmlFileView) {
+		return null;
+	}
+
+	@Override
+	public void exitNode(QuestionTreeNode node, HTMLFileView htmlFileView, Object pluginData) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void exitNode(QuestionTreeNode node, HTMLFileView htmlFileView) {
-		// TODO Auto-generated method stub
-		
+	public String getKey() {
+		return "questionswitching";
 	}
 
 }

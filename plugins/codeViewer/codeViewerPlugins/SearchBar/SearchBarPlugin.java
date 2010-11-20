@@ -26,8 +26,7 @@ public class SearchBarPlugin implements CodeViewerPlugin {
 
 	public void onEditorPanelCreate(QuestionTreeNode selected,
 			EditorPanel editorPanel) {
-		boolean searchable = Boolean.parseBoolean(selected.getAttributeValue("searchable"));
-		if (searchable) {
+		if (Boolean.parseBoolean(selected.getAttributeValue("searchable"))) {
 			JTextPane textPane = editorPanel.getTextPane();
 			SearchBar searchBar = new SearchBar(textPane);
 			searchBar.setVisible(false);

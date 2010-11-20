@@ -1,5 +1,6 @@
 package util;
 
+import java.util.HashMap;
 import java.util.TreeMap;
 
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -17,7 +18,16 @@ public class QuestionTreeNode extends DefaultMutableTreeNode {
 
 	private TreeMap<String,QuestionTreeNode> attributes = new TreeMap<String,QuestionTreeNode>();
 	private TreeMap<String,String> answers = new TreeMap<String,String>();
+	private HashMap<String,Object> pluginData = new HashMap<String,Object>();
 	
+	long answerTime = 0;
+	
+	public long getAnswerTime() {
+		return answerTime;
+	}
+	public void setAnswerTime(long answerTime) {
+		this.answerTime = answerTime;
+	}
 	public QuestionTreeNode() {
 		this("");
 	}
@@ -108,5 +118,14 @@ public class QuestionTreeNode extends DefaultMutableTreeNode {
 	}
 	public String getAnswer(String key) {
 		return answers.get(key);
+	}
+	public TreeMap<String,String> getAnswers() {
+		return answers;
+	}
+	public void setPluginData(String key, Object value) {
+		pluginData.put(key, value);
+	}
+	public Object getPluginData(String key) {
+		return pluginData.get(key);
 	}
 }

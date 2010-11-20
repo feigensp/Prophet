@@ -3,6 +3,8 @@ package plugins.codeViewer.codeViewerPlugins.UndoRedo;
 import java.util.List;
 import java.util.Vector;
 
+import javax.swing.undo.UndoManager;
+
 import plugins.codeViewer.CodeViewer;
 import plugins.codeViewer.codeViewerPlugins.CodeViewerPlugin;
 import plugins.codeViewer.tabbedPane.EditorPanel;
@@ -28,7 +30,9 @@ public class UndoRedoPlugin implements CodeViewerPlugin {
 	public void onEditorPanelCreate(QuestionTreeNode selected,
 			EditorPanel editorPanel) {
 		if (Boolean.parseBoolean(selected.getAttributeValue("undoredo"))) {
-			UndoRedo ur = new UndoRedo(editorPanel.getTextPane());
+			UndoManager undoManager = new UndoManager();
+			editorPanel.getTextPane().getDocument().addUndoableEditListener(undoManager);
+			editorPanel.getTextPane().addKeyListener(new UndoRedoKeyListener(undoManager));
 		}
 	}
 }

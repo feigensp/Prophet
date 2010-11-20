@@ -26,7 +26,10 @@ import org.xml.sax.SAXException;
 public class XMLTreeHandler {
 	private final static String ATTRIBUTE_NAME = "name";
 	private final static String ATTRIBUTE_VALUE = "value";
+	private final static String ATTRIBUTE_TIME = "time";
 	private final static String TYPE_ATTRIBUTES = "attributes";
+	private final static String TYPE_ANSWERS = "answers";
+	private final static String TYPE_ANSWER = "answer";
 	private final static String TYPE_CHILDREN = "children";
 
 	/**
@@ -95,7 +98,82 @@ public class XMLTreeHandler {
 						.newInstance()
 						.newTransformer()
 						.transform(new DOMSource(xmlTree),
-								new StreamResult(path + ".xml"));
+								new StreamResult(path));
+			}
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		} catch (Error e1) {
+			e1.printStackTrace();
+		}
+	}
+	
+	/**
+	 * method which adds recursively the childs (to an xml file)
+	 * 
+	 * @param treeChilds
+	 *            childs which should bye added
+	 * @param xmlParent
+	 *            the parent who should get the childs
+	 * @param xmlTree
+	 *            the xml-document
+	 */
+	private static void saveXMLAnswerNode(Document xmlTree, Element xmlNode, QuestionTreeNode treeNode) {
+		//Name hinzufügen
+		xmlNode.setAttribute(ATTRIBUTE_NAME, treeNode.getName());
+		xmlNode.setAttribute(ATTRIBUTE_TIME, ""+treeNode.getAnswerTime());
+		// evtl. Antworten hinzufügen
+		if (treeNode.getAnswers().size()>0) {
+			Element xmlAnswersNode = xmlTree.createElement(TYPE_ANSWERS);
+			xmlNode.appendChild(xmlAnswersNode);
+			for (Entry<String, String> answerEntry : treeNode.getAnswers().entrySet()) {
+				Element xmlChild = xmlTree.createElement(TYPE_ANSWERS);
+				xmlChild.setAttribute(ATTRIBUTE_NAME, answerEntry.getKey());
+				xmlChild.setAttribute(ATTRIBUTE_VALUE, answerEntry.getValue());
+				xmlAnswersNode.appendChild(xmlChild);
+			}
+		}
+		// evtl. Kinder hinzufügen
+		if (treeNode.getChildCount()>0) {
+			Element xmlChildrenNode = xmlTree.createElement(TYPE_CHILDREN);
+			xmlNode.appendChild(xmlChildrenNode);
+			for (int i=0; i<treeNode.getChildCount(); i++) {
+				QuestionTreeNode treeChild = (QuestionTreeNode)treeNode.getChildAt(i);
+				Element xmlChild = xmlTree.createElement(treeChild.getType());
+				xmlChildrenNode.appendChild(xmlChild);
+				saveXMLAnswerNode(xmlTree, xmlChild, treeChild);
+			}
+		}
+	}
+
+	/**
+	 * writes an DataTreeNode with his children into an XML-File
+	 * 
+	 * @param treeRoot
+	 *            DataTreeNode which should be added (with children)
+	 * @param path
+	 *            path for the xml-file
+	 */
+	public static void saveXMLAnswerTree(QuestionTreeNode treeRoot, String path) {
+		Document xmlTree = null;
+		try {
+			// Dokument erstellen
+			xmlTree = DocumentBuilderFactory.newInstance().newDocumentBuilder()
+					.newDocument();
+			// Wurzelknoten erschaffen
+			Element xmlRoot = xmlTree.createElement(treeRoot.getType());
+			xmlTree.appendChild(xmlRoot);
+			saveXMLAnswerNode(xmlTree, xmlRoot, treeRoot);
+		} catch (ParserConfigurationException e1) {
+			e1.printStackTrace();
+		}
+		// Fragebogen in Datei speichern
+		try {
+			if (xmlTree != null) {
+				TransformerFactory
+						.newInstance()
+						.newTransformer()
+						.transform(new DOMSource(xmlTree),
+								new StreamResult(path));
 			}
 		} catch (Exception e1) {
 			e1.printStackTrace();

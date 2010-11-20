@@ -45,7 +45,7 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 		fileMenu.add(saveMenuItem);
 		saveMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				XMLTreeHandler.saveXMLTree(questionEditor.getTree().getRoot(), "test");
+				XMLTreeHandler.saveXMLTree(questionEditor.getTree().getRoot(), "test.xml");
 			}
 		});
 

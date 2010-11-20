@@ -28,13 +28,19 @@ public class DebugPlugin implements ExperimentPlugin {
 	}
 
 	@Override
-	public void enterNode(QuestionTreeNode node, HTMLFileView htmlFileView) {
+	public Object enterNode(QuestionTreeNode node, HTMLFileView htmlFileView) {
 		System.out.println("--> "+node.getType()+": "+node.getName());
+		return null;
 	}
 
 	@Override
-	public void exitNode(QuestionTreeNode node, HTMLFileView htmlFileView) {
+	public void exitNode(QuestionTreeNode node, HTMLFileView htmlFileView, Object pluginData) {
 		System.out.println("<-- "+node.getType()+": "+node.getName());
+	}
+
+	@Override
+	public String getKey() {
+		return "debugplugin";
 	}
 
 }

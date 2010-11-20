@@ -69,7 +69,7 @@ public class ClockLabel extends JLabel implements Runnable {
 
 	public void saveTime() {
 		if (isStarted && questionNode!=null) {
-			questionNode.setAnswer(KEY_TIME, ""+currentTime);
+			questionNode.setAnswerTime(currentTime/1000);
 		}
 	}
 	
@@ -148,6 +148,6 @@ public class ClockLabel extends JLabel implements Runnable {
 	 * @return Zeit Sekunden
 	 */
 	public long getCurrentTime() {
-		return currentTime;
+		return currentTime/1000;
 	}
 }

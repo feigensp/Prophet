@@ -11,6 +11,7 @@ import plugins.ExperimentPlugin;
 import plugins.ExperimentPluginList;
 import plugins.codeViewer.CodeViewer;
 import util.QuestionTreeNode;
+import util.XMLTreeHandler;
 
 
 
@@ -128,12 +129,12 @@ public class HTMLFileView extends JPanel {
 	}
 	private void enterNode() {
 		for (ExperimentPlugin plugin : ExperimentPluginList.getPlugins()) {
-			plugin.enterNode(currentNode, this);
+			currentNode.setPluginData(plugin.getKey(), plugin.enterNode(currentNode, this));
 		}
 	}
 	private void exitNode() {
 		for (ExperimentPlugin plugin : ExperimentPluginList.getPlugins()) {
-			plugin.exitNode(currentNode, this);
+			plugin.exitNode(currentNode, this, currentNode.getPluginData(plugin.getKey()));
 		}
 		if (currentNode.isExperiment()) {
 			endQuestionnaire();
@@ -179,6 +180,7 @@ public class HTMLFileView extends JPanel {
 	 */
 	private void endQuestionnaire() {
 		System.out.println("Beende Befragung");
+		XMLTreeHandler.saveXMLAnswerTree(rootNode, "answers.xml");
 		this.removeAll();
 		this.updateUI();
 	}

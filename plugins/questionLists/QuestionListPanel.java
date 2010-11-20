@@ -29,9 +29,8 @@ public class QuestionListPanel extends JScrollPane{
 	/**
 	 * Constructor which creates an Empty Panel
 	 */
-	public QuestionListPanel(QuestionTreeNode tree) {
-		super();
-		experimentTree=tree;
+	public QuestionListPanel() {
+		super();		
 		panel = new JPanel();
 		this.setViewportView(panel);
 		categoryList = new ArrayList<JList>();		
@@ -39,6 +38,20 @@ public class QuestionListPanel extends JScrollPane{
 		panel.updateUI();
 	}
 	
+	public void addCategories(QuestionTreeNode tree) {
+		experimentTree=tree;
+		removeAll();
+		for (int i=0; i<experimentTree.getChildCount();i++) {
+			QuestionTreeNode category = (QuestionTreeNode)experimentTree.getChildAt(i);
+			ArrayList<String> questions = new ArrayList<String>();
+			for (int j=0; j<category.getChildCount();j++) {
+				QuestionTreeNode question = (QuestionTreeNode)category.getChildAt(j);
+				questions.add(question.getName());
+			}
+			addCategory(questions,Boolean.parseBoolean(category.getAttributeValue("questionswitching")) ? IconCellRenderer.ListIcons.UPDOWNARROW : IconCellRenderer.ListIcons.DOWNARROW);
+		}
+	}
+
 	/**
 	 * removes all JLists and clears the List which consisted the lists
 	 */
@@ -64,7 +77,7 @@ public class QuestionListPanel extends JScrollPane{
 		list.setEnabled(false);
 		list.setBorder(BorderFactory.createEtchedBorder());
 		//set size
-		int width = (int) this.getParent().getPreferredSize().getWidth()-20;
+		int width = (int) this.getParent().getPreferredSize().getWidth()-25;
 		list.setPreferredSize(new Dimension(width, 75));
 		list.setMinimumSize(new Dimension(width, 75));
 		list.setMaximumSize(new Dimension(width, 75));

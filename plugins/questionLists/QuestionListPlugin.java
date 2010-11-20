@@ -26,21 +26,26 @@ public class QuestionListPlugin implements ExperimentPlugin {
 
 	@Override
 	public void experimentViewerRun(ExperimentViewer experimentViewer) {
-		QuestionListPanel overview = new QuestionListPanel(experimentViewer.getTree());
+		QuestionListPanel overview = new QuestionListPanel();
 		overview.setPreferredSize(new Dimension(150, 2));
 		experimentViewer.getContentPane().add(overview, BorderLayout.WEST);
+		overview.addCategories(experimentViewer.getTree());
 	}
 
 	@Override
-	public void enterNode(QuestionTreeNode node, HTMLFileView htmlFileView) {
+	public Object enterNode(QuestionTreeNode node, HTMLFileView htmlFileView) {
+		return null;
+	}
+
+	@Override
+	public void exitNode(QuestionTreeNode node, HTMLFileView htmlFileView, Object pluginData) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void exitNode(QuestionTreeNode node, HTMLFileView htmlFileView) {
-		// TODO Auto-generated method stub
-		
+	public String getKey() {
+		return "questionlist";
 	}
 
 }
