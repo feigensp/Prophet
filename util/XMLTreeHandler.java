@@ -39,7 +39,7 @@ public class XMLTreeHandler {
 	 * @param xmlTree
 	 *            the xml-document
 	 */
-	private static void saveXMLChild(Document xmlTree, Element xmlNode, QuestionTreeNode treeNode) {
+	private static void saveXMLNode(Document xmlTree, Element xmlNode, QuestionTreeNode treeNode) {
 		//Name und Value hinzufügen
 		xmlNode.setAttribute(ATTRIBUTE_NAME, treeNode.getName());
 		xmlNode.setAttribute(ATTRIBUTE_VALUE, treeNode.getValue());
@@ -51,7 +51,7 @@ public class XMLTreeHandler {
 				QuestionTreeNode treeChild = attributeNode.getValue();
 				Element xmlChild = xmlTree.createElement(treeChild.getType());
 				xmlAttributesNode.appendChild(xmlChild);
-				saveXMLChild(xmlTree, xmlChild, treeChild);
+				saveXMLNode(xmlTree, xmlChild, treeChild);
 			}
 		}
 		// evtl. Kinder hinzufügen
@@ -62,7 +62,7 @@ public class XMLTreeHandler {
 				QuestionTreeNode treeChild = (QuestionTreeNode)treeNode.getChildAt(i);
 				Element xmlChild = xmlTree.createElement(treeChild.getType());
 				xmlChildrenNode.appendChild(xmlChild);
-				saveXMLChild(xmlTree, xmlChild, treeChild);
+				saveXMLNode(xmlTree, xmlChild, treeChild);
 			}
 		}
 	}
@@ -84,7 +84,7 @@ public class XMLTreeHandler {
 			// Wurzelknoten erschaffen
 			Element xmlRoot = xmlTree.createElement(treeRoot.getType());
 			xmlTree.appendChild(xmlRoot);
-			saveXMLChild(xmlTree, xmlRoot, treeRoot);
+			saveXMLNode(xmlTree, xmlRoot, treeRoot);
 		} catch (ParserConfigurationException e1) {
 			e1.printStackTrace();
 		}
@@ -112,7 +112,7 @@ public class XMLTreeHandler {
 	 * @param treeParent
 	 *            the DataTreeNode which should get the childs
 	 */
-	private static QuestionTreeNode loadXMLChild(Node xmlNode) {
+	private static QuestionTreeNode loadXMLNode(Node xmlNode) {
 		QuestionTreeNode result = new QuestionTreeNode(xmlNode.getNodeName());
 		//Name und Value setzen
 		Node xmlNameNode = xmlNode.getAttributes().getNamedItem(ATTRIBUTE_NAME);
@@ -131,15 +131,14 @@ public class XMLTreeHandler {
 				NodeList xmlAttributesList = xmlMetaNode.getChildNodes();
 				for (int j=0; j<xmlAttributesList.getLength();j++) {
 					Node xmlAttributeNode = xmlAttributesList.item(j);
-					QuestionTreeNode attributeNode = loadXMLChild(xmlAttributeNode);
+					QuestionTreeNode attributeNode = loadXMLNode(xmlAttributeNode);
 					result.setAttribute(attributeNode.getName(), attributeNode);					
 				}
 			} else if (xmlMetaNode.getNodeName().equals(TYPE_CHILDREN) && xmlMetaNode.hasChildNodes()) {
 				NodeList xmlChildrenList = xmlMetaNode.getChildNodes();
 				for (int j=0; j<xmlChildrenList.getLength();j++) {
 					Node xmlChildNode = xmlChildrenList.item(j);
-					QuestionTreeNode childNode = loadXMLChild(xmlChildNode);
-					result.insert(childNode, result.getChildCount());					
+					result.add(loadXMLNode(xmlChildNode));					
 				}
 			}
 		}
@@ -160,7 +159,7 @@ public class XMLTreeHandler {
 					.newDocumentBuilder().parse(new File(path));
 			// Wurzel holen
 			Node xmlRoot = doc.getFirstChild();
-			return loadXMLChild(xmlRoot);
+			return loadXMLNode(xmlRoot);
 		} catch (SAXException e) {
 			e.printStackTrace();
 		} catch (IOException e) {

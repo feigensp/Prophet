@@ -27,7 +27,8 @@ public class UndoRedoPlugin implements CodeViewerPlugin {
 	@Override
 	public void onEditorPanelCreate(QuestionTreeNode selected,
 			EditorPanel editorPanel) {
-		// TODO Auto-generated method stub
-		
+		if (Boolean.parseBoolean(selected.getAttributeValue("undoredo"))) {
+			UndoRedo ur = new UndoRedo(editorPanel.getTextPane());
+		}
 	}
 }

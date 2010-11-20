@@ -7,69 +7,82 @@
 
 package experimentViewer;
 
+import java.text.DecimalFormat;
+
 import javax.swing.JLabel;
+
+import util.QuestionTreeNode;
 
 @SuppressWarnings("serial")
 public class ClockLabel extends JLabel implements Runnable {
+	private final static String KEY_TIME = "time";
 
-	private long startTime; // Startzeit der Messung (oder äquivalent)
-	boolean isRunning; // Bestimmt ob der Thread läuft oder wartet
-	private long currentTime; // Aktuelle Laufzeit
-	private String label;
-	private Thread t;
+	private long startTime=0;
+	boolean isStarted = false;
+	boolean isRunning=false;
+	boolean isStopped=false;
+	private long currentTime=0;
+	private String caption;
+	private Thread myThread;
+	QuestionTreeNode questionNode = null;
 
-	/**
-	 * Konstruktor durch welchem die Zeit auch optisch dargestellt wird
-	 * 
-	 * @param display
-	 *            JLabel auf welchen die Zeit geschriebenw erden wird
-	 */
+	public ClockLabel(QuestionTreeNode questionNode, String caption) {
+		this.questionNode = questionNode;
+		this.caption = caption;
+	}
 
 	/**
 	 * Konstruktor durch welchen aktuelle Uhrzeit im Label angezeigt wird
 	 * 
-	 * @param label Beschriftung die vor der Uhrzeit stehen soll
+	 * @param caption Beschriftung die vor der Uhrzeit stehen soll
 	 */
-	public ClockLabel(String label) {
-		this.label = label;
-		t = new Thread(this);
+	public ClockLabel(String caption) {
+		this(null, caption);
 	}
 	
 	/**
 	 * Konstruktor für eine "unsichtbare" Uhr
 	 */
 	public ClockLabel() {
-		this.label = null;
-		t = new Thread(this);
+		this(null);
 	}
 
 	/**
 	 * Startet die Stoppuhr
 	 */
 	public void start() {
-		startTime = System.currentTimeMillis();
-		isRunning = true;
-		currentTime = 0;
-		t.start();
+		if (!isStarted) {
+			myThread = new Thread(this);
+			myThread.start();
+		}
 	}
 
 	/**
 	 * Pausiert die Stoppuhr
 	 */
 	public void pause() {
-		isRunning = false;
+		if (isRunning) {
+			isRunning = false;
+			saveTime();
+		}
 	}
 
+	public void saveTime() {
+		if (isStarted && questionNode!=null) {
+			questionNode.setAnswer(KEY_TIME, ""+currentTime);
+		}
+	}
+	
 	/**
 	 * Lässt die Stoppuhr ihre Arbeit wieder aufnehmen
 	 */
 	public void resume() {
-		if(!isRunning) {
+		if(isStarted && !isRunning && !isStopped) {
 			synchronized (this) {
 				isRunning = true;
 				notify();
 			}
-			startTime = System.currentTimeMillis() - (currentTime * 1000);
+			startTime = System.currentTimeMillis() - currentTime;
 		}
 	}
 
@@ -77,9 +90,15 @@ public class ClockLabel extends JLabel implements Runnable {
 	 * Stoppt die Stoppuhr
 	 */
 	public void stop() {
-		isRunning = false;
-		startTime = 0;
-		currentTime = 0;
+		if (isStarted && !isStopped) {
+			synchronized (this) {
+				isRunning = false;
+				isStopped = true;
+				notify();
+			}
+			saveTime();
+			myThread = null;
+		}
 	}
 
 	/**
@@ -97,23 +116,18 @@ public class ClockLabel extends JLabel implements Runnable {
 	 * Konstruktors in das JLabel
 	 */
 	public void run() {
-		while (true) {
-			currentTime = (System.currentTimeMillis() - startTime) / 1000;
-			if (label != null) {
-				// Zeiten ins display schreiben
-				if (currentTime / 60 < 10) {
-					if (currentTime < 10) {
-						setText(label + ": 0" + (currentTime / 60) + ":0" + currentTime);
-					} else {
-						setText(label + ": 0" + (currentTime / 60) + ":" + currentTime);
-					}
-				} else {
-					if (currentTime < 10) {
-						setText(label + ": " + (currentTime / 60) + ":0" + currentTime);
-					} else {
-						setText(label + ": " + (currentTime / 60) + ":" + currentTime);
-					}
-				}
+		startTime = System.currentTimeMillis();
+		isStarted=true;
+		isRunning = true;
+		isStopped = false;
+		currentTime = 0;
+		while (!isStopped) {
+			currentTime = (System.currentTimeMillis() - startTime);
+			if (caption != null) {
+				DecimalFormat df = new DecimalFormat("#00");
+				long seconds = (currentTime/1000)%60;
+				long minutes = (currentTime/1000)/60;
+				setText(caption + ": " + df.format(minutes) + ":" + df.format(seconds));
 			}
 			try {
 				Thread.sleep(200);

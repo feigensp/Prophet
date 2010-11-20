@@ -1,46 +1,40 @@
-package plugins.questionLists;
+package plugins;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
 import java.util.List;
 
-import plugins.ExperimentPlugin;
 import util.QuestionTreeNode;
 import experimentEditor.ExperimentEditor;
 import experimentEditor.tabbedPane.settingsEditor.SettingsComponentDescription;
 import experimentViewer.ExperimentViewer;
 import experimentViewer.HTMLFileView;
 
-
-public class QuestionListPlugin implements ExperimentPlugin {
+public class DebugPlugin implements ExperimentPlugin {
 
 	@Override
 	public List<SettingsComponentDescription> getSettingsComponentDescriptions(
 			QuestionTreeNode node) {
+		System.out.println("Trying to get component descriptions.");
 		return null;
 	}
 
 	@Override
 	public void experimentEditorRun(ExperimentEditor experimentEditor) {
+		System.out.println("Running experiment editor.");		
 	}
 
 	@Override
 	public void experimentViewerRun(ExperimentViewer experimentViewer) {
-		QuestionListPanel overview = new QuestionListPanel(experimentViewer.getTree());
-		overview.setPreferredSize(new Dimension(150, 2));
-		experimentViewer.getContentPane().add(overview, BorderLayout.WEST);
+		System.out.println("Running experiment viewer.");		
 	}
 
 	@Override
 	public void enterNode(QuestionTreeNode node, HTMLFileView htmlFileView) {
-		// TODO Auto-generated method stub
-		
+		System.out.println("--> "+node.getType()+": "+node.getName());
 	}
 
 	@Override
 	public void exitNode(QuestionTreeNode node, HTMLFileView htmlFileView) {
-		// TODO Auto-generated method stub
-		
+		System.out.println("<-- "+node.getType()+": "+node.getName());
 	}
 
 }

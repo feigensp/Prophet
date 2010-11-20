@@ -31,10 +31,9 @@ public class EditorPanel extends JPanel {
 			selected=new QuestionTreeNode();
 		}
 
-		HighlightedDocument document = null;
-		document = new HighlightedDocument();
-		document.setHighlightStyle(HighlightedDocument.JAVA_STYLE);
-		textPane = new JTextPane(document);
+		//TODO: SyntaxHighlighting
+		//HighlightedDocument document = new HighlightedDocument();
+		textPane = new JTextPane(/*document*/);
 		textPane.setFont(new Font("monospaced", Font.PLAIN, 12));
 		try {
 			byte[] buffer = new byte[(int) file.length()];

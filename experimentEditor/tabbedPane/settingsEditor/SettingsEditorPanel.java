@@ -7,11 +7,14 @@ package experimentEditor.tabbedPane.settingsEditor;
  * @author Markus Köppen, Andreas Hasselberg
  */
 
+import java.util.List;
+
 import plugins.ExperimentPlugin;
 import plugins.ExperimentPluginList;
 import util.QuestionTreeNode;
 import util.VerticalFlowLayout;
 import experimentEditor.tabbedPane.ExperimentEditorTab;
+import experimentEditor.tabbedPane.settingsEditor.settingsComponents.SettingsCheckBox;
 
 
 @SuppressWarnings("serial")
@@ -33,10 +36,19 @@ public class SettingsEditorPanel extends ExperimentEditorTab {
 		updateUI();
 		
 		if (selected!=null) {
+			if (selected.isCategory() || selected.isQuestion()) {
+				add(new SettingsComponentDescription(SettingsCheckBox.class, "inactive", "Deaktivieren").build(selected));
+			}
+			if (selected.isExperiment() || selected.isCategory()) {
+				add(new SettingsComponentDescription(SettingsCheckBox.class, "donotshowcontent", "Inhalt nicht anzeigen").build(selected));
+			}
 			// adding checkboxes for the given possible settings in Settings.java
 			for (ExperimentPlugin plugin : ExperimentPluginList.getPlugins()) {
-				for (SettingsComponentDescription desc : plugin.getSettingsComponentDescriptions(selected.getType())) {
-					add(desc.build(selected));
+				List<SettingsComponentDescription> descriptions = plugin.getSettingsComponentDescriptions(selected);
+				if (descriptions!=null) {
+					for (SettingsComponentDescription desc : descriptions) {
+						add(desc.build(selected));
+					}
 				}
 			}
 		}

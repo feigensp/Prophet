@@ -7,6 +7,9 @@ import plugins.codeViewer.CodeViewer;
 import plugins.codeViewer.codeViewerPlugins.CodeViewerPlugin;
 import plugins.codeViewer.tabbedPane.EditorPanel;
 import util.QuestionTreeNode;
+
+import com.Ostermiller.Syntax.HighlightedDocument;
+
 import experimentEditor.tabbedPane.settingsEditor.SettingsComponentDescription;
 import experimentEditor.tabbedPane.settingsEditor.settingsComponents.SettingsCheckBox;
 
@@ -28,7 +31,8 @@ public class SyntaxHighlightingPlugin implements CodeViewerPlugin {
 	@Override
 	public void onEditorPanelCreate(QuestionTreeNode selected,
 			EditorPanel editorPanel) {
-		// TODO Auto-generated method stub
-		
+//		if (Boolean.parseBoolean(selected.getAttributeValue("syntaxhighlighting_default"))) {
+//			((HighlightedDocument)editorPanel.getTextPane().getDocument()).setHighlightStyle(HighlightedDocument.JAVA_STYLE);
+//		}
 	}
 }

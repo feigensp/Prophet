@@ -13,7 +13,8 @@ import util.QuestionTreeNode;
 import util.XMLTreeHandler;
 
 public class ExperimentViewer extends JFrame {
-	QuestionTreeNode experimentTree;
+	QuestionTreeNode tree;
+	JPanel contentPane;
 
 	/**
 	 * Launch the application.
@@ -32,11 +33,11 @@ public class ExperimentViewer extends JFrame {
 	}
 
 	public ExperimentViewer() {
-		experimentTree = XMLTreeHandler.loadXMLTree("myTest.xml");
+		tree = XMLTreeHandler.loadXMLTree("test.xml");
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
-		JPanel contentPane = new JPanel();
+		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(new BorderLayout(0, 0));
@@ -44,11 +45,15 @@ public class ExperimentViewer extends JFrame {
 		JPanel timeshowing = new JPanel();
 		contentPane.add(timeshowing, BorderLayout.SOUTH);		
 		
-		HTMLFileView textPane = new HTMLFileView(experimentTree);
+		HTMLFileView textPane = new HTMLFileView(tree);
 		contentPane.add(textPane, BorderLayout.CENTER);
 		
 		for (ExperimentPlugin plugin : ExperimentPluginList.getPlugins()) {
 			plugin.experimentViewerRun(this);
 		}
+		textPane.start();
+	}
+	public QuestionTreeNode getTree() {
+		return tree;
 	}
 }

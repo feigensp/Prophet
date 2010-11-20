@@ -16,6 +16,7 @@ public class QuestionTreeNode extends DefaultMutableTreeNode {
 	private String value = "";
 
 	private TreeMap<String,QuestionTreeNode> attributes = new TreeMap<String,QuestionTreeNode>();
+	private TreeMap<String,String> answers = new TreeMap<String,String>();
 	
 	public QuestionTreeNode() {
 		this("");
@@ -101,5 +102,11 @@ public class QuestionTreeNode extends DefaultMutableTreeNode {
 		}
 		type=t;
 		return true;
+	}
+	public void setAnswer(String key, String value) {
+		answers.put(key, value);
+	}
+	public String getAnswer(String key) {
+		return answers.get(key);
 	}
 }

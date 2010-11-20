@@ -7,26 +7,32 @@ import java.util.ArrayList;
 import javax.swing.JTextPane;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
 
 
 public class UndoRedo implements DocumentListener, KeyListener{
 
-	JTextPane textPane;
+	Document document;
 	ArrayList<Change> changes;
 	String lastText;
 	
 	int pos;
 	boolean undoRedoChange;
 	
-	public UndoRedo(JTextPane textPane) {
+	public UndoRedo(Document document) {
 		changes = new ArrayList<Change>();
 		pos = 0;
 		undoRedoChange = false;
-		this.textPane = textPane;		
-		textPane.getDocument().addDocumentListener(this);
-		textPane.addKeyListener(this);
+		this.document = document;
+		document.addDocumentListener(this);
 		
-		lastText = textPane.getText();
+		try {
+			document.getText(0, document.getLength());
+		} catch (BadLocationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public void undo() {
@@ -34,13 +40,13 @@ public class UndoRedo implements DocumentListener, KeyListener{
 			undoRedoChange = true;
 			pos--;
 			Change change = changes.get(pos);
-			String text = textPane.getText();
+			String text = "";
 			switch(change.getType()) {
 			case Change.INSERT:
-				text = text.substring(0, change.getOffset()) + text.substring(change.getOffset()+change.getChange().length());
+				text = document.getText(0, change.getOffset()) + text.substring(change.getOffset()+change.getChange().length());
 				break;
 			case Change.REMOVE:
-				text = text.substring(0, change.getOffset()) + change.getChange() + text.substring(change.getOffset());
+				text = new JTextPane().getText(0, change.getOffset()) + change.getChange() + text.substring(change.getOffset());
 				break;
 			}
 			textPane.setText(text);
@@ -85,7 +91,12 @@ public class UndoRedo implements DocumentListener, KeyListener{
 			changes.add(change);
 			pos=changes.size();
 			
-			lastText = textPane.getText();
+			try {
+				lastText = textPane.getDocument().getText(0, textPane.getDocument().getLength());
+			} catch (BadLocationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 	@Override

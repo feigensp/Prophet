@@ -9,13 +9,14 @@ import experimentEditor.ExperimentEditor;
 import experimentEditor.tabbedPane.settingsEditor.SettingsComponentDescription;
 import experimentEditor.tabbedPane.settingsEditor.settingsComponents.SettingsCheckBox;
 import experimentViewer.ExperimentViewer;
+import experimentViewer.HTMLFileView;
 
 public class ExperimentQuestionSwitchingPlugin implements ExperimentPlugin {
 
 	@Override
-	public List<SettingsComponentDescription> getSettingsComponentDescriptions(String type) {
+	public List<SettingsComponentDescription> getSettingsComponentDescriptions(QuestionTreeNode node) {
 		Vector<SettingsComponentDescription> result = new Vector<SettingsComponentDescription>();
-		if (type.equals(QuestionTreeNode.TYPE_CATEGORY)) {
+		if (node.getType().equals(QuestionTreeNode.TYPE_CATEGORY)) {
 			result.add(new SettingsComponentDescription(SettingsCheckBox.class,"questionswitching", "Vor- und Zurückblättern erlauben"));
 		}
 		return result;
@@ -29,6 +30,18 @@ public class ExperimentQuestionSwitchingPlugin implements ExperimentPlugin {
 
 	@Override
 	public void experimentViewerRun(ExperimentViewer experimentViewer) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void enterNode(QuestionTreeNode node, HTMLFileView htmlFileView) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void exitNode(QuestionTreeNode node, HTMLFileView htmlFileView) {
 		// TODO Auto-generated method stub
 		
 	}

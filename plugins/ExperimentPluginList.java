@@ -10,6 +10,7 @@ public class ExperimentPluginList {
 		{
 			add(new ExperimentCodeViewerPlugin());
 			add(new ExperimentQuestionSwitchingPlugin());
+			add(new DebugPlugin());
 		}
 	};
 	

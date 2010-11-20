@@ -8,8 +8,14 @@ public class Change {
 	int offset;
 	String change;
 	int type;
+	int length;
 	
-	public Change() {
+	public int getLength() {
+		return length;
+	}
+
+	public void setLength(int length) {
+		this.length = length;
 	}
 	
 	public int getOffset() {

@@ -1,4 +1,4 @@
-package experimentViewer;
+package plugins.questionLists;
 
 import java.awt.Dimension;
 import java.util.ArrayList;
@@ -9,6 +9,7 @@ import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+
 
 import util.QuestionTreeNode;
 
@@ -44,6 +45,7 @@ public class QuestionListPanel extends JScrollPane{
 	public void removeAll() {
 		panel.removeAll();
 		categoryList.clear();
+		panel.updateUI();
 	}
 	
 	/**
@@ -76,7 +78,7 @@ public class QuestionListPanel extends JScrollPane{
 	 * returns the index of the Categorie with the selected item
 	 * @return index of the first list with an selected item, -1 if non ist selected
 	 */
-	public int getSelectedCategorie() {
+	public int getSelectedCategory() {
 		int i = 0;
 		for(JList list : categoryList) {
 			if(list.getSelectedIndex() != -1) {

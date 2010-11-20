@@ -1,4 +1,4 @@
-package experimentViewer;
+package plugins.questionLists;
 
 import java.awt.Color;
 import java.awt.Component;
