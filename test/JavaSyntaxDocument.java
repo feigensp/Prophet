@@ -6,13 +6,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileInputStream;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Vector;
 
 import javax.swing.JButton;
-import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
+import javax.swing.JTextPane;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultEditorKit;
@@ -24,8 +22,13 @@ import javax.swing.text.MutableAttributeSet;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledEditorKit;
-
-class SyntaxDocument extends DefaultStyledDocument {
+/**
+ * Probleme: Escape sequenz für String/char delimiter
+ * komplettes neu überarbeiten beim schreiben in kommentare * oder löschen von zeichen
+ * @author hasselbe
+ *
+ */
+class JavaSyntaxDocument extends DefaultStyledDocument {
 	public static final String STRING_QUOTE_DELIMITER = "\"";
 	public static final String CHAR_QUOTE_DELIMITER = "'";
 	public static final String SINGLE_LINE_COMMENT_DELIMITER = "//";
@@ -36,12 +39,6 @@ class SyntaxDocument extends DefaultStyledDocument {
 	public static final Color QUOTE_COLOR = new Color(0, 0, 192);
 	public static final Color KEYWORD_COLOR = new Color(127, 0, 85);
 
-	public static final int MULTI_LINE_COMMENT_OPEN = 0;
-	public static final int MULTI_LINE_COMMENT_CLOSE = 1;
-	public static final int MULTI_LINE_COMMENT_OPEN_CLOSE = 2;
-	public static final int MULTI_LINE_COMMENT_CLOSE_OPEN = 3;
-	public static final int MULTI_LINE_COMMENT_CLOSE_OPEN_CLOSE = 4;
-
 	private DefaultStyledDocument doc;
 	private Element rootElement;
 
@@ -51,9 +48,8 @@ class SyntaxDocument extends DefaultStyledDocument {
 	private MutableAttributeSet quote;
 
 	private HashSet<String> keywords;
-	private Vector<Tupel<Integer, Integer>> multiLineComments;
 
-	public SyntaxDocument() {
+	public JavaSyntaxDocument() {
 		doc = this;
 		rootElement = doc.getDefaultRootElement();
 		putProperty(DefaultEditorKit.EndOfLineStringProperty, "\n");
@@ -131,8 +127,6 @@ class SyntaxDocument extends DefaultStyledDocument {
 		keywords.add("void");
 		keywords.add("volatile");
 		keywords.add("while");
-
-		multiLineComments = new Vector<Tupel<Integer, Integer>>();
 	}
 
 	/*
@@ -157,7 +151,6 @@ class SyntaxDocument extends DefaultStyledDocument {
 	 */
 	public void processAllLines(int offset, int length) throws BadLocationException {
 		String content = doc.getText(0, doc.getLength());
-
 		// The lines affected by the latest document update
 		int startLine = rootElement.getElementIndex(0);
 		int endLine = rootElement.getElementIndex(content.length());
@@ -251,32 +244,26 @@ class SyntaxDocument extends DefaultStyledDocument {
 				else
 					return;
 			}
+			tempOffset = startOffset + 1;
 			if (STRING_QUOTE_DELIMITER.equals(content.substring(startOffset, startOffset + 1))) {
-				tempOffset = startOffset + 1;
 				// go on until you find the closing delimiter
 				while (tempOffset < endOffset
-						&& (!STRING_QUOTE_DELIMITER.equals(content.substring(tempOffset, tempOffset + 1)) || "\\"
-								.equals(content.substring(tempOffset - 1, tempOffset)))) {
+						&& (!STRING_QUOTE_DELIMITER.equals(content.substring(tempOffset, tempOffset + 1)))) {
 					tempOffset++;
 				}
 				doc.setCharacterAttributes(startOffset, tempOffset - startOffset + 1, quote, true);
-				startOffset = tempOffset + 1;
 			}
 			// else look if it starts with a charQuote
 			else if (CHAR_QUOTE_DELIMITER.equals(content.substring(startOffset, startOffset + 1))) {
-				tempOffset = startOffset + 1;
 				// go on until you find the closing delimiter
 				while (tempOffset < endOffset
-						&& (!CHAR_QUOTE_DELIMITER.equals(content.substring(tempOffset, tempOffset + 1)) || "\\"
-								.equals(content.substring(tempOffset - 1, tempOffset)))) {
+						&& (!CHAR_QUOTE_DELIMITER.equals(content.substring(tempOffset, tempOffset + 1)))) {
 					tempOffset++;
 				}
 				doc.setCharacterAttributes(startOffset, tempOffset - startOffset + 1, quote, true);
-				startOffset = tempOffset + 1;
 			}
 			// else look if the next token is a keywort
 			else {
-				tempOffset = startOffset + 1;
 				// get end of token
 				while (tempOffset < endOffset) {
 					if (isDelimiter(content.substring(tempOffset, tempOffset + 1))) {
@@ -289,61 +276,8 @@ class SyntaxDocument extends DefaultStyledDocument {
 				if (keywords.contains(token)) {
 					doc.setCharacterAttributes(startOffset, tempOffset - startOffset, keyword, false);
 				}
-				startOffset = tempOffset + 1;
 			}
-			// multiLineComment
-			// Zeile holen
-			// Iterator commentIterator = multiLineComments.iterator();
-			// Tupel<Integer, Integer> lineComment = null;
-			// Tupel<Integer, Integer> lastComment = null;
-			// while (commentIterator.hasNext()) {
-			// lineComment = (Tupel<Integer, Integer>) commentIterator.next();
-			// if ((Integer) lineComment.getKey() == line) {
-			// break;
-			// }
-			// lastComment = lineComment;
-			// }
-			// // position des ersten multilineComment opener
-			// int multiLineCommentOpenPos =
-			// lineContent.indexOf(MULTI_LINE_COMMENT_OPEN_DELIMITER);
-			// while (multiLineCommentOpenPos != -1) {
-			// if (!doc.getCharacterElement(lineStart +
-			// multiLineCommentOpenPos).getAttributes()
-			// .containsAttributes(quote)) {
-			// break;
-			// }
-			// multiLineCommentOpenPos =
-			// lineContent.indexOf(MULTI_LINE_COMMENT_OPEN_DELIMITER,
-			// multiLineCommentOpenPos + 2);
-			// }
-			// // position des ersten multiLineComment closer
-			// int multiLineCommentClosePos =
-			// lineContent.indexOf(MULTI_LINE_COMMENT_CLOSE_DELIMITER);
-			// while (multiLineCommentClosePos != -1) {
-			// if (!doc.getCharacterElement(lineStart +
-			// multiLineCommentClosePos).getAttributes()
-			// .containsAttributes(quote)) {
-			// break;
-			// }
-			// multiLineCommentClosePos =
-			// lineContent.indexOf(MULTI_LINE_COMMENT_CLOSE_DELIMITER,
-			// multiLineCommentClosePos + 2);
-			// }
-			// // schauen ob in vorheriger kommentar zeile mit öffnendem
-			// kommentar
-			// // geendet wurde
-			// if (lastComment.getValue() == MULTI_LINE_COMMENT_OPEN
-			// || lastComment.getValue() == MULTI_LINE_COMMENT_CLOSE_OPEN) {
-			// String lastLine =
-			// content.substring(rootElement.getElement(lastComment.getKey())
-			// .getStartOffset(),
-			// rootElement.getElement(lastComment.getKey()).getEndOffset());
-			// int lastOpenCommentOffset =
-			// // ende des kommentares suchen (ansonsten alles einfärben bis
-			// // zur nächsten Zeile mit schliesenden Kommentar
-			// if (multiLineCommentClosePos != -1) {
-			// }
-			// }
+			startOffset = tempOffset + 1;
 		}
 	}
 
@@ -352,7 +286,6 @@ class SyntaxDocument extends DefaultStyledDocument {
 	 */
 	protected boolean isDelimiter(String character) {
 		String operands = ";:{}()[]+-*/%<=>!&|^~";
-
 		if (Character.isWhitespace(character.charAt(0)) || operands.indexOf(character) != -1)
 			return true;
 		else
@@ -361,25 +294,13 @@ class SyntaxDocument extends DefaultStyledDocument {
 
 	public static void main(String a[]) {
 
-		EditorKit editorKit = new StyledEditorKit() {
-			public Document createDefaultDocument() {
-				return new SyntaxDocument();
-			}
-		};
-
-		final JEditorPane edit = new JEditorPane();
-		edit.setEditorKit(editorKit);
-		// edit.setEditorKit(new StyledEditorKit());
-		// edit.setDocument(new SyntaxDocument());
+		final JTextPane edit = new JTextPane(new JavaSyntaxDocument());
 
 		JButton button = new JButton("Load SyntaxDocument.java");
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					FileInputStream fis = new FileInputStream("src\\test\\SyntaxDocument.java");
-					// FileInputStream fis = new FileInputStream(
-					// "C:\\Java\\jdk1.4.1\\src\\javax\\swing\\JComponent.java"
-					// );
 					edit.read(fis, null);
 					edit.requestFocus();
 				} catch (Exception e2) {
