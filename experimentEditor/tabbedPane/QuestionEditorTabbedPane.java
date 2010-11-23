@@ -9,6 +9,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import util.QuestionTreeNode;
+import experimentEditor.tabbedPane.NoteEditor.NoteEditorPanel;
 import experimentEditor.tabbedPane.contentEditor.ContentEditorPanel;
 import experimentEditor.tabbedPane.contentViewer.ContentViewerPanel;
 import experimentEditor.tabbedPane.settingsEditor.SettingsEditorPanel;
@@ -33,6 +34,7 @@ public class QuestionEditorTabbedPane extends JPanel {
 		addEditorPanel("Editor", new ContentEditorPanel());
 		addEditorPanel("Vorschau", new ContentViewerPanel());
 		addEditorPanel("Einstellungen", new SettingsEditorPanel());
+		addEditorPanel("Notizen", new NoteEditorPanel());
 	}
 	public void addEditorPanel(String caption, ExperimentEditorTab panel) {
 		myTabbedPane.addTab(caption, null, (Component)panel, null);

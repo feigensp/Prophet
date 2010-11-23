@@ -1,4 +1,4 @@
-package experimentEditor.tabbedPane.contentEditor;
+package experimentEditor.tabbedPane.NoteEditor;
 
 import java.awt.BorderLayout;
 import java.awt.event.KeyAdapter;
@@ -8,7 +8,6 @@ import java.util.HashMap;
 
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.text.BadLocationException;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
@@ -19,8 +18,7 @@ import experimentEditor.tabbedPane.ExperimentEditorTab;
 import experimentEditor.tabbedPane.contentEditor.ToolBar.ContentEditorToolBar;
 
 @SuppressWarnings("serial")
-public class ContentEditorPanel extends ExperimentEditorTab {
-	private ContentEditorToolBar toolBar;
+public class NoteEditorPanel extends ExperimentEditorTab {
 	private HashMap<QuestionTreeNode,RSyntaxTextArea> editAreas = new HashMap<QuestionTreeNode,RSyntaxTextArea>();
 	RSyntaxTextArea editArea;
 	RTextScrollPane scrollPane;
@@ -29,7 +27,8 @@ public class ContentEditorPanel extends ExperimentEditorTab {
 	private DocumentListener myDocumentListener = new DocumentListener() {
 		public void myChange() {
 			if (selected!=null) {
-				selected.setValue(editArea.getText());
+				QuestionTreeNode node = selected.getAddAttribute("notes");
+				node.setValue(editArea.getText());
 			}
 		}
 		@Override
@@ -47,15 +46,8 @@ public class ContentEditorPanel extends ExperimentEditorTab {
 			myChange();
 		}
 	};
-	private KeyListener myKeyListener = new KeyAdapter() {
-		public void keyPressed(KeyEvent ke) {
-			if (ke.isShiftDown() && ke.getKeyCode() == KeyEvent.VK_ENTER) {
-				editArea.replaceSelection("<br>");
-			}
-		}
-	};
 	
-	public ContentEditorPanel() {
+	public NoteEditorPanel() {
 		setLayout(new BorderLayout());
 	}
 	
@@ -67,14 +59,10 @@ public class ContentEditorPanel extends ExperimentEditorTab {
 			editArea = editAreas.get(selected);
 			if (editArea==null) {
 				editArea = new RSyntaxTextArea();
-				editArea.setText(selected.getValue());
-				editArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_HTML);
-				editArea.getDocument().addDocumentListener(myDocumentListener);			
-				editArea.addKeyListener(myKeyListener);
+				editArea.setText(selected.getAddAttribute("notes").getValue());
+				editArea.getDocument().addDocumentListener(myDocumentListener);
 				editAreas.put(selected, editArea);
 			}
-			toolBar = new ContentEditorToolBar(editArea);		
-			add(toolBar, BorderLayout.NORTH);
 			scrollPane = new RTextScrollPane(editArea);
 			add(scrollPane, BorderLayout.CENTER);
 		}

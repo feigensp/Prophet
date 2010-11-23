@@ -4,14 +4,14 @@ import java.awt.Component;
 
 import javax.swing.JToolBar;
 
-import experimentEditor.tabbedPane.contentEditor.EditArea;
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
 
 @SuppressWarnings("serial")
 public class ContentEditorToolBar extends JToolBar {
-	EditArea editArea;
+	RSyntaxTextArea editArea;
 	
-	public ContentEditorToolBar(EditArea ea) {
+	public ContentEditorToolBar(RSyntaxTextArea ea) {
 		editArea = ea;
 		setFloatable(false);
 

@@ -7,16 +7,17 @@ import java.util.ArrayList;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+
 import util.StringTuple;
-import experimentEditor.tabbedPane.contentEditor.EditArea;
 
 @SuppressWarnings("serial")
 public class FormularBox extends JComboBox implements ActionListener {
 
-	private EditArea editArea;
+	private RSyntaxTextArea editArea;
 	private ArrayList<String> forms;
 
-	public FormularBox(EditArea editArea) {
+	public FormularBox(RSyntaxTextArea editArea) {
 		super();
 		this.editArea = editArea;
 		forms = new ArrayList<String>();

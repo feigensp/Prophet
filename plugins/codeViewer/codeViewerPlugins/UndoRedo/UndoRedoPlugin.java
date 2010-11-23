@@ -29,10 +29,10 @@ public class UndoRedoPlugin implements CodeViewerPlugin {
 	@Override
 	public void onEditorPanelCreate(QuestionTreeNode selected,
 			EditorPanel editorPanel) {
-		if (Boolean.parseBoolean(selected.getAttributeValue("undoredo"))) {
-			UndoManager undoManager = new UndoManager();
-			editorPanel.getTextPane().getDocument().addUndoableEditListener(undoManager);
-			editorPanel.getTextPane().addKeyListener(new UndoRedoKeyListener(undoManager));
-		}
+//		if (Boolean.parseBoolean(selected.getAttributeValue("undoredo"))) {
+//			UndoManager undoManager = new UndoManager();
+//			editorPanel.getTextArea().getDocument().addUndoableEditListener(undoManager);
+//			editorPanel.getTextArea().addKeyListener(new UndoRedoKeyListener(undoManager));
+//		}
 	}
 }

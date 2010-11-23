@@ -8,7 +8,9 @@ import java.io.IOException;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextPane;
+
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+import org.fife.ui.rtextarea.RTextScrollPane;
 
 import plugins.codeViewer.codeViewerPlugins.CodeViewerPlugin;
 import plugins.codeViewer.codeViewerPlugins.CodeViewerPluginList;
@@ -17,8 +19,8 @@ import util.QuestionTreeNode;
 @SuppressWarnings("serial")
 public class EditorPanel extends JPanel {
 	private File file;
-	private JScrollPane scrollPane;
-	private JTextPane textPane;
+	private RTextScrollPane scrollPane;
+	private RSyntaxTextArea textArea;
 
 	/**
 	 * Create the panel.
@@ -29,25 +31,18 @@ public class EditorPanel extends JPanel {
 			selected=new QuestionTreeNode();
 		}
 
-		//TODO: SyntaxHighlighting
-		//HighlightedDocument document = new HighlightedDocument();
-		textPane = new JTextPane(/*document*/);
-		textPane.setFont(new Font("monospaced", Font.PLAIN, 12));
+		textArea = new RSyntaxTextArea();
+		textArea.setFont(new Font("monospaced", Font.PLAIN, 12));
 		try {
 			byte[] buffer = new byte[(int) file.length()];
 		    FileInputStream fileStream = new FileInputStream(file);
 		    fileStream.read(buffer);
-		    textPane.setText(new String(buffer));
-		    textPane.setCaretPosition(0);
+		    textArea.setText(new String(buffer));
+		    textArea.setCaretPosition(0);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		JPanel textPanel = new JPanel(new BorderLayout());
-		textPanel.add(textPane);
-		scrollPane = new JScrollPane(textPanel,
-				JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
-				JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-		scrollPane.getVerticalScrollBar().setUnitIncrement(textPane.getFontMetrics(textPane.getFont()).getHeight());
+		scrollPane = new RTextScrollPane(textArea);
 		
 		setLayout(new BorderLayout());
 		add(scrollPane, BorderLayout.CENTER);
@@ -66,12 +61,12 @@ public class EditorPanel extends JPanel {
 	}
 
 	public void grabFocus() {
-		textPane.grabFocus();
+		textArea.grabFocus();
 	}	
-	public JTextPane getTextPane() {
-		return textPane;
+	public RSyntaxTextArea getTextArea() {
+		return textArea;
 	}
-	public JScrollPane getScrollPane() {
+	public RTextScrollPane getScrollPane() {
 		return scrollPane;
 	}
 }

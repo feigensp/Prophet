@@ -3,6 +3,8 @@ package plugins.codeViewer.codeViewerPlugins.SearchBar;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
+import util.SearchBar;
+
 public class SearchBarListener extends KeyAdapter {
 	SearchBar searchBar;
 	

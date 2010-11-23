@@ -6,16 +6,17 @@ import java.util.ArrayList;
 
 import javax.swing.JComboBox;
 
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+
 import util.StringTuple;
-import experimentEditor.tabbedPane.contentEditor.EditArea;
 
 @SuppressWarnings("serial")
 public class FontStyleBox extends JComboBox implements ActionListener{
 	
-	private EditArea editArea;
+	private RSyntaxTextArea editArea;
 	private ArrayList<StringTuple> fontStyles;
 	
-	public FontStyleBox(EditArea editArea) {
+	public FontStyleBox(RSyntaxTextArea editArea) {
 		super();
 		this.editArea = editArea;
 		fontStyles = new ArrayList<StringTuple>();
@@ -32,7 +33,10 @@ public class FontStyleBox extends JComboBox implements ActionListener{
 	
 	public void actionPerformed(ActionEvent ae) {
 		if (this.getSelectedIndex() != 0) {
-			editArea.setTag(fontStyles.get(this.getSelectedIndex()-1).getValue());
+			String tag = fontStyles.get(this.getSelectedIndex()-1).getValue();
+			String text = editArea.getSelectedText();
+			text = text==null ? "" : text;
+			editArea.replaceSelection("<"+tag+">"+text+"</"+tag+">");
 			this.setSelectedIndex(0);
 		}		
 	}

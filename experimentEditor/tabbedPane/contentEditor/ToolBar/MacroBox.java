@@ -12,12 +12,11 @@ import javax.swing.JComboBox;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-
-import experimentEditor.tabbedPane.contentEditor.EditArea;
 
 
 @SuppressWarnings("serial")
@@ -25,9 +24,9 @@ public class MacroBox extends JComboBox {
 
 	private ArrayList<String> macros;
 
-	EditArea textPane;
+	RSyntaxTextArea textPane;
 
-	public MacroBox(EditArea textP) {
+	public MacroBox(RSyntaxTextArea textP) {
 		macros = new ArrayList<String>();
 		textPane = textP;
 		addItem("Makroauswahl");

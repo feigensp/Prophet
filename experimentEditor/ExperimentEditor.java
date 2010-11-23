@@ -13,6 +13,7 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 
 import util.QuestionTreeNode;
@@ -39,6 +40,8 @@ public class ExperimentEditor extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					String laf = UIManager.getSystemLookAndFeelClassName();
+					UIManager.setLookAndFeel(laf);
 					ExperimentEditor frame = new ExperimentEditor();
 					frame.setVisible(true);
 				} catch (Exception e) {

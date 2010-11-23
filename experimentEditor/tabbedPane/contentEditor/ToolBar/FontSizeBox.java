@@ -6,16 +6,17 @@ import java.util.ArrayList;
 
 import javax.swing.JComboBox;
 
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+
 import util.StringTuple;
-import experimentEditor.tabbedPane.contentEditor.EditArea;
 
 @SuppressWarnings("serial")
 public class FontSizeBox extends JComboBox implements ActionListener{
 	
-	private EditArea editArea;
+	private RSyntaxTextArea editArea;
 	private ArrayList<StringTuple> fontSizes;
 	
-	public FontSizeBox(EditArea editArea) {
+	public FontSizeBox(RSyntaxTextArea editArea) {
 		super();
 		this.editArea = editArea;
 		fontSizes = new ArrayList<StringTuple>();
@@ -35,7 +36,10 @@ public class FontSizeBox extends JComboBox implements ActionListener{
 	
 	public void actionPerformed(ActionEvent ae) {
 		if (this.getSelectedIndex() != 0) {
-			editArea.setEmbedding("<font size=\""+fontSizes.get(this.getSelectedIndex()-1).getValue()+"\">", "</font>");
+			String size = fontSizes.get(this.getSelectedIndex()-1).getValue();
+			String text = editArea.getSelectedText();
+			text = text==null ? "" : text;
+			editArea.replaceSelection("<font size=\""+size+"\">"+text+"</font>");
 			this.setSelectedIndex(0);
 		}		
 	}

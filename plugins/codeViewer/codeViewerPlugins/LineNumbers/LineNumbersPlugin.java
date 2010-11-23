@@ -28,10 +28,7 @@ public class LineNumbersPlugin implements CodeViewerPlugin {
 	@Override
 	public void onEditorPanelCreate(QuestionTreeNode selected,
 			EditorPanel editorPanel) {
-		boolean linenumbers = Boolean.parseBoolean(selected.getAttributeValue("linenumbers_default"));
-		if (linenumbers) {
-			LineNumbers lineNumbers = new LineNumbers(editorPanel.getTextPane());
-			editorPanel.getScrollPane().setRowHeaderView(lineNumbers);
-		}
+		boolean lineNumbers = Boolean.parseBoolean(selected.getAttributeValue("linenumbers_default"));
+		editorPanel.getScrollPane().setLineNumbersEnabled(lineNumbers);
 	}
 }
