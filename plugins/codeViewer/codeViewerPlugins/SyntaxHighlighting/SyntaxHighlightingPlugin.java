@@ -7,9 +7,6 @@ import plugins.codeViewer.CodeViewer;
 import plugins.codeViewer.codeViewerPlugins.CodeViewerPlugin;
 import plugins.codeViewer.tabbedPane.EditorPanel;
 import util.QuestionTreeNode;
-
-import com.Ostermiller.Syntax.HighlightedDocument;
-
 import experimentEditor.tabbedPane.settingsEditor.SettingsComponentDescription;
 import experimentEditor.tabbedPane.settingsEditor.settingsComponents.SettingsCheckBox;
 

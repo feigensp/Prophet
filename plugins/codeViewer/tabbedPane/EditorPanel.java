@@ -14,8 +14,6 @@ import plugins.codeViewer.codeViewerPlugins.CodeViewerPlugin;
 import plugins.codeViewer.codeViewerPlugins.CodeViewerPluginList;
 import util.QuestionTreeNode;
 
-import com.Ostermiller.Syntax.HighlightedDocument;
-
 @SuppressWarnings("serial")
 public class EditorPanel extends JPanel {
 	private File file;

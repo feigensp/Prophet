@@ -1,6 +1,6 @@
 package test;
 
-public class Tupel<K, V> {
+public class Tupel<K,V> {
 
 	K key;
 	V value;

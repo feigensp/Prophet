@@ -24,7 +24,7 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledEditorKit;
 /**
  * Probleme: Escape sequenz für String/char delimiter
- * komplettes neu überarbeiten beim schreiben in kommentare * oder löschen von zeichen
+ * komplettes neu überarbeiten beim schreiben in kommentare *, / oder löschen von zeichen
  * @author hasselbe
  *
  */
@@ -190,7 +190,7 @@ class JavaSyntaxDocument extends DefaultStyledDocument {
 		int endLine = rootElement.getElementIndex(offset + length);
 		// wenn veränderte zeilen mehrzeiligen kommentar enthalten oder im
 		// mehrzeiligem kommentar sind alle Zeilen anpassen
-		if (str.contains("*")
+		if (str.contains("*") || str.contains("/")
 				|| (offset > 0 && doc.getCharacterElement(offset - 1).getAttributes()
 						.containsAttributes(comment))) {
 			processAllLines(offset, length);

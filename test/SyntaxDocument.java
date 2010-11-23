@@ -42,6 +42,7 @@ class SyntaxDocument extends DefaultStyledDocument {
 	public static final int MULTI_LINE_COMMENT_CLOSE_OPEN = 3;
 	public static final int MULTI_LINE_COMMENT_CLOSE_OPEN_CLOSE = 4;
 
+	
 	private DefaultStyledDocument doc;
 	private Element rootElement;
 
@@ -366,7 +367,6 @@ class SyntaxDocument extends DefaultStyledDocument {
 				return new SyntaxDocument();
 			}
 		};
-
 		final JEditorPane edit = new JEditorPane();
 		edit.setEditorKit(editorKit);
 		// edit.setEditorKit(new StyledEditorKit());
