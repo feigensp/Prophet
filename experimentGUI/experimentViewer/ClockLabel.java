@@ -16,10 +16,9 @@ import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 
 @SuppressWarnings("serial")
 public class ClockLabel extends JLabel implements Runnable {
-	private final static String KEY_TIME = "time";
 
 	private long startTime=0;
-	boolean isStarted = false;
+	boolean isStarted=false;
 	boolean isRunning=false;
 	boolean isStopped=false;
 	private long currentTime=0;
@@ -63,14 +62,8 @@ public class ClockLabel extends JLabel implements Runnable {
 	 */
 	public void pause() {
 		if (isRunning) {
-			isRunning = false;
 			saveTime();
-		}
-	}
-
-	public void saveTime() {
-		if (isStarted && questionNode!=null) {
-			questionNode.setAnswerTime(currentTime/1000);
+			isRunning = false;
 		}
 	}
 	
@@ -92,12 +85,10 @@ public class ClockLabel extends JLabel implements Runnable {
 	 */
 	public void stop() {
 		if (isStarted && !isStopped) {
-			synchronized (this) {
-				isRunning = false;
-				isStopped = true;
-				notify();
-			}
 			saveTime();
+			isRunning = false;
+			isStopped = true;
+			myThread.notify();
 			myThread = null;
 		}
 	}
@@ -118,16 +109,16 @@ public class ClockLabel extends JLabel implements Runnable {
 	 */
 	public void run() {
 		startTime = System.currentTimeMillis();
-		isStarted=true;
+		isStarted = true;
 		isRunning = true;
 		isStopped = false;
 		currentTime = 0;
 		while (!isStopped) {
-			currentTime = (System.currentTimeMillis() - startTime);
+			long myTime = getCurrentTime();
 			if (caption != null) {
 				DecimalFormat df = new DecimalFormat("#00");
-				long seconds = (currentTime/1000)%60;
-				long minutes = (currentTime/1000)/60;
+				long seconds = (myTime/1000)%60;
+				long minutes = (myTime/1000)/60;
 				setText(caption + ": " + df.format(minutes) + ":" + df.format(seconds));
 			}
 			try {
@@ -149,6 +140,15 @@ public class ClockLabel extends JLabel implements Runnable {
 	 * @return Zeit Sekunden
 	 */
 	public long getCurrentTime() {
-		return currentTime/1000;
+		if (isRunning) {
+			currentTime = System.currentTimeMillis() - startTime;
+		}
+		return currentTime;
+	}
+	
+	private void saveTime() {
+		if (isStarted && questionNode!=null) {
+			questionNode.setAnswerTime(getCurrentTime());
+		}
 	}
 }

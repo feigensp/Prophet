@@ -1,19 +1,14 @@
 package experimentGUI.experimentEditor.tabbedPane;
 
 import java.awt.BorderLayout;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.util.HashMap;
 
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
-import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 import org.fife.ui.rtextarea.RTextScrollPane;
 
-import experimentGUI.experimentEditor.tabbedPane.contentEditorToolBar.ContentEditorToolBar;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 
 @SuppressWarnings("serial")

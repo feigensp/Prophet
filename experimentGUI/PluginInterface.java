@@ -2,7 +2,6 @@ package experimentGUI;
 
 import java.util.List;
 
-import experimentGUI.experimentEditor.ExperimentEditor;
 import experimentGUI.experimentEditor.tabbedPane.settingsEditor.SettingsComponentDescription;
 import experimentGUI.experimentViewer.ExperimentViewer;
 import experimentGUI.experimentViewer.HTMLFileView;

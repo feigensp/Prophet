@@ -1,7 +1,5 @@
 package experimentGUI.experimentEditor.tabbedPane.settingsEditor;
 
-import java.util.Vector;
-
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 
 

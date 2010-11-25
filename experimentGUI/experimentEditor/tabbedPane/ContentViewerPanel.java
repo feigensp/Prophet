@@ -2,8 +2,6 @@ package experimentGUI.experimentEditor.tabbedPane;
 
 import java.awt.BorderLayout;
 
-import javax.swing.JTextPane;
-
 import experimentGUI.experimentViewer.QuestionViewPane;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 
