@@ -40,7 +40,7 @@ import test.experimentQuestionCreator.ExtendedPanel;
 import test.experimentQuestionCreator.MyTreeNode;
 import test.experimentQuestionCreator.QuestionElement;
 import test.experimentQuestionCreator.XMLHandler;
-import experimentViewer.ClockLabel;
+import experimentGUI.experimentViewer.ClockLabel;
 
 public class ExperimentGUI extends JFrame {
 
