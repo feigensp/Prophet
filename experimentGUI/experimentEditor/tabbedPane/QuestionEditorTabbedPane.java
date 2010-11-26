@@ -8,7 +8,6 @@ import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import experimentGUI.experimentEditor.tabbedPane.settingsEditor.SettingsEditorPanel;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 
 

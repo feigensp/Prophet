@@ -2,12 +2,12 @@ package experimentGUI;
 
 import java.util.Vector;
 
+import experimentGUI.plugins.CodeViewerPlugin;
 import experimentGUI.plugins.DebugPlugin;
 import experimentGUI.plugins.DoNotShowContentPlugin;
 import experimentGUI.plugins.InactivityPlugin;
+import experimentGUI.plugins.QuestionListPlugin;
 import experimentGUI.plugins.QuestionSwitchingPlugin;
-import experimentGUI.plugins.codeViewer.CodeViewerPlugin;
-import experimentGUI.plugins.questionLists.QuestionListPlugin;
 
 
 public class PluginList {

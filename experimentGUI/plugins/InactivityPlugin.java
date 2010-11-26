@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.Vector;
 
 import experimentGUI.PluginInterface;
-import experimentGUI.experimentEditor.tabbedPane.settingsEditor.SettingsComponentDescription;
-import experimentGUI.experimentEditor.tabbedPane.settingsEditor.settingsComponents.SettingsCheckBox;
+import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.SettingsComponentDescription;
+import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.settingsComponents.SettingsCheckBox;
 import experimentGUI.experimentViewer.ExperimentViewer;
 import experimentGUI.experimentViewer.HTMLFileView;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;

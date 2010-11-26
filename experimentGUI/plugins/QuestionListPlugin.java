@@ -1,34 +1,35 @@
 package experimentGUI.plugins;
 
+import java.awt.BorderLayout;
 import java.util.List;
-import java.util.Vector;
 
 import experimentGUI.PluginInterface;
 import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.SettingsComponentDescription;
-import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.settingsComponents.SettingsCheckBox;
 import experimentGUI.experimentViewer.ExperimentViewer;
 import experimentGUI.experimentViewer.HTMLFileView;
+import experimentGUI.plugins.questionListPlugin.QuestionList;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 
-public class DoNotShowContentPlugin implements PluginInterface {
+
+public class QuestionListPlugin implements PluginInterface {
+	QuestionList overview;
 
 	@Override
-	public List<SettingsComponentDescription> getSettingsComponentDescriptions(QuestionTreeNode node) {
-		Vector<SettingsComponentDescription> result = new Vector<SettingsComponentDescription>();
-		if (node.isExperiment() || node.isCategory()) {
-			result.add(new SettingsComponentDescription(SettingsCheckBox.class, "donotshowcontent", "Inhalt nicht anzeigen"));
-		}
-		return result;
+	public List<SettingsComponentDescription> getSettingsComponentDescriptions(
+			QuestionTreeNode node) {
+		return null;
 	}
 
 	@Override
 	public void experimentViewerRun(ExperimentViewer experimentViewer) {
-		// TODO Auto-generated method stub
-		
+		overview = new QuestionList(experimentViewer.getTree());
+		//overview.setPreferredSize(new Dimension(150, 2));
+		experimentViewer.getContentPane().add(overview, BorderLayout.WEST);
 	}
 
 	@Override
 	public Object enterNode(QuestionTreeNode node, HTMLFileView htmlFileView) {
+		overview.visit(node);
 		return null;
 	}
 
@@ -40,7 +41,7 @@ public class DoNotShowContentPlugin implements PluginInterface {
 
 	@Override
 	public String getKey() {
-		return "donotshowcontent";
+		return "questionlist";
 	}
 
 }
