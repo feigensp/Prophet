@@ -44,7 +44,7 @@ public class FormularBox extends JComboBox implements ActionListener {
 			String textFieldName = JOptionPane.showInputDialog(null,
 					"Name des Textfeldes:", "Textfeld", 1);
 			if (textFieldName != null) {
-				editArea.replaceSelection("<input type=\"text\" name=\""
+				editArea.replaceSelection("<input type=\"text\" id=\""
 						+ textFieldName + "\">");
 			}
 			break;
@@ -52,8 +52,8 @@ public class FormularBox extends JComboBox implements ActionListener {
 			String textAreaName = JOptionPane.showInputDialog(this,
 					"Name des Textareas:", "Textarea", 1);
 			if (textAreaName != null) {
-				editArea.replaceSelection("<textarea name=\"" + textAreaName
-						+ "\" cols=\"50\" rows=\"10\">");
+				editArea.replaceSelection("<textarea id=\"" + textAreaName
+						+ "\" cols=\"50\" rows=\"10\"></textarea>");
 			}
 			break;
 		case 3: // liste
@@ -68,7 +68,7 @@ public class FormularBox extends JComboBox implements ActionListener {
 							+ "<option value=\"" + listEntrys[i] + "\">"
 							+ listEntrys[i] + "</option>";
 				}
-				editArea.replaceSelection("<select name=\""
+				editArea.replaceSelection("<select id=\""
 						+ listInfos.getKey() + "\" size=\"3\" multiple>" + list
 						+ System.getProperty("line.separator") + "</select>");
 			}
@@ -85,7 +85,7 @@ public class FormularBox extends JComboBox implements ActionListener {
 							+ "<option value=\"" + comboEntrys[i] + "\">"
 							+ comboEntrys[i] + "</option>";
 				}
-				editArea.replaceSelection("<select name=\""
+				editArea.replaceSelection("<select id=\""
 						+ comboInfos.getKey() + "\">" + combos
 						+ System.getProperty("line.separator") + "</select>");
 			}
@@ -98,7 +98,7 @@ public class FormularBox extends JComboBox implements ActionListener {
 						System.getProperty("line.separator"));
 				String radios = "";
 				for (int i = 0; i < radioEntrys.length; i++) {
-					radios += "<input type=\"radio\" name=\""
+					radios += "<input type=\"radio\" id=\""
 							+ radioInfos.getKey() + "\" value=\""
 							+ radioEntrys[i] + "\">" + radioEntrys[i] + "<br>"
 							+ System.getProperty("line.separator");
@@ -114,7 +114,7 @@ public class FormularBox extends JComboBox implements ActionListener {
 						System.getProperty("line.separator"));
 				String checks = "";
 				for (int i = 0; i < checkEntrys.length; i++) {
-					checks += "<input type=\"checkbox\" name=\""
+					checks += "<input type=\"checkbox\" id=\""
 							+ checkInfos.getKey() + "\" value=\""
 							+ checkEntrys[i] + "\">" + checkEntrys[i] + "<br>"
 							+ System.getProperty("line.separator");
