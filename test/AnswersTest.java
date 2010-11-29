@@ -26,6 +26,7 @@ public class AnswersTest extends JFrame implements ActionListener {
 	static JTextPane textPane;
 	
 	public static final String[] ATTRIBUTES = {"id", "type", "weight", "answer"};
+	public static final int[] PRIMARY_ATTRIBUTES = {0, 2, 3};
 	
 	
 	private ArrayList<HashMap<String, String>> elements = new ArrayList<HashMap<String, String>>();
@@ -66,19 +67,32 @@ public class AnswersTest extends JFrame implements ActionListener {
 	}
 
 	public void actionPerformed(ActionEvent ae) {
-
+		storeAnswerSpecifications(textPane.getText());
+		printAnswerSpecifications();
+	}
+	
+	public void printAnswerSpecifications() {	
+		System.out.println("Antworten: ");	
+		for(HashMap<String, String> hm : elements) {
+			for(int i=0; i<ATTRIBUTES.length; i++) {
+				System.out.print(ATTRIBUTES[i] + ":" + hm.get(ATTRIBUTES[i]));
+				System.out.print(" - ");
+			}
+			System.out.println();
+		}		
+	}
+	
+	public void storeAnswerSpecifications(String htmlContent) {
+		//prepare analysis
 		HTMLEditorKit kit = new HTMLEditorKit();
 		HTMLDocument doc = (javax.swing.text.html.HTMLDocument) kit.createDefaultDocument();
-		doc.putProperty("IgnoreCharsetDirective", Boolean.TRUE);
-		
-
+		doc.putProperty("IgnoreCharsetDirective", Boolean.TRUE);		
 		try {
-			String htmlContent = textPane.getText();
 			StringReader sr = new StringReader(htmlContent);
 			kit.read(sr, doc, 0);
 			HTMLDocument.Iterator tagIterator = doc.getIterator(HTML.Tag.INPUT);
-			System.out.println("Antworten: ");
 			while (tagIterator.isValid()) {
+				//store attributes of the current tag
 				AttributeSet as = tagIterator.getAttributes();
 				Enumeration e = as.getAttributeNames();
 				String[] attributesContent = new String[ATTRIBUTES.length];
@@ -92,26 +106,27 @@ public class AnswersTest extends JFrame implements ActionListener {
 					}
 				}
 //				System.out.println();
-				if(attributesContent[2] != null && attributesContent[3] != null) {
+				//check if primary attributes are available
+				boolean store = true;
+				for(int i=0; i<PRIMARY_ATTRIBUTES.length; i++) {
+					if(attributesContent[PRIMARY_ATTRIBUTES[i]] == null) {
+						store = false;
+						break;
+					}
+				}
+				//if primary attributes are present store the important attributes
+				if(store) {
 					HashMap<String, String> hm = new HashMap<String, String>();
 					for(int i=0; i<ATTRIBUTES.length; i++) {
 						hm.put(ATTRIBUTES[i], attributesContent[i]);
 					}
-					elements.add(hm);
+					elements.add(hm);					
 				}
 				tagIterator.next();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
-		
-		for(HashMap<String, String> hm : elements) {
-			for(int i=0; i<ATTRIBUTES.length; i++) {
-				System.out.print(ATTRIBUTES[i] + ":" + hm.get(ATTRIBUTES[i]));
-				System.out.print(" - ");
-			}
-			System.out.println();
-		}
+		}		
 	}
 }
 
