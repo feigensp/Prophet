@@ -128,6 +128,7 @@ public class AnswerEvaluationGUI extends JFrame {
 		questionOverviewTree.setModel((TreeModel) null);
 		questionOverviewTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 		new JScrollPane(questionOverviewTree);
+		questionOverviewTree.setEnabled(false);
 		questionOverviewPanel.add(questionOverviewTree);
 
 		JPanel contentPanel = new JPanel();
@@ -182,6 +183,7 @@ public class AnswerEvaluationGUI extends JFrame {
 			@Override
 			public void mousePressed(MouseEvent e) {
 				TreePath selPath = questionOverviewTree.getPathForLocation(e.getX(), e.getY());
+				//System.out.println(selPath);
 				if (selPath != null) {
 					selected = (QuestionTreeNode) selPath.getLastPathComponent();
 					if (selected.isCategory()) {

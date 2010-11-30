@@ -127,7 +127,7 @@ public class XMLTreeHandler {
 			Element xmlAnswersNode = xmlTree.createElement(TYPE_ANSWERS);
 			xmlNode.appendChild(xmlAnswersNode);
 			for (Entry<String, String> answerEntry : treeNode.getAnswers().entrySet()) {
-				Element xmlChild = xmlTree.createElement(TYPE_ANSWERS);
+				Element xmlChild = xmlTree.createElement(TYPE_ANSWER);
 				xmlChild.setAttribute(ATTRIBUTE_NAME, answerEntry.getKey());
 				xmlChild.setAttribute(ATTRIBUTE_VALUE, answerEntry.getValue());
 				xmlAnswersNode.appendChild(xmlChild);
