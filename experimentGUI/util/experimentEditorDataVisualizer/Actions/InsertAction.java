@@ -4,10 +4,11 @@ public class InsertAction implements Action{
 	
 	private String actionCommand;
 	private int startTime;
+	private String path;
 	private int offset;
 	private String value;
 	
-	public InsertAction(String action, int start, int offset, String value) {
+	public InsertAction(String action, int start, String path, int offset, String value) {
 		this.actionCommand = action;
 		this.startTime = start;
 		this.offset = offset;
@@ -20,6 +21,10 @@ public class InsertAction implements Action{
 
 	public int getStartTime() {
 		return startTime;
+	}
+	
+	public String getPath() {
+		return path;
 	}
 	
 	public int getOffset() {

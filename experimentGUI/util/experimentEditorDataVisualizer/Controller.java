@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.Vector;
 
 import experimentGUI.plugins.codeViewerPlugin.CodeViewer;
-import experimentGUI.plugins.codeViewerPlugin.fileTree.FileEvent;
 import experimentGUI.util.experimentEditorDataVisualizer.Actions.Action;
 import experimentGUI.util.experimentEditorDataVisualizer.Actions.FileAction;
 
@@ -15,12 +14,12 @@ public class Controller {
 	int currentAction;
 	CodeViewer codeViewer;
 
-	public Controller(Vector<Action> vectorActions, CodeViewer codeViewer) {
+	public Controller(Vector<Action> vectorActions) {
 		this.actions = (Action[]) vectorActions.toArray();
 		Arrays.sort(actions);
 		currentAction = -1;
 		
-		this.codeViewer = codeViewer;
+		//TODO: Codeviewer plugins auch holen und diesen initialisieren
 	}
 
 	public void jumpToAction(int actionIndex) {

@@ -1,3 +1,5 @@
 Konstruktor "FileEvent" ist nicht public
 EditorTabbedPane in CodeViewer nicht public/keine getter
-SearchBar
+SearchBar - plus: warum wollten wir eigentlich nicht nochmal mitspeichern ob vorwärts oder rückwärts gesucht wird?
+konstanten für schlüsselwörter der xml datei machen --> will drauf zugreifen :P (passt am besten da rein, wo die erstellt wird, oder?)
+scroll sachen --> brauche zugriff aufs frame um größe anzupassen (wenn in video mit aufnehmen - denke aber dort nicht nötig, das scroll teil würde ich nur im extra prog auswerten)

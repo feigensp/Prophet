@@ -4,10 +4,11 @@ public class ScrollAction implements Action{
 	
 	private String actionCommand;
 	private int startTime;
+	private String path;
 	private int startLine;
 	private int endLine;
 	
-	public ScrollAction(String action, int start, int startLine, int endLine) {
+	public ScrollAction(String action, int start, String path, int startLine, int endLine) {
 		this.actionCommand = action;
 		this.startTime = start;
 		this.startLine = startLine;
@@ -20,6 +21,10 @@ public class ScrollAction implements Action{
 
 	public int getStartTime() {
 		return startTime;
+	}
+	
+	public String getPath() {
+		return path;
 	}
 	
 	public int getStartLine() {

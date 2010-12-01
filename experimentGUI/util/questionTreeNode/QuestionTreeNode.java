@@ -21,13 +21,6 @@ public class QuestionTreeNode extends DefaultMutableTreeNode {
 	private HashMap<String,Object> pluginData = new HashMap<String,Object>();
 	
 	long answerTime = 0;
-	
-	public long getAnswerTime() {
-		return answerTime;
-	}
-	public void setAnswerTime(long answerTime) {
-		this.answerTime = answerTime;
-	}
 	public QuestionTreeNode() {
 		this("");
 	}
@@ -41,6 +34,13 @@ public class QuestionTreeNode extends DefaultMutableTreeNode {
 		if (!(n.trim().equals(""))) {
 			name=n;
 		}
+	}
+	
+	public long getAnswerTime() {
+		return answerTime;
+	}
+	public void setAnswerTime(long answerTime) {
+		this.answerTime = answerTime;
 	}
 	public boolean isExperiment() {
 		return type.equals(TYPE_EXPERIMENT);

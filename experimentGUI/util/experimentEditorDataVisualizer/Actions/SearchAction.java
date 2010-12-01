@@ -4,13 +4,14 @@ public class SearchAction implements Action{
 	
 	private String actionCommand;
 	private int startTime;
+	private String path;
 	private String text;
 	private int currentPosition;
 	boolean regex;
 	boolean caseSensitive;
 	//boolean forward;
 	
-	public SearchAction(String action, int start, String text, int currentPos, boolean regex, boolean caseSensitive /*, boolean forward*/) {
+	public SearchAction(String action, int start, String path, String text, int currentPos, boolean regex, boolean caseSensitive /*, boolean forward*/) {
 		this.actionCommand = action;
 		this.startTime = start;
 		this.text = text;
@@ -26,6 +27,10 @@ public class SearchAction implements Action{
 
 	public int getStartTime() {
 		return startTime;
+	}
+	
+	public String getPath() {
+		return path;
 	}
 	
 	public String getText() {

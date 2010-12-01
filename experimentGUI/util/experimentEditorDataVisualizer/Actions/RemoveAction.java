@@ -4,10 +4,11 @@ public class RemoveAction implements Action{
 	
 	private String actionCommand;
 	private int startTime;
+	private String path;
 	private int offset;
 	private int length;
 	
-	public RemoveAction(String action, int start, int offset, int length) {
+	public RemoveAction(String action, int start, String path, int offset, int length) {
 		this.actionCommand = action;
 		this.startTime = start;
 		this.offset = offset;
@@ -20,6 +21,10 @@ public class RemoveAction implements Action{
 
 	public int getStartTime() {
 		return startTime;
+	}
+	
+	public String getPath() {
+		return path;
 	}
 	
 	public int getOffset() {
