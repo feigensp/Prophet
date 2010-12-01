@@ -3,12 +3,12 @@ package experimentGUI.util.experimentEditorDataVisualizer.Actions;
 public class RemoveAction implements Action{
 	
 	private String actionCommand;
-	private int startTime;
+	private long startTime;
 	private String path;
 	private int offset;
 	private int length;
 	
-	public RemoveAction(String action, int start, String path, int offset, int length) {
+	public RemoveAction(String action, long start, String path, int offset, int length) {
 		this.actionCommand = action;
 		this.startTime = start;
 		this.offset = offset;
@@ -19,7 +19,7 @@ public class RemoveAction implements Action{
 		return actionCommand;
 	}
 
-	public int getStartTime() {
+	public long getStartTime() {
 		return startTime;
 	}
 	
@@ -36,6 +36,6 @@ public class RemoveAction implements Action{
 	}
 
 	public int compareTo(Integer start) {
-		return startTime-start;
+		return (int) startTime-start;
 	}
 }

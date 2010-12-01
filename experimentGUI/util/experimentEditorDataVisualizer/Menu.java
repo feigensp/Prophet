@@ -97,18 +97,32 @@ public class Menu extends JFrame {
 		});
 		backwardButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				controller.lastAction();
 			}
 		});
 		forwardButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				controller.nextAction();
 			}
 		});
 		jumpToTimeButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				try {
+					long millis = Long.parseLong(secondsTextField.getText()) * 1000;
+					millis += Long.parseLong(minutesTextField.getText()) * 60 * 1000;
+					controller.jumpToTime(millis);
+				} catch(NumberFormatException e) {
+					//TODO: Meldung ausgeben					
+				}
 			}
 		});
 		jumpToActionButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				try {
+					controller.jumpToAction(Integer.parseInt(actionIndexTextField.getText()));
+				} catch(NumberFormatException e) {
+					//TODO: Meldung ausgeben
+				}
 			}
 		});
 		closeMenuItem.addActionListener(new ActionListener() {
@@ -124,38 +138,42 @@ public class Menu extends JFrame {
 		for (int i = 0; i < log.getChildCount(); i++) {
 			QuestionTreeNode fileNode = (QuestionTreeNode) log.getChildAt(i);
 			if (fileNode.getType().equals("file")) {
-				int start = Integer.parseInt(fileNode.getAttributeValue("start"));
-				int end = Integer.parseInt(fileNode.getAttributeValue("end"));
-				String path = fileNode.getAttributeValue("path");
-				actionVector.add(new FileAction("file", start, end, path));
-				for (int j = 0; j < fileNode.getChildCount(); j++) {
-					QuestionTreeNode actionNode = (QuestionTreeNode) fileNode.getChildAt(j);
-					String actionCommand = actionNode.getType();
-					Action act = null;
-					start = Integer.parseInt(actionNode.getAttributeValue("time"));
-					if (actionCommand.equals("insert")) {
-						int offset = Integer.parseInt(actionNode.getAttributeValue("offset"));
-						String value = actionNode.getAttributeValue("value");
-						act = new InsertAction("insert", start, path, offset, value);
-					} else if (actionCommand.equals("remove")) {
-						int offset = Integer.parseInt(actionNode.getAttributeValue("offset"));
-						int length = Integer.parseInt(actionNode.getAttributeValue("length"));
-						act = new RemoveAction("remove", start, path, offset, length);
-					} else if (actionCommand.equals("scroll")) {
-						int startLine = Integer.parseInt(actionNode.getAttributeValue("startLine"));
-						int endLine = Integer.parseInt(actionNode.getAttributeValue("endLine"));
-						act = new ScrollAction("scroll", start, path, startLine, endLine);
-					} else if (actionCommand.equals("search")) {
-						String text = actionNode.getAttributeValue("text");
-						int currentPos = Integer.parseInt(actionNode.getAttributeValue("currentPosition"));
-						boolean regex = actionNode.getAttributeValue("regex").equals("true") ? true : false;
-						boolean caseSensitive = actionNode.getAttributeValue("case").equals("true") ? true
-								: false;
-						act = new SearchAction("search", start, path, text, currentPos, regex, caseSensitive);
+				try {
+					long start = Long.parseLong(fileNode.getAttributeValue("start"));
+					long end = Long.parseLong(fileNode.getAttributeValue("end"));
+					String path = fileNode.getAttributeValue("path");
+					actionVector.add(new FileAction("file", start, end, path));
+					for (int j = 0; j < fileNode.getChildCount(); j++) {
+						QuestionTreeNode actionNode = (QuestionTreeNode) fileNode.getChildAt(j);
+						String actionCommand = actionNode.getType();
+						Action act = null;
+						start = Long.parseLong(actionNode.getAttributeValue("time"));
+						if (actionCommand.equals("insert")) {
+							int offset = Integer.parseInt(actionNode.getAttributeValue("offset"));
+							String value = actionNode.getAttributeValue("value");
+							act = new InsertAction("insert", start, path, offset, value);
+						} else if (actionCommand.equals("remove")) {
+							int offset = Integer.parseInt(actionNode.getAttributeValue("offset"));
+							int length = Integer.parseInt(actionNode.getAttributeValue("length"));
+							act = new RemoveAction("remove", start, path, offset, length);
+						} else if (actionCommand.equals("scroll")) {
+							int startLine = Integer.parseInt(actionNode.getAttributeValue("startLine"));
+							int endLine = Integer.parseInt(actionNode.getAttributeValue("endLine"));
+							act = new ScrollAction("scroll", start, path, startLine, endLine);
+						} else if (actionCommand.equals("search")) {
+							String text = actionNode.getAttributeValue("text");
+							int currentPos = Integer.parseInt(actionNode.getAttributeValue("currentPosition"));
+							boolean regex = actionNode.getAttributeValue("regex").equals("true") ? true : false;
+							boolean caseSensitive = actionNode.getAttributeValue("case").equals("true") ? true
+									: false;
+							act = new SearchAction("search", start, path, text, currentPos, regex, caseSensitive);
+						}
+						if (act != null) {
+							actionVector.add(act);
+						}
 					}
-					if (act != null) {
-						actionVector.add(act);
-					}
+				} catch(NumberFormatException e) {
+					System.out.println("Fehler bei der Datenauswertung der log-Datei");
 				}
 			}
 		}

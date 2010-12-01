@@ -31,8 +31,8 @@ public class Controller {
 		}
 	}
 
-	public void jumpToTime(int millis) {
-		int currentTime = actions[currentAction].getStartTime();
+	public void jumpToTime(long millis) {
+		long currentTime = actions[currentAction].getStartTime();
 		while (currentTime > millis) {
 			lastAction();
 			currentTime = actions[currentAction].getStartTime();

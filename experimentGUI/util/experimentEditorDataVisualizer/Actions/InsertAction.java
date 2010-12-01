@@ -3,12 +3,12 @@ package experimentGUI.util.experimentEditorDataVisualizer.Actions;
 public class InsertAction implements Action{
 	
 	private String actionCommand;
-	private int startTime;
+	private long startTime;
 	private String path;
 	private int offset;
 	private String value;
 	
-	public InsertAction(String action, int start, String path, int offset, String value) {
+	public InsertAction(String action, long start, String path, int offset, String value) {
 		this.actionCommand = action;
 		this.startTime = start;
 		this.offset = offset;
@@ -19,7 +19,7 @@ public class InsertAction implements Action{
 		return actionCommand;
 	}
 
-	public int getStartTime() {
+	public long getStartTime() {
 		return startTime;
 	}
 	
@@ -36,6 +36,6 @@ public class InsertAction implements Action{
 	}
 
 	public int compareTo(Integer start) {
-		return startTime-start;
+		return (int) startTime-start;
 	}
 }

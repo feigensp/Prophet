@@ -3,11 +3,11 @@ package experimentGUI.util.experimentEditorDataVisualizer.Actions;
 public class FileAction implements Action{
 	
 	private String actionCommand;
-	private int startTime;
-	private int endTime;
+	private long startTime;
+	private long endTime;
 	private String path;
 	
-	public FileAction(String action, int start, int end, String path) {
+	public FileAction(String action, long start, long end, String path) {
 		this.actionCommand = action;
 		this.startTime = start;
 		this.endTime = end;
@@ -18,11 +18,11 @@ public class FileAction implements Action{
 		return actionCommand;
 	}
 
-	public int getStartTime() {
+	public long getStartTime() {
 		return startTime;
 	}
 	
-	public int getEndTime() {
+	public long getEndTime() {
 		return endTime;
 	}
 	
@@ -31,6 +31,6 @@ public class FileAction implements Action{
 	}
 
 	public int compareTo(Integer start) {
-		return startTime-start;
+		return (int) startTime-start;
 	}
 }

@@ -3,7 +3,7 @@ package experimentGUI.util.experimentEditorDataVisualizer.Actions;
 public class SearchAction implements Action{
 	
 	private String actionCommand;
-	private int startTime;
+	private long startTime;
 	private String path;
 	private String text;
 	private int currentPosition;
@@ -11,7 +11,7 @@ public class SearchAction implements Action{
 	boolean caseSensitive;
 	//boolean forward;
 	
-	public SearchAction(String action, int start, String path, String text, int currentPos, boolean regex, boolean caseSensitive /*, boolean forward*/) {
+	public SearchAction(String action, long start, String path, String text, int currentPos, boolean regex, boolean caseSensitive /*, boolean forward*/) {
 		this.actionCommand = action;
 		this.startTime = start;
 		this.text = text;
@@ -25,7 +25,7 @@ public class SearchAction implements Action{
 		return actionCommand;
 	}
 
-	public int getStartTime() {
+	public long getStartTime() {
 		return startTime;
 	}
 	
@@ -54,6 +54,6 @@ public class SearchAction implements Action{
 //	}
 
 	public int compareTo(Integer start) {
-		return startTime-start;
+		return (int) startTime-start;
 	}
 }

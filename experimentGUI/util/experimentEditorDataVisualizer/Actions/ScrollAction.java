@@ -3,12 +3,12 @@ package experimentGUI.util.experimentEditorDataVisualizer.Actions;
 public class ScrollAction implements Action{
 	
 	private String actionCommand;
-	private int startTime;
+	private long startTime;
 	private String path;
 	private int startLine;
 	private int endLine;
 	
-	public ScrollAction(String action, int start, String path, int startLine, int endLine) {
+	public ScrollAction(String action, long start, String path, int startLine, int endLine) {
 		this.actionCommand = action;
 		this.startTime = start;
 		this.startLine = startLine;
@@ -19,7 +19,7 @@ public class ScrollAction implements Action{
 		return actionCommand;
 	}
 
-	public int getStartTime() {
+	public long getStartTime() {
 		return startTime;
 	}
 	
@@ -36,6 +36,6 @@ public class ScrollAction implements Action{
 	}
 
 	public int compareTo(Integer start) {
-		return startTime-start;
+		return (int) startTime-start;
 	}
 }
