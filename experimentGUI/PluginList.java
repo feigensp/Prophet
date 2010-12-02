@@ -5,7 +5,6 @@ import java.util.Vector;
 import experimentGUI.plugins.CodeViewerPlugin;
 import experimentGUI.plugins.DebugPlugin;
 import experimentGUI.plugins.DoNotShowContentPlugin;
-import experimentGUI.plugins.InactivityPlugin;
 import experimentGUI.plugins.QuestionListPlugin;
 import experimentGUI.plugins.QuestionSwitchingPlugin;
 
@@ -14,7 +13,6 @@ public class PluginList {
 	private static Vector<PluginInterface> plugins = new Vector<PluginInterface>() {
 		private static final long serialVersionUID = 1L;
 		{
-			add(new InactivityPlugin());
 			add(new DoNotShowContentPlugin());
 			add(new CodeViewerPlugin());
 			add(new QuestionSwitchingPlugin());

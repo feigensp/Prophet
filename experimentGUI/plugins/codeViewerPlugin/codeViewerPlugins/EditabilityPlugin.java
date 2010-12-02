@@ -11,16 +11,27 @@ import experimentGUI.plugins.codeViewerPlugin.tabbedPane.EditorPanel;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 
 public class EditabilityPlugin implements CodeViewerPluginInterface {
-	public List<SettingsComponentDescription> getSettingsComponentDescriptions() {
-		Vector<SettingsComponentDescription> result = new Vector<SettingsComponentDescription>();
-		result.add(new SettingsComponentDescription(SettingsCheckBox.class,"editable", "Quelltext editierbar"));
-		return result;
+	public final static String KEY = "editable";
+	boolean editable;
+	
+	@Override
+	public SettingsComponentDescription getSettingsComponentDescription() {
+		return new SettingsComponentDescription(SettingsCheckBox.class, KEY, "Quelltext editierbar");
 	}
-	public void onFrameCreate(QuestionTreeNode selected, CodeViewer viewer) {		
+	@Override
+	public void onFrameCreate(QuestionTreeNode selected, CodeViewer viewer) {
+		editable = Boolean.parseBoolean(selected.getAttributeValue(KEY));
 	}
 
-	public void onEditorPanelCreate(QuestionTreeNode selected,
-			EditorPanel editorPanel) {
-		editorPanel.getTextArea().setEditable(Boolean.parseBoolean(selected.getAttributeValue("editable")));	
+	@Override
+	public void onEditorPanelCreate(EditorPanel editorPanel) {
+		editorPanel.getTextArea().setEditable(editable);	
+	}
+	@Override
+	public void onClose() {
+	}
+	@Override
+	public String getKey() {
+		return KEY;
 	}
 }

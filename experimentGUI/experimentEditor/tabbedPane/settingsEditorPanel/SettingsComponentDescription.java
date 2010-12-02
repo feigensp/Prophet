@@ -7,11 +7,13 @@ public class SettingsComponentDescription {
 	private Class<? extends SettingsComponent> myClass;
 	private String key;
 	private String caption;
+	SettingsComponentDescription next;
 
 	public SettingsComponentDescription(Class<? extends SettingsComponent> myClass, String key, String caption) {
 		this.myClass=myClass;
 		this.key=key;
 		this.caption=caption;
+		this.next=null;
 	}
 	public Class<? extends SettingsComponent> getMyClass() {
 		return myClass;
@@ -34,5 +36,15 @@ public class SettingsComponentDescription {
 		result.setCaption(caption);
 		result.setTreeNode(myNode);
 		return result;
+	}
+	public void addNextComponentDescription(SettingsComponentDescription next) {
+		if (this.next==null) {
+			this.next = next;
+		} else {
+			this.next.addNextComponentDescription(next);
+		}
+	}
+	public SettingsComponentDescription getNextComponentDescription() {
+		return next;
 	}
 }

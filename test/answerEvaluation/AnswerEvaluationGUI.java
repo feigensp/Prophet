@@ -28,7 +28,7 @@ import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
-import experimentGUI.util.questionTreeNode.XMLTreeHandler;
+import experimentGUI.util.questionTreeNode.QuestionTreeXMLHandler;
 
 public class AnswerEvaluationGUI extends JFrame {
 
@@ -167,8 +167,8 @@ public class AnswerEvaluationGUI extends JFrame {
 		// load data
 		loadButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				questionnaire = XMLTreeHandler.loadXMLTree(questionnairePathTextField.getText());
-				answers = XMLTreeHandler.loadXMLTree(answerPathTextField.getText());
+				questionnaire = QuestionTreeXMLHandler.loadXMLTree(questionnairePathTextField.getText());
+				answers = QuestionTreeXMLHandler.loadXMLTree(answerPathTextField.getText());
 				if (questionnaire != null && answers != null) {
 					// evtl. noch aufbau vergleichen, ob passend
 					questionOverviewTree.setModel(new DefaultTreeModel(questionnaire));

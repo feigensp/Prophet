@@ -20,11 +20,12 @@ import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 
 @SuppressWarnings("serial")
 public class CodeViewer extends JFrame implements FileListener {
-	private EditorTabbedPane tabbedPane;
+	public final static String KEY_PATH = "path";
+	
 	private JMenuBar menuBar;
-	private JMenu menu;
-	private JMenuItem menuItem;
 	private JSplitPane splitPane;
+	FileTree myTree;
+	private EditorTabbedPane tabbedPane;
 
 	/**
 	 * Launch the application.
@@ -43,7 +44,6 @@ public class CodeViewer extends JFrame implements FileListener {
 	}
 	
 	public CodeViewer(QuestionTreeNode selected) {
-		//setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setBounds(100, 100, 800, 600);
 		if (selected==null) {
 			selected = new QuestionTreeNode();
@@ -51,22 +51,22 @@ public class CodeViewer extends JFrame implements FileListener {
 		
 		//read settings, store in variables
 		
-		String path = selected.getAttributeValue("codeviewer_path");
-		path = path==null ? "." : path;
+		String path = selected.getAttributeValue(KEY_PATH);
+		path = path==null || path.length()==0 ? "." : path;
 		
 		menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
 		
-		menu = new JMenu("Menu dummy");
+		JMenu menu = new JMenu("Menu dummy");
 		menuBar.add(menu);
 		
-		menuItem = new JMenuItem("Menu item dummy");
+		JMenuItem menuItem = new JMenuItem("Menu item dummy");
 		menu.add(menuItem);
 		
 		splitPane = new JSplitPane();
 		splitPane.setBorder(null);
 		
-		FileTree myTree = new FileTree(new File(path));
+		myTree = new FileTree(new File(path));
 		myTree.setPreferredSize(new Dimension(200, 400));
 		myTree.addFileListener(this);
 		splitPane.setLeftComponent(myTree);
@@ -75,14 +75,22 @@ public class CodeViewer extends JFrame implements FileListener {
 		splitPane.setRightComponent(tabbedPane);
 		
 		setContentPane(splitPane);	
-		
-		for (CodeViewerPluginInterface plugin : CodeViewerPluginList.getPlugins()) {
-			plugin.onFrameCreate(selected, this);
-		}
 	}
 
 	@Override
 	public void fileEventOccured(FileEvent arg0) {
 		tabbedPane.openFile(arg0.getFile());
+	}
+
+	public JSplitPane getSplitPane() {
+		return splitPane;
+	}
+
+	public FileTree getMyTree() {
+		return myTree;
+	}
+
+	public EditorTabbedPane getTabbedPane() {
+		return tabbedPane;
 	}
 }

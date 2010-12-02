@@ -1,8 +1,5 @@
 package experimentGUI.plugins;
 
-import java.util.List;
-import java.util.Vector;
-
 import experimentGUI.PluginInterface;
 import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.SettingsComponentDescription;
 import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.settingsComponents.SettingsCheckBox;
@@ -11,14 +8,14 @@ import experimentGUI.experimentViewer.HTMLFileView;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 
 public class DoNotShowContentPlugin implements PluginInterface {
+	public final static String KEY = "donotshowcontent";
 
 	@Override
-	public List<SettingsComponentDescription> getSettingsComponentDescriptions(QuestionTreeNode node) {
-		Vector<SettingsComponentDescription> result = new Vector<SettingsComponentDescription>();
+	public SettingsComponentDescription getSettingsComponentDescription(QuestionTreeNode node) {
 		if (node.isExperiment() || node.isCategory()) {
-			result.add(new SettingsComponentDescription(SettingsCheckBox.class, "donotshowcontent", "Inhalt nicht anzeigen"));
+			return new SettingsComponentDescription(SettingsCheckBox.class, KEY, "Inhalt nicht anzeigen");
 		}
-		return result;
+		return null;
 	}
 
 	@Override
@@ -40,7 +37,7 @@ public class DoNotShowContentPlugin implements PluginInterface {
 
 	@Override
 	public String getKey() {
-		return "donotshowcontent";
+		return KEY;
 	}
 
 }

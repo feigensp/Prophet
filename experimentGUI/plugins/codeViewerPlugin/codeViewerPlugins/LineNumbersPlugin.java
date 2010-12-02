@@ -11,24 +11,32 @@ import experimentGUI.plugins.codeViewerPlugin.tabbedPane.EditorPanel;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 
 public class LineNumbersPlugin implements CodeViewerPluginInterface {
-
-	public List<SettingsComponentDescription> getSettingsComponentDescriptions() {
-		Vector<SettingsComponentDescription> result = new Vector<SettingsComponentDescription>();
-		result.add(new SettingsComponentDescription(SettingsCheckBox.class,"linenumbers_default", "Zeilennummern anzeigen"));
-		result.add(new SettingsComponentDescription(SettingsCheckBox.class,"linenumbers_toggle", "Zeilennummern ein- und ausschaltbar"));
+	QuestionTreeNode selected;
+	
+	@Override
+	public SettingsComponentDescription getSettingsComponentDescription() {
+		SettingsComponentDescription result = new SettingsComponentDescription(SettingsCheckBox.class,"linenumbers_default", "Zeilennummern anzeigen");
+		result.addNextComponentDescription(new SettingsComponentDescription(SettingsCheckBox.class,"linenumbers_toggle", "Zeilennummern ein- und ausschaltbar"));
 		return result;
 	}
 	
 	@Override
 	public void onFrameCreate(QuestionTreeNode selected, CodeViewer viewer) {
-		// TODO Auto-generated method stub
-		
+		this.selected=selected;
 	}
 
 	@Override
-	public void onEditorPanelCreate(QuestionTreeNode selected,
-			EditorPanel editorPanel) {
+	public void onEditorPanelCreate(EditorPanel editorPanel) {
 		boolean lineNumbers = Boolean.parseBoolean(selected.getAttributeValue("linenumbers_default"));
 		editorPanel.getScrollPane().setLineNumbersEnabled(lineNumbers);
+	}
+
+	@Override
+	public void onClose() {
+	}
+
+	@Override
+	public String getKey() {
+		return "linenumbers";
 	}
 }

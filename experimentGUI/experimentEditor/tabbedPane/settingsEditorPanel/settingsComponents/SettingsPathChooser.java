@@ -28,7 +28,12 @@ public class SettingsPathChooser extends SettingsComponent {
 		textField.setEditable(false);
 		add(textField,BorderLayout.CENTER);
 		textField.setColumns(20);
-		textField.addActionListener(getDefaultActionListener());
+		textField.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				saveValue();				
+			}
+		});
 		pathButton = new JButton("Durchsuchen");
 		add(pathButton,BorderLayout.EAST);
 		pathButton.addActionListener(new ActionListener() {

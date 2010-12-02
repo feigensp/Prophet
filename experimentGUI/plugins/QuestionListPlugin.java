@@ -12,10 +12,12 @@ import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 
 
 public class QuestionListPlugin implements PluginInterface {
+	public final static String KEY = "questionlist";
+
 	QuestionList overview;
 
 	@Override
-	public List<SettingsComponentDescription> getSettingsComponentDescriptions(
+	public SettingsComponentDescription getSettingsComponentDescription(
 			QuestionTreeNode node) {
 		return null;
 	}
@@ -41,7 +43,7 @@ public class QuestionListPlugin implements PluginInterface {
 
 	@Override
 	public String getKey() {
-		return "questionlist";
+		return KEY;
 	}
 
 }

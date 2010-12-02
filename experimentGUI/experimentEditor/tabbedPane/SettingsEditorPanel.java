@@ -12,6 +12,7 @@ import java.util.List;
 import experimentGUI.PluginInterface;
 import experimentGUI.PluginList;
 import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.SettingsComponentDescription;
+import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.settingsComponents.SettingsCheckBox;
 import experimentGUI.util.VerticalFlowLayout;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 
@@ -35,11 +36,12 @@ public class SettingsEditorPanel extends ExperimentEditorTab {
 		updateUI();
 		
 		if (selected!=null) {
-			// adding checkboxes for the given possible settings in Settings.java
+			add(new SettingsComponentDescription(SettingsCheckBox.class, "inactive", "Deaktivieren").build(selected));
 			for (PluginInterface plugin : PluginList.getPlugins()) {
-				List<SettingsComponentDescription> descriptions = plugin.getSettingsComponentDescriptions(selected);
-				if (descriptions!=null) {
-					for (SettingsComponentDescription desc : descriptions) {
+				SettingsComponentDescription desc = plugin.getSettingsComponentDescription(selected);
+				if (desc!=null) {
+					add(desc.build(selected));
+					while ((desc=desc.getNextComponentDescription())!=null) {
 						add(desc.build(selected));
 					}
 				}

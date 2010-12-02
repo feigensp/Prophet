@@ -10,7 +10,7 @@ import javax.swing.UIManager;
 import experimentGUI.PluginInterface;
 import experimentGUI.PluginList;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
-import experimentGUI.util.questionTreeNode.XMLTreeHandler;
+import experimentGUI.util.questionTreeNode.QuestionTreeXMLHandler;
 
 
 public class ExperimentViewer extends JFrame {
@@ -36,7 +36,7 @@ public class ExperimentViewer extends JFrame {
 	}
 
 	public ExperimentViewer() {
-		tree = XMLTreeHandler.loadXMLTree("test.xml");
+		tree = QuestionTreeXMLHandler.loadXMLTree("test.xml");
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		contentPane = new JPanel();

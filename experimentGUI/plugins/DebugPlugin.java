@@ -9,9 +9,10 @@ import experimentGUI.experimentViewer.HTMLFileView;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 
 public class DebugPlugin implements PluginInterface {
-
+	public final static String KEY = "debugplugin";
+	
 	@Override
-	public List<SettingsComponentDescription> getSettingsComponentDescriptions(
+	public SettingsComponentDescription getSettingsComponentDescription(
 			QuestionTreeNode node) {
 		System.out.println("Trying to get component descriptions.");
 		return null;
@@ -35,7 +36,7 @@ public class DebugPlugin implements PluginInterface {
 
 	@Override
 	public String getKey() {
-		return "debugplugin";
+		return KEY;
 	}
 
 }

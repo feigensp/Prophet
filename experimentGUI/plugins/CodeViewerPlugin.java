@@ -1,11 +1,11 @@
 package experimentGUI.plugins;
 
-import java.util.List;
-import java.util.Vector;
+import javax.swing.JFrame;
 
 import experimentGUI.PluginInterface;
 import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.SettingsComponentDescription;
 import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.SettingsPluginComponentDescription;
+import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.settingsComponents.SettingsPathChooser;
 import experimentGUI.experimentViewer.ExperimentViewer;
 import experimentGUI.experimentViewer.HTMLFileView;
 import experimentGUI.plugins.codeViewerPlugin.CodeViewer;
@@ -14,36 +14,42 @@ import experimentGUI.plugins.codeViewerPlugin.CodeViewerPluginList;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 
 public class CodeViewerPlugin implements PluginInterface {
+	public final static String KEY = "codeviewer";
 
 	@Override
-	public List<SettingsComponentDescription> getSettingsComponentDescriptions(
+	public SettingsComponentDescription getSettingsComponentDescription(
 			QuestionTreeNode node) {
-		Vector<SettingsComponentDescription> result = new Vector<SettingsComponentDescription>();
 		if (node.getType().equals(QuestionTreeNode.TYPE_CATEGORY)) {
-			SettingsPluginComponentDescription desc = new SettingsPluginComponentDescription("codeviewer", "Codeviewer aktivieren");
+			SettingsPluginComponentDescription result = new SettingsPluginComponentDescription(KEY, "Codeviewer aktivieren");
+			result.addSubComponent(new SettingsComponentDescription(SettingsPathChooser.class, CodeViewer.KEY_PATH, "Pfad der Quelltexte:"));
 			for (CodeViewerPluginInterface plugin : CodeViewerPluginList.getPlugins()) {
-				if (plugin.getSettingsComponentDescriptions()!=null) {
-					for (SettingsComponentDescription pluginDescription : plugin.getSettingsComponentDescriptions()) {
-						desc.addSubComponent(pluginDescription);
+				SettingsComponentDescription desc = plugin.getSettingsComponentDescription();
+				if (desc!=null) {
+					result.addSubComponent(desc);
+					while ((desc = desc.getNextComponentDescription()) != null) {
+						result.addSubComponent(desc);
 					}
 				}
 			}
-			result.add(desc);
+			return result;
 		}
-		return result;
+		return null;
 	}
 
 	@Override
 	public void experimentViewerRun(ExperimentViewer experimentViewer) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public Object enterNode(QuestionTreeNode node, HTMLFileView htmlFileView) {
-		if (Boolean.parseBoolean(node.getAttributeValue("codeviewer"))) {
-			CodeViewer cv = new CodeViewer(node.getAttribute("codeviewer"));
+		boolean enabled = Boolean.parseBoolean(node.getAttributeValue(KEY));
+		if (enabled) {
+			CodeViewer cv = new CodeViewer(node.getAttribute(KEY));
+			cv.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 			cv.setVisible(true);
+			for (CodeViewerPluginInterface plugin : CodeViewerPluginList.getPlugins()) {
+				plugin.onFrameCreate(node.getAttribute(KEY), cv);
+			}
 			return cv;
 		}
 		return null;
@@ -53,12 +59,15 @@ public class CodeViewerPlugin implements PluginInterface {
 	public void exitNode(QuestionTreeNode node, HTMLFileView htmlFileView, Object pluginData) {
 		CodeViewer cv = (CodeViewer)pluginData;
 		if (cv!=null) {
+			for (CodeViewerPluginInterface plugin : CodeViewerPluginList.getPlugins()) {
+				plugin.onClose();
+			}
 			cv.dispose();
 		}
 	}
 
 	@Override
 	public String getKey() {
-		return "codeviewer";
+		return KEY;
 	}
 }

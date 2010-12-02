@@ -30,7 +30,7 @@ import experimentGUI.util.experimentEditorDataVisualizer.Actions.RemoveAction;
 import experimentGUI.util.experimentEditorDataVisualizer.Actions.ScrollAction;
 import experimentGUI.util.experimentEditorDataVisualizer.Actions.SearchAction;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
-import experimentGUI.util.questionTreeNode.XMLTreeHandler;
+import experimentGUI.util.questionTreeNode.QuestionTreeXMLHandler;
 import java.awt.FlowLayout;
 
 public class VideoRecordAlternative extends JFrame {
@@ -83,7 +83,7 @@ public class VideoRecordAlternative extends JFrame {
 				int returnVal = fc.showOpenDialog(null);
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
 					File file = fc.getSelectedFile();
-					log = XMLTreeHandler.loadXMLTree(file.getAbsolutePath());
+					log = QuestionTreeXMLHandler.loadXMLTree(file.getAbsolutePath());
 				}
 				if (log != null && log.getType().equals("codeviewer")) {
 					//TODO: codeViewer mit plugins erstellen und übergeben

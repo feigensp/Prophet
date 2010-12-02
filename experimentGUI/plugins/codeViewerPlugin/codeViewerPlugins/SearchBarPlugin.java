@@ -1,8 +1,6 @@
 package experimentGUI.plugins.codeViewerPlugin.codeViewerPlugins;
 
 import java.awt.BorderLayout;
-import java.util.List;
-import java.util.Vector;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
@@ -10,30 +8,40 @@ import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.SettingsCom
 import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.settingsComponents.SettingsCheckBox;
 import experimentGUI.plugins.codeViewerPlugin.CodeViewer;
 import experimentGUI.plugins.codeViewerPlugin.CodeViewerPluginInterface;
+import experimentGUI.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin.RecorderPluginList;
+import experimentGUI.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin.recorderPlugins.SearchedPlugin;
 import experimentGUI.plugins.codeViewerPlugin.tabbedPane.EditorPanel;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 import experimentGUI.util.searchBar.SearchBar;
 import experimentGUI.util.searchBar.SearchBarListener;
 
 public class SearchBarPlugin implements CodeViewerPluginInterface {
-
-	public List<SettingsComponentDescription> getSettingsComponentDescriptions() {
-		Vector<SettingsComponentDescription> result = new Vector<SettingsComponentDescription>();
-		result.add(new SettingsComponentDescription(SettingsCheckBox.class,"searchable", "Suchfunktion einschalten"));
-		return result;
-	}
+	public final static String KEY = "searchable";
+	boolean enabled;
 	
-	public void onFrameCreate(QuestionTreeNode selected, CodeViewer viewer) {		
+	@Override
+	public SettingsComponentDescription getSettingsComponentDescription() {
+		return new SettingsComponentDescription(SettingsCheckBox.class,KEY, "Suchfunktion einschalten");
 	}
-
-	public void onEditorPanelCreate(QuestionTreeNode selected,
-			EditorPanel editorPanel) {
-		if (Boolean.parseBoolean(selected.getAttributeValue("searchable"))) {
+	@Override
+	public void onFrameCreate(QuestionTreeNode selected, CodeViewer viewer) {	
+		enabled = Boolean.parseBoolean(selected.getAttributeValue(KEY));
+	}
+	@Override
+	public void onEditorPanelCreate(EditorPanel editorPanel) {
+		if (enabled) {
 			RSyntaxTextArea textPane = editorPanel.getTextArea();
 			SearchBar searchBar = new SearchBar(textPane);
 			searchBar.setVisible(false);
 			editorPanel.add(searchBar, BorderLayout.SOUTH);			
 			textPane.addKeyListener(new SearchBarListener(searchBar));
 		}
+	}
+	@Override
+	public void onClose() {
+	}
+	@Override
+	public String getKey() {
+		return KEY;
 	}
 }

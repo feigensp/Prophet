@@ -8,7 +8,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
-import experimentGUI.util.questionTreeNode.XMLTreeHandler;
+import experimentGUI.util.questionTreeNode.QuestionTreeXMLHandler;
 
 
 @SuppressWarnings("serial")
@@ -32,7 +32,7 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 		fileMenu.add(loadMenuItem);
 		loadMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				QuestionTreeNode newRoot = XMLTreeHandler.loadXMLTree("test.xml");
+				QuestionTreeNode newRoot = QuestionTreeXMLHandler.loadXMLTree("test.xml");
 //				JFileChooser fc = new JFileChooser();
 //				if (fc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
 //					//File file = fc.getSelectedFile();
@@ -46,7 +46,7 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 		fileMenu.add(saveMenuItem);
 		saveMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				XMLTreeHandler.saveXMLTree(questionEditor.getTree().getRoot(), "test.xml");
+				QuestionTreeXMLHandler.saveXMLTree(questionEditor.getTree().getRoot(), "test.xml");
 			}
 		});
 

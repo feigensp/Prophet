@@ -10,7 +10,7 @@ import javax.swing.JPanel;
 import experimentGUI.PluginInterface;
 import experimentGUI.PluginList;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
-import experimentGUI.util.questionTreeNode.XMLTreeHandler;
+import experimentGUI.util.questionTreeNode.QuestionTreeXMLHandler;
 
 
 
@@ -180,7 +180,7 @@ public class HTMLFileView extends JPanel {
 	 */
 	private void endQuestionnaire() {
 		System.out.println("Beende Befragung");
-		XMLTreeHandler.saveXMLAnswerTree(rootNode, "answers.xml");
+		QuestionTreeXMLHandler.saveXMLAnswerTree(rootNode, "answers.xml");
 		this.removeAll();
 		this.updateUI();
 	}

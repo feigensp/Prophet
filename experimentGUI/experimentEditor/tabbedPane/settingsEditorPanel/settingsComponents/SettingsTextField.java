@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.SettingsComponent;
 
@@ -19,7 +21,23 @@ public class SettingsTextField extends SettingsComponent{
 		add(caption, BorderLayout.NORTH);
 		textField = new JTextField();
 		add(textField, BorderLayout.CENTER);
-		textField.addActionListener(getDefaultActionListener());
+		textField.getDocument().addDocumentListener(new DocumentListener() {
+
+			@Override
+			public void changedUpdate(DocumentEvent arg0) {
+				saveValue();
+			}
+
+			@Override
+			public void insertUpdate(DocumentEvent arg0) {
+				saveValue();
+			}
+
+			@Override
+			public void removeUpdate(DocumentEvent arg0) {
+				saveValue();
+			}			
+		});
 	}
 	
 	public void setCaption(String cap) {

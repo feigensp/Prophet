@@ -11,14 +11,14 @@ import experimentGUI.experimentViewer.HTMLFileView;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 
 public class QuestionSwitchingPlugin implements PluginInterface {
+	public final static String KEY = "questionswitching";
 
 	@Override
-	public List<SettingsComponentDescription> getSettingsComponentDescriptions(QuestionTreeNode node) {
-		Vector<SettingsComponentDescription> result = new Vector<SettingsComponentDescription>();
+	public SettingsComponentDescription getSettingsComponentDescription(QuestionTreeNode node) {
 		if (node.getType().equals(QuestionTreeNode.TYPE_CATEGORY)) {
-			result.add(new SettingsComponentDescription(SettingsCheckBox.class,"questionswitching", "Vor- und Zurückblättern erlauben"));
+			return new SettingsComponentDescription(SettingsCheckBox.class,KEY, "Vor- und Zurückblättern erlauben");
 		}
-		return result;
+		return null;
 	}
 
 	@Override
@@ -40,7 +40,7 @@ public class QuestionSwitchingPlugin implements PluginInterface {
 
 	@Override
 	public String getKey() {
-		return "questionswitching";
+		return KEY;
 	}
 
 }

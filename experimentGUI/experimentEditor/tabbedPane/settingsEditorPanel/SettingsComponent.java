@@ -1,8 +1,5 @@
 package experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
 import javax.swing.JPanel;
 
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
@@ -12,17 +9,6 @@ import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 public abstract class SettingsComponent extends JPanel {
 	String key;
 	QuestionTreeNode treeNode;
-	
-	private ActionListener defaultActionListener = new ActionListener() {
-		public void actionPerformed(ActionEvent arg0) {
-			saveValue();
-			loadValue();
-		}		
-	};
-	
-	public ActionListener getDefaultActionListener() {
-		return defaultActionListener;
-	}	
 
 	public QuestionTreeNode getTreeNode() {
 		return treeNode;

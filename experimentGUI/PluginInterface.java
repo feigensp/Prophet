@@ -8,7 +8,7 @@ import experimentGUI.experimentViewer.HTMLFileView;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 
 public interface PluginInterface {
-	public List<SettingsComponentDescription> getSettingsComponentDescriptions(QuestionTreeNode node);
+	public SettingsComponentDescription getSettingsComponentDescription(QuestionTreeNode node);
 	public void experimentViewerRun(ExperimentViewer experimentViewer);
 	public Object enterNode(QuestionTreeNode node, HTMLFileView htmlFileView);
 	public void exitNode(QuestionTreeNode node, HTMLFileView htmlFileView, Object pluginData);

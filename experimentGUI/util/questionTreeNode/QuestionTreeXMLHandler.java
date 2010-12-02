@@ -24,7 +24,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 
-public class XMLTreeHandler {
+public class QuestionTreeXMLHandler {
 	private final static String ATTRIBUTE_NAME = "name";
 	private final static String ATTRIBUTE_VALUE = "value";
 	private final static String ATTRIBUTE_TIME = "time";

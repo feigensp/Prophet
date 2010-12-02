@@ -2,12 +2,15 @@ package experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Vector;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
+import javax.swing.border.BevelBorder;
 
 
 @SuppressWarnings("serial")
@@ -19,10 +22,16 @@ public class SettingsPluginComponent extends SettingsComponent {
 	public SettingsPluginComponent() {
 		setLayout(new BorderLayout());		
 		activatedCheckBox = new JCheckBox("");
-		activatedCheckBox.addActionListener(getDefaultActionListener());
+		activatedCheckBox.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				saveValue();
+				loadValue();				
+			}
+		});
 		add(activatedCheckBox,BorderLayout.NORTH);
 		optionPanel = new JPanel();
-		optionPanel.setBorder(BorderFactory.createLineBorder(Color.black));
+		optionPanel.setBorder(BorderFactory.createTitledBorder(""));
 		optionPanel.setLayout(new BoxLayout(optionPanel,BoxLayout.Y_AXIS));
 		add(optionPanel,BorderLayout.CENTER);
 	}

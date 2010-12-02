@@ -50,7 +50,7 @@ public class EditorPanel extends JPanel {
 		add(scrollPane, BorderLayout.CENTER);
 		
 		for (CodeViewerPluginInterface plugin : CodeViewerPluginList.getPlugins()) {
-			plugin.onEditorPanelCreate(selected, this);
+			plugin.onEditorPanelCreate(this);
 		}
 	}
 	

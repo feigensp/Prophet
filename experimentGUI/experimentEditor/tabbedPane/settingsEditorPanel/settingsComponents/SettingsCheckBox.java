@@ -1,6 +1,8 @@
 package experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.settingsComponents;
 
 import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JCheckBox;
 
@@ -14,7 +16,12 @@ public class SettingsCheckBox extends SettingsComponent {
 	public SettingsCheckBox() {
 		setLayout(new BorderLayout());
 		myCheckBox = new JCheckBox();
-		myCheckBox.addActionListener(getDefaultActionListener());
+		myCheckBox.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				saveValue();				
+			}
+		});
 		//myCheckBox.setBorder(new EmptyBorder(0,0,0,0));
 		add(myCheckBox,BorderLayout.CENTER);
 	}
