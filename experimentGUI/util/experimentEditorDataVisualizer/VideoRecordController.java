@@ -13,13 +13,13 @@ import experimentGUI.util.experimentEditorDataVisualizer.Actions.ScrollAction;
 import experimentGUI.util.experimentEditorDataVisualizer.Actions.SearchAction;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 
-public class Controller {
+public class VideoRecordController {
 
 	Action[] actions;
 	int currentAction;
 	CodeViewer codeViewer;
 
-	public Controller(QuestionTreeNode data, CodeViewer codeViewer) {
+	public VideoRecordController(QuestionTreeNode data, CodeViewer codeViewer) {
 		this.actions = extractActions(data);
 		currentAction = -1;
 		

@@ -33,7 +33,7 @@ import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 import experimentGUI.util.questionTreeNode.XMLTreeHandler;
 import java.awt.FlowLayout;
 
-public class Menu extends JFrame {
+public class VideoRecordAlternative extends JFrame {
 
 	private JTextField minutesTextField;
 	private JTextField secondsTextField;
@@ -45,7 +45,7 @@ public class Menu extends JFrame {
 	private JMenuItem openMenuItem;
 	private JMenuItem closeMenuItem;
 
-	private Controller controller;
+	private VideoRecordController controller;
 
 	/**
 	 * Launch the application.
@@ -56,7 +56,7 @@ public class Menu extends JFrame {
 				try {
 					String laf = UIManager.getSystemLookAndFeelClassName();
 					UIManager.setLookAndFeel(laf);
-					Menu frame = new Menu();
+					VideoRecordAlternative frame = new VideoRecordAlternative();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -65,7 +65,7 @@ public class Menu extends JFrame {
 		});
 	}
 
-	public Menu() {
+	public VideoRecordAlternative() {
 		controller = null;
 
 		initializeGUI();
@@ -87,7 +87,7 @@ public class Menu extends JFrame {
 				}
 				if (log != null && log.getType().equals("codeviewer")) {
 					//TODO: codeViewer mit plugins erstellen und übergeben
-					controller = new Controller(log, null);
+					controller = new VideoRecordController(log, null);
 					activate();
 				} else {
 					controller = null;

@@ -33,6 +33,5 @@ public class EditorTabbedPane extends JTabbedPane {
 		this.setTabComponentAt(this.getTabCount() - 1, new ButtonTabComponent(
 				this));
 		myPanel.grabFocus();
-		 //System.out.println(rec.getFileTime());
 	}
 }
