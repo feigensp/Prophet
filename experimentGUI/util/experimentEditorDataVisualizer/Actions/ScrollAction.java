@@ -1,5 +1,8 @@
 package experimentGUI.util.experimentEditorDataVisualizer.Actions;
 
+import experimentGUI.experimentEditor.ExperimentEditor;
+import experimentGUI.plugins.codeViewerPlugin.CodeViewer;
+
 public class ScrollAction implements Action{
 	
 	private String actionCommand;
@@ -13,6 +16,10 @@ public class ScrollAction implements Action{
 		this.startTime = start;
 		this.startLine = startLine;
 		this.endLine = endLine;
+	}
+	
+	public void execute(CodeViewer codeViewer) {
+		
 	}
 
 	public String getActionCommand() {

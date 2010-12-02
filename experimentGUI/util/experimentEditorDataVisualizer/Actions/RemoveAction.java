@@ -1,5 +1,8 @@
 package experimentGUI.util.experimentEditorDataVisualizer.Actions;
 
+import experimentGUI.experimentEditor.ExperimentEditor;
+import experimentGUI.plugins.codeViewerPlugin.CodeViewer;
+
 public class RemoveAction implements Action{
 	
 	private String actionCommand;
@@ -13,6 +16,10 @@ public class RemoveAction implements Action{
 		this.startTime = start;
 		this.offset = offset;
 		this.length = length;
+	}
+	
+	public void execute(CodeViewer codeViewer) {
+		
 	}
 
 	public String getActionCommand() {

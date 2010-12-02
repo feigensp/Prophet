@@ -1,5 +1,8 @@
 package experimentGUI.util.experimentEditorDataVisualizer.Actions;
 
+import experimentGUI.experimentEditor.ExperimentEditor;
+import experimentGUI.plugins.codeViewerPlugin.CodeViewer;
+
 public class SearchAction implements Action{
 	
 	private String actionCommand;
@@ -19,6 +22,10 @@ public class SearchAction implements Action{
 		this.regex = regex;
 		this.caseSensitive = caseSensitive;
 		//this.forward = forward;
+	}
+	
+	public void execute(CodeViewer codeViewer) {
+		
 	}
 
 	public String getActionCommand() {

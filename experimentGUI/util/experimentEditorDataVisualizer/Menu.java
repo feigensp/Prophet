@@ -86,8 +86,8 @@ public class Menu extends JFrame {
 					log = XMLTreeHandler.loadXMLTree(file.getAbsolutePath());
 				}
 				if (log != null && log.getType().equals("codeviewer")) {
-					Vector<Action> actions = extractActions(log);
-					controller = new Controller(actions);
+					//TODO: codeViewer mit plugins erstellen und übergeben
+					controller = new Controller(log, null);
 					activate();
 				} else {
 					controller = null;
@@ -133,52 +133,6 @@ public class Menu extends JFrame {
 
 	}
 
-	private Vector<Action> extractActions(QuestionTreeNode log) {
-		Vector<Action> actionVector = new Vector<Action>();
-		for (int i = 0; i < log.getChildCount(); i++) {
-			QuestionTreeNode fileNode = (QuestionTreeNode) log.getChildAt(i);
-			if (fileNode.getType().equals("file")) {
-				try {
-					long start = Long.parseLong(fileNode.getAttributeValue("start"));
-					long end = Long.parseLong(fileNode.getAttributeValue("end"));
-					String path = fileNode.getAttributeValue("path");
-					actionVector.add(new FileAction("file", start, end, path));
-					for (int j = 0; j < fileNode.getChildCount(); j++) {
-						QuestionTreeNode actionNode = (QuestionTreeNode) fileNode.getChildAt(j);
-						String actionCommand = actionNode.getType();
-						Action act = null;
-						start = Long.parseLong(actionNode.getAttributeValue("time"));
-						if (actionCommand.equals("insert")) {
-							int offset = Integer.parseInt(actionNode.getAttributeValue("offset"));
-							String value = actionNode.getAttributeValue("value");
-							act = new InsertAction("insert", start, path, offset, value);
-						} else if (actionCommand.equals("remove")) {
-							int offset = Integer.parseInt(actionNode.getAttributeValue("offset"));
-							int length = Integer.parseInt(actionNode.getAttributeValue("length"));
-							act = new RemoveAction("remove", start, path, offset, length);
-						} else if (actionCommand.equals("scroll")) {
-							int startLine = Integer.parseInt(actionNode.getAttributeValue("startLine"));
-							int endLine = Integer.parseInt(actionNode.getAttributeValue("endLine"));
-							act = new ScrollAction("scroll", start, path, startLine, endLine);
-						} else if (actionCommand.equals("search")) {
-							String text = actionNode.getAttributeValue("text");
-							int currentPos = Integer.parseInt(actionNode.getAttributeValue("currentPosition"));
-							boolean regex = actionNode.getAttributeValue("regex").equals("true") ? true : false;
-							boolean caseSensitive = actionNode.getAttributeValue("case").equals("true") ? true
-									: false;
-							act = new SearchAction("search", start, path, text, currentPos, regex, caseSensitive);
-						}
-						if (act != null) {
-							actionVector.add(act);
-						}
-					}
-				} catch(NumberFormatException e) {
-					System.out.println("Fehler bei der Datenauswertung der log-Datei");
-				}
-			}
-		}
-		return actionVector;
-	}
 
 	private void activate() {
 		minutesTextField.setEnabled(true);
