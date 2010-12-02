@@ -7,7 +7,7 @@ import java.io.File;
 public class FileEvent extends AWTEvent{
 	public static final int FILE_OPENED = RESERVED_ID_MAX + 1;
 	File file;
-	FileEvent(Object source, int id, File f) {
+	public FileEvent(Object source, int id, File f) {
 		super(source, id);
 		file=f;
 	}

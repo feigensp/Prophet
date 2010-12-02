@@ -19,7 +19,7 @@ import javax.swing.tree.TreeSelectionModel;
 @SuppressWarnings("serial")
 public class FileTree extends JScrollPane {
 	private JTree tree;
-	private File file, fireFile;
+	private File file;
 	private Vector<FileListener> fileListeners;
 
 	public FileTree(File f) {
@@ -33,9 +33,8 @@ public class FileTree extends JScrollPane {
 						&& (selPath != null)
 						&& ((FileTreeNode) selPath.getLastPathComponent())
 								.getFile().isFile()) {
-					fireFile = ((FileTreeNode) selPath.getLastPathComponent())
-							.getFile();
-					fireFileEvent();
+					fireFileEvent(((FileTreeNode) selPath.getLastPathComponent())
+							.getFile());
 				}
 			}
 		});
@@ -58,7 +57,7 @@ public class FileTree extends JScrollPane {
 			fileListeners.removeElement(l);
 	}
 
-	private void fireFileEvent() {
+	public void fireFileEvent(File fireFile) {
 		if (fileListeners == null)
 			return;
 		FileEvent event = new FileEvent(this, FileEvent.FILE_OPENED, fireFile);
