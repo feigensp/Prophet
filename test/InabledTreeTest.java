@@ -49,7 +49,6 @@ public class InabledTreeTest extends JFrame implements ActionListener {
 		contentPane.setLayout(new BorderLayout(0, 0));
 
 		tree = new JTree();
-		tree.setEnabled(false);
 //		renderer = new DefaultTreeCellRenderer();
 //		renderer.setBackground(Color.WHITE);
 //		renderer.setTextSelectionColor(Color.RED);
@@ -64,6 +63,7 @@ public class InabledTreeTest extends JFrame implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		tree.setSelectionPath(tree.getClosestPathForLocation(100, 100));
+		tree.setEnabled(false);
 	}
 
 }

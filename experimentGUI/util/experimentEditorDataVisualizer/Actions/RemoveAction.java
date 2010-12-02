@@ -5,14 +5,13 @@ import experimentGUI.plugins.codeViewerPlugin.CodeViewer;
 
 public class RemoveAction implements Action{
 	
-	private String actionCommand;
+	public static final String ACTION_COMMAND = "RemoveAction";
 	private long startTime;
 	private String path;
 	private int offset;
 	private int length;
 	
-	public RemoveAction(String action, long start, String path, int offset, int length) {
-		this.actionCommand = action;
+	public RemoveAction(long start, String path, int offset, int length) {
 		this.startTime = start;
 		this.offset = offset;
 		this.length = length;
@@ -23,7 +22,7 @@ public class RemoveAction implements Action{
 	}
 
 	public String getActionCommand() {
-		return actionCommand;
+		return ACTION_COMMAND;
 	}
 
 	public long getStartTime() {

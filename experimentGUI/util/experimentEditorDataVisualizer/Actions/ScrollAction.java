@@ -5,14 +5,13 @@ import experimentGUI.plugins.codeViewerPlugin.CodeViewer;
 
 public class ScrollAction implements Action{
 	
-	private String actionCommand;
+	public static final String ACTION_COMMAND = "ScrollAction";
 	private long startTime;
 	private String path;
 	private int startLine;
 	private int endLine;
 	
-	public ScrollAction(String action, long start, String path, int startLine, int endLine) {
-		this.actionCommand = action;
+	public ScrollAction(long start, String path, int startLine, int endLine) {
 		this.startTime = start;
 		this.startLine = startLine;
 		this.endLine = endLine;
@@ -23,7 +22,7 @@ public class ScrollAction implements Action{
 	}
 
 	public String getActionCommand() {
-		return actionCommand;
+		return ACTION_COMMAND;
 	}
 
 	public long getStartTime() {

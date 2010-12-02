@@ -61,7 +61,7 @@ public class VideoRecordController {
 		actions[currentAction].execute(codeViewer);
 	}	
 
-	private Action[] extractActions(QuestionTreeNode data) {
+	public static Action[] extractActions(QuestionTreeNode data) {
 		Vector<Action> actionVector = new Vector<Action>();
 		for (int i = 0; i < data.getChildCount(); i++) {
 			QuestionTreeNode fileNode = (QuestionTreeNode) data.getChildAt(i);
@@ -70,7 +70,7 @@ public class VideoRecordController {
 					long start = Long.parseLong(fileNode.getAttributeValue("start"));
 					long end = Long.parseLong(fileNode.getAttributeValue("end"));
 					String path = fileNode.getAttributeValue("path");
-					actionVector.add(new FileAction("file", start, end, path));
+					actionVector.add(new FileAction(start, end, path));
 					for (int j = 0; j < fileNode.getChildCount(); j++) {
 						QuestionTreeNode actionNode = (QuestionTreeNode) fileNode.getChildAt(j);
 						String actionCommand = actionNode.getType();
@@ -79,22 +79,22 @@ public class VideoRecordController {
 						if (actionCommand.equals("insert")) {
 							int offset = Integer.parseInt(actionNode.getAttributeValue("offset"));
 							String value = actionNode.getAttributeValue("value");
-							act = new InsertAction("insert", start, path, offset, value);
+							act = new InsertAction(start, path, offset, value);
 						} else if (actionCommand.equals("remove")) {
 							int offset = Integer.parseInt(actionNode.getAttributeValue("offset"));
 							int length = Integer.parseInt(actionNode.getAttributeValue("length"));
-							act = new RemoveAction("remove", start, path, offset, length);
+							act = new RemoveAction(start, path, offset, length);
 						} else if (actionCommand.equals("scroll")) {
 							int startLine = Integer.parseInt(actionNode.getAttributeValue("startLine"));
 							int endLine = Integer.parseInt(actionNode.getAttributeValue("endLine"));
-							act = new ScrollAction("scroll", start, path, startLine, endLine);
+							act = new ScrollAction(start, path, startLine, endLine);
 						} else if (actionCommand.equals("search")) {
 							String text = actionNode.getAttributeValue("text");
 							int currentPos = Integer.parseInt(actionNode.getAttributeValue("currentPosition"));
 							boolean regex = actionNode.getAttributeValue("regex").equals("true") ? true : false;
 							boolean caseSensitive = actionNode.getAttributeValue("case").equals("true") ? true
 									: false;
-							act = new SearchAction("search", start, path, text, currentPos, regex, caseSensitive);
+							act = new SearchAction(start, path, text, currentPos, regex, caseSensitive);
 						}
 						if (act != null) {
 							actionVector.add(act);

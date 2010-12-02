@@ -5,14 +5,13 @@ import experimentGUI.plugins.codeViewerPlugin.CodeViewer;
 
 public class InsertAction implements Action{
 	
-	private String actionCommand;
+	public static final String ACTION_COMMAND = "InsertAction";
 	private long startTime;
 	private String path;
 	private int offset;
 	private String value;
 	
-	public InsertAction(String action, long start, String path, int offset, String value) {
-		this.actionCommand = action;
+	public InsertAction(long start, String path, int offset, String value) {
 		this.startTime = start;
 		this.offset = offset;
 		this.value = value;
@@ -23,7 +22,7 @@ public class InsertAction implements Action{
 	}
 
 	public String getActionCommand() {
-		return actionCommand;
+		return ACTION_COMMAND;
 	}
 
 	public long getStartTime() {

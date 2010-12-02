@@ -7,13 +7,12 @@ import experimentGUI.plugins.codeViewerPlugin.fileTree.FileEvent;
 
 public class FileAction implements Action{
 	
-	private String actionCommand;
+	public static final String ACTION_COMMAND = "FileAction";
 	private long startTime;
 	private long endTime;
 	private String path;
 	
-	public FileAction(String action, long start, long end, String path) {
-		this.actionCommand = action;
+	public FileAction(long start, long end, String path) {
 		this.startTime = start;
 		this.endTime = end;
 		this.path = path;
@@ -25,7 +24,7 @@ public class FileAction implements Action{
 	}
 
 	public String getActionCommand() {
-		return actionCommand;
+		return ACTION_COMMAND;
 	}
 
 	public long getStartTime() {

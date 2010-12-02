@@ -5,7 +5,7 @@ import experimentGUI.plugins.codeViewerPlugin.CodeViewer;
 
 public class SearchAction implements Action{
 	
-	private String actionCommand;
+	public static final String ACTION_COMMAND = "SearchAction";
 	private long startTime;
 	private String path;
 	private String text;
@@ -14,8 +14,7 @@ public class SearchAction implements Action{
 	boolean caseSensitive;
 	//boolean forward;
 	
-	public SearchAction(String action, long start, String path, String text, int currentPos, boolean regex, boolean caseSensitive /*, boolean forward*/) {
-		this.actionCommand = action;
+	public SearchAction(long start, String path, String text, int currentPos, boolean regex, boolean caseSensitive /*, boolean forward*/) {
 		this.startTime = start;
 		this.text = text;
 		this.currentPosition = currentPos;
@@ -29,7 +28,7 @@ public class SearchAction implements Action{
 	}
 
 	public String getActionCommand() {
-		return actionCommand;
+		return ACTION_COMMAND;
 	}
 
 	public long getStartTime() {
