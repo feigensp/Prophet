@@ -62,8 +62,8 @@ public class InabledTreeTest extends JFrame implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		tree.setSelectionPath(tree.getClosestPathForLocation(100, 100));
-		tree.setEnabled(false);
+		//tree.setSelectionPath(tree.getClosestPathForLocation(100, 100));
+		tree.setEnabled(!tree.isEnabled());
 	}
 
 }

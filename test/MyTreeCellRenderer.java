@@ -1,8 +1,8 @@
 package test;
 
-import java.awt.Color;
 import java.awt.Component;
 
+import javax.swing.Icon;
 import javax.swing.JLabel;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultTreeCellRenderer;
@@ -15,12 +15,13 @@ public class MyTreeCellRenderer extends DefaultTreeCellRenderer {
 			boolean expanded, boolean leaf, int row, boolean hasFocus1) {
 		// call the normal TreeCellRendererComponent() method
 		super.getTreeCellRendererComponent(tree, value, selected1, expanded, leaf, row, hasFocus1);
-		if(value.toString().equals("blue")) {
-			this.setForeground(Color.red);
-		}
-		System.out.println("" + (i++) + tree.getPathForRow(row));
+		setEnabled(true);
+		setIcon(null);
+//		if(value.toString().equals("blue")) {
+//			this.setForeground(Color.red);
+//		}
+//		System.out.println("" + (i++) + tree.getPathForRow(row));
 		// enable set Component to draw it normally
-		this.setEnabled(true);
 		return this;
 	}
 }
