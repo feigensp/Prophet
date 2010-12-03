@@ -26,13 +26,6 @@ import org.xml.sax.SAXException;
 
 
 public class LoggingTreeXMLHandler {
-	private final static String ATTRIBUTE_NAME = "name";
-	private final static String ATTRIBUTE_VALUE = "value";
-	private final static String ATTRIBUTE_TIME = "time";
-	private final static String TYPE_ATTRIBUTES = "attributes";
-	private final static String TYPE_ANSWERS = "answers";
-	private final static String TYPE_ANSWER = "answer";
-	private final static String TYPE_CHILDREN = "children";
 
 	/**
 	 * method which adds recursively the childs (to an xml file)
