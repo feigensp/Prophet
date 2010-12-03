@@ -23,12 +23,6 @@ import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
-import experimentGUI.util.experimentEditorDataVisualizer.Actions.Action;
-import experimentGUI.util.experimentEditorDataVisualizer.Actions.FileAction;
-import experimentGUI.util.experimentEditorDataVisualizer.Actions.InsertAction;
-import experimentGUI.util.experimentEditorDataVisualizer.Actions.RemoveAction;
-import experimentGUI.util.experimentEditorDataVisualizer.Actions.ScrollAction;
-import experimentGUI.util.experimentEditorDataVisualizer.Actions.SearchAction;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 import experimentGUI.util.questionTreeNode.QuestionTreeXMLHandler;
 import java.awt.FlowLayout;
@@ -97,7 +91,7 @@ public class VideoRecordAlternative extends JFrame {
 		});
 		backwardButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				controller.lastAction();
+//				controller.lastAction();
 			}
 		});
 		forwardButton.addActionListener(new ActionListener() {
@@ -107,22 +101,22 @@ public class VideoRecordAlternative extends JFrame {
 		});
 		jumpToTimeButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				try {
-					long millis = Long.parseLong(secondsTextField.getText()) * 1000;
-					millis += Long.parseLong(minutesTextField.getText()) * 60 * 1000;
-					controller.jumpToTime(millis);
-				} catch(NumberFormatException e) {
-					//TODO: Meldung ausgeben					
-				}
+//				try {
+//					long millis = Long.parseLong(secondsTextField.getText()) * 1000;
+//					millis += Long.parseLong(minutesTextField.getText()) * 60 * 1000;
+//					controller.jumpToTime(millis);
+//				} catch(NumberFormatException e) {
+//					//TODO: Meldung ausgeben					
+//				}
 			}
 		});
 		jumpToActionButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				try {
-					controller.jumpToAction(Integer.parseInt(actionIndexTextField.getText()));
-				} catch(NumberFormatException e) {
-					//TODO: Meldung ausgeben
-				}
+//				try {
+//					controller.jumpToAction(Integer.parseInt(actionIndexTextField.getText()));
+//				} catch(NumberFormatException e) {
+//					//TODO: Meldung ausgeben
+//				}
 			}
 		});
 		closeMenuItem.addActionListener(new ActionListener() {

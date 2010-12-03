@@ -24,7 +24,7 @@ public class CodeViewer extends JFrame implements FileListener {
 	
 	private JMenuBar menuBar;
 	private JSplitPane splitPane;
-	FileTree myTree;
+	private FileTree myTree;
 	private EditorTabbedPane tabbedPane;
 
 	/**
@@ -86,7 +86,7 @@ public class CodeViewer extends JFrame implements FileListener {
 		return splitPane;
 	}
 
-	public FileTree getMyTree() {
+	public FileTree getFileTree() {
 		return myTree;
 	}
 

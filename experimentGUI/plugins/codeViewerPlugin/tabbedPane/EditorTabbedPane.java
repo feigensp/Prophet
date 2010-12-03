@@ -34,4 +34,26 @@ public class EditorTabbedPane extends JTabbedPane {
 				this));
 		myPanel.grabFocus();
 	}
+	
+	public void removeFile(File file) {
+		for (int i = 0; i < getTabCount(); i++) {
+			Component myComp = getComponentAt(i);
+			if ((myComp instanceof EditorPanel)
+					&& ((EditorPanel) myComp).getFile().equals(file)) {
+				this.remove(i);
+				return;
+			}
+		}
+	}
+	
+	public EditorPanel getEditorPanel(File file) {
+		for (int i = 0; i < getTabCount(); i++) {
+			Component myComp = getComponentAt(i);
+			if ((myComp instanceof EditorPanel)
+					&& ((EditorPanel) myComp).getFile().equals(file)) {
+				return (EditorPanel) myComp;
+			}
+		}		
+		return null;
+	}
 }
