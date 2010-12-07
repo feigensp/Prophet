@@ -69,7 +69,7 @@ public class ExperimentViewer extends JFrame {
 				plugin.experimentViewerRun(this);
 			}	
 			textPane.start();
-			pack();		
+			this.setSize(800, 600);	
 		} else {
 			System.out.println("Fehler beim laden des Fragebogens.");
 		}
