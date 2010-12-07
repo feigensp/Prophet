@@ -8,20 +8,22 @@ import javax.swing.JFileChooser;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 import experimentGUI.util.questionTreeNode.QuestionTreeXMLHandler;
 
-
 @SuppressWarnings("serial")
 public class ExperimentEditorMenuBar extends JMenuBar {
 	private ExperimentEditor questionEditor;
-	
-	public ExperimentEditorMenuBar(ExperimentEditor qE) {		
-		questionEditor=qE;
+	private File currentFile;
+
+	public ExperimentEditorMenuBar(ExperimentEditor qE) {
+		questionEditor = qE;
+		currentFile = null;
 		JMenu fileMenu = new JMenu("Datei");
 		add(fileMenu);
-		
+
 		JMenuItem newMenuItem = new JMenuItem("Neu");
 		fileMenu.add(newMenuItem);
 		newMenuItem.addActionListener(new ActionListener() {
@@ -29,15 +31,16 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 				questionEditor.newTree();
 			}
 		});
-		
+
 		JMenuItem loadMenuItem = new JMenuItem("Laden");
 		fileMenu.add(loadMenuItem);
 		loadMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				JFileChooser fc = new JFileChooser();
 				if (fc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-					File file = fc.getSelectedFile();
-					QuestionTreeNode newRoot = QuestionTreeXMLHandler.loadXMLTree(file.getAbsolutePath());
+					currentFile = fc.getSelectedFile();
+					QuestionTreeNode newRoot = QuestionTreeXMLHandler.loadXMLTree(currentFile
+							.getAbsolutePath());
 					questionEditor.loadTree(newRoot);
 				}
 			}
@@ -47,10 +50,31 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 		fileMenu.add(saveMenuItem);
 		saveMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				if (currentFile != null) {
+					QuestionTreeXMLHandler.saveXMLTree(questionEditor.getTree().getRoot(),
+							currentFile.getAbsolutePath());
+				}
+			}
+		});
+
+		JMenuItem saveAsMenuItem = new JMenuItem("Speichern unter");
+		fileMenu.add(saveAsMenuItem);
+		saveAsMenuItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
 				JFileChooser fc = new JFileChooser();
 				if (fc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
 					File file = fc.getSelectedFile();
-					QuestionTreeXMLHandler.saveXMLTree(questionEditor.getTree().getRoot(), file.getAbsolutePath());
+					if (file.exists()) {
+						int n = JOptionPane.showConfirmDialog(null, "Wollen sie " + file.getName()
+								+ " ersetzen?", "Ersetzen?", JOptionPane.YES_NO_OPTION);
+						if (n == JOptionPane.YES_OPTION) {
+							QuestionTreeXMLHandler.saveXMLTree(questionEditor.getTree().getRoot(),
+									file.getAbsolutePath());
+						}
+					} else {
+						QuestionTreeXMLHandler.saveXMLTree(questionEditor.getTree().getRoot(),
+								file.getAbsolutePath());
+					}
 				}
 			}
 		});
