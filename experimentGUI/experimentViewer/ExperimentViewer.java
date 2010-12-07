@@ -20,6 +20,8 @@ import experimentGUI.util.questionTreeNode.QuestionTreeXMLHandler;
 public class ExperimentViewer extends JFrame {
 	QuestionTreeNode tree;
 	JPanel contentPane;
+	
+	public static final String CONF_FILE_PATH = "questionnaire.conf";
 
 	/**
 	 * Launch the application.
@@ -43,7 +45,7 @@ public class ExperimentViewer extends JFrame {
 		FileReader fr;
 		String questionnairePath = null;
 		try {
-			fr = new FileReader("questionnairePath.txt");
+			fr = new FileReader(CONF_FILE_PATH);
 		    BufferedReader br = new BufferedReader(fr);
 		    questionnairePath  = br.readLine();
 		} catch (FileNotFoundException e) {
