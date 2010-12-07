@@ -5,7 +5,7 @@ import java.awt.event.KeyEvent;
 
 
 public class SearchBarListener extends KeyAdapter {
-	SearchBar searchBar;
+	private SearchBar searchBar;
 	
 	public SearchBarListener(SearchBar searchBar) {
 		this.searchBar=searchBar;

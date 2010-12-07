@@ -6,8 +6,8 @@ package experimentGUI.util.macroEditor;
  *
  */
 public class StringTuple {
-	String key;
-	String value;
+	private String key;
+	private String value;
 	
 	/**
 	 * Konstruktor which initialises the key and the value of the tupel with an empty string

@@ -12,7 +12,7 @@ import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 
 public class EditabilityPlugin implements CodeViewerPluginInterface {
 	public final static String KEY = "editable";
-	boolean editable;
+	private boolean editable;
 	
 	@Override
 	public SettingsComponentDescription getSettingsComponentDescription() {

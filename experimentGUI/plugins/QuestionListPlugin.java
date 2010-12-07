@@ -14,7 +14,7 @@ import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 public class QuestionListPlugin implements PluginInterface {
 	public final static String KEY = "questionlist";
 
-	QuestionList overview;
+	private QuestionList overview;
 
 	@Override
 	public SettingsComponentDescription getSettingsComponentDescription(

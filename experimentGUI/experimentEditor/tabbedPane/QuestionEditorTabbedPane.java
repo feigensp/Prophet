@@ -13,8 +13,8 @@ import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 
 @SuppressWarnings("serial")
 public class QuestionEditorTabbedPane extends JPanel {
-	QuestionTreeNode selected;
-	JTabbedPane myTabbedPane;
+	private QuestionTreeNode selected;
+	private JTabbedPane myTabbedPane;
 	
 	public QuestionEditorTabbedPane() {
 		setLayout(new BorderLayout());

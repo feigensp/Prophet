@@ -9,11 +9,11 @@ import javax.swing.tree.TreeNode;
 
 
 public class FileTreeNode implements TreeNode {	
-	File file;
-	FileTreeNode parent;
-	boolean isFile, extended;
-	int childCount;
-	Vector<FileTreeNode> children;
+	private File file;
+	private FileTreeNode parent;
+	private boolean isFile, extended;
+	private int childCount;
+	private Vector<FileTreeNode> children;
 	
 	public FileTreeNode(File f, FileTreeNode p) {
 		file = f;

@@ -28,17 +28,17 @@ public class RecorderPlugin implements CodeViewerPluginInterface,ChangeListener 
 	public final static String TYPE_CLOSED = "closed";
 	public final static String TYPE_VIEWERCLOSED = "viewerclosed";	
 	
-	boolean enabled;
-	String filename;
+	private boolean enabled;
+	private String filename;
 	
-	LoggingTreeNode rootNode;
-	LoggingTreeNode currentNode;
+	private LoggingTreeNode rootNode;
+	private LoggingTreeNode currentNode;
 	
-	CodeViewer codeViewer;
-	EditorTabbedPane tabbedPane;
-	EditorPanel currentTab;
+	private CodeViewer codeViewer;
+	private EditorTabbedPane tabbedPane;
+	private EditorPanel currentTab;
 	
-	HashSet<Component> openTabs;
+	private HashSet<Component> openTabs;
 
 	@Override
 	public SettingsComponentDescription getSettingsComponentDescription() {

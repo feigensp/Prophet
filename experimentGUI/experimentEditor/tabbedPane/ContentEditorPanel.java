@@ -23,8 +23,8 @@ public class ContentEditorPanel extends ExperimentEditorTab {
 	private ContentEditorToolBar toolBar;
 	private SearchBar searchBar;
 	private HashMap<QuestionTreeNode,RSyntaxTextArea> editAreas = new HashMap<QuestionTreeNode,RSyntaxTextArea>();
-	RSyntaxTextArea editArea;
-	RTextScrollPane scrollPane;
+	private RSyntaxTextArea editArea;
+	private RTextScrollPane scrollPane;
 	private QuestionTreeNode selected;
 	
 	private DocumentListener myDocumentListener = new DocumentListener() {

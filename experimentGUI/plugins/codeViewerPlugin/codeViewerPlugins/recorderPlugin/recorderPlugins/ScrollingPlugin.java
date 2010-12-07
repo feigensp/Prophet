@@ -12,7 +12,9 @@ import javax.swing.text.BadLocationException;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
 import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.SettingsComponentDescription;
+import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.SettingsPluginComponentDescription;
 import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.settingsComponents.SettingsCheckBox;
+import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.settingsComponents.SettingsTextField;
 import experimentGUI.plugins.codeViewerPlugin.CodeViewer;
 import experimentGUI.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin.RecorderPluginInterface;
 import experimentGUI.plugins.codeViewerPlugin.tabbedPane.EditorPanel;
@@ -21,24 +23,31 @@ import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 
 public class ScrollingPlugin implements RecorderPluginInterface {
 	public final static String KEY = "scrolling";
+	public final static String KEY_JOIN = "join";
+	public final static String KEY_JOIN_TIME = "jointime";
 	
 	public final static String TYPE_SCROLLING = "scrolling";
 	public final static String ATTRIBUTE_STARTLINE = "startline";
 	public final static String ATTRIBUTE_ENDLINE = "endline";
 	
-	boolean enabled;
-	int lastStartLine;
-	int lastEndLine;
+	private boolean enabled;
+	private boolean join;
+	private long joinTime;
 
-	LoggingTreeNode currentNode;
-	JViewport currentViewPort;
-	RSyntaxTextArea currentTextArea;
+	private LoggingTreeNode currentNode;
+	private JViewport currentViewPort;
+	private RSyntaxTextArea currentTextArea;
 	
-	ChangeListener myListener;
+	private ChangeListener myListener;
 
 	@Override
 	public SettingsComponentDescription getSettingsComponentDescription() {
-		return new SettingsComponentDescription(SettingsCheckBox.class, KEY, "Scrollverhalten");
+		SettingsPluginComponentDescription resultDesc = new SettingsPluginComponentDescription(KEY, "Scrollverhalten");
+		SettingsPluginComponentDescription joinDesc = new SettingsPluginComponentDescription(KEY_JOIN, "Scrollvorgänge zusammenfassen");
+		SettingsComponentDescription joinTimeDesc = new SettingsComponentDescription(SettingsTextField.class,KEY_JOIN_TIME, "Grenzzeit (ms, z.B. 1000)");
+		joinDesc.addSubComponent(joinTimeDesc);
+		resultDesc.addSubComponent(joinDesc);
+		return resultDesc;
 	}
 
 	@Override
@@ -46,11 +55,20 @@ public class ScrollingPlugin implements RecorderPluginInterface {
 			LoggingTreeNode newNode) {
 		enabled = Boolean.parseBoolean(selected.getAttributeValue(KEY));
 		if (enabled) {
+			join = Boolean.parseBoolean(selected.getAttribute(KEY).getAttributeValue(KEY_JOIN));
+			if (join) {
+				try {
+					joinTime = Long.parseLong(selected.getAttribute(KEY).getAttribute(KEY_JOIN).getAttributeValue(KEY_JOIN_TIME));
+				} catch (Exception e) {
+					joinTime=0;
+				}
+				if (joinTime==0) {
+					join=false;
+				}
+			}
 			currentNode = null;
 			currentViewPort=null;
 			currentTextArea=null;
-			lastStartLine=-1;
-			lastEndLine=-1;
 			myListener = new ChangeListener() {
 
 				@Override
@@ -60,26 +78,45 @@ public class ScrollingPlugin implements RecorderPluginInterface {
 					int x = Math.min(currentTextArea.getWidth(), topLeft.x+rect.width);
 					int y = Math.min(currentTextArea.getHeight(), topLeft.y+rect.height);
 					Point bottomRight = new Point(x,y);
-					int startLine = -1;
-					int endLine = -1;
+					int startLine;
+					int endLine;
 					int startOffset = currentTextArea.viewToModel(topLeft);
 					int endOffset = currentTextArea.viewToModel(bottomRight);
-					if (startOffset!=-1 && endOffset!=-1) {
-						try {
-							startLine = currentTextArea.getLineOfOffset(startOffset);
-							endLine = currentTextArea.getLineOfOffset(endOffset);
-						} catch (BadLocationException e) {
-							e.printStackTrace();
+					try {
+						startLine = currentTextArea.getLineOfOffset(startOffset)+1;
+						endLine = currentTextArea.getLineOfOffset(endOffset)+1;
+					} catch (BadLocationException e) {
+						e.printStackTrace();
+						startLine=-1;
+						endLine=-1;
+					}
+					if (currentNode.getChildCount()>0) {
+						LoggingTreeNode lastNode = (LoggingTreeNode)currentNode.getLastChild();
+						boolean wasScrolling = lastNode.getType().equals(TYPE_SCROLLING);
+						if (wasScrolling) {
+							if (join) {
+								//Knoten zusammenführen?
+								long timeDiff = System.currentTimeMillis()-Long.parseLong(lastNode.getAttribute(LoggingTreeNode.ATTRIBUTE_TIME));
+								if (timeDiff<joinTime) {
+									lastNode.setAttribute(ATTRIBUTE_STARTLINE, ""+startLine);
+									lastNode.setAttribute(ATTRIBUTE_ENDLINE, ""+endLine);
+									lastNode.setAttribute(LoggingTreeNode.ATTRIBUTE_TIME, ""+System.currentTimeMillis());
+									return;
+								}
+							}
+							//Wenn Zeilen nicht geändert wurden: nichts machen
+							int lastStartLine = Integer.parseInt(lastNode.getAttribute(ATTRIBUTE_STARTLINE));
+							int lastEndLine = Integer.parseInt(lastNode.getAttribute(ATTRIBUTE_ENDLINE));
+							if (startLine==lastStartLine && endLine==lastEndLine) {
+								return;
+							}
 						}
 					}
-					if (startLine!=lastStartLine || endLine!=lastEndLine) {
-						lastStartLine=startLine;
-						lastEndLine=endLine;
-						LoggingTreeNode node = new LoggingTreeNode(TYPE_SCROLLING);
-						node.setAttribute(ATTRIBUTE_STARTLINE, ""+startLine);
-						node.setAttribute(ATTRIBUTE_ENDLINE, ""+endLine);
-						currentNode.add(node);
-					}
+					//nichts zu joinen, neue Zeilen: log!
+					LoggingTreeNode node = new LoggingTreeNode(TYPE_SCROLLING);
+					node.setAttribute(ATTRIBUTE_STARTLINE, ""+startLine);
+					node.setAttribute(ATTRIBUTE_ENDLINE, ""+endLine);
+					currentNode.add(node);
 				}				
 			};
 		}

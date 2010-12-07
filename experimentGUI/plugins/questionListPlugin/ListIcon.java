@@ -13,7 +13,7 @@ public class ListIcon implements Icon {
 	public static final int UPDOWNARROW = 1;
 	private int type;
 
-	ListIcon(int type) {
+	public ListIcon(int type) {
 		this.type = type;
 	}
 

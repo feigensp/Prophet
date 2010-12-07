@@ -16,7 +16,7 @@ import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 public class SyntaxHighlightingPlugin implements CodeViewerPluginInterface {
 	public final static String KEY = "syntaxhighlighting";
 	private HashMap<String,String> extensionMap;
-	boolean enabled;
+	private boolean enabled;
 	
 	@Override
 	public SettingsComponentDescription getSettingsComponentDescription() {

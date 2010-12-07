@@ -15,9 +15,9 @@ import javax.swing.border.BevelBorder;
 
 @SuppressWarnings("serial")
 public class SettingsPluginComponent extends SettingsComponent {
-	Vector<SettingsComponent> subSettingsComponents = new Vector<SettingsComponent>();
-	JPanel optionPanel;
-	JCheckBox activatedCheckBox;
+	private Vector<SettingsComponent> subSettingsComponents = new Vector<SettingsComponent>();
+	private JPanel optionPanel;
+	private JCheckBox activatedCheckBox;
 
 	public SettingsPluginComponent() {
 		setLayout(new BorderLayout());		

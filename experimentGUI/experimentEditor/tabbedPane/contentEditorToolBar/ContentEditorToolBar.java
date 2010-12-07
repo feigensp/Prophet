@@ -9,7 +9,7 @@ import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
 @SuppressWarnings("serial")
 public class ContentEditorToolBar extends JToolBar {
-	RSyntaxTextArea editArea;
+	private RSyntaxTextArea editArea;
 	
 	public ContentEditorToolBar(RSyntaxTextArea ea) {
 		editArea = ea;

@@ -11,7 +11,7 @@ import experimentGUI.plugins.codeViewerPlugin.tabbedPane.EditorPanel;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 
 public class LineNumbersPlugin implements CodeViewerPluginInterface {
-	QuestionTreeNode selected;
+	private QuestionTreeNode selected;
 	
 	@Override
 	public SettingsComponentDescription getSettingsComponentDescription() {

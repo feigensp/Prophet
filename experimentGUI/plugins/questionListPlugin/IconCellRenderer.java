@@ -15,7 +15,7 @@ class IconCellRenderer extends JLabel implements ListCellRenderer {
 	private JList listBox;
 	private int iconType;
 
-	IconCellRenderer(JList listBox, int iconType) {
+	public IconCellRenderer(JList listBox, int iconType) {
 		setOpaque(true);
 		this.listBox = listBox;
 		this.iconType = iconType;

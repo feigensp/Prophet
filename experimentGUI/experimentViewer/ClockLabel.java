@@ -18,13 +18,13 @@ import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 public class ClockLabel extends JLabel implements Runnable {
 
 	private long startTime=0;
-	boolean isStarted=false;
-	boolean isRunning=false;
-	boolean isStopped=false;
+	private boolean isStarted=false;
+	private boolean isRunning=false;
+	private boolean isStopped=false;
 	private long currentTime=0;
 	private String caption;
 	private Thread myThread;
-	QuestionTreeNode questionNode = null;
+	private QuestionTreeNode questionNode = null;
 
 	public ClockLabel(QuestionTreeNode questionNode, String caption) {
 		this.questionNode = questionNode;

@@ -24,7 +24,7 @@ public class MacroBox extends JComboBox {
 
 	private ArrayList<String> macros;
 
-	RSyntaxTextArea textPane;
+	private RSyntaxTextArea textPane;
 
 	public MacroBox(RSyntaxTextArea textP) {
 		macros = new ArrayList<String>();

@@ -10,7 +10,7 @@ import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 
 @SuppressWarnings("serial")
 public class EditorTabbedPane extends JTabbedPane {
-	QuestionTreeNode selected;
+	private QuestionTreeNode selected;
 	
 	public EditorTabbedPane(QuestionTreeNode selected) {
 		super(JTabbedPane.TOP);

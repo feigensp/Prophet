@@ -11,11 +11,12 @@ import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 public class SearchedPlugin implements RecorderPluginInterface{
 	public final static String KEY = "search";
 	
-	boolean enabled;
+	private boolean enabled;
 
 	@Override
 	public SettingsComponentDescription getSettingsComponentDescription() {
-		return new SettingsComponentDescription(SettingsCheckBox.class, KEY, "Suchanfragen");
+		//return new SettingsComponentDescription(SettingsCheckBox.class, KEY, "Suchanfragen");
+		return null;
 	}
 
 	@Override

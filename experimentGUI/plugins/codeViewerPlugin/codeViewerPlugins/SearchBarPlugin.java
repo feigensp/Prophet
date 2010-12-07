@@ -17,7 +17,7 @@ import experimentGUI.util.searchBar.SearchBarListener;
 
 public class SearchBarPlugin implements CodeViewerPluginInterface {
 	public final static String KEY = "searchable";
-	boolean enabled;
+	private boolean enabled;
 	
 	@Override
 	public SettingsComponentDescription getSettingsComponentDescription() {

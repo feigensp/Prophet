@@ -7,7 +7,7 @@ public class SettingsComponentDescription {
 	private Class<? extends SettingsComponent> myClass;
 	private String key;
 	private String caption;
-	SettingsComponentDescription next;
+	private SettingsComponentDescription next;
 
 	public SettingsComponentDescription(Class<? extends SettingsComponent> myClass, String key, String caption) {
 		this.myClass=myClass;

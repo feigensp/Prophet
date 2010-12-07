@@ -24,14 +24,14 @@ public class ChangePlugin implements RecorderPluginInterface {
 	public final static String ATTRIBUTE_LENGTH = "length";
 	public final static String ATTRIBUTE_CONTENT = "content";
 	
-	boolean enabled;
-	boolean join;
-	long joinTime;
+	private boolean enabled;
+	private boolean join;
+	private long joinTime;
 
-	LoggingTreeNode currentNode;
-	Document currentDocument;
+	private LoggingTreeNode currentNode;
+	private Document currentDocument;
 	
-	DocumentListener myListener;
+	private DocumentListener myListener;
 
 	@Override
 	public SettingsComponentDescription getSettingsComponentDescription() {
@@ -77,22 +77,20 @@ public class ChangePlugin implements RecorderPluginInterface {
 					} catch (BadLocationException e) {
 						e.printStackTrace();
 					}
-					if (join) {
+					if (join && currentNode.getChildCount()>0) {
+						//Knoten zusammenführen?
 						LoggingTreeNode lastNode = (LoggingTreeNode)currentNode.getLastChild();
-						if (lastNode!=null) {
-							//Knoten zusammenführen?
-							boolean wasInsert = lastNode.getType().equals(TYPE_INSERT);
-							if (wasInsert) {
-								long timeDiff = System.currentTimeMillis()-Long.parseLong(lastNode.getAttribute(LoggingTreeNode.ATTRIBUTE_TIME));
-								int lastEndOffset = Integer.parseInt(lastNode.getAttribute(ATTRIBUTE_OFFSET))+Integer.parseInt(lastNode.getAttribute(ATTRIBUTE_LENGTH));
-								if (timeDiff<joinTime && lastEndOffset==offset) {
-									int newLength=Integer.parseInt(lastNode.getAttribute(ATTRIBUTE_LENGTH))+length;
-									String newContent = lastNode.getAttribute(ATTRIBUTE_CONTENT)+content;
-									lastNode.setAttribute(ATTRIBUTE_LENGTH, ""+newLength);
-									lastNode.setAttribute(ATTRIBUTE_CONTENT, newContent);
-									lastNode.setAttribute(LoggingTreeNode.ATTRIBUTE_TIME, ""+System.currentTimeMillis());
-									return;
-								}		
+						boolean wasInsert = lastNode.getType().equals(TYPE_INSERT);
+						if (wasInsert) {
+							long timeDiff = System.currentTimeMillis()-Long.parseLong(lastNode.getAttribute(LoggingTreeNode.ATTRIBUTE_TIME));
+							int lastEndOffset = Integer.parseInt(lastNode.getAttribute(ATTRIBUTE_OFFSET))+Integer.parseInt(lastNode.getAttribute(ATTRIBUTE_LENGTH));
+							if (timeDiff<joinTime && lastEndOffset==offset) {
+								int newLength=Integer.parseInt(lastNode.getAttribute(ATTRIBUTE_LENGTH))+length;
+								String newContent = lastNode.getAttribute(ATTRIBUTE_CONTENT)+content;
+								lastNode.setAttribute(ATTRIBUTE_LENGTH, ""+newLength);
+								lastNode.setAttribute(ATTRIBUTE_CONTENT, newContent);
+								lastNode.setAttribute(LoggingTreeNode.ATTRIBUTE_TIME, ""+System.currentTimeMillis());
+								return;	
 							}
 						}
 					}
@@ -107,27 +105,23 @@ public class ChangePlugin implements RecorderPluginInterface {
 				public void removeUpdate(DocumentEvent arg0) {
 					int offset = arg0.getOffset();
 					int length = arg0.getLength();
-					if (join) {
+					if (join && currentNode.getChildCount()>0) {
+						//Knoten zusammenführen?
 						LoggingTreeNode lastNode = (LoggingTreeNode)currentNode.getLastChild();
-						if (lastNode!=null) {
-							System.out.println("lastNode!=null");
-							//Knoten zusammenführen?
-							boolean wasRemove = lastNode.getType().equals(TYPE_REMOVE);
-							if (wasRemove) {
-								System.out.println("was remove");
-								long timeDiff = System.currentTimeMillis()-Long.parseLong(lastNode.getAttribute(LoggingTreeNode.ATTRIBUTE_TIME));
-								int lastOffset = Integer.parseInt(lastNode.getAttribute(ATTRIBUTE_OFFSET));
-								int lastLength = Integer.parseInt(lastNode.getAttribute(ATTRIBUTE_LENGTH));
-								boolean wasBackspace = offset+length==lastOffset;
-								boolean wasDelete = lastOffset==offset;
-								System.out.println(wasBackspace ? "wasBackspace" : wasDelete ? "wasDelete" : "was gar nix");
-								if (timeDiff<joinTime && (wasBackspace || wasDelete)) {
-									int newLength=lastLength+length;
-									lastNode.setAttribute(ATTRIBUTE_OFFSET, ""+offset);
-									lastNode.setAttribute(ATTRIBUTE_LENGTH, ""+newLength);
-									lastNode.setAttribute(LoggingTreeNode.ATTRIBUTE_TIME, ""+System.currentTimeMillis());
-									return;
-								}
+						boolean wasRemove = lastNode.getType().equals(TYPE_REMOVE);
+						if (wasRemove) {
+							System.out.println("was remove");
+							long timeDiff = System.currentTimeMillis()-Long.parseLong(lastNode.getAttribute(LoggingTreeNode.ATTRIBUTE_TIME));
+							int lastOffset = Integer.parseInt(lastNode.getAttribute(ATTRIBUTE_OFFSET));
+							int lastLength = Integer.parseInt(lastNode.getAttribute(ATTRIBUTE_LENGTH));
+							boolean wasBackspace = offset+length==lastOffset;
+							boolean wasDelete = lastOffset==offset;
+							if (timeDiff<joinTime && (wasBackspace || wasDelete)) {
+								int newLength=lastLength+length;
+								lastNode.setAttribute(ATTRIBUTE_OFFSET, ""+offset);
+								lastNode.setAttribute(ATTRIBUTE_LENGTH, ""+newLength);
+								lastNode.setAttribute(LoggingTreeNode.ATTRIBUTE_TIME, ""+System.currentTimeMillis());
+								return;
 							}
 						}
 					}

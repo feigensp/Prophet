@@ -23,7 +23,7 @@ import experimentGUI.util.questionTreeNode.QuestionTreeXMLHandler;
  * 
  */
 public class HTMLFileView extends JPanel {
-	QuestionTreeNode experimentTree;
+	private QuestionTreeNode experimentTree;
 	//the textpanes (one is one question)
 	private HashMap<QuestionTreeNode,QuestionViewPane> textPanes;
 	//time objects
@@ -31,8 +31,8 @@ public class HTMLFileView extends JPanel {
 	private HashMap<QuestionTreeNode,ClockLabel> times;
 	private ClockLabel totalTime;
 	//nodes of the question tree
-	QuestionTreeNode rootNode;
-	QuestionTreeNode currentNode;
+	private QuestionTreeNode rootNode;
+	private QuestionTreeNode currentNode;
 	
 	ActionListener myActionListener = new ActionListener() {
 		public void actionPerformed(ActionEvent arg0) {

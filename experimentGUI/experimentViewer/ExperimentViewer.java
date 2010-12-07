@@ -18,8 +18,8 @@ import experimentGUI.util.questionTreeNode.QuestionTreeXMLHandler;
 
 
 public class ExperimentViewer extends JFrame {
-	QuestionTreeNode tree;
-	JPanel contentPane;
+	private QuestionTreeNode tree;
+	private JPanel contentPane;
 	
 	public static final String CONF_FILE_PATH = "questionnaire.conf";
 
@@ -50,10 +50,10 @@ public class ExperimentViewer extends JFrame {
 		    questionnairePath  = br.readLine();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
-			System.out.println("questionnairePath.txt nicht gefunden");
+			System.out.println(CONF_FILE_PATH+" nicht gefunden");
 		} catch (IOException e) {
 			e.printStackTrace();
-			System.out.println("Fehler beim lesen von questionnairePath.txt");
+			System.out.println("Fehler beim lesen von "+CONF_FILE_PATH);
 		}
 
 		if(questionnairePath != null) {	

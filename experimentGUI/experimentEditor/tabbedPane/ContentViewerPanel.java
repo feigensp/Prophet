@@ -10,8 +10,8 @@ public class ContentViewerPanel extends ExperimentEditorTab {
 	public static final String HTMLSTART = "<html><body>";
 	public static final String HTMLEND = "</body></html>";
 	
-	QuestionTreeNode selected;
-	QuestionViewPane viewerPane;
+	private QuestionTreeNode selected;
+	private QuestionViewPane viewerPane;
 	
 	public ContentViewerPanel() {
 		setLayout(new BorderLayout());

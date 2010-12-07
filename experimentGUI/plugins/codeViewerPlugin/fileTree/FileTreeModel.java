@@ -8,7 +8,7 @@ import javax.swing.tree.TreePath;
 
 
 public class FileTreeModel implements TreeModel {
-	FileTreeNode root;
+	private FileTreeNode root;
 	
 	public FileTreeModel(File file) {
 		 root = new FileTreeNode(file, null);

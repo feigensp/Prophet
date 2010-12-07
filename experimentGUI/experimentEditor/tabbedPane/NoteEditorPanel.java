@@ -14,8 +14,8 @@ import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 @SuppressWarnings("serial")
 public class NoteEditorPanel extends ExperimentEditorTab {
 	private HashMap<QuestionTreeNode,RSyntaxTextArea> editAreas = new HashMap<QuestionTreeNode,RSyntaxTextArea>();
-	RSyntaxTextArea editArea;
-	RTextScrollPane scrollPane;
+	private RSyntaxTextArea editArea;
+	private RTextScrollPane scrollPane;
 	private QuestionTreeNode selected;
 	
 	private DocumentListener myDocumentListener = new DocumentListener() {
