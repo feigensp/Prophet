@@ -125,6 +125,7 @@ public class QuestionViewPane extends JScrollPane {
 	 */
 	private String saveAnswers(String data) {
 		StringTokenizer st = new StringTokenizer(data, "&");
+		String result = null;
 		while (st.hasMoreTokens()) {
 			String token = st.nextToken();
 			String key = null;
@@ -137,14 +138,14 @@ public class QuestionViewPane extends JScrollPane {
 								token.length()), "ISO-8859-1");
 			} catch (UnsupportedEncodingException ex) {
 				ex.printStackTrace();
-			}
+			}			
 			if (key.equals(MODE_FORWARD) || key.equals(MODE_BACKWARD)) {
-				return key;
+				result=key;
 			} else {
 				questionNode.setAnswer(key, value);
 			}
 		}
-		return null;
+		return result;
 	}
 	private boolean hasActiveNextNode(QuestionTreeNode node) {
 		boolean inactive;
