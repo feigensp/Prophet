@@ -7,105 +7,60 @@ import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import experimentGUI.plugins.codeViewerPlugin.CodeViewer;
 import experimentGUI.plugins.codeViewerPlugin.fileTree.FileTree;
 import experimentGUI.plugins.codeViewerPlugin.tabbedPane.EditorTabbedPane;
+import experimentGUI.util.loggingTreeNode.LoggingTreeNode;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 
 public class VideoRecordController {
 
-	QuestionTreeNode data;
-	int currentFile;
-	int currentAction;
-	long maxAction;
-	long startTime;
-	long currentTime;
-	long maxTime;
-	FileTree fileTree;
-	EditorTabbedPane tabbedPane;
+	private LoggingTreeNode data;
+	private int currentFile;
+	private int currentAction;
+	private int totalActionNumber;
+	private FileTree fileTree;
+	private EditorTabbedPane tabbedPane;
 
-	public VideoRecordController(QuestionTreeNode data, CodeViewer codeViewer) {
-		this.currentTime = -1;
-		this.maxTime = 0;
-		this.startTime = 0;
+	public VideoRecordController(LoggingTreeNode data, CodeViewer codeViewer) {
 		this.currentFile = -1;
-		this.maxAction = 0;
 		this.currentAction = -1;
+		this.totalActionNumber = getTotalActionNumber(data);
 		this.data = data;
 		this.fileTree = codeViewer.getFileTree();
 		this.tabbedPane = codeViewer.getTabbedPane();
 	}
-
-	private void analyseData() {
-		QuestionTreeNode testNode = null;
-		for (int i = 0; i < data.getChildCount(); i++) {
-			testNode = (QuestionTreeNode) data.getChildAt(0);
-			maxAction += testNode.getChildCount();
-		}
-		if (testNode == null) {
-			// TODO: Nutzermeldung und abbrechen
-			System.out.println("Keine Daten vorhanden.");
-		} else {
-			try {
-				startTime = Long.parseLong(data.getAttributeValue("start"));
-				maxTime = Long.parseLong(data.getAttributeValue("end")) - startTime;
-			} catch (NumberFormatException e) {
-				// TODO: Nutzermeldung und abbrechen
-				System.out.println("Fehler im Dateiformat.");
-			}
-		}
+	
+	private int getTotalActionNumber(LoggingTreeNode data) {
+		//TODO: actionanzahl zählen
+		return 0;
 	}
 
-	// public void jumpToAction(int actionIndex) {
-	// while (currentAction < actionIndex && currentAction < actions.length - 1)
-	// {
-	// nextAction();
-	// }
-	// while (currentAction > actionIndex && currentAction > 0) {
-	// lastAction();
-	// }
-	// }
-	//
-	// public void jumpToTime(long millis) {
-	// long currentTime = actions[currentAction].getStartTime();
-	// while (currentTime > millis) {
-	// lastAction();
-	// currentTime = actions[currentAction].getStartTime();
-	// }
-	// while (currentTime < millis) {
-	// if (currentAction == actions.length - 1 || millis < actions[currentAction
-	// + 1].getStartTime()) {
-	// return;
-	// } else {
-	// nextAction();
-	// currentTime = actions[currentAction].getStartTime();
-	// }
-	// }
-	// }
-
 	public void nextAction() {
-		currentAction++;
-		if (data.getChildAt(currentFile) != null
-				&& data.getChildAt(currentFile).getChildAt(currentAction) != null) {
-			// Wenn nächste Aktion in der selben file --> ausführen
-			executeAction((QuestionTreeNode) data.getChildAt(currentFile).getChildAt(currentAction));
-		} else {
-			// Wenn nicht die nächsten files durchgehen
-			currentAction = 0;
-			while (data.getChildAt(currentFile + 1) != null) {
-				// wenn keine weitere vorhanden --> am ende
-				if (currentFile >= data.getChildCount()) {
-					// TODO: Ende
-					System.out.println("Letzte Action erreicht.");
-					return;
-				} else {
-					// neues öffnen
-					executeAction((QuestionTreeNode) data.getChildAt(++currentFile));
-					// wenn es kinder hat hier verweilen
-					if (data.getChildAt(currentFile).getChildCount() > 0) {
-						break;
+		if(currentAction < totalActionNumber-1) {
+			currentAction++;
+			if (data.getChildAt(currentFile) != null
+					&& data.getChildAt(currentFile).getChildAt(currentAction) != null) {
+				// Wenn nächste Aktion in der selben file --> ausführen
+				executeAction((QuestionTreeNode) data.getChildAt(currentFile).getChildAt(currentAction));
+			} else {
+				// Wenn nicht die nächsten files durchgehen
+				currentAction = 0;
+				while (data.getChildAt(currentFile + 1) != null) {
+					// wenn keine weitere vorhanden --> am ende
+					if (currentFile >= data.getChildCount()) {
+						// TODO: Ende
+						System.out.println("Letzte Action erreicht.");
+					} else {
+						// neues öffnen
+						executeAction((QuestionTreeNode) data.getChildAt(++currentFile));
+						// wenn es kinder hat hier verweilen
+						if (data.getChildAt(currentFile).getChildCount() > 0) {
+							break;
+						}
 					}
 				}
+				// nächste aktion ausführen
+				executeAction((QuestionTreeNode) data.getChildAt(currentFile).getChildAt(currentAction));
 			}
-			// nächste aktion ausführen
-			executeAction((QuestionTreeNode) data.getChildAt(currentFile).getChildAt(currentAction));
+			
 		}
 	}
 

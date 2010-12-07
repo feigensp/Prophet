@@ -2,6 +2,10 @@ package experimentGUI.experimentViewer;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -36,21 +40,39 @@ public class ExperimentViewer extends JFrame {
 	}
 
 	public ExperimentViewer() {
-		tree = QuestionTreeXMLHandler.loadXMLTree("test.xml");
-		
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		contentPane = new JPanel();
-		setContentPane(contentPane);
-		contentPane.setLayout(new BorderLayout());	
-		
-		HTMLFileView textPane = new HTMLFileView(tree);
-		contentPane.add(textPane, BorderLayout.CENTER);
-		
-		for (PluginInterface plugin : PluginList.getPlugins()) {
-			plugin.experimentViewerRun(this);
+		FileReader fr;
+		String questionnairePath = null;
+		try {
+			fr = new FileReader("questionnairePath.txt");
+		    BufferedReader br = new BufferedReader(fr);
+		    questionnairePath  = br.readLine();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			System.out.println("questionnairePath.txt nicht gefunden");
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.out.println("Fehler beim lesen von questionnairePath.txt");
 		}
-		textPane.start();
-		pack();
+
+		if(questionnairePath != null) {	
+			tree = QuestionTreeXMLHandler.loadXMLTree(questionnairePath);	
+
+			setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			contentPane = new JPanel();
+			setContentPane(contentPane);
+			contentPane.setLayout(new BorderLayout());	
+			
+			HTMLFileView textPane = new HTMLFileView(tree);
+			contentPane.add(textPane, BorderLayout.CENTER);
+			
+			for (PluginInterface plugin : PluginList.getPlugins()) {
+				plugin.experimentViewerRun(this);
+			}	
+			textPane.start();
+			pack();		
+		} else {
+			System.out.println("Fehler beim laden des Fragebogens.");
+		}
 	}
 	public QuestionTreeNode getTree() {
 		return tree;

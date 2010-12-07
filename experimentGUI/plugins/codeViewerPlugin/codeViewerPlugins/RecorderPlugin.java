@@ -131,9 +131,11 @@ public class RecorderPlugin implements CodeViewerPluginInterface,ChangeListener 
 	
 	@Override
 	public void onClose() {
-		LoggingTreeNode node = new LoggingTreeNode(TYPE_VIEWERCLOSED);
-		currentNode.add(node);
-		LoggingTreeXMLHandler.saveXMLTree(rootNode, filename);
+		if(enabled) {
+			LoggingTreeNode node = new LoggingTreeNode(TYPE_VIEWERCLOSED);
+			currentNode.add(node);
+			LoggingTreeXMLHandler.saveXMLTree(rootNode, filename);
+		}
 	}
 
 	@Override

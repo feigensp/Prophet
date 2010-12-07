@@ -114,6 +114,7 @@ public class QuestionViewPane extends JScrollPane {
 		}
 		questionText+=HTML_END;
 		textPane.setText(questionText);
+		textPane.setCaretPosition(0);
 	}
 	
 	/**

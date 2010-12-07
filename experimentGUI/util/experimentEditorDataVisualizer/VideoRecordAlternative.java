@@ -72,20 +72,10 @@ public class VideoRecordAlternative extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				// TODO: eigentlich nicht gleich die log datei laden, sondern
 				// die fragenerstellungs-xml, weil braucht init vom CodeViewer
-				QuestionTreeNode log = null;
 				JFileChooser fc = new JFileChooser();
 				int returnVal = fc.showOpenDialog(null);
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
 					File file = fc.getSelectedFile();
-					log = QuestionTreeXMLHandler.loadXMLTree(file.getAbsolutePath());
-				}
-				if (log != null && log.getType().equals("codeviewer")) {
-					//TODO: codeViewer mit plugins erstellen und übergeben
-					controller = new VideoRecordController(log, null);
-					activate();
-				} else {
-					controller = null;
-					deactivate();
 				}
 			}
 		});

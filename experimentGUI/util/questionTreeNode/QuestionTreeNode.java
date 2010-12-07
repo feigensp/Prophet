@@ -67,6 +67,12 @@ public class QuestionTreeNode extends DefaultMutableTreeNode {
 	}
 	public String toString() {
 		return name;
+//		String ret = name + " { ";
+//		for(int i=0; i<this.getChildCount(); i++) {
+//			ret += this.getChildAt(i).toString();  
+//		}
+//		ret += " } ";
+//		return ret;
 	}
 	
 	public boolean isLeaf() {

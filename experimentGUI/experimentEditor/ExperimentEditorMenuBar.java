@@ -2,7 +2,9 @@ package experimentGUI.experimentEditor;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 
+import javax.swing.JFileChooser;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -32,13 +34,12 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 		fileMenu.add(loadMenuItem);
 		loadMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				QuestionTreeNode newRoot = QuestionTreeXMLHandler.loadXMLTree("test.xml");
-//				JFileChooser fc = new JFileChooser();
-//				if (fc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-//					//File file = fc.getSelectedFile();
-//
+				JFileChooser fc = new JFileChooser();
+				if (fc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+					File file = fc.getSelectedFile();
+					QuestionTreeNode newRoot = QuestionTreeXMLHandler.loadXMLTree(file.getAbsolutePath());
 					questionEditor.loadTree(newRoot);
-//				}
+				}
 			}
 		});
 
@@ -46,15 +47,19 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 		fileMenu.add(saveMenuItem);
 		saveMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				QuestionTreeXMLHandler.saveXMLTree(questionEditor.getTree().getRoot(), "test.xml");
+				JFileChooser fc = new JFileChooser();
+				if (fc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+					File file = fc.getSelectedFile();
+					QuestionTreeXMLHandler.saveXMLTree(questionEditor.getTree().getRoot(), file.getAbsolutePath());
+				}
 			}
 		});
 
 		JMenuItem closeMenuItem = new JMenuItem("Beenden");
 		fileMenu.add(closeMenuItem);
-		saveMenuItem.addActionListener(new ActionListener() {
+		closeMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				//TODO: Fenster schlieﬂen
+				System.exit(0);
 			}
 		});
 	}

@@ -9,6 +9,8 @@ import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.SettingsComponent;
 
@@ -28,11 +30,16 @@ public class SettingsPathChooser extends SettingsComponent {
 		textField.setEditable(false);
 		add(textField,BorderLayout.CENTER);
 		textField.setColumns(20);
-		textField.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				saveValue();				
+		textField.getDocument().addDocumentListener(new DocumentListener() {
+			public void changedUpdate(DocumentEvent arg0) {
+				saveValue();
 			}
+			public void insertUpdate(DocumentEvent arg0) {
+				saveValue();
+			}
+			public void removeUpdate(DocumentEvent arg0) {
+				saveValue();
+			}			
 		});
 		pathButton = new JButton("Durchsuchen");
 		add(pathButton,BorderLayout.EAST);
@@ -64,7 +71,7 @@ public class SettingsPathChooser extends SettingsComponent {
 	}
 
 	public void loadValue() {
-		textField.setText(getTreeNode().getValue());		
+		textField.setText(getTreeNode().getValue());
 	}
 	public void saveValue() {
 		getTreeNode().setValue(textField.getText());
