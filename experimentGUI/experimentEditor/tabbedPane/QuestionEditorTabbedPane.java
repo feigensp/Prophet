@@ -32,6 +32,7 @@ public class QuestionEditorTabbedPane extends JPanel {
 		addEditorPanel("Einstellungen", new SettingsEditorPanel());
 		addEditorPanel("Notizen", new NoteEditorPanel());
 	}
+
 	public void addEditorPanel(String caption, ExperimentEditorTab panel) {
 		myTabbedPane.addTab(caption, null, (Component)panel, null);
 	}
