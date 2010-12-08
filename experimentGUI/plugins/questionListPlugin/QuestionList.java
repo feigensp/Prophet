@@ -1,62 +1,99 @@
 package experimentGUI.plugins.questionListPlugin;
 
-import javax.swing.ImageIcon;
+import java.util.Enumeration;
+
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
-import javax.swing.text.html.HTMLEditorKit;
+import javax.swing.JTree;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreePath;
 
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 
-
 /**
- * Creates a panel which consits JList's.
- * The Lists represents categories and every item in the list represents a question
+ * Creates a panel which consits JList's. The Lists represents categories and
+ * every item in the list represents a question
+ * 
  * @author Markus Köppen, Andreas Hasselberg
- *
+ * 
  */
-public class QuestionList extends JScrollPane{
+public class QuestionList extends JScrollPane {
 	private QuestionTreeNode root;
 	private JTextPane textPane;
-	
+	private JTree tree;
+
 	/**
 	 * Constructor which creates an Empty Panel
 	 */
 	public QuestionList(QuestionTreeNode root) {
-		this.root=root;
-		textPane = new JTextPane();
-		textPane.setEditorKit(new HTMLEditorKit());
-		textPane.setEditable(false);
-		this.setViewportView(textPane);
-	}
-	
-	public void visit(QuestionTreeNode node) {
-		String content = "<html><body>";
-		boolean inactive = Boolean.parseBoolean(root.getAttributeValue("inactive"));
-		if (!inactive) {
-			content+=print(root,node);
+		this.root = root;
+		tree = new JTree(root);
+		tree.setEnabled(false);
+		tree.setCellRenderer(new SimpleTreeCellRenderer());
+		// expand all
+		for (int i = 0; i < tree.getRowCount(); i++) {
+			tree.expandRow(i);
 		}
-		content+="</body></html>";
-		textPane.setText(content);
+
+		this.setViewportView(tree);
 	}
 
+	// public QuestionList(QuestionTreeNode root) {
+	// this.root=root;
+	// textPane = new JTextPane();
+	// textPane.setEditorKit(new HTMLEditorKit());
+	// textPane.setEditable(false);
+	// this.setViewportView(textPane);
+	// }
+
+	public void visit(QuestionTreeNode selectionNode) {
+		boolean inactive = Boolean.parseBoolean(root.getAttributeValue("inactive"));
+		System.out.println("Inaktiv: " + inactive);
+		if (!inactive) {
+	        DefaultMutableTreeNode root =
+	            (DefaultMutableTreeNode)tree.getModel().getRoot();
+	        Enumeration e = root.breadthFirstEnumeration();
+	        while(e.hasMoreElements()) {
+	            DefaultMutableTreeNode node = (DefaultMutableTreeNode)e.nextElement();
+	            if(node.equals(selectionNode)) {
+	                TreePath path = new TreePath(node.getPath());
+	                tree.setSelectionPath(path);
+	                break;
+	            }
+	        }
+		}
+	}
+
+	// public void visit(QuestionTreeNode node) {
+	// String content = "<html><body>";
+	// boolean inactive =
+	// Boolean.parseBoolean(root.getAttributeValue("inactive"));
+	// if (!inactive) {
+	// content+=print(root,node);
+	// }
+	// content+="</body></html>";
+	// textPane.setText(content);
+	// }
+
 	private String print(QuestionTreeNode node, QuestionTreeNode selected) {
-		String name = node == selected ? "<b><u>"+node.getName().toUpperCase()+"</u></b>" : node.getName();
-		String subNodes="";
-		if (node.getChildCount()>0) {
+		String name = node == selected ? "<b><u>" + node.getName().toUpperCase() + "</u></b>" : node
+				.getName();
+		String subNodes = "";
+		if (node.getChildCount() > 0) {
 			String nodeList = "";
-			for (int i=0;i<node.getChildCount();i++) {
-				QuestionTreeNode subNode = (QuestionTreeNode)node.getChildAt(i);
+			for (int i = 0; i < node.getChildCount(); i++) {
+				QuestionTreeNode subNode = (QuestionTreeNode) node.getChildAt(i);
 				boolean inactive = Boolean.parseBoolean(subNode.getAttributeValue("inactive"));
 				if (!inactive) {
-					String nodeText = print(subNode,selected);
-					nodeList+=nodeText.length()>0 ? "<li>"+nodeText+"</li>" : "";
+					String nodeText = print(subNode, selected);
+					nodeList += nodeText.length() > 0 ? "<li>" + nodeText + "</li>" : "";
 				}
 			}
-			if (nodeList.length()>0) {
-				subNodes="<ul>"+nodeList+"</ul>";
+			if (nodeList.length() > 0) {
+				subNodes = "<ul>" + nodeList + "</ul>";
 			}
 		}
 		boolean donotshowcontent = Boolean.parseBoolean(node.getAttributeValue("donotshowcontent"));
-		return donotshowcontent && subNodes.length()==0 ? "" : name+subNodes;
+		return donotshowcontent && subNodes.length() == 0 ? "" : name + subNodes;
 	}
 }

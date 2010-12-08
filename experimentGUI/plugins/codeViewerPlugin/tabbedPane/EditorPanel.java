@@ -32,7 +32,6 @@ public class EditorPanel extends JPanel {
 		if (selected==null) {
 			selected=new QuestionTreeNode();
 		}
-
 		RSyntaxDocument doc = new RSyntaxDocument("text/plain");
 		try {
 			byte[] buffer = new byte[(int) file.length()];
