@@ -60,11 +60,11 @@ public class StartExternProg extends JFrame {
 		JButton button_1 = new JButton("New button");
 		button_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				OutputStreamWriter outWriter = new OutputStreamWriter(p.getOutputStream());
+//				OutputStreamWriter outWriter = new OutputStreamWriter(p.getOutputStream());
 				try {
 //					outWriter.write("ETX");
-					outWriter.flush();
-					outWriter.close();
+//					outWriter.flush();
+//					outWriter.close();
 					p.destroy();
 
 				} catch (Exception io) {

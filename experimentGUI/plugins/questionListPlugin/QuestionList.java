@@ -75,25 +75,25 @@ public class QuestionList extends JScrollPane {
 	// textPane.setText(content);
 	// }
 
-	private String print(QuestionTreeNode node, QuestionTreeNode selected) {
-		String name = node == selected ? "<b><u>" + node.getName().toUpperCase() + "</u></b>" : node
-				.getName();
-		String subNodes = "";
-		if (node.getChildCount() > 0) {
-			String nodeList = "";
-			for (int i = 0; i < node.getChildCount(); i++) {
-				QuestionTreeNode subNode = (QuestionTreeNode) node.getChildAt(i);
-				boolean inactive = Boolean.parseBoolean(subNode.getAttributeValue("inactive"));
-				if (!inactive) {
-					String nodeText = print(subNode, selected);
-					nodeList += nodeText.length() > 0 ? "<li>" + nodeText + "</li>" : "";
-				}
-			}
-			if (nodeList.length() > 0) {
-				subNodes = "<ul>" + nodeList + "</ul>";
-			}
-		}
-		boolean donotshowcontent = Boolean.parseBoolean(node.getAttributeValue("donotshowcontent"));
-		return donotshowcontent && subNodes.length() == 0 ? "" : name + subNodes;
-	}
+//	private String print(QuestionTreeNode node, QuestionTreeNode selected) {
+//		String name = node == selected ? "<b><u>" + node.getName().toUpperCase() + "</u></b>" : node
+//				.getName();
+//		String subNodes = "";
+//		if (node.getChildCount() > 0) {
+//			String nodeList = "";
+//			for (int i = 0; i < node.getChildCount(); i++) {
+//				QuestionTreeNode subNode = (QuestionTreeNode) node.getChildAt(i);
+//				boolean inactive = Boolean.parseBoolean(subNode.getAttributeValue("inactive"));
+//				if (!inactive) {
+//					String nodeText = print(subNode, selected);
+//					nodeList += nodeText.length() > 0 ? "<li>" + nodeText + "</li>" : "";
+//				}
+//			}
+//			if (nodeList.length() > 0) {
+//				subNodes = "<ul>" + nodeList + "</ul>";
+//			}
+//		}
+//		boolean donotshowcontent = Boolean.parseBoolean(node.getAttributeValue("donotshowcontent"));
+//		return donotshowcontent && subNodes.length() == 0 ? "" : name + subNodes;
+//	}
 }
