@@ -70,8 +70,6 @@ public class VideoRecordAlternative extends JFrame {
 	private void addListener() {
 		openMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				// TODO: eigentlich nicht gleich die log datei laden, sondern
-				// die fragenerstellungs-xml, weil braucht init vom CodeViewer
 				JFileChooser fc = new JFileChooser();
 				int returnVal = fc.showOpenDialog(null);
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
@@ -81,7 +79,6 @@ public class VideoRecordAlternative extends JFrame {
 		});
 		backwardButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-//				controller.lastAction();
 			}
 		});
 		forwardButton.addActionListener(new ActionListener() {
@@ -91,22 +88,10 @@ public class VideoRecordAlternative extends JFrame {
 		});
 		jumpToTimeButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-//				try {
-//					long millis = Long.parseLong(secondsTextField.getText()) * 1000;
-//					millis += Long.parseLong(minutesTextField.getText()) * 60 * 1000;
-//					controller.jumpToTime(millis);
-//				} catch(NumberFormatException e) {
-//					//TODO: Meldung ausgeben					
-//				}
 			}
 		});
 		jumpToActionButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-//				try {
-//					controller.jumpToAction(Integer.parseInt(actionIndexTextField.getText()));
-//				} catch(NumberFormatException e) {
-//					//TODO: Meldung ausgeben
-//				}
 			}
 		});
 		closeMenuItem.addActionListener(new ActionListener() {
