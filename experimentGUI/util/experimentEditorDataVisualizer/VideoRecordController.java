@@ -5,6 +5,7 @@ import java.io.File;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
 import experimentGUI.plugins.codeViewerPlugin.CodeViewer;
+import experimentGUI.plugins.codeViewerPlugin.codeViewerPlugins.RecorderPlugin;
 import experimentGUI.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin.recorderPlugins.ChangePlugin;
 import experimentGUI.plugins.codeViewerPlugin.fileTree.FileTree;
 import experimentGUI.plugins.codeViewerPlugin.tabbedPane.EditorTabbedPane;
@@ -40,9 +41,9 @@ public class VideoRecordController {
 		for (int i = 0; i < data.getChildCount(); i++) {
 			for (int j = 0; j < data.getChildAt(i).getChildCount(); j++) {
 				String type = ((LoggingTreeNode) data.getChildAt(i).getChildAt(j)).getType();
-				if (type.equals("opened")) {
+				if (type.equals(RecorderPlugin.TYPE_OPENED)) {
 					totalActionNumber++;
-				} else if (type.equals("closed")) {
+				} else if (type.equals(RecorderPlugin.TYPE_CLOSED)) {
 					totalActionNumber++;
 				} else if (type.equals(ChangePlugin.TYPE_INSERT)) {
 					totalActionNumber++;
@@ -102,17 +103,19 @@ public class VideoRecordController {
 
 	private void executeAction(LoggingTreeNode action) {
 		String actionCommand = action.getType();
-		if (actionCommand.equals("opened")) {
+		if (actionCommand.equals(RecorderPlugin.TYPE_OPENED)) {
 			currentActionNumber++;
-			String path = Conversion.toWindowsPath(action.getAttribute("path"));
+			String path = Conversion.toWindowsPath(action.getAttribute(RecorderPlugin.ATTRIBUTE_PATH));
 			if (path != null) {
 				currentFile = new File(path);
+				System.out.println(currentFile.exists());
 				fileTree.fireFileEvent(currentFile);
 				// TODO: expand Tree
 			}
-		} else if (actionCommand.equals("closed")) {
+		} else if (actionCommand.equals(RecorderPlugin.TYPE_CLOSED)) {
 			currentActionNumber++;
-			// TODO: Schliessen
+			String path = action.getAttribute(RecorderPlugin.ATTRIBUTE_PATH);
+			tabbedPane.closeFile(new File(path));
 		} else if (actionCommand.equals(ChangePlugin.TYPE_INSERT)) {
 			currentActionNumber++;
 			if (currentFile != null) {
@@ -146,10 +149,10 @@ public class VideoRecordController {
 
 	private void undoAction(QuestionTreeNode action) {
 		String actionCommand = action.getType();
-		if (actionCommand.equals("opened")) {
+		if (actionCommand.equals(RecorderPlugin.TYPE_OPENED)) {
 			currentActionNumber--;
 			// TODO: Tab schliessen
-		} else if (actionCommand.equals("closed")) {
+		} else if (actionCommand.equals(RecorderPlugin.TYPE_CLOSED)) {
 			currentActionNumber--;
 			// TODO: Tab öffnen
 		} else if (actionCommand.equals("insert")) {

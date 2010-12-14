@@ -27,6 +27,7 @@ public class RecorderPlugin implements CodeViewerPluginInterface,ChangeListener 
 	public final static String TYPE_OPENED = "opened";
 	public final static String TYPE_CLOSED = "closed";
 	public final static String TYPE_VIEWERCLOSED = "viewerclosed";	
+	public static final String ATTRIBUTE_PATH = "path";
 	
 	private boolean enabled;
 	private String filename;
@@ -97,7 +98,7 @@ public class RecorderPlugin implements CodeViewerPluginInterface,ChangeListener 
 			if (!openTabs.contains(ed)) {
 				openTabs.add(ed);
 				LoggingTreeNode openedNode = new LoggingTreeNode(TYPE_OPENED);
-				openedNode.setAttribute("path", ed.getFile().getPath());
+				openedNode.setAttribute(ATTRIBUTE_PATH, ed.getFile().getPath());
 				currentNode.add(openedNode);
 			}
 		}
@@ -108,7 +109,7 @@ public class RecorderPlugin implements CodeViewerPluginInterface,ChangeListener 
 			if (!nowOpenTabs.contains(ed)) {
 				it.remove();
 				LoggingTreeNode closedNode = new LoggingTreeNode(TYPE_CLOSED);
-				closedNode.setAttribute("path", ed.getFile().getPath());
+				closedNode.setAttribute(ATTRIBUTE_PATH, ed.getFile().getPath());
 				currentNode.add(closedNode);
 			}
 		}
@@ -119,7 +120,7 @@ public class RecorderPlugin implements CodeViewerPluginInterface,ChangeListener 
 				currentNode = new LoggingTreeNode(LoggingTreeNode.TYPE_NOFILE);
 			} else {
 				currentNode = new LoggingTreeNode(LoggingTreeNode.TYPE_FILE);
-				currentNode.setAttribute("path", currentTab.getFile().getPath());
+				currentNode.setAttribute(ATTRIBUTE_PATH, currentTab.getFile().getPath());
 			}
 			rootNode.add(currentNode);
 			//Plugins aktualisieren

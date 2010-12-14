@@ -33,6 +33,16 @@ public class EditorTabbedPane extends JTabbedPane {
 		this.setTabComponentAt(this.getTabCount() - 1, new ButtonTabComponent(this));
 		myPanel.grabFocus();
 	}
+	
+	public void closeFile(File file) {
+		for (int i = 0; i < getTabCount(); i++) {
+			Component myComp = getComponentAt(i);
+			if ((myComp instanceof EditorPanel) && ((EditorPanel) myComp).getFile().equals(file)) {
+				this.remove(i);
+				return;
+			}
+		}		
+	}
 
 	public void saveActiveFile(String path) {
 		Component activeComp = this.getSelectedComponent();

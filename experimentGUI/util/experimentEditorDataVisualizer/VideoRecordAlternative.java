@@ -3,19 +3,15 @@ package experimentGUI.util.experimentEditorDataVisualizer;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.EventQueue;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.util.Vector;
 
 import javax.swing.JButton;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
@@ -23,9 +19,11 @@ import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
+import experimentGUI.plugins.codeViewerPlugin.CodeViewer;
+import experimentGUI.util.loggingTreeNode.LoggingTreeNode;
+import experimentGUI.util.loggingTreeNode.LoggingTreeXMLHandler;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 import experimentGUI.util.questionTreeNode.QuestionTreeXMLHandler;
-import java.awt.FlowLayout;
 
 public class VideoRecordAlternative extends JFrame {
 
@@ -36,8 +34,6 @@ public class VideoRecordAlternative extends JFrame {
 	private JButton forwardButton;
 	private JButton jumpToTimeButton;
 	private JButton jumpToActionButton;
-	private JMenuItem openMenuItem;
-	private JMenuItem closeMenuItem;
 
 	private VideoRecordController controller;
 
@@ -50,7 +46,7 @@ public class VideoRecordAlternative extends JFrame {
 				try {
 					String laf = UIManager.getSystemLookAndFeelClassName();
 					UIManager.setLookAndFeel(laf);
-					VideoRecordAlternative frame = new VideoRecordAlternative();
+					VideoRecordAlternative frame = new VideoRecordAlternative("recorder - Kopie.xml", "test.xml");
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -59,24 +55,22 @@ public class VideoRecordAlternative extends JFrame {
 		});
 	}
 
-	public VideoRecordAlternative() {
-		controller = null;
-
+	public VideoRecordAlternative(String logPath, String questionnairePath) {
+		System.out.println(new File(logPath).exists());
+		System.out.println(new File(questionnairePath).exists());
+		LoggingTreeNode log = LoggingTreeXMLHandler.loadXMLTree(logPath);
+		QuestionTreeNode questionnaire = QuestionTreeXMLHandler.loadXMLTree(questionnairePath);
+		CodeViewer codeViewer = new CodeViewer(questionnaire);
+		codeViewer.setVisible(true);
+		controller = new VideoRecordController(log, codeViewer);
+		
 		initializeGUI();
 		deactivate();
 		addListener();
+		activate();
 	}
 
 	private void addListener() {
-		openMenuItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				JFileChooser fc = new JFileChooser();
-				int returnVal = fc.showOpenDialog(null);
-				if (returnVal == JFileChooser.APPROVE_OPTION) {
-					File file = fc.getSelectedFile();
-				}
-			}
-		});
 		backwardButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 			}
@@ -92,11 +86,6 @@ public class VideoRecordAlternative extends JFrame {
 		});
 		jumpToActionButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-			}
-		});
-		closeMenuItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				System.exit(0);
 			}
 		});
 
@@ -128,18 +117,6 @@ public class VideoRecordAlternative extends JFrame {
 	 */
 	private void initializeGUI() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-		JMenuBar menuBar = new JMenuBar();
-		setJMenuBar(menuBar);
-
-		JMenu fileMenu = new JMenu("Datei");
-		menuBar.add(fileMenu);
-
-		openMenuItem = new JMenuItem("Laden");
-		fileMenu.add(openMenuItem);
-
-		closeMenuItem = new JMenuItem("Beenden");
-		fileMenu.add(closeMenuItem);
 		JPanel contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);

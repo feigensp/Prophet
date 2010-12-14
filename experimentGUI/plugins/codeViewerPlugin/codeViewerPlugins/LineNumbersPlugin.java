@@ -1,8 +1,5 @@
 package experimentGUI.plugins.codeViewerPlugin.codeViewerPlugins;
 
-import java.util.List;
-import java.util.Vector;
-
 import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.SettingsComponentDescription;
 import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.settingsComponents.SettingsCheckBox;
 import experimentGUI.plugins.codeViewerPlugin.CodeViewer;
