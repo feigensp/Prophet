@@ -32,13 +32,18 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 
 import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTabbedPane;
 import javax.swing.plaf.basic.BasicButtonUI;
 
 /**
@@ -47,15 +52,17 @@ import javax.swing.plaf.basic.BasicButtonUI;
  */
 @SuppressWarnings("serial")
 public class ButtonTabComponent extends JPanel {
-	private final JTabbedPane pane;
+	private final EditorTabbedPane pane;
+	private EditorPanel editPanel;
 
-	public ButtonTabComponent(final JTabbedPane pane) {
+	public ButtonTabComponent(final EditorTabbedPane pane, EditorPanel editPanel) {
 		// unset default FlowLayout' gaps
 		super(new FlowLayout(FlowLayout.LEFT, 0, 0));
 		if (pane == null) {
 			throw new NullPointerException("TabbedPane is null");
 		}
 		this.pane = pane;
+		this.editPanel = editPanel;
 		setOpaque(false);
 
 		// make JLabel read titles from JTabbedPane
@@ -101,9 +108,19 @@ public class ButtonTabComponent extends JPanel {
 		}
 
 		public void actionPerformed(ActionEvent e) {
-			int i = pane.indexOfTabComponent(ButtonTabComponent.this);
-			if (i != -1) {
-				pane.remove(i);
+			// speicher Abfrage
+			if (editPanel.isChanged()) {
+				int n = JOptionPane.showConfirmDialog(null, "Änderungen speichern?", "Speichern?",
+						JOptionPane.YES_NO_OPTION);
+				if (n == JOptionPane.YES_OPTION) {
+					//TODO: korrekten pfad eingeben
+					pane.saveEditorPanel("test", editPanel);
+				}
+			}
+			//schliessen
+			int tabIndex = pane.indexOfTabComponent(ButtonTabComponent.this);
+			if (tabIndex != -1) {
+				pane.remove(tabIndex);
 			}
 		}
 
@@ -125,10 +142,8 @@ public class ButtonTabComponent extends JPanel {
 				g2.setColor(Color.BLACK);
 			}
 			int delta = 6;
-			g2.drawLine(delta, delta, getWidth() - delta - 1, getHeight()
-					- delta - 1);
-			g2.drawLine(getWidth() - delta - 1, delta, delta, getHeight()
-					- delta - 1);
+			g2.drawLine(delta, delta, getWidth() - delta - 1, getHeight() - delta - 1);
+			g2.drawLine(getWidth() - delta - 1, delta, delta, getHeight() - delta - 1);
 			g2.dispose();
 		}
 	}

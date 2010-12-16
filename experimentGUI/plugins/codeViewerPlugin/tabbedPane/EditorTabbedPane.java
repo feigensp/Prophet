@@ -30,7 +30,7 @@ public class EditorTabbedPane extends JTabbedPane {
 		EditorPanel myPanel = new EditorPanel(file, selected);
 		add(file.getName(), myPanel);
 		setSelectedIndex(indexOfComponent(myPanel));
-		this.setTabComponentAt(this.getTabCount() - 1, new ButtonTabComponent(this));
+		this.setTabComponentAt(this.getTabCount() - 1, new ButtonTabComponent(this, myPanel));
 		myPanel.grabFocus();
 	}
 	
@@ -60,7 +60,7 @@ public class EditorTabbedPane extends JTabbedPane {
 		}
 	}
 	
-	private void saveEditorPanel(String path, EditorPanel editorPanel) {
+	protected void saveEditorPanel(String path, EditorPanel editorPanel) {
 			String compPath = editorPanel.getFile().getPath();
 			FileWriter fileWriter = null;
 			if (System.getProperty("file.separator").equals("/")) {
