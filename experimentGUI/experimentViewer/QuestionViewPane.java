@@ -3,23 +3,19 @@ package experimentGUI.experimentViewer;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.UnsupportedEncodingException;
+import java.net.URL;
 import java.net.URLDecoder;
 import java.util.StringTokenizer;
 
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 import javax.swing.text.Element;
-import javax.swing.text.ElementIterator;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.View;
 import javax.swing.text.ViewFactory;
 import javax.swing.text.html.FormView;
 import javax.swing.text.html.HTML;
-import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
-
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.html.HTMLElement;
 
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 
@@ -95,6 +91,11 @@ public class QuestionViewPane extends JScrollPane {
 				};
 			}
 		});
+		
+
+		URL trueBase = ClassLoader.getSystemResource(".");
+		((javax.swing.text.html.HTMLDocument)textPane.getDocument()).setBase(trueBase);
+		
 		String questionText = HTML_START + questionNode.getValue()+HTML_DIVIDER;
 		boolean questionSwitching = false;
 		if (questionNode.isQuestion()) {
