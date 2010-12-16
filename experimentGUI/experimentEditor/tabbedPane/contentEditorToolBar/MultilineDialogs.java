@@ -15,7 +15,7 @@ import javax.swing.JTextPane;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
-import experimentGUI.util.macroEditor.StringTuple;
+import experimentGUI.util.Pair;
 
 
 @SuppressWarnings("serial")
@@ -23,9 +23,9 @@ public class MultilineDialogs extends JDialog implements ActionListener {
 	
 	private static JTextPane contentTextPane;
 	private static JTextField nameTextField;
-	private static StringTuple dialogInfos;
+	private static Pair<String, String> dialogInfos;
 	
-	public static StringTuple showMultilineInputDialog(String headline) {
+	public static Pair<String, String> showMultilineInputDialog(String headline) {
 		MultilineDialogs dialog = new MultilineDialogs(headline);
 		dialog.setVisible(true);
 		dialog.dispose();
@@ -71,9 +71,7 @@ public class MultilineDialogs extends JDialog implements ActionListener {
 	
 	public void actionPerformed(ActionEvent ae) {
 		if(ae.getActionCommand().equals("ok")) {
-			dialogInfos = new StringTuple();
-			dialogInfos.setKey(nameTextField.getText());
-			dialogInfos.setValue(contentTextPane.getText());
+			dialogInfos = new Pair<String, String>(nameTextField.getText(), contentTextPane.getText());
 			this.setVisible(false);
 		} else {
 			dialogInfos = null;

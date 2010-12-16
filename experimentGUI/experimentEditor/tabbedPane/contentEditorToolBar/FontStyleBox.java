@@ -8,22 +8,22 @@ import javax.swing.JComboBox;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
-import experimentGUI.util.macroEditor.StringTuple;
+import experimentGUI.util.Pair;
 
 
 @SuppressWarnings("serial")
 public class FontStyleBox extends JComboBox implements ActionListener{
 	
 	private RSyntaxTextArea editArea;
-	private ArrayList<StringTuple> fontStyles;
+	private ArrayList<Pair<String, String>> fontStyles;
 	
 	public FontStyleBox(RSyntaxTextArea editArea) {
 		super();
 		this.editArea = editArea;
-		fontStyles = new ArrayList<StringTuple>();
-		fontStyles.add(new StringTuple("Fett", "b"));
-		fontStyles.add(new StringTuple("Kursiv", "i"));
-		fontStyles.add(new StringTuple("Unterstrichen", "u"));
+		fontStyles = new ArrayList<Pair<String, String>>();
+		fontStyles.add(new Pair<String, String>("Fett", "b"));
+		fontStyles.add(new Pair<String, String>("Kursiv", "i"));
+		fontStyles.add(new Pair<String, String>("Unterstrichen", "u"));
 		
 		this.addItem("Schrifttyp");
 		for(int i=0; i<fontStyles.size(); i++) {

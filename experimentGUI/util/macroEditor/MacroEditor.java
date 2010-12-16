@@ -44,6 +44,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import experimentGUI.util.Pair;
+
 /**
  * A simple editor to create and change the macro.xml
  * 
@@ -60,7 +62,7 @@ public class MacroEditor extends JFrame {
 	private JTextPane macroContentTextPane;
 	private JTextField macroNameTextField;
 
-	private ArrayList<StringTuple> macros;
+	private ArrayList<Pair<String, String>> macros;
 
 	/**
 	 * Main method - launch application
@@ -216,7 +218,7 @@ public class MacroEditor extends JFrame {
 					Element xmlRoot = xmlTree.createElement("macros");
 					xmlTree.appendChild(xmlRoot);
 					Element xmlChild;
-					for (StringTuple child : macros) {
+					for (Pair<String, String> child : macros) {
 						xmlChild = xmlTree.createElement("macro");
 						xmlChild.setAttribute("name", child.getKey());
 						xmlChild.setTextContent(child.getValue());
@@ -274,7 +276,7 @@ public class MacroEditor extends JFrame {
 	 * load the data from macro.xml
 	 */
 	private void loadMacros() {
-		macros = new ArrayList<StringTuple>();
+		macros = new ArrayList<Pair<String, String>>();
 		try {
 			Document doc = DocumentBuilderFactory.newInstance()
 					.newDocumentBuilder().parse("macro.xml");
@@ -305,7 +307,7 @@ public class MacroEditor extends JFrame {
 	 * @param makroContent content of the macro
 	 */
 	private void addMacro(String macroName, String makroContent) {
-		macros.add(new StringTuple(macroName, makroContent));
+		macros.add(new Pair<String, String>(macroName, makroContent));
 		listModel.addElement(macroName);
 	}
 
@@ -325,7 +327,7 @@ public class MacroEditor extends JFrame {
 	 * @param macroContent content of the macro
 	 */
 	private void insertMacro(int index, String macroName, String macroContent) {
-		macros.add(index, new StringTuple(macroName, macroContent));
+		macros.add(index, new Pair<String, String>(macroName, macroContent));
 		listModel.add(index, macroName);
 	}
 

@@ -9,7 +9,7 @@ import javax.swing.JOptionPane;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
-import experimentGUI.util.macroEditor.StringTuple;
+import experimentGUI.util.Pair;
 
 
 @SuppressWarnings("serial")
@@ -57,7 +57,7 @@ public class FormularBox extends JComboBox implements ActionListener {
 			}
 			break;
 		case 3: // liste
-			StringTuple listInfos = MultilineDialogs
+			Pair<String, String> listInfos = MultilineDialogs
 					.showMultilineInputDialog("Listeninformationen");
 			if (listInfos != null) {
 				String[] listEntrys = listInfos.getValue().split(
@@ -74,7 +74,7 @@ public class FormularBox extends JComboBox implements ActionListener {
 			}
 			break;
 		case 4: // Combobox
-			StringTuple comboInfos = MultilineDialogs
+			Pair<String, String> comboInfos = MultilineDialogs
 					.showMultilineInputDialog("Listeninformationen");
 			if (comboInfos != null) {
 				String[] comboEntrys = comboInfos.getValue().split(
@@ -91,7 +91,7 @@ public class FormularBox extends JComboBox implements ActionListener {
 			}
 			break;
 		case 5: // RadioButton
-			StringTuple radioInfos = MultilineDialogs
+			Pair<String, String> radioInfos = MultilineDialogs
 					.showMultilineInputDialog("Listeninformationen");
 			if (radioInfos != null) {
 				String[] radioEntrys = radioInfos.getValue().split(
@@ -107,7 +107,7 @@ public class FormularBox extends JComboBox implements ActionListener {
 			}
 			break;
 		case 6: // CheckBox
-			StringTuple checkInfos = MultilineDialogs
+			Pair<String, String> checkInfos = MultilineDialogs
 					.showMultilineInputDialog("Listeninformationen");
 			if (checkInfos != null) {
 				String[] checkEntrys = checkInfos.getValue().split(

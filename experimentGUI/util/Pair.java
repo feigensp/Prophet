@@ -1,11 +1,16 @@
 package experimentGUI.util;
 
-public class Tupel<K,V> {
+public class Pair<K,V> {
 
 	K key;
 	V value;
 	
-	public Tupel(K key, V value) {
+	public Pair() {
+		key = null;
+		value = null;
+	}
+	
+	public Pair(K key, V value) {
 		this.key = key;
 		this.value = value;
 	}
