@@ -16,6 +16,7 @@ public class EditorTabbedPane extends JTabbedPane {
 	public EditorTabbedPane(QuestionTreeNode selected) {
 		super(JTabbedPane.TOP);
 		this.selected = selected;
+		this.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 	}
 
 	public void openFile(File file) {
