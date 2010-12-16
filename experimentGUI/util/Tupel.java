@@ -1,4 +1,4 @@
-package test;
+package experimentGUI.util;
 
 public class Tupel<K,V> {
 
