@@ -62,7 +62,6 @@ public class EditorPanel extends JPanel {
 			private void changeOccured() {
 				changed = true;
 				textArea.getDocument().removeDocumentListener(this);
-				System.out.println("changed");
 			}
 			public void changedUpdate(DocumentEvent arg0) {
 				changeOccured();
