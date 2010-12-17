@@ -67,8 +67,16 @@ public class LanguageEditor extends JFrame {
 	private HashMap<String, ArrayList<String>> keywords;
 	private JTextField lanTextField;
 	private DefaultComboBoxModel boxModel;
-	
+	private JButton removeLanButton;
+	private JMenuItem loadMenuItem;
+	private JMenuItem saveMenuItem;
+	private JMenuItem closeMenuItem;
+	private JButton addButton;
+	private JButton removeButton;
+	private JButton addLanButton;
+
 	private String path;
+	private JMenuItem saveAsMenuItem;
 
 	/**
 	 * Launch the application.
@@ -101,37 +109,16 @@ public class LanguageEditor extends JFrame {
 
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
-
 		JMenu fileMenu = new JMenu("Datei");
 		menuBar.add(fileMenu);
-
-		JMenuItem saveMenuItem = new JMenuItem("Speichern");
-		saveMenuItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				save(path);
-			}
-		});
-		
-		JMenuItem loadMenuItem = new JMenuItem("Laden");
-		loadMenuItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				JFileChooser fileChooser = new JFileChooser();
-				int n = fileChooser.showOpenDialog(null);
-				if(n == JFileChooser.APPROVE_OPTION) {
-					path = fileChooser.getSelectedFile().getAbsolutePath();
-					load(path);
-				}
-			}
-		});
+		saveMenuItem = new JMenuItem("Speichern");
+		loadMenuItem = new JMenuItem("Laden");
 		fileMenu.add(loadMenuItem);
 		fileMenu.add(saveMenuItem);
 
-		JMenuItem closeMenuItem = new JMenuItem("Beenden");
-		closeMenuItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				System.exit(0);
-			}
-		});
+		saveAsMenuItem = new JMenuItem("Speichern unter");
+		fileMenu.add(saveAsMenuItem);
+		closeMenuItem = new JMenuItem("Beenden");
 		fileMenu.add(closeMenuItem);
 		JPanel contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -144,7 +131,129 @@ public class LanguageEditor extends JFrame {
 		flowLayout.setAlignment(FlowLayout.LEFT);
 		contentPane.add(panel, BorderLayout.SOUTH);
 
-		JButton addButton = new JButton("Hinzuf\u00FCgen");
+		addButton = new JButton("Hinzuf\u00FCgen");
+		textField = new JTextField();
+		panel.add(textField);
+		textField.setColumns(10);
+		panel.add(addButton);
+		removeButton = new JButton("Entfernen");
+		panel.add(removeButton);
+
+		listModel = new DefaultListModel();
+		list = new JList();
+		list.setBorder(new LineBorder(new Color(0, 0, 0)));
+		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		list.setModel(listModel);
+		list.setPreferredSize(new Dimension(150, 0));
+
+		JPanel contentPanel = new JPanel();
+		contentPanel.setLayout(new BorderLayout(0, 0));
+
+		textArea = new JTextArea();
+		textArea.setBorder(new LineBorder(new Color(0, 0, 0)));
+		contentPanel.add(textArea, BorderLayout.CENTER);
+
+		JPanel panel_2 = new JPanel();
+		FlowLayout flowLayout_1 = (FlowLayout) panel_2.getLayout();
+		flowLayout_1.setAlignment(FlowLayout.LEFT);
+		panel_2.setBorder(new LineBorder(new Color(0, 0, 0)));
+		contentPanel.add(panel_2, BorderLayout.NORTH);
+
+		comboBox = new JComboBox();
+		boxModel = new DefaultComboBoxModel();
+		comboBox.setModel(boxModel);
+		panel_2.add(comboBox);
+
+		lanTextField = new JTextField();
+		panel_2.add(lanTextField);
+		lanTextField.setColumns(10);
+
+		addLanButton = new JButton("Neue Sprache");
+		panel_2.add(addLanButton);
+		removeLanButton = new JButton("Sprache entfernen");
+		panel_2.add(removeLanButton);
+
+		JSplitPane splitPane = new JSplitPane();
+		splitPane.setLeftComponent(list);
+		splitPane.setRightComponent(contentPanel);
+		contentPane.add(splitPane, BorderLayout.CENTER);
+
+		showInfos();
+		setListener();
+	}
+
+	private void setListener() {
+		// close program
+		closeMenuItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				System.exit(0);
+			}
+		});
+		// save current language specification
+		saveMenuItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				save(path);
+			}
+		});
+		// save-as option
+		saveAsMenuItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				System.out.println("yay");
+				JFileChooser fileChooser = new JFileChooser();
+				int n = fileChooser.showSaveDialog(null);
+				if (n == JFileChooser.APPROVE_OPTION) {
+					path = fileChooser.getSelectedFile().getAbsolutePath();
+					save(path);
+				}
+			}
+		});
+		// load language specification
+		loadMenuItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				JFileChooser fileChooser = new JFileChooser();
+				int n = fileChooser.showOpenDialog(null);
+				if (n == JFileChooser.APPROVE_OPTION) {
+					path = fileChooser.getSelectedFile().getAbsolutePath();
+					load(path);
+					showInfos();
+				}
+			}
+		});
+		// add language
+		addLanButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				String lanName = lanTextField.getText();
+				if (!lanName.equals("")) {
+					languages.add(lanName);
+					boxModel.addElement(lanName);
+					Iterator<ArrayList<String>> listIterator = keywords.values().iterator();
+					while (listIterator.hasNext()) {
+						listIterator.next().add("");
+					}
+				}
+			}
+		});
+		// remove language
+		removeLanButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if (boxModel.getSize() == 1) {
+					System.out.println("Es muss mindestens eine Sprache existieren");
+				} else {
+					String lanName = comboBox.getSelectedItem().toString();
+					int lanIndex = getLanIndex(languages, lanName);
+					languages.remove(lanIndex);
+					Iterator<ArrayList<String>> listIterator = keywords.values().iterator();
+					while (listIterator.hasNext()) {
+						listIterator.next().remove(lanIndex);
+					}
+					boxModel.removeElementAt(lanIndex);
+					list.clearSelection();
+					textArea.setText("");
+					textArea.setEnabled(false);
+				}
+			}
+		});
+		// add keyword
 		addButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				String keyword = getFreeName(textField.getText());
@@ -157,32 +266,19 @@ public class LanguageEditor extends JFrame {
 				listModel.addElement(keyword);
 			}
 		});
-
-		textField = new JTextField();
-		panel.add(textField);
-		textField.setColumns(10);
-		panel.add(addButton);
-
-		JButton removeButton = new JButton("Entfernen");
+		// remove keyword
 		removeButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				int index = list.getSelectedIndex();
 				if (index != -1) {
 					String key = listModel.get(index).toString();
-					keywords.remove(key);					
+					keywords.remove(key);
 					listModel.remove(index);
 					list.clearSelection();
 				}
 			}
 		});
-		panel.add(removeButton);
-		listModel = new DefaultListModel();
-		Iterator<String> keywordIterator = keywords.keySet().iterator();
-		while(keywordIterator.hasNext()) {
-			listModel.addElement(keywordIterator.next());
-		}
-		list = new JList();
-		list.setBorder(new LineBorder(new Color(0, 0, 0)));
+		// list selection
 		list.addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent e) {
 				int listIndex = list.getSelectedIndex();
@@ -196,22 +292,28 @@ public class LanguageEditor extends JFrame {
 				}
 			}
 		});
-		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		list.setModel(listModel);
-		list.setPreferredSize(new Dimension(150, 0));
-
-		JPanel contentPanel = new JPanel();
-		contentPanel.setLayout(new BorderLayout(0, 0));
-
-		textArea = new JTextArea();
-		textArea.setBorder(new LineBorder(new Color(0, 0, 0)));
+		// comboBox selection
+		comboBox.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				int listIndex = list.getSelectedIndex();
+				if (listIndex != -1) {
+					textArea.setEnabled(true);
+					textArea.setText(keywords.get(listModel.elementAt(listIndex)).get(
+							comboBox.getSelectedIndex()));
+				} else {
+					textArea.setEnabled(false);
+					textArea.setText("");
+				}
+			}
+		});
+		// save changes in textarea
 		textArea.getDocument().addDocumentListener(new DocumentListener() {
 			private void valueChanged() {
 				int lanIndex = comboBox.getSelectedIndex();
 				int keyIndex = list.getSelectedIndex();
-				if(keyIndex != -1) {
+				if (keyIndex != -1) {
 					String key = listModel.getElementAt(keyIndex).toString();
-	
+
 					ArrayList<String> alternatives = keywords.get(key);
 					alternatives.set(lanIndex, textArea.getText());
 					keywords.put(key, alternatives);
@@ -230,83 +332,6 @@ public class LanguageEditor extends JFrame {
 				valueChanged();
 			}
 		});
-		textArea.setEnabled(false);
-		contentPanel.add(textArea, BorderLayout.CENTER);
-
-		JPanel panel_2 = new JPanel();
-		FlowLayout flowLayout_1 = (FlowLayout) panel_2.getLayout();
-		flowLayout_1.setAlignment(FlowLayout.LEFT);
-		panel_2.setBorder(new LineBorder(new Color(0, 0, 0)));
-		contentPanel.add(panel_2, BorderLayout.NORTH);
-
-		comboBox = new JComboBox();
-		comboBox.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				int listIndex = list.getSelectedIndex();
-				if (listIndex != -1) {
-					textArea.setEnabled(true);
-					textArea.setText(keywords.get(listModel.elementAt(listIndex)).get(
-							comboBox.getSelectedIndex()));
-				} else {
-					textArea.setEnabled(false);
-					textArea.setText("");
-				}
-			}
-		});
-		boxModel = new DefaultComboBoxModel();
-		for (String language : languages) {
-			boxModel.addElement(language);
-		}
-		comboBox.setModel(boxModel);
-		panel_2.add(comboBox);
-
-		lanTextField = new JTextField();
-		panel_2.add(lanTextField);
-		lanTextField.setColumns(10);
-
-		JButton addLanButton = new JButton("Neue Sprache");
-		addLanButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				String lanName = lanTextField.getText();
-				if(!lanName.equals("")) {
-					languages.add(lanName);
-					boxModel.addElement(lanName);
-					Iterator<ArrayList<String>> listIterator = keywords.values().iterator();
-					while(listIterator.hasNext()) {
-						listIterator.next().add("");
-					}
-				}
-			}
-		});
-		panel_2.add(addLanButton);
-		
-		JButton removeLanButton = new JButton("Sprache entfernen");
-		removeLanButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				if(boxModel.getSize()==1) {
-					System.out.println("Es muss mindestens eine Sprache existieren");
-				} else {
-					String lanName = comboBox.getSelectedItem().toString();
-					int lanIndex = getLanIndex(languages, lanName);
-					languages.remove(lanIndex);
-					Iterator<ArrayList<String>> listIterator = keywords.values().iterator();
-					while(listIterator.hasNext()) {
-						listIterator.next().remove(lanIndex);
-					}
-					boxModel.removeElementAt(lanIndex);
-					list.clearSelection();
-					textArea.setText("");
-					textArea.setEnabled(false);
-				}
-			}
-		});
-		panel_2.add(removeLanButton);
-		
-
-		JSplitPane splitPane = new JSplitPane();
-		splitPane.setLeftComponent(list);
-		splitPane.setRightComponent(contentPanel);
-		contentPane.add(splitPane, BorderLayout.CENTER);
 	}
 
 	private void load(String path) {
@@ -315,6 +340,8 @@ public class LanguageEditor extends JFrame {
 			Node xmlRoot = doc.getFirstChild();
 			Node child = null;
 			NodeList children = xmlRoot.getChildNodes();
+			languages.clear();
+			keywords.clear();
 			for (int i = 0; i < children.getLength(); i++) {
 				child = children.item(i);
 				// languages
@@ -398,6 +425,21 @@ public class LanguageEditor extends JFrame {
 		} catch (TransformerFactoryConfigurationError e1) {
 			e1.printStackTrace();
 		}
+	}
+
+	private void showInfos() {
+		list.clearSelection();
+		listModel.removeAllElements();
+		Iterator<String> keywordIterator = keywords.keySet().iterator();
+		while (keywordIterator.hasNext()) {
+			listModel.addElement(keywordIterator.next());
+		}
+		boxModel.removeAllElements();
+		for (String language : languages) {
+			boxModel.addElement(language);
+		}
+		textArea.setText("");
+		textArea.setEnabled(false);
 	}
 
 	private String getFreeName(String name) {
