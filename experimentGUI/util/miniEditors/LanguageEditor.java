@@ -1,7 +1,7 @@
 package experimentGUI.util.miniEditors;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import javax.swing.Box;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -27,6 +26,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
@@ -45,6 +45,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeEvent;
 
 public class LanguageEditor extends JFrame {
 
@@ -65,6 +67,7 @@ public class LanguageEditor extends JFrame {
 	private ArrayList<String> languages;
 	private HashMap<String, ArrayList<String>> keywords;
 	private JTextField lanTextField;
+	private DefaultComboBoxModel boxModel;
 
 	/**
 	 * Launch the application.
@@ -90,10 +93,9 @@ public class LanguageEditor extends JFrame {
 		keywords = new HashMap<String, ArrayList<String>>();
 
 		load();
-		// testInit();
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 496, 300);
+		setBounds(100, 100, 700, 300);
 
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -110,6 +112,11 @@ public class LanguageEditor extends JFrame {
 		fileMenu.add(saveMenuItem);
 
 		JMenuItem closeMenuItem = new JMenuItem("Beenden");
+		closeMenuItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				System.exit(0);
+			}
+		});
 		fileMenu.add(closeMenuItem);
 		JPanel contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -117,6 +124,7 @@ public class LanguageEditor extends JFrame {
 		contentPane.setLayout(new BorderLayout(0, 0));
 
 		JPanel panel = new JPanel();
+		panel.setBorder(new LineBorder(new Color(0, 0, 0)));
 		FlowLayout flowLayout = (FlowLayout) panel.getLayout();
 		flowLayout.setAlignment(FlowLayout.LEFT);
 		contentPane.add(panel, BorderLayout.SOUTH);
@@ -140,10 +148,6 @@ public class LanguageEditor extends JFrame {
 		textField.setColumns(10);
 		panel.add(addButton);
 
-		Component horizontalStrut = Box.createHorizontalStrut(20);
-		horizontalStrut.setPreferredSize(new Dimension(50, 0));
-		panel.add(horizontalStrut);
-
 		JButton removeButton = new JButton("Entfernen");
 		removeButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -164,6 +168,7 @@ public class LanguageEditor extends JFrame {
 			listModel.addElement(keywordIterator.next());
 		}
 		list = new JList();
+		list.setBorder(new LineBorder(new Color(0, 0, 0)));
 		list.addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent e) {
 				int listIndex = list.getSelectedIndex();
@@ -187,6 +192,7 @@ public class LanguageEditor extends JFrame {
 		panel_1.setLayout(new BorderLayout(0, 0));
 
 		textArea = new JTextArea();
+		textArea.setBorder(new LineBorder(new Color(0, 0, 0)));
 		textArea.getDocument().addDocumentListener(new DocumentListener() {
 			private void valueChanged() {
 				int lanIndex = comboBox.getSelectedIndex();
@@ -216,10 +222,24 @@ public class LanguageEditor extends JFrame {
 		panel_1.add(textArea, BorderLayout.CENTER);
 
 		JPanel panel_2 = new JPanel();
+		panel_2.setBorder(new LineBorder(new Color(0, 0, 0)));
 		panel_1.add(panel_2, BorderLayout.NORTH);
 
 		comboBox = new JComboBox();
-		DefaultComboBoxModel boxModel = new DefaultComboBoxModel();
+		comboBox.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				int listIndex = list.getSelectedIndex();
+				if (listIndex != -1) {
+					textArea.setEnabled(true);
+					textArea.setText(keywords.get(listModel.elementAt(listIndex)).get(
+							comboBox.getSelectedIndex()));
+				} else {
+					textArea.setEnabled(false);
+					textArea.setText("");
+				}
+			}
+		});
+		boxModel = new DefaultComboBoxModel();
 		for (String language : languages) {
 			boxModel.addElement(language);
 		}
@@ -231,7 +251,42 @@ public class LanguageEditor extends JFrame {
 		lanTextField.setColumns(10);
 
 		JButton addLanButton = new JButton("Neue Sprache");
+		addLanButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				String lanName = lanTextField.getText();
+				if(!lanName.equals("")) {
+					languages.add(lanName);
+					boxModel.addElement(lanName);
+					Iterator<ArrayList<String>> listIterator = keywords.values().iterator();
+					while(listIterator.hasNext()) {
+						listIterator.next().add("");
+					}
+				}
+			}
+		});
 		panel_2.add(addLanButton);
+		
+		JButton removeLanButton = new JButton("Sprache entfernen");
+		removeLanButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if(boxModel.getSize()==1) {
+					System.out.println("Es muss mindestens eine Sprache existieren");
+				} else {
+					String lanName = comboBox.getSelectedItem().toString();
+					int lanIndex = getLanIndex(languages, lanName);
+					languages.remove(lanIndex);
+					Iterator<ArrayList<String>> listIterator = keywords.values().iterator();
+					while(listIterator.hasNext()) {
+						listIterator.next().remove(lanIndex);
+					}
+					boxModel.removeElementAt(lanIndex);
+					list.clearSelection();
+					textArea.setText("");
+					textArea.setEnabled(false);
+				}
+			}
+		});
+		panel_2.add(removeLanButton);
 	}
 
 	private void load() {
