@@ -16,12 +16,14 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
@@ -45,12 +47,9 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeEvent;
 
 public class LanguageEditor extends JFrame {
 
-	public static final String XML_PATH = "language.xml";
 	public static final String ELEMENT_LANGUAGES = "languages";
 	public static final String ELEMENT_LANGUAGE = "language";
 	public static final String ELEMENT_KEYWORD = "keyword";
@@ -68,6 +67,8 @@ public class LanguageEditor extends JFrame {
 	private HashMap<String, ArrayList<String>> keywords;
 	private JTextField lanTextField;
 	private DefaultComboBoxModel boxModel;
+	
+	private String path;
 
 	/**
 	 * Launch the application.
@@ -91,8 +92,9 @@ public class LanguageEditor extends JFrame {
 	public LanguageEditor() {
 		languages = new ArrayList<String>();
 		keywords = new HashMap<String, ArrayList<String>>();
+		path = "language.xml";
 
-		load();
+		load(path);
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 700, 300);
@@ -106,9 +108,22 @@ public class LanguageEditor extends JFrame {
 		JMenuItem saveMenuItem = new JMenuItem("Speichern");
 		saveMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				save();
+				save(path);
 			}
 		});
+		
+		JMenuItem loadMenuItem = new JMenuItem("Laden");
+		loadMenuItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				JFileChooser fileChooser = new JFileChooser();
+				int n = fileChooser.showOpenDialog(null);
+				if(n == JFileChooser.APPROVE_OPTION) {
+					path = fileChooser.getSelectedFile().getAbsolutePath();
+					load(path);
+				}
+			}
+		});
+		fileMenu.add(loadMenuItem);
 		fileMenu.add(saveMenuItem);
 
 		JMenuItem closeMenuItem = new JMenuItem("Beenden");
@@ -161,7 +176,6 @@ public class LanguageEditor extends JFrame {
 			}
 		});
 		panel.add(removeButton);
-
 		listModel = new DefaultListModel();
 		Iterator<String> keywordIterator = keywords.keySet().iterator();
 		while(keywordIterator.hasNext()) {
@@ -185,11 +199,9 @@ public class LanguageEditor extends JFrame {
 		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		list.setModel(listModel);
 		list.setPreferredSize(new Dimension(150, 0));
-		contentPane.add(list, BorderLayout.WEST);
 
-		JPanel panel_1 = new JPanel();
-		contentPane.add(panel_1, BorderLayout.CENTER);
-		panel_1.setLayout(new BorderLayout(0, 0));
+		JPanel contentPanel = new JPanel();
+		contentPanel.setLayout(new BorderLayout(0, 0));
 
 		textArea = new JTextArea();
 		textArea.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -219,11 +231,13 @@ public class LanguageEditor extends JFrame {
 			}
 		});
 		textArea.setEnabled(false);
-		panel_1.add(textArea, BorderLayout.CENTER);
+		contentPanel.add(textArea, BorderLayout.CENTER);
 
 		JPanel panel_2 = new JPanel();
+		FlowLayout flowLayout_1 = (FlowLayout) panel_2.getLayout();
+		flowLayout_1.setAlignment(FlowLayout.LEFT);
 		panel_2.setBorder(new LineBorder(new Color(0, 0, 0)));
-		panel_1.add(panel_2, BorderLayout.NORTH);
+		contentPanel.add(panel_2, BorderLayout.NORTH);
 
 		comboBox = new JComboBox();
 		comboBox.addActionListener(new ActionListener() {
@@ -287,11 +301,17 @@ public class LanguageEditor extends JFrame {
 			}
 		});
 		panel_2.add(removeLanButton);
+		
+
+		JSplitPane splitPane = new JSplitPane();
+		splitPane.setLeftComponent(list);
+		splitPane.setRightComponent(contentPanel);
+		contentPane.add(splitPane, BorderLayout.CENTER);
 	}
 
-	private void load() {
+	private void load(String path) {
 		try {
-			Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(XML_PATH);
+			Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(path);
 			Node xmlRoot = doc.getFirstChild();
 			Node child = null;
 			NodeList children = xmlRoot.getChildNodes();
@@ -331,16 +351,7 @@ public class LanguageEditor extends JFrame {
 		}
 	}
 
-	private int getLanIndex(ArrayList<String> list, String content) {
-		for (int i = 0; i < list.size(); i++) {
-			if (list.get(i).equals(content)) {
-				return i;
-			}
-		}
-		return -1;
-	}
-
-	private void save() {
+	private void save(String path) {
 		Document xmlTree = null;
 		try {
 			xmlTree = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
@@ -378,7 +389,7 @@ public class LanguageEditor extends JFrame {
 		try {
 			if (xmlTree != null) {
 				TransformerFactory.newInstance().newTransformer()
-						.transform(new DOMSource(xmlTree), new StreamResult(XML_PATH));
+						.transform(new DOMSource(xmlTree), new StreamResult(path));
 			}
 		} catch (TransformerConfigurationException e1) {
 			e1.printStackTrace();
@@ -397,5 +408,14 @@ public class LanguageEditor extends JFrame {
 		} else {
 			return name;
 		}
+	}
+
+	private int getLanIndex(ArrayList<String> list, String content) {
+		for (int i = 0; i < list.size(); i++) {
+			if (list.get(i).equals(content)) {
+				return i;
+			}
+		}
+		return -1;
 	}
 }
