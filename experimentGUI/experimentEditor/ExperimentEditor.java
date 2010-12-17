@@ -57,8 +57,8 @@ public class ExperimentEditor extends JFrame {
 	 * the view
 	 */
 	public ExperimentEditor() {
-		Language.init();
-		Language.setLanguage("deutsch");
+//		Language.init();
+//		Language.setLanguage("deutsch");
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 800, 600);
