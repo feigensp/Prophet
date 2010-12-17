@@ -10,6 +10,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 
+import experimentGUI.util.Language;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 import experimentGUI.util.questionTreeNode.QuestionTreeXMLHandler;
 
@@ -21,10 +22,10 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 	public ExperimentEditorMenuBar(ExperimentEditor qE) {
 		questionEditor = qE;
 		currentFile = null;
-		JMenu fileMenu = new JMenu("Datei");
+		JMenu fileMenu = new JMenu(Language.getValue("ExperimentEditorMenu_fileMenu")/*"Datei"*/);
 		add(fileMenu);
 
-		JMenuItem newMenuItem = new JMenuItem("Neu");
+		JMenuItem newMenuItem = new JMenuItem(Language.getValue("ExperimentEditorMenu_newMenuItem")/*"Neu"*/);
 		fileMenu.add(newMenuItem);
 		newMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {

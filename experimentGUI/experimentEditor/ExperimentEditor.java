@@ -18,6 +18,7 @@ import javax.swing.border.EmptyBorder;
 
 import experimentGUI.experimentEditor.QuestionTree.QuestionTree;
 import experimentGUI.experimentEditor.tabbedPane.QuestionEditorTabbedPane;
+import experimentGUI.util.Language;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 import experimentGUI.util.questionTreeNode.QuestionTreeNodeEvent;
 import experimentGUI.util.questionTreeNode.QuestionTreeNodeListener;
@@ -56,6 +57,9 @@ public class ExperimentEditor extends JFrame {
 	 * the view
 	 */
 	public ExperimentEditor() {
+		Language.init();
+		Language.setLanguage("deutsch");
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 800, 600);
 

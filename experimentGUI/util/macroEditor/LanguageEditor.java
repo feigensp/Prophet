@@ -152,6 +152,7 @@ public class LanguageEditor extends JFrame {
 					String key = listModel.get(index).toString();
 					keywords.remove(key);					
 					listModel.remove(index);
+					list.clearSelection();
 				}
 			}
 		});
@@ -190,11 +191,13 @@ public class LanguageEditor extends JFrame {
 			private void valueChanged() {
 				int lanIndex = comboBox.getSelectedIndex();
 				int keyIndex = list.getSelectedIndex();
-				String key = listModel.getElementAt(keyIndex).toString();
-
-				ArrayList<String> alternatives = keywords.get(key);
-				alternatives.set(lanIndex, textArea.getText());
-				keywords.put(key, alternatives);
+				if(keyIndex != -1) {
+					String key = listModel.getElementAt(keyIndex).toString();
+	
+					ArrayList<String> alternatives = keywords.get(key);
+					alternatives.set(lanIndex, textArea.getText());
+					keywords.put(key, alternatives);
+				}
 			}
 
 			public void changedUpdate(DocumentEvent arg0) {
