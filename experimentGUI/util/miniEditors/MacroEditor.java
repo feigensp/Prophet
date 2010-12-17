@@ -1,4 +1,4 @@
-package experimentGUI.util.macroEditor;
+package experimentGUI.util.miniEditors;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
