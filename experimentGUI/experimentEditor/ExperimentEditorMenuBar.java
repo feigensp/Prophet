@@ -18,6 +18,7 @@ import experimentGUI.util.questionTreeNode.QuestionTreeXMLHandler;
 public class ExperimentEditorMenuBar extends JMenuBar {
 	private ExperimentEditor questionEditor;
 	private File currentFile;
+	private JMenuItem saveAsMenuItem;
 
 	public ExperimentEditorMenuBar(ExperimentEditor qE) {
 		questionEditor = qE;
@@ -54,11 +55,13 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 				if (currentFile != null) {
 					QuestionTreeXMLHandler.saveXMLTree(questionEditor.getTree().getRoot(),
 							currentFile.getAbsolutePath());
+				} else {
+					saveAsMenuItem.doClick();
 				}
 			}
 		});
 
-		JMenuItem saveAsMenuItem = new JMenuItem("Speichern unter");
+		saveAsMenuItem = new JMenuItem("Speichern unter");
 		fileMenu.add(saveAsMenuItem);
 		saveAsMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -69,6 +72,7 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 						int n = JOptionPane.showConfirmDialog(null, "Wollen sie " + file.getName()
 								+ " ersetzen?", "Ersetzen?", JOptionPane.YES_NO_OPTION);
 						if (n == JOptionPane.YES_OPTION) {
+							currentFile = file;
 							QuestionTreeXMLHandler.saveXMLTree(questionEditor.getTree().getRoot(),
 									file.getAbsolutePath());
 						}
