@@ -52,7 +52,6 @@ import experimentGUI.util.Pair;
  * @author Markus Köppen, Andreas Hasselberg
  * 
  */
-@SuppressWarnings("serial")
 public class MacroEditor extends JFrame {
 
 	private JPanel contentPane;
