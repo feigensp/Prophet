@@ -8,15 +8,30 @@ import java.io.IOException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+/**
+ * this class contains zip methods
+ * 
+ * @author Markus Köppen, Andreas Hasselberg
+ *
+ */
 public class ZipFile {
 	
 	private static ZipOutputStream zipOut;
 	private static String path;
 
+	/**
+	 * a main method to test the zip-method
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		zipFiles("C:\\Users\\hasselbe\\workspace\\QuelltextProj\\", "cow.zip");
 	}
 
+	/**
+	 * zips a file or directory, ignores zip-files
+	 * @param zipPath path to the file or directory which should be zipped
+	 * @param outputName name of the zip file which is created
+	 */
 	public static void zipFiles(String zipPath, String outputName) {
 		path = zipPath;
 		try {
@@ -30,6 +45,10 @@ public class ZipFile {
 		}
 	}
 
+	/**
+	 * method to zip a directory
+	 * @param zipDir the directory
+	 */
 	private void zipDir(File zipDir) {
 		File[] fileArray = zipDir.listFiles();
 		for (int i = 0; i < fileArray.length; i++) {
@@ -41,6 +60,10 @@ public class ZipFile {
 		}
 	}
 
+	/**
+	 * method to zip a file
+	 * @param file the file
+	 */
 	private void zipFile(File file) {
 		byte[] buf = new byte[4096];
 		if (file.getName().endsWith(".zip")) return;

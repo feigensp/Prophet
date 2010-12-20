@@ -19,17 +19,30 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
 /**
- * @author zeja modified
+ * this class contains a method to send an E-Mail (with attachments)
+ * 
+ * @author zeja
+ * @author Markus Köppen, Andreas Hasselberg
  */
 public class Email {
 
+	/**
+	 * constants for the Email infos
+	 */
 	private static final String password = "2010ErstellterExperimentVerteiler.";
 	private static final String username = "Verteiler.Experiment";
 	private static final String userAddress = "Verteiler.Experiment@web.de";
 	// GeheimFrage: Lieblingsfilm: Das Experiment
 	private static final String smtpHost = "smtp.web.de";
 
-	public void sendMail(String recipientsAddress, String subject, String text, String filePath) {
+	/**
+	 * Sends an EMail
+	 * @param recipientsAddress adress of the recipient
+	 * @param subject subject of the email
+	 * @param text text of the email
+	 * @param filePath attachment (null if not used)
+	 */
+	public static void sendMail(String recipientsAddress, String subject, String text, String filePath) {
 		MailAuthenticator auth = new MailAuthenticator(username, password);
 		Properties properties = new Properties();
 		properties.put("mail.smtp.host", smtpHost);
@@ -66,7 +79,21 @@ public class Email {
 		}
 	}
 
-	class MailAuthenticator extends Authenticator {
+	/**
+	 * main method to test the methods
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		String recipientsAddress = "hasselbe@gmail.com"; // somereceiver@web.de
+		String subject = "Test";
+		String text = "text";
+
+		Email.sendMail(recipientsAddress, subject, text, null);
+	}
+	
+
+
+	static class MailAuthenticator extends Authenticator {
 		private final String user;
 		private final String password;
 
@@ -92,13 +119,5 @@ public class Email {
 		protected PasswordAuthentication getPasswordAuthentication() {
 			return new PasswordAuthentication(this.user, this.password);
 		}
-	}
-
-	public static void main(String[] args) {
-		String recipientsAddress = "hasselbe@gmail.com"; // somereceiver@web.de
-		String subject = "Test";
-		String text = "text";
-
-		new Email().sendMail(recipientsAddress, subject, text, null);
 	}
 }
