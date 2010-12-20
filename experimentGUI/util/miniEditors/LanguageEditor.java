@@ -48,8 +48,18 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+/**
+ * This ist a little programm to create/manipulate a xml File,
+ * which could be used from language.java
+ * 
+ * @author Markus Köppen, Andreas Hasselberg
+ *
+ */
 public class LanguageEditor extends JFrame {
 
+	/**
+	 * xml constants
+	 */
 	public static final String ELEMENT_LANGUAGES = "languages";
 	public static final String ELEMENT_LANGUAGE = "language";
 	public static final String ELEMENT_KEYWORD = "keyword";
@@ -57,16 +67,18 @@ public class LanguageEditor extends JFrame {
 	public static final String ELEMENT_KEY_LAN = "languageInterpretation";
 	public static final String ATTRIBUTE_LANGUAGE = "language";
 	public static final String ATTRIBUTE_INTERPRETATION = "interpretation";
+	/**
+	 * standard language constant
+	 */
+	public static String LANGUAGE_GERMAN = "deutsch";
 
 	private JList list;
 	private DefaultListModel listModel;
 	private JTextField textField;
 	private JTextArea textArea;
 	private JComboBox comboBox;
-	private ArrayList<String> languages;
-	private HashMap<String, ArrayList<String>> keywords;
-	private JTextField lanTextField;
 	private DefaultComboBoxModel boxModel;
+	private JTextField lanTextField;
 	private JButton removeLanButton;
 	private JMenuItem loadMenuItem;
 	private JMenuItem saveMenuItem;
@@ -74,9 +86,22 @@ public class LanguageEditor extends JFrame {
 	private JButton addButton;
 	private JButton removeButton;
 	private JButton addLanButton;
-
-	private String path;
 	private JMenuItem saveAsMenuItem;
+	private JMenuItem newMenuItem;
+
+	/**
+	 * the current path for the file to save in
+	 */
+	private String path;
+	/**
+	 * structure to save the different languages
+	 */
+	private ArrayList<String> languages;
+	/**
+	 * structure to save the keyword and the corresponding words/sentences
+	 * the order of these words is the same as the language order
+	 */
+	private HashMap<String, ArrayList<String>> keywords;
 
 	/**
 	 * Launch the application.
@@ -95,15 +120,18 @@ public class LanguageEditor extends JFrame {
 	}
 
 	/**
-	 * Create the frame.
+	 * Creating the GUI and initializing
 	 */
 	public LanguageEditor() {
+		//initialise the data structures
 		languages = new ArrayList<String>();
 		keywords = new HashMap<String, ArrayList<String>>();
-		path = "language.xml";
-
-		load(path);
-
+		path = null;
+		
+//		path = "language.xml";
+//		load(path);
+		
+		//build up GUI
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 700, 300);
 
@@ -112,6 +140,9 @@ public class LanguageEditor extends JFrame {
 		JMenu fileMenu = new JMenu("Datei");
 		menuBar.add(fileMenu);
 		saveMenuItem = new JMenuItem("Speichern");
+		
+		newMenuItem = new JMenuItem("Neu");
+		fileMenu.add(newMenuItem);
 		loadMenuItem = new JMenuItem("Laden");
 		fileMenu.add(loadMenuItem);
 		fileMenu.add(saveMenuItem);
@@ -180,8 +211,13 @@ public class LanguageEditor extends JFrame {
 
 		showInfos();
 		setListener();
+		//create empty rack
+		newMenuItem.doClick();
 	}
 
+	/**
+	 * set all Listeners and define theyr methods
+	 */
 	private void setListener() {
 		// close program
 		closeMenuItem.addActionListener(new ActionListener() {
@@ -189,16 +225,31 @@ public class LanguageEditor extends JFrame {
 				System.exit(0);
 			}
 		});
+		//new language specification
+		newMenuItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				path = null;
+				keywords.clear();
+				listModel.clear();
+				languages.clear();
+				languages.add(LANGUAGE_GERMAN);
+				boxModel.removeAllElements();
+				boxModel.addElement(LANGUAGE_GERMAN);
+			}
+		});
 		// save current language specification
 		saveMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				save(path);
+				if(path == null) {
+					saveAsMenuItem.doClick();
+				} else {
+					save(path);
+				}
 			}
 		});
 		// save-as option
 		saveAsMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				System.out.println("yay");
 				JFileChooser fileChooser = new JFileChooser();
 				int n = fileChooser.showSaveDialog(null);
 				if (n == JFileChooser.APPROVE_OPTION) {
@@ -239,8 +290,7 @@ public class LanguageEditor extends JFrame {
 				if (boxModel.getSize() == 1) {
 					System.out.println("Es muss mindestens eine Sprache existieren");
 				} else {
-					String lanName = comboBox.getSelectedItem().toString();
-					int lanIndex = getLanIndex(languages, lanName);
+					int lanIndex = comboBox.getSelectedIndex();
 					languages.remove(lanIndex);
 					Iterator<ArrayList<String>> listIterator = keywords.values().iterator();
 					while (listIterator.hasNext()) {
@@ -334,6 +384,10 @@ public class LanguageEditor extends JFrame {
 		});
 	}
 
+	/**
+	 * load the data in a xml file
+	 * @param path location and name of the file
+	 */
 	private void load(String path) {
 		try {
 			Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(path);
@@ -359,12 +413,9 @@ public class LanguageEditor extends JFrame {
 					NodeList interpretList = keyNode.getChildNodes();
 					for (int k = 0; k < interpretList.getLength(); k++) {
 						Node interpretNode = interpretList.item(k);
-						String lanInterpret = interpretNode.getAttributes().getNamedItem(ATTRIBUTE_LANGUAGE)
-								.getNodeValue();
 						String interpretString = interpretNode.getAttributes()
 								.getNamedItem(ATTRIBUTE_INTERPRETATION).getNodeValue();
-						int lanIndex = getLanIndex(languages, lanInterpret);
-						interprets.add(lanIndex, interpretString);
+						interprets.add(k, interpretString);
 					}
 					keywords.put(key, interprets);
 				}
@@ -378,6 +429,10 @@ public class LanguageEditor extends JFrame {
 		}
 	}
 
+	/**
+	 * save the data in a xml file
+	 * @param path path and location of the xml file
+	 */
 	private void save(String path) {
 		Document xmlTree = null;
 		try {
@@ -427,6 +482,10 @@ public class LanguageEditor extends JFrame {
 		}
 	}
 
+	/**
+	 * shows the current data in the JList and JComboBox
+	 * Clears the JList selection and the JTextArea
+	 */
 	private void showInfos() {
 		list.clearSelection();
 		listModel.removeAllElements();
@@ -442,6 +501,11 @@ public class LanguageEditor extends JFrame {
 		textArea.setEnabled(false);
 	}
 
+	/**
+	 * gets the next free name for a keyword by appending a "'" if needed
+	 * @param name keyword name which is wanted
+	 * @return next free keyword name
+	 */
 	private String getFreeName(String name) {
 		if (name.equals("")) {
 			return getFreeName("default");
@@ -450,14 +514,5 @@ public class LanguageEditor extends JFrame {
 		} else {
 			return name;
 		}
-	}
-
-	private int getLanIndex(ArrayList<String> list, String content) {
-		for (int i = 0; i < list.size(); i++) {
-			if (list.get(i).equals(content)) {
-				return i;
-			}
-		}
-		return -1;
 	}
 }
