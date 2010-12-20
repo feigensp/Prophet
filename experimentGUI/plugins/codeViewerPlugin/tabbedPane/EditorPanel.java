@@ -57,7 +57,7 @@ public class EditorPanel extends JPanel {
 			plugin.onEditorPanelCreate(this);
 		}
 		
-
+		//TODO: in editable plugin
 		textArea.getDocument().addDocumentListener(new DocumentListener() {			
 			private void changeOccured() {
 				changed = true;

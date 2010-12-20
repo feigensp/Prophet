@@ -56,10 +56,9 @@ public class CodeViewer extends JFrame implements FileListener {
 		String path = selected.getAttributeValue(KEY_PATH);
 		path = path==null || path.length()==0 ? "." : path;
 		//System.out.println(path);
-		
 		menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
-		
+		//TODO: in editable Plugin		
 		JMenu menu = new JMenu("Datei");
 		menuBar.add(menu);
 
@@ -77,7 +76,7 @@ public class CodeViewer extends JFrame implements FileListener {
 				tabbedPane.saveAllFiles("UserMods");
 			}
 		});
-		
+		//end TODO
 		splitPane = new JSplitPane();
 		splitPane.setBorder(null);
 		

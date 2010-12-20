@@ -108,7 +108,7 @@ public class ButtonTabComponent extends JPanel {
 		}
 
 		public void actionPerformed(ActionEvent e) {
-			// speicher Abfrage
+			//TODO: speicher Abfrage in editable Plugin
 			if (editPanel.isChanged()) {
 				int n = JOptionPane.showConfirmDialog(null, "Änderungen speichern?", "Speichern?",
 						JOptionPane.YES_NO_OPTION);
