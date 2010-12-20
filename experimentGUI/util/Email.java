@@ -11,6 +11,7 @@ import javax.mail.Authenticator;
 import javax.mail.BodyPart;
 import javax.mail.Message;
 import javax.mail.PasswordAuthentication;
+import javax.mail.SendFailedException;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
@@ -37,19 +38,24 @@ public class Email {
 
 	/**
 	 * Sends an EMail
-	 * @param recipientsAddress adress of the recipient
-	 * @param subject subject of the email
-	 * @param text text of the email
-	 * @param filePath attachment (null if not used)
+	 * 
+	 * @param recipientsAddress
+	 *            adress of the recipient
+	 * @param subject
+	 *            subject of the email
+	 * @param text
+	 *            text of the email
+	 * @param filePath
+	 *            attachment (null if not used)
 	 */
-	public static void sendMail(String recipientsAddress, String subject, String text, String filePath) {
-		MailAuthenticator auth = new MailAuthenticator(username, password);
-		Properties properties = new Properties();
-		properties.put("mail.smtp.host", smtpHost);
-		properties.put("mail.smtp.auth", "true");
-
-		Session session = Session.getDefaultInstance(properties, auth);
+	public static boolean sendMail(String recipientsAddress, String subject, String text, String filePath) {
 		try {
+			MailAuthenticator auth = new MailAuthenticator(username, password);
+			Properties properties = new Properties();
+			properties.put("mail.smtp.host", smtpHost);
+			properties.put("mail.smtp.auth", "true");
+
+			Session session = Session.getDefaultInstance(properties, auth);
 			Message msg = new MimeMessage(session);
 
 			MimeMultipart content = new MimeMultipart("alternative");
@@ -65,22 +71,21 @@ public class Email {
 				messageBodyPart.setFileName(new File(filePath).getName());
 				content.addBodyPart(messageBodyPart);
 			}
-
 			msg.setContent(content);
 			msg.setSentDate(new Date());
 			msg.setFrom(new InternetAddress(userAddress));
 			msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipientsAddress, false));
-
 			msg.setSubject(subject);
-
 			Transport.send(msg);
+			return true;
 		} catch (Exception e) {
-			e.printStackTrace();
+			return false;
 		}
 	}
 
 	/**
 	 * main method to test the methods
+	 * 
 	 * @param args
 	 */
 	public static void main(String[] args) {
@@ -88,10 +93,8 @@ public class Email {
 		String subject = "Test";
 		String text = "text";
 
-		Email.sendMail(recipientsAddress, subject, text, null);
+		System.out.println(Email.sendMail(recipientsAddress, subject, text, null));
 	}
-	
-
 
 	static class MailAuthenticator extends Authenticator {
 		private final String user;
