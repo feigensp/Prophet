@@ -45,6 +45,7 @@ public class EditorTabbedPane extends JTabbedPane {
 		}		
 	}
 
+	//TODO in plugin auslagern
 	public void saveActiveFile(String path) {
 		Component activeComp = this.getSelectedComponent();
 		if (activeComp != null && activeComp instanceof EditorPanel) {
@@ -93,7 +94,7 @@ public class EditorTabbedPane extends JTabbedPane {
 		}
 		return false;
 	}
-
+	//end TODO
 	public void removeFile(File file) {
 		for (int i = 0; i < getTabCount(); i++) {
 			Component myComp = getComponentAt(i);
