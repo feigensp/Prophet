@@ -17,6 +17,7 @@ import javax.swing.text.html.FormView;
 import javax.swing.text.html.HTML;
 import javax.swing.text.html.HTMLEditorKit;
 
+import experimentGUI.Constants;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 
 
@@ -31,20 +32,17 @@ import experimentGUI.util.questionTreeNode.QuestionTreeNode;
  */
 @SuppressWarnings("serial")
 public class QuestionViewPane extends JScrollPane {
-	//constants for moving for- or backward
-	public static final String MODE_FORWARD = "nextQuestion";
-	public static final String MODE_BACKWARD = "previousQuestion";
 	//constants for the html navigation
 	private static final String HTML_START = "<html><body><form>";
-	private static final String HTML_DIVIDER = "<br><br>";
+	private static final String HTML_DIVIDER = "<br /><br /><hr /><br /><br />";
 	private static final String FOOTER_FORWARD_CAPTION = "Weiter";
 	private static final String FOOTER_BACKWARD_CAPTION = "Zurück";
 	private static final String FOOTER_END_CATEGORY_CAPTION = "Kategorie Abschließen";
 	private static final String FOOTER_START_EXPERIMENT_CAPTION = "Experiment starten";
-	private static final String FOOTER_FORWARD = "<input name =\""+MODE_FORWARD+"\" type=\"submit\" value=\""+FOOTER_FORWARD_CAPTION+"\">";
-	private static final String FOOTER_BACKWARD = "<input name =\""+MODE_BACKWARD+"\" type=\"submit\" value=\""+FOOTER_BACKWARD_CAPTION+"\">";
-	private static final String FOOTER_END_CATEGORY = "<input name =\""+MODE_FORWARD+"\" type=\"submit\" value=\""+FOOTER_END_CATEGORY_CAPTION+"\">";
-	private static final String FOOTER_START_EXPERIMENT = "<input name =\""+MODE_FORWARD+"\" type=\"submit\" value=\""+FOOTER_START_EXPERIMENT_CAPTION+"\">";
+	private static final String FOOTER_FORWARD = "<input name =\""+Constants.KEY_FORWARD+"\" type=\"submit\" value=\""+FOOTER_FORWARD_CAPTION+"\" />";
+	private static final String FOOTER_BACKWARD = "<input name =\""+Constants.KEY_BACKWARD+"\" type=\"submit\" value=\""+FOOTER_BACKWARD_CAPTION+"\" />";
+	private static final String FOOTER_END_CATEGORY = "<input name =\""+Constants.KEY_FORWARD+"\" type=\"submit\" value=\""+FOOTER_END_CATEGORY_CAPTION+"\" />";
+	private static final String FOOTER_START_EXPERIMENT = "<table><tr><td>Probandencode:</td><td><input name=\""+Constants.KEY_SUBJECT+"\" /></td></tr></table>"+HTML_DIVIDER+"<input name =\""+Constants.KEY_FORWARD+"\" type=\"submit\" value=\""+FOOTER_START_EXPERIMENT_CAPTION+"\" />";
 	private static final String HTML_END = "</form></body></html>";
 	
 	private ActionListener actionListener;
@@ -140,7 +138,7 @@ public class QuestionViewPane extends JScrollPane {
 			} catch (UnsupportedEncodingException ex) {
 				ex.printStackTrace();
 			}			
-			if (key.equals(MODE_FORWARD) || key.equals(MODE_BACKWARD)) {
+			if (key.equals(Constants.KEY_FORWARD) || key.equals(Constants.KEY_BACKWARD)) {
 				result=key;
 			} else {
 				questionNode.setAnswer(key, value);
@@ -151,12 +149,12 @@ public class QuestionViewPane extends JScrollPane {
 	private boolean hasActiveNextNode(QuestionTreeNode node) {
 		boolean inactive;
 		if (node.isExperiment() || node.isCategory()) {
-			inactive = Boolean.parseBoolean(node.getAttributeValue("inactive"));
+			inactive = Boolean.parseBoolean(node.getAttributeValue(Constants.KEY_INACTIVE));
 			if (inactive || node.getChildCount()==0) {
 				return false;
 			} else {
 				node = (QuestionTreeNode)node.getFirstChild();
-				inactive = Boolean.parseBoolean(node.getAttributeValue("inactive"));
+				inactive = Boolean.parseBoolean(node.getAttributeValue(Constants.KEY_INACTIVE));
 				if (!inactive) {
 					return true;
 				}
@@ -167,7 +165,7 @@ public class QuestionViewPane extends JScrollPane {
 			if (node==null) {
 				return false;
 			}
-			inactive = Boolean.parseBoolean(node.getAttributeValue("inactive"));
+			inactive = Boolean.parseBoolean(node.getAttributeValue(Constants.KEY_INACTIVE));
 			if (!inactive) {
 				return true;
 			}
@@ -182,7 +180,7 @@ public class QuestionViewPane extends JScrollPane {
 			if (node==null) {
 				return false;
 			}
-			boolean inactive = Boolean.parseBoolean(node.getAttributeValue("inactive"));
+			boolean inactive = Boolean.parseBoolean(node.getAttributeValue(Constants.KEY_INACTIVE));
 			if (!inactive) {
 				return true;
 			}

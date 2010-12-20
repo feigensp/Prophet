@@ -14,6 +14,7 @@ import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 
+import experimentGUI.Constants;
 import experimentGUI.PluginInterface;
 import experimentGUI.PluginList;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
@@ -42,14 +43,14 @@ public class ExperimentViewer extends JFrame {
 	private QuestionTreeNode tree;
 	private QuestionTreeNode currentNode;
 	
-	public static final String DEFAULT_FILE = "default.xml";
+	private String subjectDir;
 	
 	ActionListener myActionListener = new ActionListener() {
 		public void actionPerformed(ActionEvent arg0) {
 			String command = arg0.getActionCommand();
-			if (command.equals(QuestionViewPane.MODE_BACKWARD)) {
+			if (command.equals(Constants.KEY_BACKWARD)) {
 				previousNode();
-			} else if (command.equals(QuestionViewPane.MODE_FORWARD)) {
+			} else if (command.equals(Constants.KEY_FORWARD)) {
 				nextNode();
 			}
 		}		
@@ -84,7 +85,7 @@ public class ExperimentViewer extends JFrame {
 	 */
 	public ExperimentViewer() {
 		this.setSize(800, 600);
-		String fileName = DEFAULT_FILE;
+		String fileName = Constants.DEFAULT_FILE;
 		if (!(new File(fileName).exists())) {
 			fileName = JOptionPane.showInputDialog("Bitte Experiment angeben:");
 			if (!fileName.endsWith(".xml")) {
@@ -114,13 +115,16 @@ public class ExperimentViewer extends JFrame {
 		textPanes = new HashMap<QuestionTreeNode,QuestionViewPane>();
 		times = new HashMap<QuestionTreeNode,ClockLabel>();
 		totalTime = new ClockLabel("Gesamtzeit");
-		totalTime.start();
 		timePanel = new JPanel();
 		nextNode();
 	}
 	
 	private boolean nextNode() {
 		pauseClock();
+		if (currentNode==tree) {
+			totalTime.start();
+			subjectDir = currentNode.getAttributeValue(Constants.KEY_CODE)+"_"+currentNode.getAnswer(Constants.KEY_SUBJECT);
+		}
 		boolean inactive = Boolean.parseBoolean(currentNode.getAttributeValue("inactive"));
 		if (!inactive && currentNode.getChildCount() != 0) {
 			currentNode=(QuestionTreeNode)currentNode.getFirstChild();
@@ -137,11 +141,11 @@ public class ExperimentViewer extends JFrame {
 			}
 			currentNode=(QuestionTreeNode)currentNode.getNextSibling();
 		}
-		inactive = Boolean.parseBoolean(currentNode.getAttributeValue("inactive"));
+		inactive = Boolean.parseBoolean(currentNode.getAttributeValue(Constants.KEY_INACTIVE));
 		if (inactive) {
 			return nextNode();
 		} else {
-			boolean doNotShowContent = Boolean.parseBoolean(currentNode.getAttributeValue("donotshowcontent"));
+			boolean doNotShowContent = Boolean.parseBoolean(currentNode.getAttributeValue(Constants.KEY_DONOTSHOWCONTENT));
 			if (doNotShowContent) {
 				enterNode();
 				return nextNode();
@@ -158,7 +162,7 @@ public class ExperimentViewer extends JFrame {
 			QuestionTreeNode tempNode = currentNode;
 			while ((QuestionTreeNode)tempNode.getPreviousSibling()!=null) {
 				tempNode = (QuestionTreeNode)tempNode.getPreviousSibling();
-				boolean inactive = Boolean.parseBoolean(tempNode.getAttributeValue("inactive"));
+				boolean inactive = Boolean.parseBoolean(tempNode.getAttributeValue(Constants.KEY_INACTIVE));
 				if (!inactive) {
 					exitNode();
 					currentNode=tempNode;
@@ -171,16 +175,19 @@ public class ExperimentViewer extends JFrame {
 		return false;
 	}
 	private void enterNode() {
-		for (PluginInterface plugin : PluginList.getPlugins()) {
-			currentNode.setPluginData(plugin.getKey(), plugin.enterNode(currentNode));
+		if (!currentNode.isExperiment()) {
+			for (PluginInterface plugin : PluginList.getPlugins()) {
+				currentNode.setPluginData(plugin.getKey(), plugin.enterNode(currentNode));
+			}
 		}
 	}
-	private void exitNode() {
-		for (PluginInterface plugin : PluginList.getPlugins()) {
-			plugin.exitNode(currentNode, currentNode.getPluginData(plugin.getKey()));
-		}
+	private void exitNode() {		
 		if (currentNode.isExperiment()) {
 			endQuestionnaire();
+		} else {
+			for (PluginInterface plugin : PluginList.getPlugins()) {
+				plugin.exitNode(currentNode, currentNode.getPluginData(plugin.getKey()));
+			}
 		}
 	}
 	private void pauseClock() {
@@ -207,15 +214,19 @@ public class ExperimentViewer extends JFrame {
 		} 
 		contentPane.add(currentViewPane, BorderLayout.CENTER);
 		
+		timePanel.removeAll();
 		ClockLabel clock = times.get(currentNode);
 		if (clock==null) {
-			clock = new ClockLabel(currentNode, "Aktuell");
+			if (currentNode.isExperiment()) {
+				clock = new ClockLabel(currentNode, null);
+			} else {
+				clock = new ClockLabel(currentNode, "Aktuell");
+			}
 			times.put(currentNode, clock);
 			clock.start();
 		} else {
 			clock.resume();
 		}
-		timePanel.removeAll();
 		timePanel.add(clock);
 		timePanel.add(totalTime);
 		contentPane.add(timePanel, BorderLayout.SOUTH);
@@ -226,7 +237,7 @@ public class ExperimentViewer extends JFrame {
 	 * method which is called when the last question is answered
 	 */
 	private void endQuestionnaire() {
-		QuestionTreeXMLHandler.saveXMLAnswerTree(tree, "answers.xml");
+		QuestionTreeXMLHandler.saveXMLAnswerTree(tree, Constants.FILE_ANSWERS);
 		for (PluginInterface plugin : PluginList.getPlugins()) {
 			plugin.finishExperiment();
 		}
@@ -236,5 +247,9 @@ public class ExperimentViewer extends JFrame {
 
 	public QuestionTreeNode getTree() {
 		return tree;
+	}
+	
+	public String getSubjectDir() {
+		return subjectDir;
 	}
 }

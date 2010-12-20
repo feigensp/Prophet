@@ -120,6 +120,8 @@ public class ClockLabel extends JLabel implements Runnable {
 				long seconds = (myTime/1000)%60;
 				long minutes = (myTime/1000)/60;
 				setText(caption + ": " + df.format(minutes) + ":" + df.format(seconds));
+			} else {
+				setText(" ");
 			}
 			try {
 				Thread.sleep(200);

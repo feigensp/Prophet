@@ -11,7 +11,9 @@ import java.awt.BorderLayout;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.border.EmptyBorder;
 
+import experimentGUI.Constants;
 import experimentGUI.PluginInterface;
 import experimentGUI.PluginList;
 import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.SettingsComponentDescription;
@@ -35,6 +37,7 @@ public class SettingsEditorPanel extends ExperimentEditorTab {
 	public SettingsEditorPanel() {
 		setLayout(new BorderLayout());
 		myPanel = new JPanel();
+		myPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		myPanel.setLayout(new VerticalFlowLayout());		
 		add(new JScrollPane(myPanel), BorderLayout.CENTER);
 	}
@@ -45,15 +48,13 @@ public class SettingsEditorPanel extends ExperimentEditorTab {
 		
 		if (selected!=null) {
 			if (selected.isExperiment()) {
-				myPanel.add(new SettingsComponentDescription(SettingsTextField.class,"code", "Experiment-Code: ").build(selected));
+				myPanel.add(new SettingsComponentDescription(SettingsTextField.class, Constants.KEY_CODE, "Experiment-Code: ").build(selected));
 			} else {
-				myPanel.add(new SettingsComponentDescription(SettingsCheckBox.class, "inactive", "Deaktivieren").build(selected));
-			}
-			if (selected.isExperiment() || selected.isCategory()) {
-				myPanel.add(new SettingsComponentDescription(SettingsCheckBox.class, "donotshowcontent", "Inhalt nicht anzeigen").build(selected));
+				myPanel.add(new SettingsComponentDescription(SettingsCheckBox.class, Constants.KEY_INACTIVE, "Deaktivieren").build(selected));
 			}
 			if (selected.isCategory()) {
-				myPanel.add(new SettingsComponentDescription(SettingsCheckBox.class,"questionswitching", "Vor- und Zurückblättern erlauben").build(selected));
+				myPanel.add(new SettingsComponentDescription(SettingsCheckBox.class, Constants.KEY_DONOTSHOWCONTENT, "Inhalt nicht anzeigen").build(selected));
+				myPanel.add(new SettingsComponentDescription(SettingsCheckBox.class, Constants.KEY_QUESTIONSWITCHING, "Vor- und Zurückblättern erlauben").build(selected));
 			}
 			for (PluginInterface plugin : PluginList.getPlugins()) {
 				SettingsComponentDescription desc = plugin.getSettingsComponentDescription(selected);
