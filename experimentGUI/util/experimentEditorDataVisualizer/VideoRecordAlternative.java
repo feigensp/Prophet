@@ -8,6 +8,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.FileNotFoundException;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -59,7 +60,14 @@ public class VideoRecordAlternative extends JFrame {
 		System.out.println(new File(logPath).exists());
 		System.out.println(new File(questionnairePath).exists());
 		LoggingTreeNode log = LoggingTreeXMLHandler.loadXMLTree(logPath);
-		QuestionTreeNode questionnaire = QuestionTreeXMLHandler.loadXMLTree(questionnairePath);
+		QuestionTreeNode questionnaire;
+		try {
+			questionnaire = QuestionTreeXMLHandler.loadXMLTree(questionnairePath);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return;
+		}
 		CodeViewer codeViewer = new CodeViewer(questionnaire);
 		codeViewer.setVisible(true);
 		controller = new VideoRecordController(log, codeViewer);

@@ -17,15 +17,14 @@ import java.util.zip.ZipOutputStream;
 public class ZipFile {
 	
 	private static ZipOutputStream zipOut;
-	private static String path;
-	private static String fileName;
+	private static File outputFile;
 
 	/**
 	 * a main method to test the zip-method
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		zipFiles("C:\\Users\\hasselbe\\workspace\\QuelltextProj\\", "cow.zip");
+		zipFiles(".", "cow.zip");
 	}
 
 	/**
@@ -34,11 +33,11 @@ public class ZipFile {
 	 * @param outputName name of the zip file which is created
 	 */
 	public static void zipFiles(String zipPath, String outputName) {
-		path = zipPath;
-		fileName = outputName;
+		outputFile = new File(outputName);
+		System.out.println(outputFile.getAbsolutePath());
 		try {
-			zipOut = new ZipOutputStream(new FileOutputStream(zipPath + outputName));
-			new ZipFile().zipDir(new File(zipPath));
+			zipOut = new ZipOutputStream(new FileOutputStream(outputFile));
+			zipDir(new File(zipPath));
 			zipOut.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -51,13 +50,27 @@ public class ZipFile {
 	 * method to zip a directory
 	 * @param zipDir the directory
 	 */
-	private void zipDir(File zipDir) {
+	private static void zipDir(File zipDir) {
+		try {
+			zipDir = zipDir.getCanonicalFile();
+		} catch (IOException e) {
+			e.printStackTrace();
+			return;
+		}
+		zipDir(zipDir,zipDir.getName());
+	}
+	
+	/**
+	 * method to zip a directory
+	 * @param zipDir the directory
+	 */
+	private static void zipDir(File zipDir, String path) {
 		File[] fileArray = zipDir.listFiles();
 		for (int i = 0; i < fileArray.length; i++) {
 			if (fileArray[i].isDirectory()) {
-				zipDir(fileArray[i]);
+				zipDir(fileArray[i], path + System.getProperty("file.separator") + fileArray[i].getName());
 			} else {
-				zipFile(fileArray[i]);
+				zipFile(fileArray[i], path + System.getProperty("file.separator") + fileArray[i].getName());
 			}
 		}
 	}
@@ -66,16 +79,12 @@ public class ZipFile {
 	 * method to zip a file
 	 * @param file the file
 	 */
-	private void zipFile(File file) {
+	private static void zipFile(File file, String path) {
 		byte[] buf = new byte[4096];
-		if (file.getName().equals(fileName)) return;
+		if (file.getAbsolutePath().equals(outputFile.getAbsolutePath())) return;
 		try {
-			String zipFilePath = file.getAbsolutePath();
-			if(zipFilePath.startsWith(path)) {
-				zipFilePath = zipFilePath.substring(path.length());
-			}
 			FileInputStream inFile = new FileInputStream(file);
-			zipOut.putNextEntry(new ZipEntry(zipFilePath));
+			zipOut.putNextEntry(new ZipEntry(path));
 			int len;
 			while ((len = inFile.read(buf)) > 0) {
 				zipOut.write(buf, 0, len);

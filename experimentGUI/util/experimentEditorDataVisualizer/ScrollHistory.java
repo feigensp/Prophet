@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.EventQueue;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -170,7 +171,12 @@ public class ScrollHistory extends JFrame {
 		editorPanel.setLayout(new BorderLayout());
 		contentPane.add(editorPanel, BorderLayout.CENTER);
 
-		editorTabbedPane = new EditorTabbedPane(QuestionTreeXMLHandler.loadXMLTree("test.xml"));
+		try {
+			editorTabbedPane = new EditorTabbedPane(QuestionTreeXMLHandler.loadXMLTree("test.xml"));
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		editorPanel.add(editorTabbedPane, BorderLayout.CENTER);
 	}
 

@@ -3,6 +3,7 @@ package experimentGUI.experimentEditor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.FileNotFoundException;
 
 import javax.swing.JFileChooser;
 import javax.swing.JMenu;
@@ -41,8 +42,14 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 				JFileChooser fc = new JFileChooser();
 				if (fc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
 					currentFile = fc.getSelectedFile();
-					QuestionTreeNode newRoot = QuestionTreeXMLHandler.loadXMLTree(currentFile
-							.getAbsolutePath());
+					QuestionTreeNode newRoot;
+					try {
+						newRoot = QuestionTreeXMLHandler.loadXMLTree(currentFile
+								.getAbsolutePath());
+					} catch (FileNotFoundException e) {
+						JOptionPane.showMessageDialog(questionEditor, "Datei nicht gefunden.", "Fehler", JOptionPane.ERROR_MESSAGE);
+						return;
+					}
 					questionEditor.loadTree(newRoot);
 				}
 			}

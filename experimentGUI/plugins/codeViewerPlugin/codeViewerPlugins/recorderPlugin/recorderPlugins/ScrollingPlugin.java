@@ -86,7 +86,6 @@ public class ScrollingPlugin implements RecorderPluginInterface {
 						startLine = currentTextArea.getLineOfOffset(startOffset)+1;
 						endLine = currentTextArea.getLineOfOffset(endOffset)+1;
 					} catch (BadLocationException e) {
-						e.printStackTrace();
 						startLine=-1;
 						endLine=-1;
 					}

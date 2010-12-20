@@ -8,6 +8,7 @@
 package experimentGUI.util.questionTreeNode;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Map.Entry;
 
@@ -231,11 +232,15 @@ public class QuestionTreeXMLHandler {
 	 *            path of the file
 	 * @return root of the new tree-structure
 	 */
-	public static QuestionTreeNode loadXMLTree(String path) {
-		try {
+	public static QuestionTreeNode loadXMLTree(String path) throws FileNotFoundException {
+		File file = new File(path);
+		if (!file.exists()) {
+			throw new FileNotFoundException();
+		}
+		try {			
 			// Document lesen
 			Document doc = DocumentBuilderFactory.newInstance()
-					.newDocumentBuilder().parse(new File(path));
+					.newDocumentBuilder().parse(file);
 			// Wurzel holen
 			Node xmlRoot = doc.getFirstChild();
 			return loadXMLNode(xmlRoot);

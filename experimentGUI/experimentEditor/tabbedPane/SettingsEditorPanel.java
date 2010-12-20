@@ -7,18 +7,23 @@ package experimentGUI.experimentEditor.tabbedPane;
  * @author Markus Köppen, Andreas Hasselberg
  */
 
-import java.util.List;
+import java.awt.BorderLayout;
+
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 import experimentGUI.PluginInterface;
 import experimentGUI.PluginList;
 import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.SettingsComponentDescription;
 import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.settingsComponents.SettingsCheckBox;
+import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.settingsComponents.SettingsTextField;
 import experimentGUI.util.VerticalFlowLayout;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 
 
 @SuppressWarnings("serial")
 public class SettingsEditorPanel extends ExperimentEditorTab {
+	JPanel myPanel;
 
 	/**
 	 * Constructor which defines the appearance and do the initialisation of the
@@ -28,21 +33,34 @@ public class SettingsEditorPanel extends ExperimentEditorTab {
 	 *            String identifier of this Dialog
 	 */
 	public SettingsEditorPanel() {
-		setLayout(new VerticalFlowLayout());
+		setLayout(new BorderLayout());
+		myPanel = new JPanel();
+		myPanel.setLayout(new VerticalFlowLayout());		
+		add(new JScrollPane(myPanel), BorderLayout.CENTER);
 	}
 	
 	public void activate(QuestionTreeNode selected) {
-		removeAll();
-		updateUI();
+		myPanel.removeAll();
+		myPanel.updateUI();		
 		
 		if (selected!=null) {
-			add(new SettingsComponentDescription(SettingsCheckBox.class, "inactive", "Deaktivieren").build(selected));
+			if (selected.isExperiment()) {
+				myPanel.add(new SettingsComponentDescription(SettingsTextField.class,"code", "Experiment-Code: ").build(selected));
+			} else {
+				myPanel.add(new SettingsComponentDescription(SettingsCheckBox.class, "inactive", "Deaktivieren").build(selected));
+			}
+			if (selected.isExperiment() || selected.isCategory()) {
+				myPanel.add(new SettingsComponentDescription(SettingsCheckBox.class, "donotshowcontent", "Inhalt nicht anzeigen").build(selected));
+			}
+			if (selected.isCategory()) {
+				myPanel.add(new SettingsComponentDescription(SettingsCheckBox.class,"questionswitching", "Vor- und Zurückblättern erlauben").build(selected));
+			}
 			for (PluginInterface plugin : PluginList.getPlugins()) {
 				SettingsComponentDescription desc = plugin.getSettingsComponentDescription(selected);
 				if (desc!=null) {
-					add(desc.build(selected));
+					myPanel.add(desc.build(selected));
 					while ((desc=desc.getNextComponentDescription())!=null) {
-						add(desc.build(selected));
+						myPanel.add(desc.build(selected));
 					}
 				}
 			}

@@ -1,11 +1,8 @@
 package experimentGUI.plugins;
 
-import java.util.List;
-
 import experimentGUI.PluginInterface;
 import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.SettingsComponentDescription;
 import experimentGUI.experimentViewer.ExperimentViewer;
-import experimentGUI.experimentViewer.HTMLFileView;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 
 public class DebugPlugin implements PluginInterface {
@@ -24,19 +21,25 @@ public class DebugPlugin implements PluginInterface {
 	}
 
 	@Override
-	public Object enterNode(QuestionTreeNode node, HTMLFileView htmlFileView) {
+	public Object enterNode(QuestionTreeNode node) {
 		System.out.println("--> "+node.getType()+": "+node.getName());
 		return null;
 	}
 
 	@Override
-	public void exitNode(QuestionTreeNode node, HTMLFileView htmlFileView, Object pluginData) {
+	public void exitNode(QuestionTreeNode node, Object pluginData) {
 		System.out.println("<-- "+node.getType()+": "+node.getName());
 	}
 
 	@Override
 	public String getKey() {
 		return KEY;
+	}
+
+	@Override
+	public String finishExperiment() {
+		System.out.println("Beende Befragung.");
+		return null;
 	}
 
 }

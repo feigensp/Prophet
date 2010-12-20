@@ -7,7 +7,6 @@ import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.SettingsCom
 import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.SettingsPluginComponentDescription;
 import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.settingsComponents.SettingsPathChooser;
 import experimentGUI.experimentViewer.ExperimentViewer;
-import experimentGUI.experimentViewer.HTMLFileView;
 import experimentGUI.plugins.codeViewerPlugin.CodeViewer;
 import experimentGUI.plugins.codeViewerPlugin.CodeViewerPluginInterface;
 import experimentGUI.plugins.codeViewerPlugin.CodeViewerPluginList;
@@ -41,7 +40,7 @@ public class CodeViewerPlugin implements PluginInterface {
 	}
 
 	@Override
-	public Object enterNode(QuestionTreeNode node, HTMLFileView htmlFileView) {
+	public Object enterNode(QuestionTreeNode node) {
 		boolean enabled = Boolean.parseBoolean(node.getAttributeValue(KEY));
 		if (enabled) {
 			CodeViewer cv = new CodeViewer(node.getAttribute(KEY));
@@ -56,7 +55,7 @@ public class CodeViewerPlugin implements PluginInterface {
 	}
 
 	@Override
-	public void exitNode(QuestionTreeNode node, HTMLFileView htmlFileView, Object pluginData) {
+	public void exitNode(QuestionTreeNode node, Object pluginData) {
 		CodeViewer cv = (CodeViewer)pluginData;
 		if (cv!=null) {
 			for (CodeViewerPluginInterface plugin : CodeViewerPluginList.getPlugins()) {
@@ -69,5 +68,10 @@ public class CodeViewerPlugin implements PluginInterface {
 	@Override
 	public String getKey() {
 		return KEY;
+	}
+
+	@Override
+	public String finishExperiment() {
+		return null;
 	}
 }
