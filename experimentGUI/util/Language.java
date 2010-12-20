@@ -12,14 +12,31 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+/**
+ * this class can load language specifications from xml files
+ * you can set the language and get - per method your desired notes which correspond to a keyword
+ * 
+ * @author Markus Köppen, Andreas Hasselberg
+ *
+ */
 public class Language {
 	
+	/**
+	 * contains the keywords and the corresponding notes
+	 */
 	private static HashMap<String, ArrayList<String>> keywords;
+	/**
+	 * contains the languages and theyr order
+	 */
 	private static ArrayList<String> languages;
-	
+	/**
+	 * contains the current chose language
+	 */
 	private static int chosenLanguage;
-
-	public static final String XML_PATH = "language.xml";
+	
+	/**
+	 * xml constants
+	 */
 	public static final String ELEMENT_LANGUAGES = "languages";
 	public static final String ELEMENT_LANGUAGE = "language";
 	public static final String ELEMENT_KEYWORD = "keyword";
@@ -28,13 +45,17 @@ public class Language {
 	public static final String ATTRIBUTE_LANGUAGE = "language";
 	public static final String ATTRIBUTE_INTERPRETATION = "interpretation";
 		
-	public static void init() {	
+	/**
+	 * initialize the data with the content of an xml file
+	 * @param path path of the xml file
+	 */
+	public static void init(String path) {	
 		keywords = new HashMap<String, ArrayList<String>>();
 		languages = new ArrayList<String>();
 		chosenLanguage = 0;
 		
 		try {
-			Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(XML_PATH);
+			Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(path);
 			Node xmlRoot = doc.getFirstChild();
 			Node child = null;
 			NodeList children = xmlRoot.getChildNodes();
@@ -55,12 +76,9 @@ public class Language {
 					NodeList interpretList = keyNode.getChildNodes();
 					for (int k = 0; k < interpretList.getLength(); k++) {
 						Node interpretNode = interpretList.item(k);
-						String lanInterpret = interpretNode.getAttributes().getNamedItem(ATTRIBUTE_LANGUAGE)
-								.getNodeValue();
 						String interpretString = interpretNode.getAttributes()
 								.getNamedItem(ATTRIBUTE_INTERPRETATION).getNodeValue();
-						int lanIndex = getLanIndex(languages, lanInterpret);
-						interprets.add(lanIndex, interpretString);
+						interprets.add(k, interpretString);
 					}
 					keywords.put(key, interprets);
 				}
@@ -74,15 +92,57 @@ public class Language {
 		}
 	}
 	
-	public static void setLanguage(String language) {
-		chosenLanguage = getLanIndex(languages, language);
+	/**
+	 * sets the language
+	 * @param language name of the language
+	 * @return true if applying was successful
+	 */
+	public static boolean setLanguage(String language) {
+		int index = getLanIndex(languages, language);
+		if(index != -1) {
+			chosenLanguage = index;
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
+	/**
+	 * returns the String representation of the currently used language
+	 * @return current used language
+	 */
+	public static String getLanguage() {
+		return languages.get(chosenLanguage);
+	}
+	
+	/**
+	 * returns all available languages
+	 * @return String-ArrayList with all languages
+	 */
+	public static ArrayList<String> getLanguages() {
+		return languages;
+	}
+	
+	/**
+	 * returns the note to a specific keyword in the current language
+	 * @param key keyword to the corresponding note
+	 * @return note to the corresponding keyword (or null if not found)
+	 */
 	public static String getValue(String key) {
 		ArrayList<String> specifications = keywords.get(key);
-		return specifications.get(chosenLanguage);
+		if(specifications != null) {
+			return specifications.get(chosenLanguage);
+		} else {
+			return null;
+		}
 	}
 
+	/**
+	 * returns the index of a String in an ArrayList
+	 * @param list the list which contains Strings
+	 * @param content the String which index is unknown
+	 * @return index of the String in the ArrayList
+	 */
 	private static int getLanIndex(ArrayList<String> list, String content) {
 		for (int i = 0; i < list.size(); i++) {
 			if (list.get(i).equals(content)) {
