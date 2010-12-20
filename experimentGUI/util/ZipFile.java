@@ -18,6 +18,7 @@ public class ZipFile {
 	
 	private static ZipOutputStream zipOut;
 	private static String path;
+	private static String fileName;
 
 	/**
 	 * a main method to test the zip-method
@@ -34,6 +35,7 @@ public class ZipFile {
 	 */
 	public static void zipFiles(String zipPath, String outputName) {
 		path = zipPath;
+		fileName = outputName;
 		try {
 			zipOut = new ZipOutputStream(new FileOutputStream(zipPath + outputName));
 			new ZipFile().zipDir(new File(zipPath));
@@ -66,7 +68,7 @@ public class ZipFile {
 	 */
 	private void zipFile(File file) {
 		byte[] buf = new byte[4096];
-		if (file.getName().endsWith(".zip")) return;
+		if (file.getName().equals(fileName)) return;
 		try {
 			String zipFilePath = file.getAbsolutePath();
 			if(zipFilePath.startsWith(path)) {
