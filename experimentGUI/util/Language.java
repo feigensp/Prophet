@@ -25,15 +25,15 @@ public class Language {
 	/**
 	 * contains the keywords and the corresponding notes
 	 */
-	private HashMap<String, HashMap<String, String>> keywords;
+	private static HashMap<String, HashMap<String, String>> keywords;
 	/**
 	 * contains the languages and theyr order
 	 */
-	private ArrayList<String> languages;
+	private static ArrayList<String> languages;
 	/**
 	 * contains the current chose language
 	 */
-	private int chosenLanguage;
+	private static int chosenLanguage;
 
 	/**
 	 * xml constants
@@ -52,7 +52,7 @@ public class Language {
 	 * @param path
 	 *            path of the xml file
 	 */
-	public Language(String path) {
+	public static void init(String path) {
 		keywords = new HashMap<String, HashMap<String, String>>();
 		languages = new ArrayList<String>();
 		chosenLanguage = 0;
@@ -104,7 +104,7 @@ public class Language {
 	 *            name of the language
 	 * @return true if applying was successful
 	 */
-	public boolean setLanguage(String language) {
+	public static boolean setLanguage(String language) {
 		int index = getLanIndex(languages, language);
 		if (index != -1) {
 			chosenLanguage = index;
@@ -120,7 +120,7 @@ public class Language {
 	 * 
 	 * @return current used language
 	 */
-	public String getLanguage() {
+	public static String getLanguage() {
 		return languages.get(chosenLanguage);
 	}
 
@@ -129,7 +129,7 @@ public class Language {
 	 * 
 	 * @return String-ArrayList with all languages
 	 */
-	public ArrayList<String> getLanguages() {
+	public static ArrayList<String> getLanguages() {
 		return languages;
 	}
 
@@ -140,7 +140,7 @@ public class Language {
 	 *            keyword to the corresponding note
 	 * @return note to the corresponding keyword (or null if not found)
 	 */
-	public String getValue(String key) {
+	public static String getValue(String key) {
 		HashMap<String, String> specifications = keywords.get(key);
 		if (specifications != null) {
 			return specifications.get(languages.get(chosenLanguage));
@@ -158,7 +158,7 @@ public class Language {
 	 *            the String which index is unknown
 	 * @return index of the String in the ArrayList
 	 */
-	private int getLanIndex(ArrayList<String> list, String content) {
+	private static int getLanIndex(ArrayList<String> list, String content) {
 		for (int i = 0; i < list.size(); i++) {
 			if (list.get(i).equals(content)) {
 				return i;

@@ -30,7 +30,6 @@ public class ExperimentEditor extends JFrame {
 	private QuestionEditorTabbedPane questionEditorTabbedPane;
 
 	private JPanel contentPane;
-	private Language language;
 
 	/**
 	 * the main method to launch the application
@@ -58,8 +57,8 @@ public class ExperimentEditor extends JFrame {
 	 * the view
 	 */
 	public ExperimentEditor() {
-		language = new Language("language.xml");
-		language.setLanguage("arabisch");
+		Language.init("language.xml");
+		Language.setLanguage("arabisch");
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 800, 600);
@@ -97,9 +96,5 @@ public class ExperimentEditor extends JFrame {
 	}
 	public void loadTree(QuestionTreeNode root) {
 		tree.setRoot(root);
-	}
-	
-	public Language getLanguage() {
-		return language;
 	}
 }
