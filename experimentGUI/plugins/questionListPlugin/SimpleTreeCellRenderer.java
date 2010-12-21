@@ -14,7 +14,7 @@ public class SimpleTreeCellRenderer extends DefaultTreeCellRenderer{
 			boolean expanded, boolean leaf, int row, boolean hasFocus1) {
 		super.getTreeCellRendererComponent(tree, value, selected1, expanded, leaf, row, hasFocus1);
 		setEnabled(true);
-		setIcon(new ListIcon(ListIcon.NOICON));
+		setIcon(new ListIcon(ListIcon.CIRCLE));
 		return this;
 	}
 }

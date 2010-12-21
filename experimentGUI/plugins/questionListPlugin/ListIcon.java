@@ -11,6 +11,8 @@ public class ListIcon implements Icon {
 	public static final int NOICON = -1;
 	public static final int DOWNARROW = 0;
 	public static final int UPDOWNARROW = 1;
+	public static final int CIRCLE = 2;
+	
 	private int type;
 
 	public ListIcon(int type) {
@@ -53,6 +55,9 @@ public class ListIcon implements Icon {
 				p.addPoint(15, 4);
 				g.drawPolygon(p);
 				g.fillPolygon(p);
+			}
+			if(type == CIRCLE) {
+				g.drawRoundRect(6, 6, 5, 5, 4, 4);
 			}
 		}
 	}
