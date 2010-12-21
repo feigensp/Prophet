@@ -4,12 +4,10 @@ import java.awt.BorderLayout;
 import java.awt.Font;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 
 import javax.swing.JPanel;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.text.BadLocationException;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxDocument;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
@@ -22,7 +20,7 @@ import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 
 @SuppressWarnings("serial")
 public class EditorPanel extends JPanel {
-	private File file;
+	private String filePath;
 	private RTextScrollPane scrollPane;
 	private RSyntaxTextArea textArea;
 	private boolean changed;
@@ -30,9 +28,9 @@ public class EditorPanel extends JPanel {
 	/**
 	 * Create the panel.
 	 */
-	public EditorPanel(File f, QuestionTreeNode selected) {
+	public EditorPanel(File file, String path, QuestionTreeNode selected) {
 		changed = false;
-		file=f;
+		this.filePath=path;
 		if (selected==null) {
 			selected=new QuestionTreeNode();
 		}
@@ -78,14 +76,6 @@ public class EditorPanel extends JPanel {
 			}			
 		});
 	}
-	
-	public EditorPanel(File f) {
-		this(f, null);
-	}
-
-	public File getFile() {
-		return file;
-	}
 
 	public void grabFocus() {
 		textArea.grabFocus();
@@ -98,5 +88,8 @@ public class EditorPanel extends JPanel {
 	}
 	public boolean isChanged() {
 		return changed;
+	}
+	public String getFilePath() {
+		return filePath;
 	}
 }

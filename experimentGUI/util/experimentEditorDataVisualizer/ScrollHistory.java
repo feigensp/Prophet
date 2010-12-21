@@ -147,7 +147,7 @@ public class ScrollHistory extends JFrame {
 		// fileTree
 		fileTree.addFileListener(new FileListener() {
 			public void fileEventOccured(FileEvent e) {
-				editorTabbedPane.openFile(e.getFile());
+				editorTabbedPane.openFile(e.getFilePath());
 			}
 		});
 	}

@@ -2,88 +2,60 @@ package experimentGUI.plugins.codeViewerPlugin.fileTree;
 
 import java.io.File;
 import java.util.Arrays;
-import java.util.Enumeration;
 import java.util.Vector;
 
-import javax.swing.tree.TreeNode;
+import javax.swing.tree.DefaultMutableTreeNode;
 
 
-public class FileTreeNode implements TreeNode {	
-	private File file;
-	private FileTreeNode parent;
-	private boolean isFile, extended;
-	private int childCount;
-	private Vector<FileTreeNode> children;
+@SuppressWarnings("serial")
+public class FileTreeNode extends DefaultMutableTreeNode {	
+	private String name;
+	private String path;
+	private boolean isFile;
 	
-	public FileTreeNode(File f, FileTreeNode p) {
-		file = f;
-		parent = p;
-		isFile = f.isFile();
-		extended = false;
+	public FileTreeNode(File file) {
+		this(file,"", true);
 	}
-	public File getFile() {
-		return file;
-	}
-	public String toString() {
-		return file.getName();
-	}
-	private void extend() {
-		if (extended) {
-			return;
+	private FileTreeNode(File file, String containingPath, boolean root) {
+		name=file.getName();
+		if (root) {
+			this.path="";
+		} else {
+			this.path=containingPath+System.getProperty("file.separator")+name;
 		}
-		File[] content = file.listFiles();
-		Arrays.sort(content);
-		Vector<FileTreeNode> dirs = new Vector<FileTreeNode>();
-		Vector<FileTreeNode> files = new Vector<FileTreeNode>();
-		for (File f : content) {
-			if (f.isDirectory()) {
-				dirs.add(new FileTreeNode(f, this));
-			} else {
-				files.add(new FileTreeNode(f, this));
+		isFile = file.isFile();
+		if(!isFile) {
+			File[] content = file.listFiles();
+			Arrays.sort(content);
+			Vector<FileTreeNode> dirs = new Vector<FileTreeNode>();
+			Vector<FileTreeNode> files = new Vector<FileTreeNode>();
+			for (File f : content) {
+				if (f.isDirectory()) {
+					dirs.add(new FileTreeNode(f, this.path, false));
+				} else {
+					files.add(new FileTreeNode(f, this.path, false));
+				}
+			}
+			for (FileTreeNode newDir : dirs) {
+				this.add(newDir);
+			}
+			for (FileTreeNode newFile : files) {
+				this.add(newFile);
 			}
 		}
-		children=new Vector<FileTreeNode>();
-		children.addAll(dirs);
-		children.addAll(files);
-		childCount=children.size();
-		extended=true;
 	}
-	public int getChildCount() {
-		if (!extended) {
-			extend();
-		}
-		return childCount;
+	public String getFilePath() {
+		return path;
 	}
+	@Override
+	public String toString() {
+		return name;
+	}
+	@Override
 	public boolean isLeaf() {
 		return isFile;
 	}
-	@Override
-	public Enumeration<FileTreeNode> children() {
-		if (!extended) {
-			extend();
-		}
-		return children.elements();
-	}
-	@Override
-	public boolean getAllowsChildren() {
-		return !isLeaf();
-	}
-	@Override
-	public TreeNode getChildAt(int childIndex) {
-		if (!extended) {
-			extend();
-		}
-		return children.get(childIndex);
-	}
-	@Override
-	public int getIndex(TreeNode node) {
-		if (!extended) {
-			extend();
-		}
-		return children.indexOf(node);
-	}
-	@Override
-	public TreeNode getParent() {
-		return parent;
+	public boolean isFile() {
+		return isFile;
 	}
 }

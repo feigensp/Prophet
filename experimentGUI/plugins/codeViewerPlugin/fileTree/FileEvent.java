@@ -6,12 +6,13 @@ import java.io.File;
 @SuppressWarnings("serial")
 public class FileEvent extends AWTEvent{
 	public static final int FILE_OPENED = RESERVED_ID_MAX + 1;
-	private File file;
-	public FileEvent(Object source, int id, File f) {
+	public static final int FILE_CLOSED = FILE_OPENED + 1;
+	private String filePath;
+	public FileEvent(Object source, int id, String filePath) {
 		super(source, id);
-		file=f;
+		this.filePath=filePath;
 	}
-	public File getFile() {
-		return file;
+	public String getFilePath() {
+		return filePath;
 	}
 }

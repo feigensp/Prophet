@@ -28,6 +28,9 @@ public class CodeViewer extends JFrame implements FileListener {
 	private JSplitPane splitPane;
 	private FileTree myTree;
 	private EditorTabbedPane tabbedPane;
+	
+	private File showDir;
+	private File saveDir;
 
 	/**
 	 * Launch the application.
@@ -36,7 +39,7 @@ public class CodeViewer extends JFrame implements FileListener {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					CodeViewer frame = new CodeViewer(null);
+					CodeViewer frame = new CodeViewer(null, null);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -45,17 +48,21 @@ public class CodeViewer extends JFrame implements FileListener {
 		});
 	}
 	
-	public CodeViewer(QuestionTreeNode selected) {
-		setBounds(100, 100, 800, 600);
+	public CodeViewer(QuestionTreeNode selected, File saveDir) {
+		this.setSize(800, 600);
+		
 		if (selected==null) {
 			selected = new QuestionTreeNode();
 		}
+		if (saveDir==null) {
+			saveDir=new File(".");
+		}
+		this.saveDir=saveDir;
 		
 		//read settings, store in variables
 		
-		String path = selected.getAttributeValue(KEY_PATH);
-		path = path==null || path.length()==0 ? "." : path;
-		//System.out.println(path);
+		String showPath = selected.getAttributeValue(KEY_PATH);
+		showDir = new File(showPath==null || showPath.length()==0 ? "." : showPath);
 		menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
 		//TODO: in editable Plugin		
@@ -66,26 +73,26 @@ public class CodeViewer extends JFrame implements FileListener {
 		menu.add(saveMenuItem);
 		saveMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				tabbedPane.saveActiveFile("UserMods");
+				tabbedPane.saveActiveFile();
 			}
 		});
 		JMenuItem saveAllMenuItem = new JMenuItem("Alle Speichern");
 		menu.add(saveAllMenuItem);
 		saveAllMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				tabbedPane.saveAllFiles("UserMods");
+				tabbedPane.saveAllFiles();
 			}
 		});
 		//end TODO
 		splitPane = new JSplitPane();
 		splitPane.setBorder(null);
 		
-		myTree = new FileTree(new File(path));
+		myTree = new FileTree(showDir);
 		myTree.setPreferredSize(new Dimension(200, 400));
 		myTree.addFileListener(this);
 		splitPane.setLeftComponent(myTree);
 		
-		tabbedPane = new EditorTabbedPane(selected);
+		tabbedPane = new EditorTabbedPane(selected, showDir, new File(saveDir.getPath()+System.getProperty("file.separator")+"savedFiles"));
 		splitPane.setRightComponent(tabbedPane);
 		
 		setContentPane(splitPane);	
@@ -93,7 +100,9 @@ public class CodeViewer extends JFrame implements FileListener {
 
 	@Override
 	public void fileEventOccured(FileEvent arg0) {
-		tabbedPane.openFile(arg0.getFile());
+		if (arg0.getID()==FileEvent.FILE_OPENED) {
+			tabbedPane.openFile(arg0.getFilePath());
+		}
 	}
 
 	public JSplitPane getSplitPane() {
@@ -106,5 +115,8 @@ public class CodeViewer extends JFrame implements FileListener {
 
 	public EditorTabbedPane getTabbedPane() {
 		return tabbedPane;
+	}
+	public File getSaveDir() {
+		return saveDir;
 	}
 }

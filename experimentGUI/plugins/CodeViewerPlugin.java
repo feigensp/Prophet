@@ -1,5 +1,7 @@
 package experimentGUI.plugins;
 
+import java.io.File;
+
 import javax.swing.JFrame;
 
 import experimentGUI.PluginInterface;
@@ -14,6 +16,8 @@ import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 
 public class CodeViewerPlugin implements PluginInterface {
 	public final static String KEY = "codeviewer";
+	ExperimentViewer experimentViewer;
+	int count = 1;
 
 	@Override
 	public SettingsComponentDescription getSettingsComponentDescription(
@@ -37,13 +41,16 @@ public class CodeViewerPlugin implements PluginInterface {
 
 	@Override
 	public void experimentViewerRun(ExperimentViewer experimentViewer) {
+		this.experimentViewer=experimentViewer;
 	}
 
 	@Override
 	public Object enterNode(QuestionTreeNode node) {
 		boolean enabled = Boolean.parseBoolean(node.getAttributeValue(KEY));
 		if (enabled) {
-			CodeViewer cv = new CodeViewer(node.getAttribute(KEY));
+			String savePath = experimentViewer.getSaveDir().getPath()+System.getProperty("file.separator")+(count++)+"_"+node.getName()+"_codeviewer";		
+			CodeViewer cv = new CodeViewer(node.getAttribute(KEY), new File(savePath));
+			cv.setLocationRelativeTo(experimentViewer);
 			cv.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 			cv.setVisible(true);
 			for (CodeViewerPluginInterface plugin : CodeViewerPluginList.getPlugins()) {

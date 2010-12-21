@@ -68,7 +68,7 @@ public class VideoRecordAlternative extends JFrame {
 			e.printStackTrace();
 			return;
 		}
-		CodeViewer codeViewer = new CodeViewer(questionnaire);
+		CodeViewer codeViewer = new CodeViewer(questionnaire, null);
 		codeViewer.setVisible(true);
 		controller = new VideoRecordController(log, codeViewer);
 		

@@ -11,17 +11,16 @@ import java.util.HashMap;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextPane;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
+import javax.swing.text.html.HTMLEditorKit;
 
 import experimentGUI.Constants;
 import experimentGUI.PluginInterface;
 import experimentGUI.PluginList;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 import experimentGUI.util.questionTreeNode.QuestionTreeXMLHandler;
-
-
-
 
 /**
  * This class shows the html files (questions) creates the navigation and
@@ -43,7 +42,7 @@ public class ExperimentViewer extends JFrame {
 	private QuestionTreeNode tree;
 	private QuestionTreeNode currentNode;
 	
-	private String subjectDir;
+	private File saveDir;
 	
 	ActionListener myActionListener = new ActionListener() {
 		public void actionPerformed(ActionEvent arg0) {
@@ -85,6 +84,8 @@ public class ExperimentViewer extends JFrame {
 	 */
 	public ExperimentViewer() {
 		this.setSize(800, 600);
+		setLocationRelativeTo(null);
+		
 		String fileName = Constants.DEFAULT_FILE;
 		if (!(new File(fileName).exists())) {
 			fileName = JOptionPane.showInputDialog("Bitte Experiment angeben:");
@@ -122,8 +123,17 @@ public class ExperimentViewer extends JFrame {
 	private boolean nextNode() {
 		pauseClock();
 		if (currentNode==tree) {
+			String subject = currentNode.getAnswer(Constants.KEY_SUBJECT);
+			if (subject==null || subject.length()==0) {
+				JOptionPane.showMessageDialog(this, "Bitte Probanden-Code eingeben!", "Fehler!", JOptionPane.ERROR_MESSAGE);
+				return false;
+			}
+			String experiment = currentNode.getAttributeValue(Constants.KEY_CODE);
+			if (experiment==null) {
+				experiment="default";
+			}
+			saveDir = new File(experiment+"_"+subject);
 			totalTime.start();
-			subjectDir = currentNode.getAttributeValue(Constants.KEY_CODE)+"_"+currentNode.getAnswer(Constants.KEY_SUBJECT);
 		}
 		boolean inactive = Boolean.parseBoolean(currentNode.getAttributeValue("inactive"));
 		if (!inactive && currentNode.getChildCount() != 0) {
@@ -237,19 +247,29 @@ public class ExperimentViewer extends JFrame {
 	 * method which is called when the last question is answered
 	 */
 	private void endQuestionnaire() {
-		QuestionTreeXMLHandler.saveXMLAnswerTree(tree, Constants.FILE_ANSWERS);
-		for (PluginInterface plugin : PluginList.getPlugins()) {
-			plugin.finishExperiment();
-		}
 		contentPane.removeAll();
 		contentPane.updateUI();
+		JTextPane output = new JTextPane();
+		output.setEditable(false);
+		output.setEditorKit(new HTMLEditorKit());
+		String outputString = "<p>Befragung beendet.</p>";
+		QuestionTreeXMLHandler.saveXMLAnswerTree(tree, saveDir.getPath()+System.getProperty("file.separator")+Constants.FILE_ANSWERS);
+		for (PluginInterface plugin : PluginList.getPlugins()) {
+			String tmp = plugin.finishExperiment();
+			if (tmp!=null) {
+				outputString+="<p>"+tmp+"</p>";
+			}
+		}
+		output.setText(outputString);
+		output.setCaretPosition(0);
+		contentPane.add(output, BorderLayout.CENTER);
 	}
 
 	public QuestionTreeNode getTree() {
 		return tree;
 	}
 	
-	public String getSubjectDir() {
-		return subjectDir;
+	public File getSaveDir() {
+		return saveDir;
 	}
 }

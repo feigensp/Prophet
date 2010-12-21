@@ -57,11 +57,12 @@ public class ExperimentEditor extends JFrame {
 	 * the view
 	 */
 	public ExperimentEditor() {
-		Language.init("language.xml");
-		Language.setLanguage("arabisch");
+//		Language.init("language.xml");
+//		Language.setLanguage("arabisch");
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 800, 600);
+		setSize(800, 600);
+		setLocationRelativeTo(null);
 
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));

@@ -8,6 +8,7 @@ import java.util.Vector;
 
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
+import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
@@ -19,12 +20,12 @@ import javax.swing.tree.TreeSelectionModel;
 @SuppressWarnings("serial")
 public class FileTree extends JScrollPane {
 	private JTree tree;
-	private File file;
+	private File rootDir;
 	private Vector<FileListener> fileListeners;
 
-	public FileTree(File f) {
-		file = f;
-		tree = new JTree(new FileTreeModel(file));
+	public FileTree(File dir) {
+		rootDir = dir;
+		tree = new JTree(new DefaultTreeModel(new FileTreeNode(rootDir)));
 		tree.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
@@ -32,9 +33,9 @@ public class FileTree extends JScrollPane {
 				if ((e.getClickCount() == 2)
 						&& (selPath != null)
 						&& ((FileTreeNode) selPath.getLastPathComponent())
-								.getFile().isFile()) {
+								.isFile()) {
 					fireFileEvent(((FileTreeNode) selPath.getLastPathComponent())
-							.getFile());
+							.getFilePath());
 				}
 			}
 		});
@@ -57,10 +58,10 @@ public class FileTree extends JScrollPane {
 			fileListeners.removeElement(l);
 	}
 
-	public void fireFileEvent(File fireFile) {
+	public void fireFileEvent(String filePath) {
 		if (fileListeners == null)
 			return;
-		FileEvent event = new FileEvent(this, FileEvent.FILE_OPENED, fireFile);
+		FileEvent event = new FileEvent(this, FileEvent.FILE_OPENED, filePath);
 		for (Enumeration<FileListener> e = fileListeners.elements(); e
 				.hasMoreElements();)
 			((FileListener) e.nextElement()).fileEventOccured(event);			

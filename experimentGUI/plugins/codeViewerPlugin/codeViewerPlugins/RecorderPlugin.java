@@ -30,7 +30,6 @@ public class RecorderPlugin implements CodeViewerPluginInterface,ChangeListener 
 	public static final String ATTRIBUTE_PATH = "path";
 	
 	private boolean enabled;
-	private String filename;
 	
 	private LoggingTreeNode rootNode;
 	private LoggingTreeNode currentNode;
@@ -71,12 +70,6 @@ public class RecorderPlugin implements CodeViewerPluginInterface,ChangeListener 
 			
 			openTabs = new HashSet<Component>();
 			
-			filename = selected.getAttribute(KEY).getAttributeValue(KEY_FILENAME);
-			if (filename==null || filename.length()==0) {
-				filename="recorder";
-			}
-			filename+=".xml";
-			
 			viewer.getTabbedPane().addChangeListener(this);
 			for (RecorderPluginInterface plugin : RecorderPluginList.getPlugins()) {
 				plugin.onFrameCreate(selected.getAddAttribute(KEY),codeViewer, currentNode);
@@ -98,7 +91,7 @@ public class RecorderPlugin implements CodeViewerPluginInterface,ChangeListener 
 			if (!openTabs.contains(ed)) {
 				openTabs.add(ed);
 				LoggingTreeNode openedNode = new LoggingTreeNode(TYPE_OPENED);
-				openedNode.setAttribute(ATTRIBUTE_PATH, ed.getFile().getPath());
+				openedNode.setAttribute(ATTRIBUTE_PATH, ed.getFilePath());
 				currentNode.add(openedNode);
 			}
 		}
@@ -109,7 +102,7 @@ public class RecorderPlugin implements CodeViewerPluginInterface,ChangeListener 
 			if (!nowOpenTabs.contains(ed)) {
 				it.remove();
 				LoggingTreeNode closedNode = new LoggingTreeNode(TYPE_CLOSED);
-				closedNode.setAttribute(ATTRIBUTE_PATH, ed.getFile().getPath());
+				closedNode.setAttribute(ATTRIBUTE_PATH, ed.getFilePath());
 				currentNode.add(closedNode);
 			}
 		}
@@ -120,7 +113,7 @@ public class RecorderPlugin implements CodeViewerPluginInterface,ChangeListener 
 				currentNode = new LoggingTreeNode(LoggingTreeNode.TYPE_NOFILE);
 			} else {
 				currentNode = new LoggingTreeNode(LoggingTreeNode.TYPE_FILE);
-				currentNode.setAttribute(ATTRIBUTE_PATH, currentTab.getFile().getPath());
+				currentNode.setAttribute(ATTRIBUTE_PATH, currentTab.getFilePath());
 			}
 			rootNode.add(currentNode);
 			//Plugins aktualisieren
@@ -135,7 +128,7 @@ public class RecorderPlugin implements CodeViewerPluginInterface,ChangeListener 
 		if(enabled) {
 			LoggingTreeNode node = new LoggingTreeNode(TYPE_VIEWERCLOSED);
 			currentNode.add(node);
-			LoggingTreeXMLHandler.saveXMLTree(rootNode, filename);
+			LoggingTreeXMLHandler.saveXMLTree(rootNode, codeViewer.getSaveDir().getPath()+System.getProperty("file.separator")+"recorder.xml");
 		}
 	}
 

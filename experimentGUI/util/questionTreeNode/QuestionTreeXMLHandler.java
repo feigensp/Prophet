@@ -84,6 +84,10 @@ public class QuestionTreeXMLHandler {
 		Document xmlTree = null;
 		try {
 			// Dokument erstellen
+			File dir = new File(path).getParentFile();
+			if (!dir.exists()) {
+				dir.mkdirs();
+			}
 			xmlTree = DocumentBuilderFactory.newInstance().newDocumentBuilder()
 					.newDocument();
 			// Wurzelknoten erschaffen
@@ -159,6 +163,10 @@ public class QuestionTreeXMLHandler {
 		Document xmlTree = null;
 		try {
 			// Dokument erstellen
+			File dir = new File(path).getParentFile();
+			if (!dir.exists()) {
+				dir.mkdirs();
+			}
 			xmlTree = DocumentBuilderFactory.newInstance().newDocumentBuilder()
 					.newDocument();
 			// Wurzelknoten erschaffen

@@ -48,7 +48,6 @@ public class QuestionList extends JScrollPane {
 
 	public void visit(QuestionTreeNode selectionNode) {
 		boolean inactive = Boolean.parseBoolean(root.getAttributeValue("inactive"));
-		System.out.println("Inaktiv: " + inactive);
 		if (!inactive) {
 	        DefaultMutableTreeNode root =
 	            (DefaultMutableTreeNode)tree.getModel().getRoot();

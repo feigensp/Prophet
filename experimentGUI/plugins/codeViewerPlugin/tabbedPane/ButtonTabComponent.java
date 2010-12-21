@@ -113,8 +113,7 @@ public class ButtonTabComponent extends JPanel {
 				int n = JOptionPane.showConfirmDialog(null, "Änderungen speichern?", "Speichern?",
 						JOptionPane.YES_NO_OPTION);
 				if (n == JOptionPane.YES_OPTION) {
-					//TODO: korrekten pfad eingeben
-					pane.saveEditorPanel("test", editPanel);
+					pane.saveEditorPanel(editPanel);
 				}
 			}
 			//schliessen
