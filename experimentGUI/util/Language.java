@@ -1,16 +1,6 @@
 package experimentGUI.util;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
+import java.util.TreeMap;
 
 /**
  * this class can load language specifications from xml files you can set the
@@ -22,18 +12,17 @@ import org.xml.sax.SAXException;
  */
 public class Language {
 
-	/**
-	 * contains the keywords and the corresponding notes
-	 */
-	private static HashMap<String, HashMap<String, String>> keywords;
-	/**
-	 * contains the languages and theyr order
-	 */
-	private static ArrayList<String> languages;
-	/**
-	 * contains the current chose language
-	 */
-	private static int chosenLanguage;
+	//contains the keywords and the corresponding notes
+	private static TreeMap<String, TreeMap<String, String>> keywords;
+	private TreeMap<String, TreeMap<String, String>> localKeywords;
+	//contains the current chose language
+	private static String currentLanguage;
+	private String currentLocalLanguage;
+	//fallback language
+	private static String fallbackLanguage;
+	private String localFallbackLanguage;
+	
+	private static final String ERROR_MSG = "not found";
 
 	/**
 	 * xml constants
@@ -45,7 +34,40 @@ public class Language {
 	public static final String ELEMENT_KEY_LAN = "languageInterpretation";
 	public static final String ATTRIBUTE_LANGUAGE = "language";
 	public static final String ATTRIBUTE_INTERPRETATION = "interpretation";
-
+	
+	public Language() {
+		localKeywords = new TreeMap<String, TreeMap<String, String>>();
+	}
+	
+	public String put(String language, String key, String value) {
+		if(localKeywords.containsKey(language)) {
+			return localKeywords.get(language).put(key, value);
+		} else {
+			TreeMap<String, String> treeMap = new TreeMap<String, String>();
+			treeMap.put(key, value);
+			localKeywords.put(language, treeMap);
+			return value;
+		}
+	}
+	
+	public String getValue(String language, String key) {
+		if(localKeywords.containsKey(language)) {
+			return localKeywords.get(language).get(key);
+		} else {
+			return null;
+		}
+	}
+	
+	public void setLocalLanguage(String language) {
+		currentLocalLanguage = language;
+	}
+	
+	public void setLocalFallbackLanguage(String language) {
+		localFallbackLanguage = language;
+	}
+	
+	
+	
 	/**
 	 * initialize the data with the content of an xml file
 	 * 
@@ -53,48 +75,9 @@ public class Language {
 	 *            path of the xml file
 	 */
 	public static void init(String path) {
-		keywords = new HashMap<String, HashMap<String, String>>();
-		languages = new ArrayList<String>();
-		chosenLanguage = 0;
-
-		try {
-			Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(path);
-			Node xmlRoot = doc.getFirstChild();
-			Node child = null;
-			NodeList children = xmlRoot.getChildNodes();
-			for (int i = 0; i < children.getLength(); i++) {
-				child = children.item(i);
-				// languages
-				if (child.getNodeName().equals(ELEMENT_LANGUAGES)) {
-					NodeList lanList = child.getChildNodes();
-					for (int j = 0; j < lanList.getLength(); j++) {
-						Node lan = lanList.item(j);
-						languages.add(lan.getTextContent());
-					}
-				} else {
-					// keywords
-					Node keyNode = children.item(i);
-					String key = keyNode.getAttributes().getNamedItem(ATTRIBUTE_NAME).getNodeValue();
-					HashMap<String, String> interprets = new HashMap<String, String>();
-					NodeList interpretList = keyNode.getChildNodes();
-					for (int k = 0; k < interpretList.getLength(); k++) {
-						Node interpretNode = interpretList.item(k);
-						String interpretString = interpretNode.getAttributes()
-								.getNamedItem(ATTRIBUTE_INTERPRETATION).getNodeValue();
-						String languageString = interpretNode.getAttributes()
-								.getNamedItem(ATTRIBUTE_LANGUAGE).getNodeValue();
-						interprets.put(languageString, interpretString);
-					}
-					keywords.put(key, interprets);
-				}
-			}
-		} catch (SAXException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (ParserConfigurationException e) {
-			e.printStackTrace();
-		}
+		Pair<TreeMap<String, TreeMap<String, String>>, String> data = LanguageXMLHandler.load(path);
+		keywords = data.getKey();
+		fallbackLanguage = data.getValue();
 	}
 
 	/**
@@ -105,12 +88,11 @@ public class Language {
 	 * @return true if applying was successful
 	 */
 	public static boolean setLanguage(String language) {
-		int index = getLanIndex(languages, language);
-		if (index != -1) {
-			chosenLanguage = index;
+		if (keywords.get(language) != null) {
+			currentLanguage = language;
 			return true;
 		} else {
-			chosenLanguage = 0;
+			currentLanguage = fallbackLanguage;
 			return false;
 		}
 	}
@@ -121,16 +103,7 @@ public class Language {
 	 * @return current used language
 	 */
 	public static String getLanguage() {
-		return languages.get(chosenLanguage);
-	}
-
-	/**
-	 * returns all available languages
-	 * 
-	 * @return String-ArrayList with all languages
-	 */
-	public static ArrayList<String> getLanguages() {
-		return languages;
+		return currentLanguage;
 	}
 
 	/**
@@ -141,29 +114,15 @@ public class Language {
 	 * @return note to the corresponding keyword (or null if not found)
 	 */
 	public static String getValue(String key) {
-		HashMap<String, String> specifications = keywords.get(key);
-		if (specifications != null) {
-			return specifications.get(languages.get(chosenLanguage));
+		TreeMap<String, String> specifications = keywords.get(currentLanguage);
+		if(specifications == null) {
+			return ERROR_MSG;
+		}
+		String interpretation = specifications.get(key);
+		if (interpretation == null) {
+			return ERROR_MSG;
 		} else {
-			return null;
+			return interpretation;
 		}
-	}
-
-	/**
-	 * returns the index of a String in an ArrayList
-	 * 
-	 * @param list
-	 *            the list which contains Strings
-	 * @param content
-	 *            the String which index is unknown
-	 * @return index of the String in the ArrayList
-	 */
-	private static int getLanIndex(ArrayList<String> list, String content) {
-		for (int i = 0; i < list.size(); i++) {
-			if (list.get(i).equals(content)) {
-				return i;
-			}
-		}
-		return -1;
 	}
 }

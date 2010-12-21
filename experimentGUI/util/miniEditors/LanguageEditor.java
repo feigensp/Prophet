@@ -5,13 +5,16 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.io.IOException;
-import java.util.HashMap;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.io.File;
 import java.util.Iterator;
+import java.util.TreeMap;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
@@ -23,31 +26,23 @@ import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.TransformerFactoryConfigurationError;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
+import experimentGUI.util.LanguageXMLHandler;
+import experimentGUI.util.Pair;
 
 /**
  * This ist a little programm to create/manipulate a xml File, which could be
@@ -59,19 +54,11 @@ import org.xml.sax.SAXException;
 public class LanguageEditor extends JFrame {
 
 	/**
-	 * xml constants
-	 */
-	public static final String ELEMENT_LANGUAGES = "languages";
-	public static final String ELEMENT_LANGUAGE = "language";
-	public static final String ELEMENT_KEYWORD = "keyword";
-	public static final String ATTRIBUTE_NAME = "name";
-	public static final String ELEMENT_KEY_LAN = "languageInterpretation";
-	public static final String ATTRIBUTE_LANGUAGE = "language";
-	public static final String ATTRIBUTE_INTERPRETATION = "interpretation";
-	/**
 	 * standard language constant
 	 */
-	public static String LANGUAGE_GERMAN = "deutsch";
+	public static String LANGUAGE_GERMAN = "de";
+	public static String DEFAULT_LANGUAGE_UNDEFINED = "Ausweichsprache setzen";
+	public static String DEFAULT_LANGUAGE_DEFINED = "Ausweichsprache: ";
 
 	private JList list;
 	private DefaultListModel listModel;
@@ -89,6 +76,7 @@ public class LanguageEditor extends JFrame {
 	private JButton addLanButton;
 	private JMenuItem saveAsMenuItem;
 	private JMenuItem newMenuItem;
+	private JButton fallbackLanguageButton;
 
 	/**
 	 * the current path for the file to save in
@@ -98,7 +86,7 @@ public class LanguageEditor extends JFrame {
 	 * structure to save the keyword and the corresponding words/sentences the
 	 * order of these words is the same as the language order
 	 */
-	private HashMap<String, HashMap<String, String>> keywords;
+	private TreeMap<String, TreeMap<String, String>> keywords;
 
 	/**
 	 * Launch the application.
@@ -107,6 +95,9 @@ public class LanguageEditor extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					String laf = UIManager.getSystemLookAndFeelClassName();
+					UIManager.setLookAndFeel(laf);
+
 					LanguageEditor frame = new LanguageEditor();
 					frame.setVisible(true);
 				} catch (Exception e) {
@@ -121,13 +112,9 @@ public class LanguageEditor extends JFrame {
 	 */
 	public LanguageEditor() {
 		// initialise the data structures
-		keywords = new HashMap<String, HashMap<String, String>>();
+		keywords = new TreeMap<String, TreeMap<String, String>>();
 		path = null;
 
-		// path = "language.xml";
-		// load(path);
-
-		// build up GUI
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 700, 300);
 
@@ -152,26 +139,15 @@ public class LanguageEditor extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(new BorderLayout(0, 0));
 
-		JPanel panel = new JPanel();
-		panel.setBorder(new LineBorder(new Color(0, 0, 0)));
-		FlowLayout flowLayout = (FlowLayout) panel.getLayout();
-		flowLayout.setAlignment(FlowLayout.LEFT);
-		contentPane.add(panel, BorderLayout.SOUTH);
-
 		addButton = new JButton("Hinzuf\u00FCgen");
 		textField = new JTextField();
-		panel.add(textField);
 		textField.setColumns(10);
-		panel.add(addButton);
 		removeButton = new JButton("Entfernen");
-		panel.add(removeButton);
 
 		listModel = new DefaultListModel();
-		list = new JList();
-		list.setBorder(new LineBorder(new Color(0, 0, 0)));
-		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		list = new JList();	
 		list.setModel(listModel);
-		list.setPreferredSize(new Dimension(150, 0));
+		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
 		JPanel contentPanel = new JPanel();
 		contentPanel.setLayout(new BorderLayout(0, 0));
@@ -184,7 +160,7 @@ public class LanguageEditor extends JFrame {
 		FlowLayout flowLayout_1 = (FlowLayout) panel_2.getLayout();
 		flowLayout_1.setAlignment(FlowLayout.LEFT);
 		panel_2.setBorder(new LineBorder(new Color(0, 0, 0)));
-		contentPanel.add(panel_2, BorderLayout.NORTH);
+		contentPane.add(panel_2, BorderLayout.NORTH);
 
 		comboBox = new JComboBox();
 		boxModel = new DefaultComboBoxModel();
@@ -196,22 +172,41 @@ public class LanguageEditor extends JFrame {
 		lanTextField.setColumns(10);
 
 		addLanButton = new JButton("Neue Sprache");
+		addLanButton.setToolTipText("ISO 639-1 Sprachangabe");
 		panel_2.add(addLanButton);
 		removeLanButton = new JButton("Sprache entfernen");
 		panel_2.add(removeLanButton);
 
+		fallbackLanguageButton = new JButton(DEFAULT_LANGUAGE_UNDEFINED);
+		panel_2.add(fallbackLanguageButton);
+
+		JPanel keywordPanel = new JPanel();
+		keywordPanel.setLayout(new BorderLayout());	
+		
+		keywordPanel.add(new JScrollPane(list), BorderLayout.CENTER);
+		JPanel keywordMenuPanel = new JPanel();
+		keywordMenuPanel.setBorder(new LineBorder(new Color(0, 0, 0)));
+		keywordMenuPanel.setLayout(new GridLayout(2, 1));
+		JPanel addKeywordPanel = new JPanel();
+		addKeywordPanel.add(textField);
+		addKeywordPanel.add(addButton);
+		keywordMenuPanel.add(addKeywordPanel);
+		JPanel removeKeyPanel = new JPanel();
+		removeKeyPanel.add(removeButton);
+		keywordMenuPanel.add(removeKeyPanel);
+		keywordPanel.add(keywordMenuPanel, BorderLayout.SOUTH);
+
 		JSplitPane splitPane = new JSplitPane();
-		splitPane.setLeftComponent(list);
+		splitPane.setLeftComponent(keywordPanel);
 		splitPane.setRightComponent(contentPanel);
 		contentPane.add(splitPane, BorderLayout.CENTER);
 
 		setListener();
 		newMenuItem.doClick();
-		// create empty rack
 	}
 
 	/**
-	 * set all Listeners and define theyr methods
+	 * set all Listeners and define their methods
 	 */
 	private void setListener() {
 		// close program
@@ -225,7 +220,7 @@ public class LanguageEditor extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				path = null;
 				keywords.clear();
-				keywords.put(LANGUAGE_GERMAN, new HashMap<String, String>());
+				keywords.put(LANGUAGE_GERMAN, new TreeMap<String, String>());
 				showInfos();
 			}
 		});
@@ -235,18 +230,37 @@ public class LanguageEditor extends JFrame {
 				if (path == null) {
 					saveAsMenuItem.doClick();
 				} else {
-					save(path);
+					String defaultLanguage = fallbackLanguageButton.getText();
+					defaultLanguage = defaultLanguage.equals(DEFAULT_LANGUAGE_UNDEFINED) ? null
+							: defaultLanguage.substring(DEFAULT_LANGUAGE_DEFINED.length());
+					LanguageXMLHandler.save(path, keywords, defaultLanguage);
 				}
 			}
 		});
 		// save-as option
 		saveAsMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				JFileChooser fileChooser = new JFileChooser();
-				int n = fileChooser.showSaveDialog(null);
-				if (n == JFileChooser.APPROVE_OPTION) {
-					path = fileChooser.getSelectedFile().getAbsolutePath();
-					save(path);
+				if (keywords.size() == 0) {
+					JOptionPane.showMessageDialog(null,
+							"Keine Sprache vorhanden. Datei wird nicht gespeichert.");
+				} else {
+					JFileChooser fileChooser = new JFileChooser();
+					int n = fileChooser.showSaveDialog(null);
+					if (n == JFileChooser.APPROVE_OPTION) {
+						File file = fileChooser.getSelectedFile();
+						if (file.exists()) {
+							n = JOptionPane.showConfirmDialog(null, "Datei ersetzen?",
+									"Wollen Sie die Datei " + file.getName() + "wirklich ersetzen?",
+									JOptionPane.YES_NO_OPTION);
+							if (n == JOptionPane.YES_OPTION) {
+								path = file.getAbsolutePath();
+								String defaultLanguage = fallbackLanguageButton.getText();
+								defaultLanguage = defaultLanguage.equals(DEFAULT_LANGUAGE_UNDEFINED) ? null
+										: defaultLanguage.substring(DEFAULT_LANGUAGE_DEFINED.length());
+								LanguageXMLHandler.save(path, keywords, defaultLanguage);
+							}
+						}
+					}
 				}
 			}
 		});
@@ -257,7 +271,15 @@ public class LanguageEditor extends JFrame {
 				int n = fileChooser.showOpenDialog(null);
 				if (n == JFileChooser.APPROVE_OPTION) {
 					path = fileChooser.getSelectedFile().getAbsolutePath();
-					load(path);
+					Pair<TreeMap<String, TreeMap<String, String>>, String> data = LanguageXMLHandler
+							.load(path);
+					keywords = data.getKey();
+					String defaultLanguage = data.getValue();
+					if (defaultLanguage != null) {
+						fallbackLanguageButton.setText(DEFAULT_LANGUAGE_DEFINED + defaultLanguage);
+					} else {
+						fallbackLanguageButton.setText(DEFAULT_LANGUAGE_UNDEFINED);
+					}
 					showInfos();
 				}
 			}
@@ -266,9 +288,14 @@ public class LanguageEditor extends JFrame {
 		addLanButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				String lanName = lanTextField.getText();
+				lanTextField.setText("");
+				lanTextField.grabFocus();
 				if (!lanName.equals("")) {
+					keywords.put(lanName, new TreeMap<String, String>());
 					boxModel.addElement(lanName);
-					keywords.put(lanName, new HashMap<String, String>());
+					comboBox.setSelectedItem(lanName);
+
+					testEnabling();
 				}
 			}
 		});
@@ -276,7 +303,12 @@ public class LanguageEditor extends JFrame {
 		removeLanButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if (boxModel.getSize() == 1) {
-					System.out.println("Es muss mindestens eine Sprache existieren");
+					int lanIndex = comboBox.getSelectedIndex();
+					String lanName = comboBox.getSelectedItem().toString();
+					keywords.remove(lanName);
+					boxModel.removeElementAt(lanIndex);
+					testEnabling();
+					lanTextField.grabFocus();
 				} else {
 					int lanIndex = comboBox.getSelectedIndex();
 					String lanName = comboBox.getSelectedItem().toString();
@@ -285,6 +317,16 @@ public class LanguageEditor extends JFrame {
 					list.clearSelection();
 					textArea.setText("");
 					textArea.setEnabled(false);
+					comboBox.setSelectedIndex(lanIndex - 1);
+				}
+			}
+		});
+		// default language
+		fallbackLanguageButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if (comboBox.getSelectedIndex() != -1) {
+					fallbackLanguageButton.setText(DEFAULT_LANGUAGE_DEFINED
+							+ comboBox.getSelectedItem().toString());
 				}
 			}
 		});
@@ -292,9 +334,15 @@ public class LanguageEditor extends JFrame {
 		addButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				String keyword = getFreeName(textField.getText());
-				String lanName = comboBox.getSelectedItem().toString();
-				keywords.get(lanName).put(keyword, "");
-				listModel.addElement(keyword);
+				if (!keyword.equals("")) {
+					removeButton.setEnabled(true);
+					String lanName = comboBox.getSelectedItem().toString();
+					keywords.get(lanName).put(keyword, "");
+					listModel.addElement(keyword);
+					textField.setText("");
+					list.setSelectedValue(keyword, true);
+					textArea.grabFocus();
+				}
 			}
 		});
 		// remove keyword
@@ -306,7 +354,13 @@ public class LanguageEditor extends JFrame {
 					String key = listModel.get(index).toString();
 					keywords.get(lanName).remove(key);
 					listModel.remove(index);
-					list.clearSelection();
+					if (index > 0) {
+						list.setSelectedIndex(index - 1);
+					} else {
+						removeButton.setEnabled(false);
+						list.clearSelection();
+						textField.grabFocus();
+					}
 				}
 			}
 		});
@@ -318,6 +372,7 @@ public class LanguageEditor extends JFrame {
 					String lanName = comboBox.getSelectedItem().toString();
 					textArea.setEnabled(true);
 					textArea.setText(keywords.get(lanName).get(listModel.elementAt(listIndex)));
+					textArea.grabFocus();
 				} else {
 					textArea.setEnabled(false);
 					textArea.setText("");
@@ -334,9 +389,7 @@ public class LanguageEditor extends JFrame {
 					while (keywordIterator.hasNext()) {
 						listModel.addElement(keywordIterator.next());
 					}
-					textArea.setEnabled(false);
-					textArea.setText("");
-					list.clearSelection();
+					testEnabling();
 				}
 			}
 		});
@@ -363,92 +416,14 @@ public class LanguageEditor extends JFrame {
 				valueChanged();
 			}
 		});
-	}
-
-	/**
-	 * load the data in a xml file
-	 * 
-	 * @param path
-	 *            location and name of the file
-	 */
-	private void load(String path) {
-		try {
-			Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(path);
-			Node xmlRoot = doc.getFirstChild();
-			NodeList children = xmlRoot.getChildNodes();
-			keywords.clear();
-			for (int i = 0; i < children.getLength(); i++) {
-				// keywords
-				Node lanNode = children.item(i);
-				String language = lanNode.getAttributes().getNamedItem(ATTRIBUTE_LANGUAGE).getNodeValue();
-				HashMap<String, String> xmlKeywords = new HashMap<String, String>();
-				NodeList keyList = lanNode.getChildNodes();
-				for (int j = 0; j < keyList.getLength(); j++) {
-					Node keyNode = keyList.item(j);
-					String interpretString = keyNode.getAttributes().getNamedItem(ATTRIBUTE_INTERPRETATION)
-							.getNodeValue();
-					String keyString = keyNode.getAttributes().getNamedItem(ATTRIBUTE_NAME).getNodeValue();
-					xmlKeywords.put(keyString, interpretString);
+		// Type in keyword-textfield
+		textField.addKeyListener(new KeyAdapter() {
+			public void keyReleased(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+					addButton.doClick();
 				}
-				keywords.put(language, xmlKeywords);
 			}
-		} catch (SAXException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (ParserConfigurationException e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * save the data in a xml file
-	 * 
-	 * @param path
-	 *            path and location of the xml file
-	 */
-	private void save(String path) {
-		Document xmlTree = null;
-		try {
-			xmlTree = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
-			Element xmlRoot = xmlTree.createElement("LanguageSpecifications");
-			xmlTree.appendChild(xmlRoot);
-			// keywords
-			Iterator<String> keyIterator = keywords.keySet().iterator();
-			Iterator<HashMap<String, String>> valueIterator = keywords.values().iterator();
-			while (keyIterator.hasNext()) {
-				String key = keyIterator.next();
-				HashMap<String, String> specifications = valueIterator.next();
-				Element keyEle = xmlTree.createElement(ELEMENT_LANGUAGE);
-				keyEle.setAttribute(ATTRIBUTE_LANGUAGE, key);
-
-				Iterator<String> keywordIterator = specifications.keySet().iterator();
-				Iterator<String> interpretationIterator = specifications.values().iterator();
-				while (keywordIterator.hasNext()) {
-					String keyword = keywordIterator.next();
-					String interpretation = interpretationIterator.next();
-					Element specEle = xmlTree.createElement(ELEMENT_KEYWORD);
-					specEle.setAttribute(ATTRIBUTE_NAME, keyword);
-					specEle.setAttribute(ATTRIBUTE_INTERPRETATION, interpretation);
-					keyEle.appendChild(specEle);
-				}
-				xmlRoot.appendChild(keyEle);
-			}
-		} catch (ParserConfigurationException e1) {
-			e1.printStackTrace();
-		}
-		try {
-			if (xmlTree != null) {
-				TransformerFactory.newInstance().newTransformer()
-						.transform(new DOMSource(xmlTree), new StreamResult(path));
-			}
-		} catch (TransformerConfigurationException e1) {
-			e1.printStackTrace();
-		} catch (TransformerException e1) {
-			e1.printStackTrace();
-		} catch (TransformerFactoryConfigurationError e1) {
-			e1.printStackTrace();
-		}
+		});
 	}
 
 	/**
@@ -471,8 +446,31 @@ public class LanguageEditor extends JFrame {
 			String keyword = keywordIterator.next();
 			listModel.addElement(keyword);
 		}
-		textArea.setText("");
-		textArea.setEnabled(false);
+		testEnabling();
+	}
+
+	private void testEnabling() {
+		if (keywords.size() != 0) {
+			removeLanButton.setEnabled(true);
+			fallbackLanguageButton.setEnabled(true);
+			addButton.setEnabled(true);
+			if (keywords.get(comboBox.getSelectedItem()).size() != 0) {
+				list.setSelectedIndex(0);
+				textArea.setEnabled(true);
+				removeButton.setEnabled(true);
+			} else {
+				removeButton.setEnabled(false);
+				textArea.setText("");
+				textArea.setEnabled(false);
+			}
+		} else {
+			removeLanButton.setEnabled(false);
+			fallbackLanguageButton.setEnabled(false);
+			addButton.setEnabled(false);
+			removeButton.setEnabled(false);
+			textArea.setText("");
+			textArea.setEnabled(false);
+		}
 	}
 
 	/**
