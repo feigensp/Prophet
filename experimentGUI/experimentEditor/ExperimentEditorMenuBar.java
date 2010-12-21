@@ -24,10 +24,10 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 	public ExperimentEditorMenuBar(ExperimentEditor qE) {
 		questionEditor = qE;
 		currentFile = null;
-		JMenu fileMenu = new JMenu(/*Language.getValue("fileMenu")*/"Datei");
+		JMenu fileMenu = new JMenu(questionEditor.getLanguage().getValue("fileMenu")/*"Datei"*/);
 		add(fileMenu);
 
-		JMenuItem newMenuItem = new JMenuItem(/*Language.getValue("newMenuItem")*/"Neu");
+		JMenuItem newMenuItem = new JMenuItem(questionEditor.getLanguage().getValue("newMenuItem")/*"Neu"*/);
 		fileMenu.add(newMenuItem);
 		newMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {

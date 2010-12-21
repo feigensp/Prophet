@@ -13,27 +13,28 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 /**
- * this class can load language specifications from xml files
- * you can set the language and get - per method your desired notes which correspond to a keyword
+ * this class can load language specifications from xml files you can set the
+ * language and get - per method your desired notes which correspond to a
+ * keyword
  * 
  * @author Markus Köppen, Andreas Hasselberg
- *
+ * 
  */
 public class Language {
-	
+
 	/**
 	 * contains the keywords and the corresponding notes
 	 */
-	private static HashMap<String, ArrayList<String>> keywords;
+	private HashMap<String, HashMap<String, String>> keywords;
 	/**
 	 * contains the languages and theyr order
 	 */
-	private static ArrayList<String> languages;
+	private ArrayList<String> languages;
 	/**
 	 * contains the current chose language
 	 */
-	private static int chosenLanguage;
-	
+	private int chosenLanguage;
+
 	/**
 	 * xml constants
 	 */
@@ -44,16 +45,18 @@ public class Language {
 	public static final String ELEMENT_KEY_LAN = "languageInterpretation";
 	public static final String ATTRIBUTE_LANGUAGE = "language";
 	public static final String ATTRIBUTE_INTERPRETATION = "interpretation";
-		
+
 	/**
 	 * initialize the data with the content of an xml file
-	 * @param path path of the xml file
+	 * 
+	 * @param path
+	 *            path of the xml file
 	 */
-	public static void init(String path) {	
-		keywords = new HashMap<String, ArrayList<String>>();
+	public Language(String path) {
+		keywords = new HashMap<String, HashMap<String, String>>();
 		languages = new ArrayList<String>();
 		chosenLanguage = 0;
-		
+
 		try {
 			Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(path);
 			Node xmlRoot = doc.getFirstChild();
@@ -72,13 +75,15 @@ public class Language {
 					// keywords
 					Node keyNode = children.item(i);
 					String key = keyNode.getAttributes().getNamedItem(ATTRIBUTE_NAME).getNodeValue();
-					ArrayList<String> interprets = new ArrayList<String>();
+					HashMap<String, String> interprets = new HashMap<String, String>();
 					NodeList interpretList = keyNode.getChildNodes();
 					for (int k = 0; k < interpretList.getLength(); k++) {
 						Node interpretNode = interpretList.item(k);
 						String interpretString = interpretNode.getAttributes()
 								.getNamedItem(ATTRIBUTE_INTERPRETATION).getNodeValue();
-						interprets.add(k, interpretString);
+						String languageString = interpretNode.getAttributes()
+								.getNamedItem(ATTRIBUTE_LANGUAGE).getNodeValue();
+						interprets.put(languageString, interpretString);
 					}
 					keywords.put(key, interprets);
 				}
@@ -91,47 +96,54 @@ public class Language {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * sets the language
-	 * @param language name of the language
+	 * 
+	 * @param language
+	 *            name of the language
 	 * @return true if applying was successful
 	 */
-	public static boolean setLanguage(String language) {
+	public boolean setLanguage(String language) {
 		int index = getLanIndex(languages, language);
-		if(index != -1) {
+		if (index != -1) {
 			chosenLanguage = index;
 			return true;
 		} else {
+			chosenLanguage = 0;
 			return false;
 		}
 	}
-	
+
 	/**
 	 * returns the String representation of the currently used language
+	 * 
 	 * @return current used language
 	 */
-	public static String getLanguage() {
+	public String getLanguage() {
 		return languages.get(chosenLanguage);
 	}
-	
+
 	/**
 	 * returns all available languages
+	 * 
 	 * @return String-ArrayList with all languages
 	 */
-	public static ArrayList<String> getLanguages() {
+	public ArrayList<String> getLanguages() {
 		return languages;
 	}
-	
+
 	/**
 	 * returns the note to a specific keyword in the current language
-	 * @param key keyword to the corresponding note
+	 * 
+	 * @param key
+	 *            keyword to the corresponding note
 	 * @return note to the corresponding keyword (or null if not found)
 	 */
-	public static String getValue(String key) {
-		ArrayList<String> specifications = keywords.get(key);
-		if(specifications != null) {
-			return specifications.get(chosenLanguage);
+	public String getValue(String key) {
+		HashMap<String, String> specifications = keywords.get(key);
+		if (specifications != null) {
+			return specifications.get(languages.get(chosenLanguage));
 		} else {
 			return null;
 		}
@@ -139,11 +151,14 @@ public class Language {
 
 	/**
 	 * returns the index of a String in an ArrayList
-	 * @param list the list which contains Strings
-	 * @param content the String which index is unknown
+	 * 
+	 * @param list
+	 *            the list which contains Strings
+	 * @param content
+	 *            the String which index is unknown
 	 * @return index of the String in the ArrayList
 	 */
-	private static int getLanIndex(ArrayList<String> list, String content) {
+	private int getLanIndex(ArrayList<String> list, String content) {
 		for (int i = 0; i < list.size(); i++) {
 			if (list.get(i).equals(content)) {
 				return i;
