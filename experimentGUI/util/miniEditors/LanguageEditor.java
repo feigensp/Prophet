@@ -7,8 +7,9 @@ import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -94,10 +95,6 @@ public class LanguageEditor extends JFrame {
 	 */
 	private String path;
 	/**
-	 * structure to save the different languages
-	 */
-	private ArrayList<String> languages;
-	/**
 	 * structure to save the keyword and the corresponding words/sentences the
 	 * order of these words is the same as the language order
 	 */
@@ -124,7 +121,6 @@ public class LanguageEditor extends JFrame {
 	 */
 	public LanguageEditor() {
 		// initialise the data structures
-		languages = new ArrayList<String>();
 		keywords = new HashMap<String, HashMap<String, String>>();
 		path = null;
 
@@ -209,10 +205,9 @@ public class LanguageEditor extends JFrame {
 		splitPane.setRightComponent(contentPanel);
 		contentPane.add(splitPane, BorderLayout.CENTER);
 
-		showInfos();
 		setListener();
-		// create empty rack
 		newMenuItem.doClick();
+		// create empty rack
 	}
 
 	/**
@@ -230,11 +225,8 @@ public class LanguageEditor extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				path = null;
 				keywords.clear();
-				listModel.clear();
-				languages.clear();
-				languages.add(LANGUAGE_GERMAN);
-				boxModel.removeAllElements();
-				boxModel.addElement(LANGUAGE_GERMAN);
+				keywords.put(LANGUAGE_GERMAN, new HashMap<String, String>());
+				showInfos();
 			}
 		});
 		// save current language specification
@@ -275,12 +267,8 @@ public class LanguageEditor extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				String lanName = lanTextField.getText();
 				if (!lanName.equals("")) {
-					languages.add(lanName);
 					boxModel.addElement(lanName);
-					Iterator<HashMap<String, String>> listIterator = keywords.values().iterator();
-					while (listIterator.hasNext()) {
-						listIterator.next().put(lanName, "");
-					}
+					keywords.put(lanName, new HashMap<String, String>());
 				}
 			}
 		});
@@ -292,11 +280,7 @@ public class LanguageEditor extends JFrame {
 				} else {
 					int lanIndex = comboBox.getSelectedIndex();
 					String lanName = comboBox.getSelectedItem().toString();
-					languages.remove(lanIndex);
-					Iterator<HashMap<String, String>> listIterator = keywords.values().iterator();
-					while (listIterator.hasNext()) {
-						listIterator.next().remove(lanName);
-					}
+					keywords.remove(lanName);
 					boxModel.removeElementAt(lanIndex);
 					list.clearSelection();
 					textArea.setText("");
@@ -308,12 +292,8 @@ public class LanguageEditor extends JFrame {
 		addButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				String keyword = getFreeName(textField.getText());
-				// ArrayList<String> specs = new ArrayList<String>();
-				// for (int i = 0; i < languages.size(); i++) {
-				// specs.add("");
-				// }
-				keywords.put(keyword, new HashMap<String, String>());
-
+				String lanName = comboBox.getSelectedItem().toString();
+				keywords.get(lanName).put(keyword, "");
 				listModel.addElement(keyword);
 			}
 		});
@@ -322,8 +302,9 @@ public class LanguageEditor extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				int index = list.getSelectedIndex();
 				if (index != -1) {
+					String lanName = comboBox.getSelectedItem().toString();
 					String key = listModel.get(index).toString();
-					keywords.remove(key);
+					keywords.get(lanName).remove(key);
 					listModel.remove(index);
 					list.clearSelection();
 				}
@@ -334,9 +315,9 @@ public class LanguageEditor extends JFrame {
 			public void valueChanged(ListSelectionEvent e) {
 				int listIndex = list.getSelectedIndex();
 				if (listIndex != -1) {
+					String lanName = comboBox.getSelectedItem().toString();
 					textArea.setEnabled(true);
-					textArea.setText(keywords.get(listModel.elementAt(listIndex)).get(
-							comboBox.getSelectedItem().toString()));
+					textArea.setText(keywords.get(lanName).get(listModel.elementAt(listIndex)));
 				} else {
 					textArea.setEnabled(false);
 					textArea.setText("");
@@ -344,30 +325,29 @@ public class LanguageEditor extends JFrame {
 			}
 		});
 		// comboBox selection
-		comboBox.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				int listIndex = list.getSelectedIndex();
-				if (listIndex != -1) {
-					textArea.setEnabled(true);
-					textArea.setText(keywords.get(listModel.elementAt(listIndex)).get(
-							comboBox.getSelectedItem().toString()));
-				} else {
+		comboBox.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent arg0) {
+				String lanName = (String) comboBox.getSelectedItem();
+				if (lanName != null) {
+					listModel.clear();
+					Iterator<String> keywordIterator = keywords.get(lanName).keySet().iterator();
+					while (keywordIterator.hasNext()) {
+						listModel.addElement(keywordIterator.next());
+					}
 					textArea.setEnabled(false);
 					textArea.setText("");
+					list.clearSelection();
 				}
 			}
 		});
 		// save changes in textarea
 		textArea.getDocument().addDocumentListener(new DocumentListener() {
 			private void valueChanged() {
-				String lanName = comboBox.getSelectedItem().toString();
 				int keyIndex = list.getSelectedIndex();
 				if (keyIndex != -1) {
+					String lanName = comboBox.getSelectedItem().toString();
 					String key = listModel.getElementAt(keyIndex).toString();
-
-					HashMap<String, String> alternatives = keywords.get(key);
-					alternatives.put(lanName, textArea.getText());
-					keywords.put(key, alternatives);
+					keywords.get(lanName).put(key, textArea.getText());
 				}
 			}
 
@@ -395,35 +375,22 @@ public class LanguageEditor extends JFrame {
 		try {
 			Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(path);
 			Node xmlRoot = doc.getFirstChild();
-			Node child = null;
 			NodeList children = xmlRoot.getChildNodes();
-			languages.clear();
 			keywords.clear();
 			for (int i = 0; i < children.getLength(); i++) {
-				child = children.item(i);
-				// languages
-				if (child.getNodeName().equals(ELEMENT_LANGUAGES)) {
-					NodeList lanList = child.getChildNodes();
-					for (int j = 0; j < lanList.getLength(); j++) {
-						Node lan = lanList.item(j);
-						languages.add(lan.getTextContent());
-					}
-				} else {
-					// keywords
-					Node keyNode = children.item(i);
-					String key = keyNode.getAttributes().getNamedItem(ATTRIBUTE_NAME).getNodeValue();
-					HashMap<String, String> interprets = new HashMap<String, String>();
-					NodeList interpretList = keyNode.getChildNodes();
-					for (int k = 0; k < interpretList.getLength(); k++) {
-						Node interpretNode = interpretList.item(k);
-						String interpretString = interpretNode.getAttributes()
-								.getNamedItem(ATTRIBUTE_INTERPRETATION).getNodeValue();
-						String languageString = interpretNode.getAttributes()
-								.getNamedItem(ATTRIBUTE_LANGUAGE).getNodeValue();
-						interprets.put(languageString, interpretString);
-					}
-					keywords.put(key, interprets);
+				// keywords
+				Node lanNode = children.item(i);
+				String language = lanNode.getAttributes().getNamedItem(ATTRIBUTE_LANGUAGE).getNodeValue();
+				HashMap<String, String> xmlKeywords = new HashMap<String, String>();
+				NodeList keyList = lanNode.getChildNodes();
+				for (int j = 0; j < keyList.getLength(); j++) {
+					Node keyNode = keyList.item(j);
+					String interpretString = keyNode.getAttributes().getNamedItem(ATTRIBUTE_INTERPRETATION)
+							.getNodeValue();
+					String keyString = keyNode.getAttributes().getNamedItem(ATTRIBUTE_NAME).getNodeValue();
+					xmlKeywords.put(keyString, interpretString);
 				}
+				keywords.put(language, xmlKeywords);
 			}
 		} catch (SAXException e) {
 			e.printStackTrace();
@@ -446,30 +413,25 @@ public class LanguageEditor extends JFrame {
 			xmlTree = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
 			Element xmlRoot = xmlTree.createElement("LanguageSpecifications");
 			xmlTree.appendChild(xmlRoot);
-			// language specifications
-			Element lans = xmlTree.createElement(ELEMENT_LANGUAGES);
-			for (String lan : languages) {
-				Element lanName = xmlTree.createElement(ELEMENT_LANGUAGE);
-				lanName.setTextContent(lan);
-				lans.appendChild(lanName);
-			}
-			xmlRoot.appendChild(lans);
 			// keywords
 			Iterator<String> keyIterator = keywords.keySet().iterator();
 			Iterator<HashMap<String, String>> valueIterator = keywords.values().iterator();
 			while (keyIterator.hasNext()) {
 				String key = keyIterator.next();
 				HashMap<String, String> specifications = valueIterator.next();
-				Element keyEle = xmlTree.createElement(ELEMENT_KEYWORD);
-				keyEle.setAttribute(ATTRIBUTE_NAME, key);
+				Element keyEle = xmlTree.createElement(ELEMENT_LANGUAGE);
+				keyEle.setAttribute(ATTRIBUTE_LANGUAGE, key);
 
-				for (int i = 0; i < specifications.size(); i++) {
-					Element specEle = xmlTree.createElement(ELEMENT_KEY_LAN);
-					specEle.setAttribute(ATTRIBUTE_LANGUAGE, languages.get(i));
-					specEle.setAttribute(ATTRIBUTE_INTERPRETATION, specifications.get(languages.get(i)));
+				Iterator<String> keywordIterator = specifications.keySet().iterator();
+				Iterator<String> interpretationIterator = specifications.values().iterator();
+				while (keywordIterator.hasNext()) {
+					String keyword = keywordIterator.next();
+					String interpretation = interpretationIterator.next();
+					Element specEle = xmlTree.createElement(ELEMENT_KEYWORD);
+					specEle.setAttribute(ATTRIBUTE_NAME, keyword);
+					specEle.setAttribute(ATTRIBUTE_INTERPRETATION, interpretation);
 					keyEle.appendChild(specEle);
 				}
-
 				xmlRoot.appendChild(keyEle);
 			}
 		} catch (ParserConfigurationException e1) {
@@ -494,15 +456,20 @@ public class LanguageEditor extends JFrame {
 	 * selection and the JTextArea
 	 */
 	private void showInfos() {
+		boxModel.removeAllElements();
+
+		Iterator<String> languageIterator = keywords.keySet().iterator();
+		while (languageIterator.hasNext()) {
+			boxModel.addElement(languageIterator.next());
+		}
+		comboBox.setSelectedIndex(0);
+		String lanName = comboBox.getSelectedItem().toString();
 		list.clearSelection();
 		listModel.removeAllElements();
-		Iterator<String> keywordIterator = keywords.keySet().iterator();
+		Iterator<String> keywordIterator = keywords.get(lanName).keySet().iterator();
 		while (keywordIterator.hasNext()) {
-			listModel.addElement(keywordIterator.next());
-		}
-		boxModel.removeAllElements();
-		for (String language : languages) {
-			boxModel.addElement(language);
+			String keyword = keywordIterator.next();
+			listModel.addElement(keyword);
 		}
 		textArea.setText("");
 		textArea.setEnabled(false);
