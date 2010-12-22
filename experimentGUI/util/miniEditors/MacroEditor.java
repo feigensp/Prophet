@@ -45,6 +45,8 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import experimentGUI.util.Pair;
+import javax.swing.border.LineBorder;
+import java.awt.Color;
 
 /**
  * A simple editor to create and change the macro.xml
@@ -105,6 +107,7 @@ public class MacroEditor extends JFrame {
 		overviewPanel.setLayout(new BorderLayout(0, 0));
 		listModel = new DefaultListModel();
 		macroList = new JList(listModel);
+		macroList.setBorder(new LineBorder(new Color(0, 0, 0)));
 		macroList.setPreferredSize(new Dimension(150, 0));
 		overviewPanel.add(macroList, BorderLayout.CENTER);
 		JPopupMenu macroMenuPopupMenu = new JPopupMenu();
@@ -117,9 +120,13 @@ public class MacroEditor extends JFrame {
 		contentPane.add(macroPanel, BorderLayout.CENTER);
 		macroPanel.setLayout(new BorderLayout(0, 0));
 		macroNameTextField = new JTextField();
+		macroNameTextField.setEnabled(false);
+		macroNameTextField.setBorder(new LineBorder(new Color(171, 173, 179)));
 		macroPanel.add(macroNameTextField, BorderLayout.NORTH);
 		macroNameTextField.setColumns(10);
 		macroContentTextPane = new JTextPane();
+		macroContentTextPane.setEnabled(false);
+		macroContentTextPane.setBorder(new LineBorder(new Color(0, 0, 0)));
 		macroPanel.add(macroContentTextPane, BorderLayout.CENTER);
 		// close application menu item
 		closeMenuItem.addActionListener(new ActionListener() {
