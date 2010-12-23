@@ -43,7 +43,6 @@ public class RecorderPlugin implements CodeViewerPluginInterface,ChangeListener 
 	@Override
 	public SettingsComponentDescription getSettingsComponentDescription() {
 		SettingsPluginComponentDescription result = new SettingsPluginComponentDescription(KEY, "Recorder aktivieren");
-		result.addSubComponent(new SettingsComponentDescription(SettingsTextField.class, KEY_FILENAME, "Dateiname der Aufnahme (default: \"recorder\"):"));
 		for (RecorderPluginInterface plugin : RecorderPluginList.getPlugins()) {
 			SettingsComponentDescription desc = plugin.getSettingsComponentDescription();
 			if (desc!=null) {

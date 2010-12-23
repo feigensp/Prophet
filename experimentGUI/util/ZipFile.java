@@ -24,7 +24,7 @@ public class ZipFile {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		zipFiles(".", "cow.zip");
+		zipFiles(new File("."), new File("cow.zip"));
 	}
 
 	/**
@@ -32,12 +32,12 @@ public class ZipFile {
 	 * @param zipPath path to the file or directory which should be zipped
 	 * @param outputName name of the zip file which is created
 	 */
-	public static void zipFiles(String zipPath, String outputName) {
-		outputFile = new File(outputName);
-		System.out.println(outputFile.getAbsolutePath());
+	public static void zipFiles(File zipPath, File outputF) {
 		try {
+			outputFile=outputF;
+			outputFile.getAbsoluteFile().getParentFile().mkdirs();
 			zipOut = new ZipOutputStream(new FileOutputStream(outputFile));
-			zipDir(new File(zipPath));
+			zipDir(zipPath);
 			zipOut.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();

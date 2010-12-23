@@ -24,6 +24,7 @@ import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.SettingsPlu
 import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.settingsComponents.SettingsPasswordField;
 import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.settingsComponents.SettingsTextField;
 import experimentGUI.experimentViewer.ExperimentViewer;
+import experimentGUI.util.ZipFile;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 
 
@@ -32,17 +33,19 @@ public class MailPlugin implements PluginInterface {
 	public final static String SMTP_SERVER = "smtp_server";
 	public final static String SMTP_USER = "smtp_user";
 	public final static String SMTP_PASS = "smtp_pass";
-	public final static String SMTP_EMAIL = "smtp_email";
+	public final static String SMTP_SENDER = "smtp_sender";
+	public final static String SMTP_RECEIVER = "smtp_receiver";
 	
 	private boolean enabled;
 	private String smtpServer;
 	private String smtpUser;
 	private String smtpPass;
-	private String smtpEmail;
-	private String experimentCode;
-	private String subjectCode;
+	private String smtpSender;
+	private String smtpReceiver;
 	
-	public boolean sendMail(String recipientsAddress, String subject, String text, String filePath) {
+	ExperimentViewer experimentViewer;
+	
+	public boolean sendMail(String subject, String text, File attachmentFile) {
 		try {
 			MailAuthenticator auth = new MailAuthenticator(smtpUser, smtpPass);
 			Properties properties = new Properties();
@@ -58,17 +61,17 @@ public class MailPlugin implements PluginInterface {
 			message.setHeader("MIME-Version", "1.0");
 			message.setHeader("Content-Type", message.getContentType());
 			content.addBodyPart(message);
-			if (filePath != null) {
-				DataSource fileDataSource = new FileDataSource(filePath);
+			if (attachmentFile != null) {
+				DataSource fileDataSource = new FileDataSource(attachmentFile);
 				BodyPart messageBodyPart = new MimeBodyPart();
 				messageBodyPart.setDataHandler(new DataHandler(fileDataSource));
-				messageBodyPart.setFileName(new File(filePath).getName());
+				messageBodyPart.setFileName(attachmentFile.getName());
 				content.addBodyPart(messageBodyPart);
 			}
 			msg.setContent(content);
 			msg.setSentDate(new Date());
-			msg.setFrom(new InternetAddress(smtpEmail));
-			msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipientsAddress, false));
+			msg.setFrom(new InternetAddress(smtpSender));
+			msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(smtpReceiver, false));
 			msg.setSubject(subject);
 			Transport.send(msg);
 			return true;
@@ -85,7 +88,8 @@ public class MailPlugin implements PluginInterface {
 			result.addSubComponent(new SettingsComponentDescription(SettingsTextField.class,SMTP_SERVER, "SMTP-Server:"));
 			result.addSubComponent(new SettingsComponentDescription(SettingsTextField.class,SMTP_USER, "SMTP-Benutzer:"));
 			result.addSubComponent(new SettingsComponentDescription(SettingsPasswordField.class,SMTP_PASS, "SMTP-Passwort:"));
-			result.addSubComponent(new SettingsComponentDescription(SettingsTextField.class,SMTP_EMAIL, "Empfänger:"));		
+			result.addSubComponent(new SettingsComponentDescription(SettingsTextField.class,SMTP_SENDER, "Absender:"));		
+			result.addSubComponent(new SettingsComponentDescription(SettingsTextField.class,SMTP_RECEIVER, "Empfänger:"));		
 			return result;
 		}
 		return null;
@@ -93,6 +97,7 @@ public class MailPlugin implements PluginInterface {
 
 	@Override
 	public void experimentViewerRun(ExperimentViewer experimentViewer) {
+		this.experimentViewer=experimentViewer;
 	}
 
 	@Override
@@ -104,7 +109,8 @@ public class MailPlugin implements PluginInterface {
 				smtpServer=attributes.getAttributeValue(SMTP_SERVER);
 				smtpUser=attributes.getAttributeValue(SMTP_USER);
 				smtpPass=SettingsPasswordField.decode(attributes.getAttributeValue(SMTP_PASS));
-				smtpEmail=attributes.getAttributeValue(SMTP_EMAIL);
+				smtpSender=attributes.getAttributeValue(SMTP_SENDER);
+				smtpReceiver=attributes.getAttributeValue(SMTP_RECEIVER);
 			}
 		}
 		return null;
@@ -122,7 +128,11 @@ public class MailPlugin implements PluginInterface {
 	@Override
 	public String finishExperiment() {
 		if (enabled) {
-			
+			File attachmentFile = new File(experimentViewer.getSaveDir().getName()+".zip");
+			ZipFile.zipFiles(experimentViewer.getSaveDir(), attachmentFile);
+			if (!this.sendMail(experimentViewer.getSaveDir().getName(), "", attachmentFile)) {
+				return "E-Mail-Versand gescheitert. Bitte beim Versuchsleiter melden.";
+			}
 		}
 		return null;
 	}

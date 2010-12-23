@@ -11,7 +11,6 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 
-import experimentGUI.util.Language;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 import experimentGUI.util.questionTreeNode.QuestionTreeXMLHandler;
 
@@ -39,7 +38,7 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 		fileMenu.add(loadMenuItem);
 		loadMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				JFileChooser fc = new JFileChooser();
+				JFileChooser fc = new JFileChooser(new File("."));
 				if (fc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
 					currentFile = fc.getSelectedFile();
 					QuestionTreeNode newRoot;

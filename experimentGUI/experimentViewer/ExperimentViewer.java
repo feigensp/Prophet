@@ -185,19 +185,16 @@ public class ExperimentViewer extends JFrame {
 		return false;
 	}
 	private void enterNode() {
-		if (!currentNode.isExperiment()) {
-			for (PluginInterface plugin : PluginList.getPlugins()) {
-				currentNode.setPluginData(plugin.getKey(), plugin.enterNode(currentNode));
-			}
+		for (PluginInterface plugin : PluginList.getPlugins()) {
+			currentNode.setPluginData(plugin.getKey(), plugin.enterNode(currentNode));
 		}
 	}
 	private void exitNode() {		
+		for (PluginInterface plugin : PluginList.getPlugins()) {
+			plugin.exitNode(currentNode, currentNode.getPluginData(plugin.getKey()));
+		}
 		if (currentNode.isExperiment()) {
 			endQuestionnaire();
-		} else {
-			for (PluginInterface plugin : PluginList.getPlugins()) {
-				plugin.exitNode(currentNode, currentNode.getPluginData(plugin.getKey()));
-			}
 		}
 	}
 	private void pauseClock() {
