@@ -1,6 +1,12 @@
 package experimentGUI.plugins;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.logging.FileHandler;
+import java.util.logging.Formatter;
+import java.util.logging.Handler;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 import javax.swing.JFrame;
 
@@ -18,6 +24,10 @@ public class CodeViewerPlugin implements PluginInterface {
 	public final static String KEY = "codeviewer";
 	ExperimentViewer experimentViewer;
 	int count = 1;
+
+	private static Logger logger;
+	private Handler fileHandler;
+	private Formatter formatter;
 
 	@Override
 	public SettingsComponentDescription getSettingsComponentDescription(
@@ -46,18 +56,37 @@ public class CodeViewerPlugin implements PluginInterface {
 
 	@Override
 	public Object enterNode(QuestionTreeNode node) {
+		//logger 
+		try {
+			logger = Logger.getLogger("experimentGUI.experimentViewer.ExperimentViewer");
+			fileHandler = new FileHandler("experimentGUI.experimentViewer.ExperimentViewer.txt");
+			formatter = new SimpleFormatter();
+			fileHandler.setFormatter(formatter);
+			logger.addHandler(fileHandler);
+		} catch (SecurityException e1) {
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}	
+		
+		logger.info("enter \"enterNode()\"");
 		boolean enabled = Boolean.parseBoolean(node.getAttributeValue(KEY));
+		logger.info("enabled: " + enabled);
 		if (enabled) {
 			String savePath = experimentViewer.getSaveDir().getPath()+System.getProperty("file.separator")+(count++)+"_"+node.getName()+"_codeviewer";		
 			CodeViewer cv = new CodeViewer(node.getAttribute(KEY), new File(savePath));
 			cv.setLocationRelativeTo(experimentViewer);
 			cv.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 			cv.setVisible(true);
+			experimentViewer.setVisible(true);
 			for (CodeViewerPluginInterface plugin : CodeViewerPluginList.getPlugins()) {
+				logger.info("plugin: " + plugin.toString());
 				plugin.onFrameCreate(node.getAttribute(KEY), cv);
 			}
+			logger.info("exit \"enterNode()\" --> normal");
 			return cv;
 		}
+		logger.info("exit \"enterNode()\" --> enabled == false");
 		return null;
 	}
 

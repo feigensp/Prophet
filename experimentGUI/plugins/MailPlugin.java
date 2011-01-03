@@ -1,10 +1,9 @@
 package experimentGUI.plugins;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.util.Date;
 import java.util.Properties;
+import java.util.logging.Logger;
 
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
@@ -48,92 +47,36 @@ public class MailPlugin implements PluginInterface {
 
 	public boolean sendMail(String subject, String text, File attachmentFile) {
 		try {
-			File ausgabeDatei = new File("logSendMail.txt");
-			FileWriter fw = new FileWriter(ausgabeDatei);
-			BufferedWriter bw = new BufferedWriter(fw);
-			bw.write("Beginn sendMail\n");
-			bw.write("Parameter: subject: " + subject + " - text: " + text + " - attachementFile: "
-					+ attachmentFile.getAbsolutePath() + "\n");
-			bw.flush();
 			MailAuthenticator auth = new MailAuthenticator(smtpUser, smtpPass);
-			bw.write("MailAuthenticator auth = new MailAuthenticator(smtpUser, smtpPass);" + "\n");
-			bw.flush();
 			Properties properties = new Properties();
-			bw.write("Properties properties = new Properties();" + "\n");
-			bw.flush();
 			properties.put("mail.smtp.host", smtpServer);
-			bw.write("properties.put(\"mail.smtp.host\", smtpServer);" + "\n");
-			bw.flush();
 			properties.put("mail.smtp.auth", "true");
-			bw.write("properties.put(\"mail.smtp.auth\", \"true\");" + "\n");
-			bw.flush();
 
 			Session session = Session.getDefaultInstance(properties, auth);
-			bw.write("Session session = Session.getDefaultInstance(properties, auth);" + "\n");
-			bw.flush();
 			Message msg = new MimeMessage(session);
-			bw.write("Message msg = new MimeMessage(session);" + "\n");
-			bw.flush();
 
 			MimeMultipart content = new MimeMultipart("alternative");
-			bw.write("MimeMultipart content = new MimeMultipart(\"alternative\");" + "\n");
-			bw.flush();
 			MimeBodyPart message = new MimeBodyPart();
-			bw.write("MimeBodyPart message = new MimeBodyPart();" + "\n");
-			bw.flush();
 			message.setText(text);
-			bw.write("message.setText(text);");
-			bw.flush();
 			message.setHeader("MIME-Version", "1.0" + "\n");
-			bw.write("message.setHeader(\"MIME-Version\", \"1.0\");" + "\n");
-			bw.flush();
 			message.setHeader("Content-Type", message.getContentType());
-			bw.write("message.setHeader(\"Content-Type\", message.getContentType());" + "\n");
-			bw.flush();
 			content.addBodyPart(message);
-			bw.write("content.addBodyPart(message);" + "\n");
-			bw.flush();
 			if (attachmentFile != null) {
-				bw.write("if (attachmentFile != null) {" + "\n");
-				bw.flush();
 				DataSource fileDataSource = new FileDataSource(attachmentFile);
-				bw.write("DataSource fileDataSource = new FileDataSource(attachmentFile);" + "\n");
-				bw.flush();
 				BodyPart messageBodyPart = new MimeBodyPart();
-				bw.write("BodyPart messageBodyPart = new MimeBodyPart();" + "\n");
-				bw.flush();
 				messageBodyPart.setDataHandler(new DataHandler(fileDataSource));
-				bw.write("messageBodyPart.setDataHandler(new DataHandler(fileDataSource));" + "\n");
-				bw.flush();
 				messageBodyPart.setFileName(attachmentFile.getName());
-				bw.write("messageBodyPart.setFileName(attachmentFile.getName());" + "\n");
-				bw.flush();
 				content.addBodyPart(messageBodyPart);
-				bw.write("content.addBodyPart(messageBodyPart);" + "\n");
-				bw.flush();
 			}
 			msg.setContent(content);
-			bw.write("msg.setContent(content);" + "\n");
-			bw.flush();
 			msg.setSentDate(new Date());
-			bw.write(new Date().toString());
-			bw.write("msg.setSentDate(new Date());" + "\n");
-			bw.flush();
 			msg.setFrom(new InternetAddress(smtpSender));
-			bw.write("msg.setFrom(new InternetAddress(smtpSender));" + "\n");
-			bw.flush();
 			msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(smtpReceiver, false));
-			bw.write("msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(smtpReceiver, false));" + "\n");
-			bw.flush();
 			msg.setSubject(subject);
-			bw.write("msg.setSubject(subject);" + "\n");
-			bw.flush();
 			Transport.send(msg);
-			bw.write("Transport.send(msg);" + "\n");
-			bw.flush();
-			bw.close();
 			return true;
 		} catch (Exception e) {
+			//e.getMessage()
 			return false;
 		}
 	}
@@ -166,42 +109,15 @@ public class MailPlugin implements PluginInterface {
 	@Override
 	public Object enterNode(QuestionTreeNode node) {
 		try {
-			File ausgabeDatei = new File("logEnterNode_" + node.getName() + ".txt");
-			FileWriter fw = new FileWriter(ausgabeDatei);
-			BufferedWriter bw = new BufferedWriter(fw);
-			bw.write("Beginn: enterNode" + "\n");
-			bw.flush();
 			if (node.isExperiment()) {
-				bw.write("if (node.isExperiment()) {" + "\n");
-				bw.flush();
 				enabled = Boolean.parseBoolean(node.getAttributeValue(KEY));
-				bw.write("enabled = Boolean.parseBoolean(node.getAttributeValue(KEY));" + " --- enabled: "
-						+ enabled + "\n");
-				bw.flush();
 				if (enabled) {
-					bw.write("if (enabled) {" + "\n");
-					bw.flush();
 					QuestionTreeNode attributes = node.getAttribute(KEY);
-					bw.write("QuestionTreeNode attributes = node.getAttribute(KEY);" + "\n");
-					bw.flush();
 					smtpServer = attributes.getAttributeValue(SMTP_SERVER);
-					bw.write("smtpServer=attributes.getAttributeValue(SMTP_SERVER);" + " --- " + smtpServer + "\n");
-					bw.flush();
 					smtpUser = attributes.getAttributeValue(SMTP_USER);
-					bw.write("smtpUser=attributes.getAttributeValue(SMTP_USER);" + " --- " + smtpUser + "\n");
-					bw.flush();
 					smtpPass = SettingsPasswordField.decode(attributes.getAttributeValue(SMTP_PASS));
-					bw.write("smtpPass=SettingsPasswordField.decode(attributes.getAttributeValue(SMTP_PASS));"
-							+ " --- " + smtpPass + "\n");
-					bw.flush();
 					smtpSender = attributes.getAttributeValue(SMTP_SENDER);
-					bw.write("smtpSender=attributes.getAttributeValue(SMTP_SENDER);" + " --- " + smtpSender + "\n");
-					bw.flush();
 					smtpReceiver = attributes.getAttributeValue(SMTP_RECEIVER);
-					bw.write("smtpReceiver=attributes.getAttributeValue(SMTP_RECEIVER);" + " --- "
-							+ smtpReceiver + "\n");
-					bw.flush();
-					bw.close();
 				}
 			}
 		} catch (Exception e) {
@@ -222,25 +138,10 @@ public class MailPlugin implements PluginInterface {
 	@Override
 	public String finishExperiment() {
 		try {
-
-			File ausgabeDatei = new File("logfinishExperiment.txt");
-			FileWriter fw = new FileWriter(ausgabeDatei);
-			BufferedWriter bw = new BufferedWriter(fw);
-			bw.write("Beginn: finishExperiment" + "\n");
-			bw.flush();
 			if (enabled) {
-				bw.write("if (enabled) {");
-				bw.flush();
 				File attachmentFile = new File(experimentViewer.getSaveDir().getName() + ".zip");
-				bw.write("File attachmentFile = new File(experimentViewer.getSaveDir().getName() + \".zip\");" + "\n");
-				bw.flush();
 				ZipFile.zipFiles(experimentViewer.getSaveDir(), attachmentFile);
-				bw.write("ZipFile.zipFiles(experimentViewer.getSaveDir(), attachmentFile);" + "\n");
-				bw.flush();
 				if (!this.sendMail(experimentViewer.getSaveDir().getName(), "", attachmentFile)) {
-					bw.write("if (!this.sendMail(experimentViewer.getSaveDir().getName(), \"\", attachmentFile)) {" + " --- " + experimentViewer.getSaveDir().getName() + " - " + attachmentFile.getAbsolutePath() + "\n");
-					bw.flush();
-					bw.close();
 					return "E-Mail-Versand gescheitert. Bitte beim Versuchsleiter melden.";
 				}
 			}

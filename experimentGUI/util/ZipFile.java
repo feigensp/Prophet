@@ -36,27 +36,11 @@ public class ZipFile {
 	 */
 	public static void zipFiles(File zipPath, File outputF) {
 		try {
-			File ausgabeDatei = new File("logzipFiles.txt");
-			FileWriter fw = new FileWriter(ausgabeDatei);
-			BufferedWriter bw = new BufferedWriter(fw);
-			bw.write("Beginn: zipFiles --- Parameter: zipPath: " + zipPath.getAbsolutePath() + " - outputF: " + outputF.getAbsolutePath() + "\n");
-			bw.flush();
 			outputFile=outputF;
-			bw.write("outputFile=outputF;" + "\n");
-			bw.flush();
 			outputFile.getAbsoluteFile().getParentFile().mkdirs();
-			bw.write("outputFile.getAbsoluteFile().getParentFile().mkdirs();" + "\n");
-			bw.flush();
 			zipOut = new ZipOutputStream(new FileOutputStream(outputFile));
-			bw.write("zipOut = new ZipOutputStream(new FileOutputStream(outputFile));" + "\n");
-			bw.flush();
 			zipDir(zipPath);
-			bw.write("zipDir(zipPath);" + "\n");
-			bw.flush();
 			zipOut.close();
-			bw.write("zipOut.close();" + "\n");
-			bw.flush();
-			bw.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {

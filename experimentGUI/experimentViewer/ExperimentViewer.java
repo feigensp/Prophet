@@ -6,7 +6,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.logging.FileHandler;
+import java.util.logging.Formatter;
+import java.util.logging.Handler;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -43,6 +49,10 @@ public class ExperimentViewer extends JFrame {
 	private QuestionTreeNode currentNode;
 	
 	private File saveDir;
+	
+	private static Logger logger;
+	private Handler fileHandler;
+	private Formatter formatter;
 	
 	ActionListener myActionListener = new ActionListener() {
 		public void actionPerformed(ActionEvent arg0) {
@@ -83,20 +93,43 @@ public class ExperimentViewer extends JFrame {
 	 *            the categorieQuestionListsPanel where the overview is shown
 	 */
 	public ExperimentViewer() {
+		//logger
+		try {
+			logger = Logger.getLogger("experimentGUI.experimentViewer.ExperimentViewer");
+			fileHandler = new FileHandler("experimentGUI.experimentViewer.ExperimentViewer.txt");
+			formatter = new SimpleFormatter();
+			fileHandler.setFormatter(formatter);
+			logger.addHandler(fileHandler);
+		} catch (SecurityException e1) {
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}		
+		
 		this.setSize(800, 600);
 		setLocationRelativeTo(null);
 		
 		String fileName = Constants.DEFAULT_FILE;
 		if (!(new File(fileName).exists())) {
+			logger.info(Constants.DEFAULT_FILE + " existierte nicht.");
 			fileName = JOptionPane.showInputDialog("Bitte Experiment angeben:");
+			if(fileName == null) {
+				logger.info("Beende Programm.");
+				System.exit(0);
+			}
 			if (!fileName.endsWith(".xml")) {
 				fileName+=".xml";
 			}
+			logger.info("Setze Dateinamen auf " + fileName);
+		} else {
+			logger.info(Constants.DEFAULT_FILE + " existierte.");
 		}
 		try {
 			tree = QuestionTreeXMLHandler.loadXMLTree(fileName);
 		} catch (FileNotFoundException e) {
+			logger.info("Fehler beim laden der Datei \"" + fileName + "\" in " + System.getProperty("user.dir") + "\r\n" + e.getLocalizedMessage());
 			JOptionPane.showMessageDialog(this, "Experiment nicht gefunden.");
+			logger.info("Beende Programm.");
 			System.exit(0); 
 		}
 
@@ -121,11 +154,14 @@ public class ExperimentViewer extends JFrame {
 	}
 	
 	private boolean nextNode() {
+		logger.info("enter \"nextNode()\"");
 		pauseClock();
 		if (currentNode==tree) {
+			logger.info("currentNode==tree");
 			String subject = currentNode.getAnswer(Constants.KEY_SUBJECT);
 			if (subject==null || subject.length()==0) {
 				JOptionPane.showMessageDialog(this, "Bitte Probanden-Code eingeben!", "Fehler!", JOptionPane.ERROR_MESSAGE);
+				logger.info("exit \"nextNode()\" --> kein Probandencode");
 				return false;
 			}
 			String experiment = currentNode.getAttributeValue(Constants.KEY_CODE);
@@ -136,6 +172,8 @@ public class ExperimentViewer extends JFrame {
 			totalTime.start();
 		}
 		boolean inactive = Boolean.parseBoolean(currentNode.getAttributeValue("inactive"));
+		logger.info("inactive: " + inactive);
+		logger.info("child count of currentNode: " + currentNode.getChildCount());
 		if (!inactive && currentNode.getChildCount() != 0) {
 			currentNode=(QuestionTreeNode)currentNode.getFirstChild();
 		} else {
@@ -143,59 +181,81 @@ public class ExperimentViewer extends JFrame {
 				exitNode();
 			}
 			while(currentNode.getNextSibling()==null) {
+				logger.info("enter while loop");
 				currentNode = (QuestionTreeNode)currentNode.getParent();
 				if (currentNode==null) {
+					logger.info("exit \"nextNode()\" --> currentNode == null");
 					return false;
 				}
+				logger.info("currentNode: " + currentNode.getName());
 				exitNode();
+				logger.info("exit while loop");
 			}
 			currentNode=(QuestionTreeNode)currentNode.getNextSibling();
 		}
 		inactive = Boolean.parseBoolean(currentNode.getAttributeValue(Constants.KEY_INACTIVE));
 		if (inactive) {
+			logger.info("exit \"nextNode()\" --> inactive == true");
 			return nextNode();
 		} else {
 			boolean doNotShowContent = Boolean.parseBoolean(currentNode.getAttributeValue(Constants.KEY_DONOTSHOWCONTENT));
 			if (doNotShowContent) {
 				enterNode();
+				logger.info("exit \"nextNode()\" --> doNotShowContent == true");
 				return nextNode();
 			} else {
 				refresh();
 				enterNode();
+				logger.info("exit \"nextNode()\" --> doNotShowContent == false");
 				return true;
 			}
 		}
 	}
 	private boolean previousNode() {
+		logger.info("enter \"previousNode()\"");
 		pauseClock();
 		if (currentNode.isQuestion()) {
+			logger.info("currentNode.isQuestion() == true");
 			QuestionTreeNode tempNode = currentNode;
 			while ((QuestionTreeNode)tempNode.getPreviousSibling()!=null) {
+				logger.info("enter while loop");
 				tempNode = (QuestionTreeNode)tempNode.getPreviousSibling();
+				logger.info("tempNode: " + tempNode.getName());
 				boolean inactive = Boolean.parseBoolean(tempNode.getAttributeValue(Constants.KEY_INACTIVE));
+				logger.info("inactive: " + inactive);
 				if (!inactive) {
 					exitNode();
 					currentNode=tempNode;
 					refresh();
 					enterNode();
+					logger.info("exit \"previous Node()\" --> inactive == false");
 					return true;
 				}
+				logger.info("exit while loop");
 			}
 		}
+		logger.info("exit \"previous Node()\" --> end of method");
 		return false;
 	}
 	private void enterNode() {
+		logger.info("enter \"enterNode()\"");
 		for (PluginInterface plugin : PluginList.getPlugins()) {
+			logger.info("plugin.getKey(): " + plugin.getKey());
 			currentNode.setPluginData(plugin.getKey(), plugin.enterNode(currentNode));
 		}
+		logger.info("exit \"enterNode()\"");
 	}
-	private void exitNode() {		
+	private void exitNode() {
+		logger.info("enter \"exitNode()\"");
 		for (PluginInterface plugin : PluginList.getPlugins()) {
+			logger.info("plugin.getKey(): " + plugin.getKey());
 			plugin.exitNode(currentNode, currentNode.getPluginData(plugin.getKey()));
 		}
 		if (currentNode.isExperiment()) {
+			logger.info("currentNode.isExperiment() == true");
 			endQuestionnaire();
 		}
+		logger.info("exit \"exitNode()\"");
 	}
 	private void pauseClock() {
 		ClockLabel clock = times.get(currentNode);
@@ -244,6 +304,7 @@ public class ExperimentViewer extends JFrame {
 	 * method which is called when the last question is answered
 	 */
 	private void endQuestionnaire() {
+		logger.info("enter \"endQuestionnaire()\"");
 		contentPane.removeAll();
 		contentPane.updateUI();
 		JTextPane output = new JTextPane();
@@ -254,12 +315,14 @@ public class ExperimentViewer extends JFrame {
 		for (PluginInterface plugin : PluginList.getPlugins()) {
 			String tmp = plugin.finishExperiment();
 			if (tmp!=null) {
+				logger.info(tmp);
 				outputString+="<p>"+tmp+"</p>";
 			}
 		}
 		output.setText(outputString);
 		output.setCaretPosition(0);
 		contentPane.add(output, BorderLayout.CENTER);
+		logger.info("exit \"endQuestionnaire()\"");
 	}
 
 	public QuestionTreeNode getTree() {
