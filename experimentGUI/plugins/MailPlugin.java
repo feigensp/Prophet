@@ -178,4 +178,10 @@ public class MailPlugin implements PluginInterface {
 			return new PasswordAuthentication(this.user, this.password);
 		}
 	}
+
+	@Override
+	public void refresh() {
+		// TODO Auto-generated method stub
+		
+	}
 }

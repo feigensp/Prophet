@@ -1,7 +1,10 @@
 package experimentGUI.plugins;
 
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.io.File;
 import java.io.IOException;
+import java.util.Vector;
 import java.util.logging.FileHandler;
 import java.util.logging.Formatter;
 import java.util.logging.Handler;
@@ -28,6 +31,8 @@ public class CodeViewerPlugin implements PluginInterface {
 	private static Logger logger;
 	private Handler fileHandler;
 	private Formatter formatter;
+	private Rectangle bounds;
+	private CodeViewer cv;
 
 	@Override
 	public SettingsComponentDescription getSettingsComponentDescription(
@@ -52,14 +57,11 @@ public class CodeViewerPlugin implements PluginInterface {
 	@Override
 	public void experimentViewerRun(ExperimentViewer experimentViewer) {
 		this.experimentViewer=experimentViewer;
-	}
 
-	@Override
-	public Object enterNode(QuestionTreeNode node) {
 		//logger 
 		try {
-			logger = Logger.getLogger("experimentGUI.experimentViewer.ExperimentViewer");
-			fileHandler = new FileHandler("experimentGUI.experimentViewer.ExperimentViewer.txt");
+			logger = Logger.getLogger("experimentGUI.plugins.CodeViewerPlugin");
+			fileHandler = new FileHandler("experimentGUI.plugins.CodeViewerPlugin.txt");
 			formatter = new SimpleFormatter();
 			fileHandler.setFormatter(formatter);
 			logger.addHandler(fileHandler);
@@ -67,23 +69,30 @@ public class CodeViewerPlugin implements PluginInterface {
 			e1.printStackTrace();
 		} catch (IOException e1) {
 			e1.printStackTrace();
-		}	
-		
+		}
+	}
+
+	@Override
+	public Object enterNode(QuestionTreeNode node) {		
 		logger.info("enter \"enterNode()\"");
 		boolean enabled = Boolean.parseBoolean(node.getAttributeValue(KEY));
 		logger.info("enabled: " + enabled);
 		if (enabled) {
 			String savePath = experimentViewer.getSaveDir().getPath()+System.getProperty("file.separator")+(count++)+"_"+node.getName()+"_codeviewer";		
-			CodeViewer cv = new CodeViewer(node.getAttribute(KEY), new File(savePath));
-			cv.setLocationRelativeTo(experimentViewer);
+			cv = new CodeViewer(node.getAttribute(KEY), new File(savePath));
+			if (bounds==null) {
+				Point location = experimentViewer.getLocation();
+				cv.setLocation(new Point(location.x+20, location.y+20));
+			} else {
+				cv.setBounds(bounds);
+			}
 			cv.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 			cv.setVisible(true);
-			experimentViewer.setVisible(true);
 			for (CodeViewerPluginInterface plugin : CodeViewerPluginList.getPlugins()) {
 				logger.info("plugin: " + plugin.toString());
 				plugin.onFrameCreate(node.getAttribute(KEY), cv);
 			}
-			logger.info("exit \"enterNode()\" --> normal");
+			logger.info("exit \"enterNode()\" --> enabled == true");
 			return cv;
 		}
 		logger.info("exit \"enterNode()\" --> enabled == false");
@@ -92,12 +101,13 @@ public class CodeViewerPlugin implements PluginInterface {
 
 	@Override
 	public void exitNode(QuestionTreeNode node, Object pluginData) {
-		CodeViewer cv = (CodeViewer)pluginData;
 		if (cv!=null) {
 			for (CodeViewerPluginInterface plugin : CodeViewerPluginList.getPlugins()) {
 				plugin.onClose();
 			}
+			bounds = cv.getBounds();
 			cv.dispose();
+			cv=null;
 		}
 	}
 
@@ -109,5 +119,12 @@ public class CodeViewerPlugin implements PluginInterface {
 	@Override
 	public String finishExperiment() {
 		return null;
+	}
+
+	@Override
+	public void refresh() {
+		if (cv!=null) {
+			cv.setVisible(true);
+		}
 	}
 }

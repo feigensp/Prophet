@@ -180,8 +180,8 @@ public class ExperimentViewer extends JFrame {
 			if (!inactive) {
 				exitNode();
 			}
+			logger.info("enter while loop");
 			while(currentNode.getNextSibling()==null) {
-				logger.info("enter while loop");
 				currentNode = (QuestionTreeNode)currentNode.getParent();
 				if (currentNode==null) {
 					logger.info("exit \"nextNode()\" --> currentNode == null");
@@ -189,8 +189,8 @@ public class ExperimentViewer extends JFrame {
 				}
 				logger.info("currentNode: " + currentNode.getName());
 				exitNode();
-				logger.info("exit while loop");
 			}
+			logger.info("exit while loop");
 			currentNode=(QuestionTreeNode)currentNode.getNextSibling();
 		}
 		inactive = Boolean.parseBoolean(currentNode.getAttributeValue(Constants.KEY_INACTIVE));
@@ -217,8 +217,8 @@ public class ExperimentViewer extends JFrame {
 		if (currentNode.isQuestion()) {
 			logger.info("currentNode.isQuestion() == true");
 			QuestionTreeNode tempNode = currentNode;
+			logger.info("enter while loop");
 			while ((QuestionTreeNode)tempNode.getPreviousSibling()!=null) {
-				logger.info("enter while loop");
 				tempNode = (QuestionTreeNode)tempNode.getPreviousSibling();
 				logger.info("tempNode: " + tempNode.getName());
 				boolean inactive = Boolean.parseBoolean(tempNode.getAttributeValue(Constants.KEY_INACTIVE));
@@ -231,8 +231,8 @@ public class ExperimentViewer extends JFrame {
 					logger.info("exit \"previous Node()\" --> inactive == false");
 					return true;
 				}
-				logger.info("exit while loop");
 			}
+			logger.info("exit while loop");
 		}
 		logger.info("exit \"previous Node()\" --> end of method");
 		return false;
@@ -298,6 +298,9 @@ public class ExperimentViewer extends JFrame {
 		timePanel.add(totalTime);
 		contentPane.add(timePanel, BorderLayout.SOUTH);
 		contentPane.updateUI();
+		for (PluginInterface plugin : PluginList.getPlugins()) {
+			plugin.refresh();
+		}
 	}
 
 	/**
