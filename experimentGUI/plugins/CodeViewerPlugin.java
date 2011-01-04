@@ -3,13 +3,6 @@ package experimentGUI.plugins;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.io.File;
-import java.io.IOException;
-import java.util.Vector;
-import java.util.logging.FileHandler;
-import java.util.logging.Formatter;
-import java.util.logging.Handler;
-import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
 
 import javax.swing.JFrame;
 
@@ -28,9 +21,6 @@ public class CodeViewerPlugin implements PluginInterface {
 	ExperimentViewer experimentViewer;
 	int count = 1;
 
-	private static Logger logger;
-	private Handler fileHandler;
-	private Formatter formatter;
 	private Rectangle bounds;
 	private CodeViewer cv;
 
@@ -57,26 +47,11 @@ public class CodeViewerPlugin implements PluginInterface {
 	@Override
 	public void experimentViewerRun(ExperimentViewer experimentViewer) {
 		this.experimentViewer=experimentViewer;
-
-		//logger 
-		try {
-			logger = Logger.getLogger("experimentGUI.plugins.CodeViewerPlugin");
-			fileHandler = new FileHandler("experimentGUI.plugins.CodeViewerPlugin.txt");
-			formatter = new SimpleFormatter();
-			fileHandler.setFormatter(formatter);
-			logger.addHandler(fileHandler);
-		} catch (SecurityException e1) {
-			e1.printStackTrace();
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
 	}
 
 	@Override
-	public Object enterNode(QuestionTreeNode node) {		
-		logger.info("enter \"enterNode()\"");
+	public Object enterNode(QuestionTreeNode node) {	
 		boolean enabled = Boolean.parseBoolean(node.getAttributeValue(KEY));
-		logger.info("enabled: " + enabled);
 		if (enabled) {
 			String savePath = experimentViewer.getSaveDir().getPath()+System.getProperty("file.separator")+(count++)+"_"+node.getName()+"_codeviewer";		
 			cv = new CodeViewer(node.getAttribute(KEY), new File(savePath));
@@ -89,13 +64,10 @@ public class CodeViewerPlugin implements PluginInterface {
 			cv.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 			cv.setVisible(true);
 			for (CodeViewerPluginInterface plugin : CodeViewerPluginList.getPlugins()) {
-				logger.info("plugin: " + plugin.toString());
 				plugin.onFrameCreate(node.getAttribute(KEY), cv);
 			}
-			logger.info("exit \"enterNode()\" --> enabled == true");
 			return cv;
 		}
-		logger.info("exit \"enterNode()\" --> enabled == false");
 		return null;
 	}
 
