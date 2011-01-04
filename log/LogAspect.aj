@@ -1,5 +1,6 @@
 package log;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.logging.FileHandler;
@@ -17,6 +18,9 @@ public aspect LogAspect {
 
 	static {
 		try {
+			if(!new File("log").isDirectory()) {
+				new File("log").mkdir();
+			}
 			Handler h = new FileHandler("log" + System.getProperty("file.separator") + "bigLog.txt");
 			h.setFormatter(new SimpleFormatter());
 			bigLog.addHandler(h);
