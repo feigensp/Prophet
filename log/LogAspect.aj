@@ -18,8 +18,9 @@ public aspect LogAspect {
 
 	static {
 		try {
-			if(!new File("log").isDirectory()) {
-				new File("log").mkdir();
+			File logDir = new File("log");
+			if(!logDir.isDirectory()) {
+				logDir.mkdir();
 			}
 			Handler h = new FileHandler("log" + System.getProperty("file.separator") + "bigLog.txt");
 			h.setFormatter(new SimpleFormatter());
