@@ -72,4 +72,10 @@ public class SyntaxHighlightingPlugin implements CodeViewerPluginInterface {
 	public String getKey() {
 		return KEY;
 	}
+
+	@Override
+	public void onEditorPanelClose(EditorPanel editorPanel) {
+		// TODO Auto-generated method stub
+		
+	}
 }

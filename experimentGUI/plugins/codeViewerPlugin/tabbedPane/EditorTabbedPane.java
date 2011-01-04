@@ -2,11 +2,12 @@ package experimentGUI.plugins.codeViewerPlugin.tabbedPane;
 
 import java.awt.Component;
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 
+import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
 
+import experimentGUI.plugins.codeViewerPlugin.CodeViewerPluginInterface;
+import experimentGUI.plugins.codeViewerPlugin.CodeViewerPluginList;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 
 @SuppressWarnings("serial")
@@ -42,43 +43,14 @@ public class EditorTabbedPane extends JTabbedPane {
 	}
 	
 	public void closeFile(String path) {
-		EditorPanel e = getEditorPanel(path);
-		if (e!=null) {
-			this.remove(e);
-		}	
+		closeEditorPanel(getEditorPanel(path));
 	}
-
-	//TODO in plugin auslagern
-	public void saveActiveFile() {
-		Component activeComp = this.getSelectedComponent();
-		if (activeComp != null && activeComp instanceof EditorPanel) {
-			saveEditorPanel((EditorPanel)activeComp);
+	public void closeEditorPanel(EditorPanel editorPanel) {
+		for (CodeViewerPluginInterface plugin : CodeViewerPluginList.getPlugins()) {
+			plugin.onEditorPanelClose(editorPanel);
 		}
+		this.remove(editorPanel);
 	}
-
-	public void saveAllFiles() {
-		for (int i = 0; i < getTabCount(); i++) {
-			Component myComp = getComponentAt(i);
-			if (myComp instanceof EditorPanel) {
-				saveEditorPanel((EditorPanel)myComp);
-			}
-		}
-	}
-	
-	protected void saveEditorPanel(EditorPanel editorPanel) {
-			File file = new File(saveDir.getPath()+editorPanel.getFilePath());
-			FileWriter fileWriter = null;
-			try {
-				file.getParentFile().mkdirs();
-				fileWriter = new FileWriter(file);
-				fileWriter.write(editorPanel.getTextArea().getText());
-				fileWriter.flush();
-				fileWriter.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}	
-	}
-	//end TODO
 
 	public EditorPanel getEditorPanel(String path) {
 		for (int i = 0; i < getTabCount(); i++) {
@@ -88,5 +60,13 @@ public class EditorTabbedPane extends JTabbedPane {
 			}
 		}
 		return null;
+	}
+
+	public File getShowDir() {
+		return showDir;
+	}
+
+	public File getSaveDir() {
+		return saveDir;
 	}
 }

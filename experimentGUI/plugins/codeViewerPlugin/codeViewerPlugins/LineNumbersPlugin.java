@@ -36,4 +36,10 @@ public class LineNumbersPlugin implements CodeViewerPluginInterface {
 	public String getKey() {
 		return "linenumbers";
 	}
+
+	@Override
+	public void onEditorPanelClose(EditorPanel editorPanel) {
+		// TODO Auto-generated method stub
+		
+	}
 }

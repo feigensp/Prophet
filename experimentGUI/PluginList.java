@@ -2,10 +2,12 @@ package experimentGUI;
 
 import java.util.Vector;
 
+import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.SettingsComponentDescription;
+import experimentGUI.experimentViewer.ExperimentViewer;
 import experimentGUI.plugins.CodeViewerPlugin;
-import experimentGUI.plugins.DebugPlugin;
 import experimentGUI.plugins.MailPlugin;
 import experimentGUI.plugins.QuestionListPlugin;
+import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 
 
 public class PluginList {
@@ -13,7 +15,6 @@ public class PluginList {
 		private static final long serialVersionUID = 1L;
 		{
 			add(new CodeViewerPlugin());
-			add(new DebugPlugin());
 			add(new QuestionListPlugin());
 			add(new MailPlugin());
 		}

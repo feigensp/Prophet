@@ -52,8 +52,8 @@ import javax.swing.plaf.basic.BasicButtonUI;
  */
 @SuppressWarnings("serial")
 public class ButtonTabComponent extends JPanel {
-	private final EditorTabbedPane pane;
-	private EditorPanel editPanel;
+	private final EditorTabbedPane tabbedPane;
+	private EditorPanel editorPanel;
 
 	public ButtonTabComponent(final EditorTabbedPane pane, EditorPanel editPanel) {
 		// unset default FlowLayout' gaps
@@ -61,8 +61,8 @@ public class ButtonTabComponent extends JPanel {
 		if (pane == null) {
 			throw new NullPointerException("TabbedPane is null");
 		}
-		this.pane = pane;
-		this.editPanel = editPanel;
+		this.tabbedPane = pane;
+		this.editorPanel = editPanel;
 		setOpaque(false);
 
 		// make JLabel read titles from JTabbedPane
@@ -108,19 +108,7 @@ public class ButtonTabComponent extends JPanel {
 		}
 
 		public void actionPerformed(ActionEvent e) {
-			//TODO: speicher Abfrage in editable Plugin
-			if (editPanel.isChanged()) {
-				int n = JOptionPane.showConfirmDialog(null, "Änderungen speichern?", "Speichern?",
-						JOptionPane.YES_NO_OPTION);
-				if (n == JOptionPane.YES_OPTION) {
-					pane.saveEditorPanel(editPanel);
-				}
-			}
-			//schliessen
-			int tabIndex = pane.indexOfTabComponent(ButtonTabComponent.this);
-			if (tabIndex != -1) {
-				pane.remove(tabIndex);
-			}
+			tabbedPane.closeEditorPanel(editorPanel);
 		}
 
 		// we don't want to update UI for this button

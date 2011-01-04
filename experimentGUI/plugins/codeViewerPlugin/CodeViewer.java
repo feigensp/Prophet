@@ -2,14 +2,11 @@ package experimentGUI.plugins.codeViewerPlugin;
 
 import java.awt.Dimension;
 import java.awt.EventQueue;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
 import javax.swing.JSplitPane;
 
 import experimentGUI.plugins.codeViewerPlugin.fileTree.FileEvent;
@@ -25,6 +22,7 @@ public class CodeViewer extends JFrame implements FileListener {
 	public final static String KEY_PATH = "path";
 	
 	private JMenuBar menuBar;
+	private JMenu fileMenu;
 	private JSplitPane splitPane;
 	private FileTree myTree;
 	private EditorTabbedPane tabbedPane;
@@ -64,26 +62,11 @@ public class CodeViewer extends JFrame implements FileListener {
 		String showPath = selected.getAttributeValue(KEY_PATH);
 		showDir = new File(showPath==null || showPath.length()==0 ? "." : showPath);
 		menuBar = new JMenuBar();
-		setJMenuBar(menuBar);
-		//TODO: in editable Plugin		
-		JMenu menu = new JMenu("Datei");
-		menuBar.add(menu);
-
-		JMenuItem saveMenuItem = new JMenuItem("Speichern");
-		menu.add(saveMenuItem);
-		saveMenuItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				tabbedPane.saveActiveFile();
-			}
-		});
-		JMenuItem saveAllMenuItem = new JMenuItem("Alle Speichern");
-		menu.add(saveAllMenuItem);
-		saveAllMenuItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				tabbedPane.saveAllFiles();
-			}
-		});
-		//end TODO
+		setJMenuBar(menuBar);			
+		fileMenu = new JMenu("Datei");
+		menuBar.add(fileMenu);		
+		menuBar.setVisible(false);
+		
 		splitPane = new JSplitPane();
 		splitPane.setBorder(null);
 		
@@ -118,5 +101,13 @@ public class CodeViewer extends JFrame implements FileListener {
 	}
 	public File getSaveDir() {
 		return saveDir;
+	}
+
+	public JMenuBar getViewerMenuBar() {
+		return menuBar;
+	}
+
+	public JMenu getFileMenu() {
+		return fileMenu;
 	}
 }

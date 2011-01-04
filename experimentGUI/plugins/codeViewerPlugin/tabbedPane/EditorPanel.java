@@ -23,13 +23,11 @@ public class EditorPanel extends JPanel {
 	private String filePath;
 	private RTextScrollPane scrollPane;
 	private RSyntaxTextArea textArea;
-	private boolean changed;
 
 	/**
 	 * Create the panel.
 	 */
 	public EditorPanel(File file, String path, QuestionTreeNode selected) {
-		changed = false;
 		this.filePath=path;
 		if (selected==null) {
 			selected=new QuestionTreeNode();
@@ -54,27 +52,6 @@ public class EditorPanel extends JPanel {
 		for (CodeViewerPluginInterface plugin : CodeViewerPluginList.getPlugins()) {
 			plugin.onEditorPanelCreate(this);
 		}
-		
-		//TODO: in editable plugin
-		textArea.getDocument().addDocumentListener(new DocumentListener() {			
-			private void changeOccured() {
-				changed = true;
-				textArea.getDocument().removeDocumentListener(this);
-			}
-			public void changedUpdate(DocumentEvent arg0) {
-				changeOccured();
-			}
-
-			@Override
-			public void insertUpdate(DocumentEvent arg0) {
-				changeOccured();
-			}
-
-			@Override
-			public void removeUpdate(DocumentEvent arg0) {
-				changeOccured();
-			}			
-		});
 	}
 
 	public void grabFocus() {
@@ -85,9 +62,6 @@ public class EditorPanel extends JPanel {
 	}
 	public RTextScrollPane getScrollPane() {
 		return scrollPane;
-	}
-	public boolean isChanged() {
-		return changed;
 	}
 	public String getFilePath() {
 		return filePath;

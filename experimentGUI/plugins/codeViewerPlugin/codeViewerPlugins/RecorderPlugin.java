@@ -136,4 +136,10 @@ public class RecorderPlugin implements CodeViewerPluginInterface,ChangeListener 
 		return KEY;
 	}
 
+	@Override
+	public void onEditorPanelClose(EditorPanel editorPanel) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

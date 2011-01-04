@@ -8,6 +8,7 @@ public interface CodeViewerPluginInterface {
 	public SettingsComponentDescription getSettingsComponentDescription();
 	public void onFrameCreate(QuestionTreeNode selected, CodeViewer viewer);
 	public void onEditorPanelCreate(EditorPanel editorPanel);
+	public void onEditorPanelClose(EditorPanel editorPanel);
 	public String getKey();
 	public void onClose();
 }
