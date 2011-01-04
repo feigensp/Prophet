@@ -73,9 +73,9 @@ public aspect LogAspect {
 			addLogger(className);
 		}
 		logger.get(className).config(
-				"-> " + thisJoinPoint.getSignature().toString() + createArgs(thisJoinPoint) + " at "
+				"--> " + thisJoinPoint.getSignature().toString() + createArgs(thisJoinPoint) + " at "
 						+ thisJoinPoint.getSourceLocation());
-		bigLog.config("-> " + thisJoinPoint.getSignature().toString() + createArgs(thisJoinPoint) + " at "
+		bigLog.config("--> " + thisJoinPoint.getSignature().toString() + createArgs(thisJoinPoint) + " at "
 				+ thisJoinPoint.getSourceLocation());
 	}
 
@@ -85,9 +85,9 @@ public aspect LogAspect {
 			addLogger(className);
 		}
 		logger.get(className).config(
-				"<- " + thisJoinPoint.getSignature().toString() + " at " + thisJoinPoint.getSourceLocation()
+				"<-- " + thisJoinPoint.getSignature().toString() + " at " + thisJoinPoint.getSourceLocation()
 						+ " returning: " + o);
-		bigLog.config("<- " + thisJoinPoint.getSignature().toString() + " at "
+		bigLog.config("<-- " + thisJoinPoint.getSignature().toString() + " at "
 				+ thisJoinPoint.getSourceLocation() + " returning: " + o);
 	}
 
