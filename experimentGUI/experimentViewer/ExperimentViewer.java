@@ -31,7 +31,7 @@ import experimentGUI.util.questionTreeNode.QuestionTreeXMLHandler;
  */
 public class ExperimentViewer extends JFrame {
 	private JPanel contentPane;
-	//the textpanes (one is one question)
+	//the textpanes (one for each question)
 	private QuestionViewPane currentViewPane;
 	private HashMap<QuestionTreeNode,QuestionViewPane> textPanes;
 	//time objects
@@ -98,8 +98,13 @@ public class ExperimentViewer extends JFrame {
 			}
 		}
 		try {
+			boolean isInDir = new File(fileName).getCanonicalFile().getParentFile().equals(new File(".").getCanonicalFile());
+			if (!isInDir) {
+				JOptionPane.showMessageDialog(this, "Experiment nicht im aktuellen Verzeichnis.");
+				System.exit(0);
+			}
 			tree = QuestionTreeXMLHandler.loadXMLTree(fileName);
-		} catch (FileNotFoundException e) {
+		} catch (Exception e) {
 			JOptionPane.showMessageDialog(this, "Experiment nicht gefunden.");
 			System.exit(0); 
 		}
@@ -208,6 +213,8 @@ public class ExperimentViewer extends JFrame {
 		}
 	}
 	private void refresh() {
+		this.setEnabled(false);
+		
 		if (currentViewPane!=null) {
 			contentPane.remove(currentViewPane);
 		}
@@ -224,7 +231,7 @@ public class ExperimentViewer extends JFrame {
 			textPanes.put(currentNode, currentViewPane);
 		} 
 		contentPane.add(currentViewPane, BorderLayout.CENTER);
-		
+
 		timePanel.removeAll();
 		ClockLabel clock = times.get(currentNode);
 		if (clock==null) {
@@ -242,9 +249,8 @@ public class ExperimentViewer extends JFrame {
 		timePanel.add(totalTime);
 		contentPane.add(timePanel, BorderLayout.SOUTH);
 		contentPane.updateUI();
-		for (PluginInterface plugin : PluginList.getPlugins()) {
-			plugin.refresh();
-		}
+
+		this.setEnabled(true);
 	}
 
 	/**

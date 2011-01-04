@@ -1,6 +1,7 @@
 package experimentGUI.plugins.codeViewerPlugin.fileTree;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Arrays;
 import java.util.Vector;
 
@@ -13,10 +14,13 @@ public class FileTreeNode extends DefaultMutableTreeNode {
 	private String path;
 	private boolean isFile;
 	
-	public FileTreeNode(File file) {
+	public FileTreeNode(File file) throws FileNotFoundException {
 		this(file,"", true);
 	}
-	private FileTreeNode(File file, String containingPath, boolean root) {
+	private FileTreeNode(File file, String containingPath, boolean root) throws FileNotFoundException {
+		if (!file.exists()) {
+			throw new FileNotFoundException();
+		}
 		name=file.getName();
 		if (root) {
 			this.path="";

@@ -1,7 +1,9 @@
 package experimentGUI.plugins.questionListPlugin;
 
+import java.awt.Color;
 import java.util.Enumeration;
 
+import javax.swing.BorderFactory;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 import javax.swing.JTree;

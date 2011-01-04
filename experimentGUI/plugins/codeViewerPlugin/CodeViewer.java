@@ -2,11 +2,14 @@ package experimentGUI.plugins.codeViewerPlugin;
 
 import java.awt.Dimension;
 import java.awt.EventQueue;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JSplitPane;
 
 import experimentGUI.plugins.codeViewerPlugin.fileTree.FileEvent;
@@ -20,6 +23,7 @@ import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 @SuppressWarnings("serial")
 public class CodeViewer extends JFrame implements FileListener {
 	public final static String KEY_PATH = "path";
+	public final static String KEY_EDITABLE = "editable";
 	
 	private JMenuBar menuBar;
 	private JMenu fileMenu;
@@ -59,13 +63,32 @@ public class CodeViewer extends JFrame implements FileListener {
 		
 		//read settings, store in variables
 		
-		String showPath = selected.getAttributeValue(KEY_PATH);
+		String showPath = selected.getAttributeValue(KEY_PATH).replace('/', System.getProperty("file.separator").charAt(0));
 		showDir = new File(showPath==null || showPath.length()==0 ? "." : showPath);
+		
 		menuBar = new JMenuBar();
 		setJMenuBar(menuBar);			
 		fileMenu = new JMenu("Datei");
-		menuBar.add(fileMenu);		
-		menuBar.setVisible(false);
+		menuBar.add(fileMenu);
+		boolean editable = Boolean.parseBoolean(selected.getAttributeValue(KEY_EDITABLE));
+		getViewerMenuBar().setVisible(editable);
+		if (editable) {
+			tabbedPane = getTabbedPane();
+			JMenuItem saveMenuItem = new JMenuItem("Speichern");
+			fileMenu.add(saveMenuItem);
+			saveMenuItem.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					tabbedPane.saveActiveFile();
+				}
+			});
+			JMenuItem saveAllMenuItem = new JMenuItem("Alle Speichern");
+			fileMenu.add(saveAllMenuItem);
+			saveAllMenuItem.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					tabbedPane.saveAllFiles();
+				}
+			});
+		}
 		
 		splitPane = new JSplitPane();
 		splitPane.setBorder(null);

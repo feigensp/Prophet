@@ -11,5 +11,4 @@ public interface PluginInterface {
 	public void exitNode(QuestionTreeNode node, Object pluginData);
 	public String getKey();
 	public String finishExperiment();
-	public void refresh();
 }

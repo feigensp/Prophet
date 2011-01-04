@@ -3,11 +3,14 @@ package experimentGUI.plugins.codeViewerPlugin.fileTree;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Enumeration;
 import java.util.Vector;
 
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
+import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
@@ -25,7 +28,14 @@ public class FileTree extends JScrollPane {
 
 	public FileTree(File dir) {
 		rootDir = dir;
-		tree = new JTree(new DefaultTreeModel(new FileTreeNode(rootDir)));
+		FileTreeNode treeNode;
+		try {
+			treeNode = new FileTreeNode(rootDir);
+			tree = new JTree(new DefaultTreeModel(treeNode));
+		} catch (FileNotFoundException e1) {
+			tree = new JTree(new DefaultTreeModel(new DefaultMutableTreeNode()));
+			JOptionPane.showMessageDialog(this, "Der im Experiment angegebene Pfad ist nicht vorhanden.", "Fehler", JOptionPane.ERROR_MESSAGE);
+		}
 		tree.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {

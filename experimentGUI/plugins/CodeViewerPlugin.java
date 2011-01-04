@@ -9,6 +9,7 @@ import javax.swing.JFrame;
 import experimentGUI.PluginInterface;
 import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.SettingsComponentDescription;
 import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.SettingsPluginComponentDescription;
+import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.settingsComponents.SettingsCheckBox;
 import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.settingsComponents.SettingsPathChooser;
 import experimentGUI.experimentViewer.ExperimentViewer;
 import experimentGUI.plugins.codeViewerPlugin.CodeViewer;
@@ -18,11 +19,11 @@ import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 
 public class CodeViewerPlugin implements PluginInterface {
 	public final static String KEY = "codeviewer";
+	
 	ExperimentViewer experimentViewer;
 	int count = 1;
 
 	private Rectangle bounds;
-	private CodeViewer cv;
 
 	@Override
 	public SettingsComponentDescription getSettingsComponentDescription(
@@ -30,6 +31,7 @@ public class CodeViewerPlugin implements PluginInterface {
 		if (node.getType().equals(QuestionTreeNode.TYPE_CATEGORY)) {
 			SettingsPluginComponentDescription result = new SettingsPluginComponentDescription(KEY, "Codeviewer aktivieren");
 			result.addSubComponent(new SettingsComponentDescription(SettingsPathChooser.class, CodeViewer.KEY_PATH, "Pfad der Quelltexte:"));
+			result.addSubComponent(new SettingsComponentDescription(SettingsCheckBox.class, CodeViewer.KEY_EDITABLE, "Quelltext editierbar"));
 			for (CodeViewerPluginInterface plugin : CodeViewerPluginList.getPlugins()) {
 				SettingsComponentDescription desc = plugin.getSettingsComponentDescription();
 				if (desc!=null) {
@@ -54,7 +56,7 @@ public class CodeViewerPlugin implements PluginInterface {
 		boolean enabled = Boolean.parseBoolean(node.getAttributeValue(KEY));
 		if (enabled) {
 			String savePath = experimentViewer.getSaveDir().getPath()+System.getProperty("file.separator")+(count++)+"_"+node.getName()+"_codeviewer";		
-			cv = new CodeViewer(node.getAttribute(KEY), new File(savePath));
+			CodeViewer cv = new CodeViewer(node.getAttribute(KEY), new File(savePath));
 			if (bounds==null) {
 				Point location = experimentViewer.getLocation();
 				cv.setLocation(new Point(location.x+20, location.y+20));
@@ -73,6 +75,7 @@ public class CodeViewerPlugin implements PluginInterface {
 
 	@Override
 	public void exitNode(QuestionTreeNode node, Object pluginData) {
+		CodeViewer cv = (CodeViewer)pluginData;
 		if (cv!=null) {
 			for (CodeViewerPluginInterface plugin : CodeViewerPluginList.getPlugins()) {
 				plugin.onClose();
@@ -91,12 +94,5 @@ public class CodeViewerPlugin implements PluginInterface {
 	@Override
 	public String finishExperiment() {
 		return null;
-	}
-
-	@Override
-	public void refresh() {
-		if (cv!=null) {
-			cv.setVisible(true);
-		}
 	}
 }

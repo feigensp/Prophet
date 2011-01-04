@@ -46,11 +46,4 @@ public class QuestionListPlugin implements PluginInterface {
 	public String finishExperiment() {
 		return null;
 	}
-
-	@Override
-	public void refresh() {
-		// TODO Auto-generated method stub
-		
-	}
-
 }

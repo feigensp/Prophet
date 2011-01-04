@@ -80,24 +80,28 @@ public class MacroBox extends JComboBox {
 				}
 			}
 		});
-		loadMakros();
+		loadMacros();
 	}
 
-	private void loadMakros() {
+	private void loadMacros() {
 		try {
+			File file = new File("macro.xml");
+			if (!file.exists()) {
+				return;
+			}
 			Document doc = DocumentBuilderFactory.newInstance()
-					.newDocumentBuilder().parse(new File("macro.xml"));
+					.newDocumentBuilder().parse(file);
 			Node xmlRoot = doc.getFirstChild();
-			NodeList xmlMakros = xmlRoot.getChildNodes();
-			for (int i = 0; i < xmlMakros.getLength(); i++) {
-				String makroName = xmlMakros.item(i).getAttributes()
+			NodeList xmlMacros = xmlRoot.getChildNodes();
+			for (int i = 0; i < xmlMacros.getLength(); i++) {
+				String macroName = xmlMacros.item(i).getAttributes()
 						.getNamedItem("name").getNodeValue();
-				String makroContent = xmlMakros.item(i).getTextContent();
+				String macroContent = xmlMacros.item(i).getTextContent();
 				if (i <= 9) {
-					makroName += "\t [Strg + " + (i + 1) % 10 + "]";
+					macroName += "\t [Strg + " + (i + 1) % 10 + "]";
 				}
-				this.addItem(makroName);
-				macros.add(makroContent);
+				this.addItem(macroName);
+				macros.add(macroContent);
 			}
 		} catch (SAXException e) {
 			e.printStackTrace();

@@ -55,22 +55,22 @@ public class ButtonTabComponent extends JPanel {
 	private final EditorTabbedPane tabbedPane;
 	private EditorPanel editorPanel;
 
-	public ButtonTabComponent(final EditorTabbedPane pane, EditorPanel editPanel) {
+	public ButtonTabComponent(final EditorTabbedPane tabbedPane, EditorPanel editorPanel) {
 		// unset default FlowLayout' gaps
 		super(new FlowLayout(FlowLayout.LEFT, 0, 0));
-		if (pane == null) {
+		if (tabbedPane == null) {
 			throw new NullPointerException("TabbedPane is null");
 		}
-		this.tabbedPane = pane;
-		this.editorPanel = editPanel;
+		this.tabbedPane = tabbedPane;
+		this.editorPanel = editorPanel;
 		setOpaque(false);
 
 		// make JLabel read titles from JTabbedPane
 		JLabel label = new JLabel() {
 			public String getText() {
-				int i = pane.indexOfTabComponent(ButtonTabComponent.this);
+				int i = tabbedPane.indexOfTabComponent(ButtonTabComponent.this);
 				if (i != -1) {
-					return pane.getTitleAt(i);
+					return tabbedPane.getTitleAt(i);
 				}
 				return null;
 			}

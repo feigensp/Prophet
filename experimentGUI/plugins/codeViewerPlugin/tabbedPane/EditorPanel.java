@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.io.File;
 import java.io.FileInputStream;
 
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -13,6 +14,7 @@ import org.fife.ui.rsyntaxtextarea.RSyntaxDocument;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rtextarea.RTextScrollPane;
 
+import experimentGUI.plugins.codeViewerPlugin.CodeViewer;
 import experimentGUI.plugins.codeViewerPlugin.CodeViewerPluginInterface;
 import experimentGUI.plugins.codeViewerPlugin.CodeViewerPluginList;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
@@ -23,6 +25,8 @@ public class EditorPanel extends JPanel {
 	private String filePath;
 	private RTextScrollPane scrollPane;
 	private RSyntaxTextArea textArea;
+	
+	private boolean changed = false;
 
 	/**
 	 * Create the panel.
@@ -43,17 +47,38 @@ public class EditorPanel extends JPanel {
 		}
 		textArea = new RSyntaxTextArea(doc);
 		textArea.setFont(new Font("monospaced", Font.PLAIN, 12));
-		scrollPane = new RTextScrollPane(textArea);
-		
+		scrollPane = new RTextScrollPane(textArea);		
 		
 		setLayout(new BorderLayout());
-		add(scrollPane, BorderLayout.CENTER);
+		add(scrollPane, BorderLayout.CENTER);	
 		
 		for (CodeViewerPluginInterface plugin : CodeViewerPluginList.getPlugins()) {
 			plugin.onEditorPanelCreate(this);
 		}
-	}
+		
+		boolean editable = Boolean.parseBoolean(selected.getAttributeValue(CodeViewer.KEY_EDITABLE));
+		textArea.setEditable(editable);
+		if (editable) {
+			textArea.getDocument().addDocumentListener(new DocumentListener() {			
+				private void changeOccured() {
+					changed=true;
+				}
+				public void changedUpdate(DocumentEvent arg0) {
+					changeOccured();
+				}
 
+				@Override
+				public void insertUpdate(DocumentEvent arg0) {
+					changeOccured();
+				}
+
+				@Override
+				public void removeUpdate(DocumentEvent arg0) {
+					changeOccured();
+				}			
+			});
+		}
+	}	
 	public void grabFocus() {
 		textArea.grabFocus();
 	}	
@@ -65,5 +90,8 @@ public class EditorPanel extends JPanel {
 	}
 	public String getFilePath() {
 		return filePath;
+	}
+	public boolean isChanged() {
+		return changed;
 	}
 }
