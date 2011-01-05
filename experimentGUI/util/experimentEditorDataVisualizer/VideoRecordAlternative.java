@@ -1,6 +1,30 @@
 package experimentGUI.util.experimentEditorDataVisualizer;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.EventQueue;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileNotFoundException;
+
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.UIManager;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
+
+import experimentGUI.plugins.codeViewerPlugin.CodeViewer;
+import experimentGUI.util.loggingTreeNode.LoggingTreeNode;
+import experimentGUI.util.loggingTreeNode.LoggingTreeXMLHandler;
+import experimentGUI.util.questionTreeNode.QuestionTreeNode;
+import experimentGUI.util.questionTreeNode.QuestionTreeXMLHandler;
 
 public class VideoRecordAlternative extends JFrame {
 //
