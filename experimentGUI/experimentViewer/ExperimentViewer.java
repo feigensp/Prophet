@@ -105,8 +105,7 @@ public class ExperimentViewer extends JFrame {
 	    			loadFromJar = true;
 	    		}
 			} catch (MalformedURLException e1) {
-				JOptionPane.showMessageDialog(this, "Experiment nicht gefunden.");
-				System.exit(0); 
+				//do nothing
 			} catch (FileNotFoundException e) {
 				JOptionPane.showMessageDialog(this, "Experiment nicht gefunden.");
 				System.exit(0); 
