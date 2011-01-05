@@ -1,29 +1,6 @@
 package experimentGUI.util.experimentEditorDataVisualizer;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.EventQueue;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.HashMap;
-import java.util.Iterator;
-
 import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.text.BadLocationException;
-
-import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
-
-import experimentGUI.plugins.codeViewerPlugin.codeViewerPlugins.RecorderPlugin;
-import experimentGUI.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin.recorderPlugins.ScrollingPlugin;
-import experimentGUI.plugins.codeViewerPlugin.fileTree.FileEvent;
-import experimentGUI.plugins.codeViewerPlugin.fileTree.FileListener;
-import experimentGUI.plugins.codeViewerPlugin.fileTree.FileTree;
-import experimentGUI.plugins.codeViewerPlugin.tabbedPane.EditorTabbedPane;
-import experimentGUI.util.loggingTreeNode.LoggingTreeNode;
-import experimentGUI.util.loggingTreeNode.LoggingTreeXMLHandler;
-import experimentGUI.util.questionTreeNode.QuestionTreeXMLHandler;
 
 public class ScrollHistory extends JFrame {
 //
