@@ -6,6 +6,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.Enumeration;
 import java.util.HashMap;
 
 import javax.swing.JFrame;
@@ -83,30 +88,53 @@ public class ExperimentViewer extends JFrame {
 	 *            the categorieQuestionListsPanel where the overview is shown
 	 */
 	public ExperimentViewer() {	
+		boolean loadFromJar = false;
 		
 		this.setSize(800, 600);
 		setLocationRelativeTo(null);
 		
-		String fileName = Constants.DEFAULT_FILE;
-		if (!(new File(fileName).exists())) {
-			fileName = JOptionPane.showInputDialog("Bitte Experiment angeben:");
-			if(fileName == null) {
-				System.exit(0);
-			}
-			if (!fileName.endsWith(".xml")) {
-				fileName+=".xml";
+		File resJar = new File(Constants.RES_JAR_NAME);
+		if(resJar.exists()) {
+            URL url;
+			try {
+				url = resJar.toURI().toURL();
+	            URLClassLoader ucl = new URLClassLoader(new URL[] { url });
+	    		InputStream is = ucl.getResourceAsStream(Constants.DEFAULT_FILE);
+	    		if(is != null) {
+	    			tree = QuestionTreeXMLHandler.loadXMLTree(is);
+	    			loadFromJar = true;
+	    		}
+			} catch (MalformedURLException e1) {
+				JOptionPane.showMessageDialog(this, "Experiment nicht gefunden.");
+				System.exit(0); 
+			} catch (FileNotFoundException e) {
+				JOptionPane.showMessageDialog(this, "Experiment nicht gefunden.");
+				System.exit(0); 
 			}
 		}
-		try {
-			boolean isInDir = new File(fileName).getCanonicalFile().getParentFile().equals(new File(".").getCanonicalFile());
-			if (!isInDir) {
-				JOptionPane.showMessageDialog(this, "Experiment nicht im aktuellen Verzeichnis.");
-				System.exit(0);
+		
+		if(!loadFromJar) {
+			String fileName = Constants.DEFAULT_FILE;
+			if (!(new File(fileName).exists())) {
+				fileName = JOptionPane.showInputDialog("Bitte Experiment angeben:");
+				if(fileName == null) {
+					System.exit(0);
+				}
+				if (!fileName.endsWith(".xml")) {
+					fileName+=".xml";
+				}
 			}
-			tree = QuestionTreeXMLHandler.loadXMLTree(fileName);
-		} catch (Exception e) {
-			JOptionPane.showMessageDialog(this, "Experiment nicht gefunden.");
-			System.exit(0); 
+			try {
+				boolean isInDir = new File(fileName).getCanonicalFile().getParentFile().equals(new File(".").getCanonicalFile());
+				if (!isInDir) {
+					JOptionPane.showMessageDialog(this, "Experiment nicht im aktuellen Verzeichnis.");
+					System.exit(0);
+				}
+				tree = QuestionTreeXMLHandler.loadXMLTree(fileName);
+			} catch (Exception e) {
+				JOptionPane.showMessageDialog(this, "Experiment nicht gefunden.");
+				System.exit(0); 
+			}
 		}
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

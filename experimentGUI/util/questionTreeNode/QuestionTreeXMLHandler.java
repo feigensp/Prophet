@@ -10,6 +10,7 @@ package experimentGUI.util.questionTreeNode;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Map.Entry;
 
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -249,6 +250,25 @@ public class QuestionTreeXMLHandler {
 			// Document lesen
 			Document doc = DocumentBuilderFactory.newInstance()
 					.newDocumentBuilder().parse(file);
+			// Wurzel holen
+			Node xmlRoot = doc.getFirstChild();
+			return loadXMLNode(xmlRoot);
+		} catch (SAXException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ParserConfigurationException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+
+	public static QuestionTreeNode loadXMLTree(InputStream is) throws FileNotFoundException {
+		try {			
+			// Document lesen
+			Document doc = DocumentBuilderFactory.newInstance()
+					.newDocumentBuilder().parse(is);
 			// Wurzel holen
 			Node xmlRoot = doc.getFirstChild();
 			return loadXMLNode(xmlRoot);
