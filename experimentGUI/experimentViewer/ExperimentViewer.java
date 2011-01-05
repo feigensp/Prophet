@@ -46,6 +46,7 @@ public class ExperimentViewer extends JFrame {
 	//nodes of the question tree
 	private QuestionTreeNode tree;
 	private QuestionTreeNode currentNode;
+	private static ClassLoader cl;
 	
 	private File saveDir;
 	
@@ -77,6 +78,10 @@ public class ExperimentViewer extends JFrame {
 			}
 		});
 	}
+	
+	public static ClassLoader getClassLoader() {
+		return cl;
+	}
 
 	/**
 	 * With the call of the Constructor the data is loaded and everything is
@@ -89,28 +94,29 @@ public class ExperimentViewer extends JFrame {
 	 */
 	public ExperimentViewer() {	
 		boolean loadFromJar = false;
+		cl = this.getClass().getClassLoader();
 		
 		this.setSize(800, 600);
 		setLocationRelativeTo(null);
 		
-		File resJar = new File(Constants.RES_JAR_NAME);
-		if(resJar.exists()) {
-            URL url;
-			try {
-				url = resJar.toURI().toURL();
-	            URLClassLoader ucl = new URLClassLoader(new URL[] { url });
-	    		InputStream is = ucl.getResourceAsStream(Constants.DEFAULT_FILE);
-	    		if(is != null) {
-	    			tree = QuestionTreeXMLHandler.loadXMLTree(is);
-	    			loadFromJar = true;
-	    		}
-			} catch (MalformedURLException e1) {
-				//do nothing
-			} catch (FileNotFoundException e) {
-				JOptionPane.showMessageDialog(this, "Experiment nicht gefunden.");
-				System.exit(0); 
-			}
-		}
+//		File resJar = new File(Constants.RES_JAR_NAME);
+//		if(resJar.exists()) {
+//            URL url;
+//			try {
+//				url = resJar.toURI().toURL();
+//	            URLClassLoader ucl = new URLClassLoader(new URL[] { url });
+//	    		InputStream is = ucl.getResourceAsStream(Constants.DEFAULT_FILE);
+//	    		if(is != null) {
+//	    			tree = QuestionTreeXMLHandler.loadXMLTree(is);
+//	    			loadFromJar = true;
+//	    		}
+//			} catch (MalformedURLException e1) {
+//				//do nothing
+//			} catch (FileNotFoundException e) {
+//				JOptionPane.showMessageDialog(this, "Experiment nicht gefunden.");
+//				System.exit(0); 
+//			}
+//		}
 		
 		if(!loadFromJar) {
 			String fileName = Constants.DEFAULT_FILE;

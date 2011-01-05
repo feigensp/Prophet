@@ -10,7 +10,7 @@ package experimentGUI.util.questionTreeNode;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
+import java.net.URL;
 import java.util.Map.Entry;
 
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -24,6 +24,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+
+import experimentGUI.FileHandler;
 
 
 public class QuestionTreeXMLHandler {
@@ -241,34 +243,15 @@ public class QuestionTreeXMLHandler {
 	 *            path of the file
 	 * @return root of the new tree-structure
 	 */
-	public static QuestionTreeNode loadXMLTree(String path) throws FileNotFoundException {
-		File file = new File(path);
-		if (!file.exists()) {
-			throw new FileNotFoundException();
-		}
+	public static QuestionTreeNode loadXMLTree(String path) throws FileNotFoundException {		
 		try {			
 			// Document lesen
+			URL url = FileHandler.getRessource(path);
+			if(url == null) {
+				return null;
+			}
 			Document doc = DocumentBuilderFactory.newInstance()
-					.newDocumentBuilder().parse(file);
-			// Wurzel holen
-			Node xmlRoot = doc.getFirstChild();
-			return loadXMLNode(xmlRoot);
-		} catch (SAXException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (ParserConfigurationException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-	
-
-	public static QuestionTreeNode loadXMLTree(InputStream is) throws FileNotFoundException {
-		try {			
-			// Document lesen
-			Document doc = DocumentBuilderFactory.newInstance()
-					.newDocumentBuilder().parse(is);
+					.newDocumentBuilder().parse(url.openStream());
 			// Wurzel holen
 			Node xmlRoot = doc.getFirstChild();
 			return loadXMLNode(xmlRoot);
