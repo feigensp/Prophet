@@ -2,12 +2,10 @@ package experimentGUI;
 
 import java.util.Vector;
 
-import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.SettingsComponentDescription;
-import experimentGUI.experimentViewer.ExperimentViewer;
 import experimentGUI.plugins.CodeViewerPlugin;
 import experimentGUI.plugins.MailPlugin;
+import experimentGUI.plugins.MaxTimePlugin;
 import experimentGUI.plugins.QuestionListPlugin;
-import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 
 
 public class PluginList {
@@ -17,6 +15,7 @@ public class PluginList {
 			add(new CodeViewerPlugin());
 			add(new QuestionListPlugin());
 			add(new MailPlugin());
+			add(new MaxTimePlugin());
 		}
 	};
 	

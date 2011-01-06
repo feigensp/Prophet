@@ -31,19 +31,21 @@ import experimentGUI.util.questionTreeNode.QuestionTreeXMLHandler;
  */
 public class ExperimentViewer extends JFrame {
 	private JPanel contentPane;
-	//the textpanes (one for each question)
+	// the textpanes (one for each question)
 	private QuestionViewPane currentViewPane;
-	private HashMap<QuestionTreeNode,QuestionViewPane> textPanes;
-	//time objects
+	private HashMap<QuestionTreeNode, QuestionViewPane> textPanes;
+	// time objects
 	private JPanel timePanel;
-	private HashMap<QuestionTreeNode,ClockLabel> times;
+	private HashMap<QuestionTreeNode, ClockLabel> times;
 	private ClockLabel totalTime;
-	//nodes of the question tree
+	// nodes of the question tree
 	private QuestionTreeNode tree;
 	private QuestionTreeNode currentNode;
-	
+
 	private File saveDir;
 	
+	boolean endFlag = false;
+
 	ActionListener myActionListener = new ActionListener() {
 		public void actionPerformed(ActionEvent arg0) {
 			String command = arg0.getActionCommand();
@@ -52,9 +54,9 @@ public class ExperimentViewer extends JFrame {
 			} else if (command.equals(Constants.KEY_FORWARD)) {
 				nextNode();
 			}
-		}		
+		}
 	};
-	
+
 	/**
 	 * Launch the application.
 	 */
@@ -82,23 +84,23 @@ public class ExperimentViewer extends JFrame {
 	 * @param cqlp
 	 *            the categorieQuestionListsPanel where the overview is shown
 	 */
-	public ExperimentViewer() {	
-		
+	public ExperimentViewer() {
 		this.setSize(800, 600);
 		setLocationRelativeTo(null);
-		
+
 		String fileName = Constants.DEFAULT_FILE;
 		if (!(new File(fileName).exists())) {
 			fileName = JOptionPane.showInputDialog("Bitte Experiment angeben:");
-			if(fileName == null) {
+			if (fileName == null) {
 				System.exit(0);
 			}
 			if (!fileName.endsWith(".xml")) {
-				fileName+=".xml";
+				fileName += ".xml";
 			}
 		}
 		try {
-			boolean isInDir = new File(fileName).getCanonicalFile().getParentFile().equals(new File(".").getCanonicalFile());
+			boolean isInDir = new File(fileName).getCanonicalFile().getParentFile()
+					.equals(new File(".").getCanonicalFile());
 			if (!isInDir) {
 				JOptionPane.showMessageDialog(this, "Experiment nicht im aktuellen Verzeichnis.");
 				System.exit(0);
@@ -106,7 +108,7 @@ public class ExperimentViewer extends JFrame {
 			tree = QuestionTreeXMLHandler.loadXMLTree(fileName);
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(this, "Experiment nicht gefunden.");
-			System.exit(0); 
+			System.exit(0);
 		}
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -117,54 +119,61 @@ public class ExperimentViewer extends JFrame {
 		for (PluginInterface plugin : PluginList.getPlugins()) {
 			plugin.experimentViewerRun(this);
 		}
-		//Starte Experiment
+		// Starte Experiment
 		QuestionTreeNode superRoot = new QuestionTreeNode();
 		superRoot.add(tree);
 		tree.setParent(null);
-		currentNode=superRoot;
-		textPanes = new HashMap<QuestionTreeNode,QuestionViewPane>();
-		times = new HashMap<QuestionTreeNode,ClockLabel>();
+		currentNode = superRoot;
+		textPanes = new HashMap<QuestionTreeNode, QuestionViewPane>();
+		times = new HashMap<QuestionTreeNode, ClockLabel>();
 		totalTime = new ClockLabel("Gesamtzeit");
 		timePanel = new JPanel();
 		nextNode();
 	}
 	
+	//TODO: Markus drüber gucken
+	public Long getTime() {
+		return totalTime.getCurrentTime();
+	}
+
 	private boolean nextNode() {
 		pauseClock();
-		if (currentNode==tree) {
+		if (currentNode == tree) {
 			String subject = currentNode.getAnswer(Constants.KEY_SUBJECT);
-			if (subject==null || subject.length()==0) {
-				JOptionPane.showMessageDialog(this, "Bitte Probanden-Code eingeben!", "Fehler!", JOptionPane.ERROR_MESSAGE);
+			if (subject == null || subject.length() == 0) {
+				JOptionPane.showMessageDialog(this, "Bitte Probanden-Code eingeben!", "Fehler!",
+						JOptionPane.ERROR_MESSAGE);
 				return false;
 			}
 			String experiment = currentNode.getAttributeValue(Constants.KEY_CODE);
-			if (experiment==null) {
-				experiment="default";
+			if (experiment == null) {
+				experiment = "default";
 			}
-			saveDir = new File(experiment+"_"+subject);
+			saveDir = new File(experiment + "_" + subject);
 			totalTime.start();
 		}
 		boolean inactive = Boolean.parseBoolean(currentNode.getAttributeValue("inactive"));
 		if (!inactive && currentNode.getChildCount() != 0) {
-			currentNode=(QuestionTreeNode)currentNode.getFirstChild();
+			currentNode = (QuestionTreeNode) currentNode.getFirstChild();
 		} else {
 			if (!inactive) {
 				exitNode();
 			}
-			while(currentNode.getNextSibling()==null) {
-				currentNode = (QuestionTreeNode)currentNode.getParent();
-				if (currentNode==null) {
+			while (currentNode.getNextSibling() == null) {
+				currentNode = (QuestionTreeNode) currentNode.getParent();
+				if (currentNode == null) {
 					return false;
 				}
 				exitNode();
 			}
-			currentNode=(QuestionTreeNode)currentNode.getNextSibling();
+			currentNode = (QuestionTreeNode) currentNode.getNextSibling();
 		}
 		inactive = Boolean.parseBoolean(currentNode.getAttributeValue(Constants.KEY_INACTIVE));
 		if (inactive) {
 			return nextNode();
 		} else {
-			boolean doNotShowContent = Boolean.parseBoolean(currentNode.getAttributeValue(Constants.KEY_DONOTSHOWCONTENT));
+			boolean doNotShowContent = Boolean.parseBoolean(currentNode
+					.getAttributeValue(Constants.KEY_DONOTSHOWCONTENT));
 			if (doNotShowContent) {
 				enterNode();
 				return nextNode();
@@ -175,16 +184,17 @@ public class ExperimentViewer extends JFrame {
 			}
 		}
 	}
+
 	private boolean previousNode() {
 		pauseClock();
 		if (currentNode.isQuestion()) {
 			QuestionTreeNode tempNode = currentNode;
-			while ((QuestionTreeNode)tempNode.getPreviousSibling()!=null) {
-				tempNode = (QuestionTreeNode)tempNode.getPreviousSibling();
+			while ((QuestionTreeNode) tempNode.getPreviousSibling() != null) {
+				tempNode = (QuestionTreeNode) tempNode.getPreviousSibling();
 				boolean inactive = Boolean.parseBoolean(tempNode.getAttributeValue(Constants.KEY_INACTIVE));
 				if (!inactive) {
 					exitNode();
-					currentNode=tempNode;
+					currentNode = tempNode;
 					refresh();
 					enterNode();
 					return true;
@@ -193,48 +203,57 @@ public class ExperimentViewer extends JFrame {
 		}
 		return false;
 	}
+
 	private void enterNode() {
 		for (PluginInterface plugin : PluginList.getPlugins()) {
 			currentNode.setPluginData(plugin.getKey(), plugin.enterNode(currentNode));
 		}
 	}
+
 	private void exitNode() {
 		for (PluginInterface plugin : PluginList.getPlugins()) {
 			plugin.exitNode(currentNode, currentNode.getPluginData(plugin.getKey()));
 		}
-		if (currentNode.isExperiment()) {
+		//TODO: Markus drüber gucken -- Hier das "&& !endFlag" eingefügt und die nächste if abfrage
+		if (currentNode.isExperiment() && !endFlag) {
+			endQuestionnaire();
+		}
+		if(endFlag) {
+			closePlugins();
 			endQuestionnaire();
 		}
 	}
+
 	private void pauseClock() {
 		ClockLabel clock = times.get(currentNode);
-		if (clock!= null) {
+		if (clock != null) {
 			clock.pause();
 		}
 	}
+
 	private void refresh() {
 		this.setEnabled(false);
-		
-		if (currentViewPane!=null) {
+
+		if (currentViewPane != null) {
 			contentPane.remove(currentViewPane);
 		}
-		if (timePanel!=null) {
+		if (timePanel != null) {
 			contentPane.remove(timePanel);
 		}
-		if (currentNode==null) {
+		if (currentNode == null) {
 			return;
 		}
 		currentViewPane = textPanes.get(currentNode);
-		if (currentViewPane==null) {
+		if (currentViewPane == null) {
 			currentViewPane = new QuestionViewPane(currentNode);
 			currentViewPane.setActionListener(myActionListener);
 			textPanes.put(currentNode, currentViewPane);
-		} 
+		}
 		contentPane.add(currentViewPane, BorderLayout.CENTER);
 
 		timePanel.removeAll();
 		ClockLabel clock = times.get(currentNode);
-		if (clock==null) {
+		if (clock == null) {
 			if (currentNode.isExperiment()) {
 				clock = new ClockLabel(currentNode, null);
 			} else {
@@ -263,22 +282,47 @@ public class ExperimentViewer extends JFrame {
 		output.setEditable(false);
 		output.setEditorKit(new HTMLEditorKit());
 		String outputString = "<p>Befragung beendet.</p>";
-		QuestionTreeXMLHandler.saveXMLAnswerTree(tree, saveDir.getPath()+System.getProperty("file.separator")+Constants.FILE_ANSWERS);
+		QuestionTreeXMLHandler.saveXMLAnswerTree(tree,
+				saveDir.getPath() + System.getProperty("file.separator") + Constants.FILE_ANSWERS);
 		for (PluginInterface plugin : PluginList.getPlugins()) {
 			String tmp = plugin.finishExperiment();
-			if (tmp!=null) {
-				outputString+="<p>"+tmp+"</p>";
+			if (tmp != null) {
+				outputString += "<p>" + tmp + "</p>";
 			}
 		}
 		output.setText(outputString);
 		output.setCaretPosition(0);
 		contentPane.add(output, BorderLayout.CENTER);
 	}
+	
+	//TODO: Markus drüber gucken
+	public void setEndFlag() {
+		endFlag = true;
+	}
+	//TODO: Markus drüber gucken
+	private void closePlugins() {
+		pauseClock();
+		if(currentNode.isQuestion()) {
+			for (PluginInterface plugin : PluginList.getPlugins()) {
+				plugin.exitNode(currentNode, currentNode.getPluginData(plugin.getKey()));
+			}
+			currentNode = (QuestionTreeNode) currentNode.getParent();
+		} 
+		if(currentNode.isCategory()) {
+			for (PluginInterface plugin : PluginList.getPlugins()) {
+				plugin.exitNode(currentNode, currentNode.getPluginData(plugin.getKey()));
+			}
+			currentNode = (QuestionTreeNode) currentNode.getParent();
+		}
+		for (PluginInterface plugin : PluginList.getPlugins()) {
+			plugin.exitNode(currentNode, currentNode.getPluginData(plugin.getKey()));
+		}
+	}
 
 	public QuestionTreeNode getTree() {
 		return tree;
 	}
-	
+
 	public File getSaveDir() {
 		return saveDir;
 	}
