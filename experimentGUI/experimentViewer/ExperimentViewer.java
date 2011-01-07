@@ -45,6 +45,7 @@ public class ExperimentViewer extends JFrame {
 	private File saveDir;
 	
 	boolean endFlag = false;
+	boolean nextCategoryFlag = false;
 
 	ActionListener myActionListener = new ActionListener() {
 		public void actionPerformed(ActionEvent arg0) {
@@ -214,13 +215,16 @@ public class ExperimentViewer extends JFrame {
 		for (PluginInterface plugin : PluginList.getPlugins()) {
 			plugin.exitNode(currentNode, currentNode.getPluginData(plugin.getKey()));
 		}
-		//TODO: Markus drüber gucken -- Hier das "&& !endFlag" eingefügt und die nächste if abfrage
+		//TODO: Markus drüber gucken -- Hier das "&& !endFlag" eingefügt und die nächsten if abfragen
 		if (currentNode.isExperiment() && !endFlag) {
 			endQuestionnaire();
 		}
 		if(endFlag) {
 			closePlugins();
 			endQuestionnaire();
+		}
+		if(nextCategoryFlag) {
+			closeCategoryPlugins();
 		}
 	}
 
@@ -299,6 +303,30 @@ public class ExperimentViewer extends JFrame {
 	public void setEndFlag() {
 		endFlag = true;
 	}
+
+	//TODO: Markus drüber gucken
+	public void setNextCategoryFlag() {
+		nextCategoryFlag = true;
+	}
+
+	//TODO: Markus drüber gucken
+	private void closeCategoryPlugins() {
+		if(currentNode.isCategory()) {
+			if(currentNode.getChildCount()!= 0) {
+				currentNode.getChildAt(currentNode.getChildCount()-1);
+			}
+		}
+		if(currentNode.isQuestion()) {
+			for (PluginInterface plugin : PluginList.getPlugins()) {
+				plugin.exitNode(currentNode, currentNode.getPluginData(plugin.getKey()));
+			}
+			while(currentNode.getNextSibling()!= null) {
+				currentNode = (QuestionTreeNode) currentNode.getNextSibling();
+			}
+		} 
+		nextCategoryFlag = false;
+	}
+	
 	//TODO: Markus drüber gucken
 	private void closePlugins() {
 		pauseClock();
