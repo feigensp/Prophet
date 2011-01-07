@@ -1,5 +1,7 @@
 package experimentGUI.plugins;
 
+import javax.swing.JOptionPane;
+
 import experimentGUI.PluginInterface;
 import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.SettingsComponentDescription;
 import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.SettingsPluginComponentDescription;
@@ -18,6 +20,8 @@ public class MaxTimePlugin implements PluginInterface {
 	private boolean experimentEnabled;
 	private boolean categoryEnabled;
 	private long startTimeCategory = 0;
+	
+	private boolean experimentEnded = false;
 
 	@Override
 	public SettingsComponentDescription getSettingsComponentDescription(QuestionTreeNode node) {
@@ -73,6 +77,7 @@ public class MaxTimePlugin implements PluginInterface {
 			int currentTime = (int) ((experimentViewer.getTime() / 1000) / 60);
 			if (currentTime >= maxTimeExperiment) {
 				experimentViewer.setEndFlag();
+				experimentEnded = true;
 				return;
 			}
 		}
@@ -81,6 +86,7 @@ public class MaxTimePlugin implements PluginInterface {
 			currentTime -= startTimeCategory;
 			if ((int) (currentTime / 1000) >= maxTimeCategory) {
 				experimentViewer.setNextCategoryFlag();
+				JOptionPane.showMessageDialog(null, "Bearbeitungszeit für Kategorie abgelaufen.");
 				return;
 			}
 		}
@@ -94,7 +100,9 @@ public class MaxTimePlugin implements PluginInterface {
 
 	@Override
 	public String finishExperiment() {
-		// TODO Auto-generated method stub
+		if(experimentEnded) {
+			return "Experiment wurde wegen Zeitüberschreitung beendet";
+		}
 		return null;
 	}
 
