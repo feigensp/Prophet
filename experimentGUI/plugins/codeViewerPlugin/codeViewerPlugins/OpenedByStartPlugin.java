@@ -23,11 +23,9 @@ public class OpenedByStartPlugin implements CodeViewerPluginInterface{
 
 	@Override
 	public void onFrameCreate(QuestionTreeNode selected, CodeViewer viewer) {
-		System.out.println(Boolean.parseBoolean(selected.getAttributeValue(KEY)));
 		if(Boolean.parseBoolean(selected.getAttributeValue(KEY))) {
 			QuestionTreeNode attributes = selected.getAttribute(KEY);
 			String path = attributes.getAttributeValue(PATH);
-			System.out.println(path);
 			viewer.getTabbedPane().openFile(path);
 		}
 	}
