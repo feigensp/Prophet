@@ -80,11 +80,11 @@ public class LoadAnnotationsTest {
 						+ list.item(i).getAttributes().getNamedItem(ATTRIBUE_LENGTH));
 				// Features
 				for (int j = 0; j < list.item(i).getChildNodes().getLength(); j++) {
-					if (!list.item(i).getChildNodes().item(j).getNodeName().equals("#text")) {
+//					if (!list.item(i).getChildNodes().item(j).getNodeName().equals("#text")) {
 						System.out.println(whitespaces + "\tFeature ("
 								+ list.item(i).getChildNodes().item(j).getNodeName() + "): "
 								+ list.item(i).getChildNodes().item(j).getTextContent());
-					}
+//					}
 				}
 			}
 		}

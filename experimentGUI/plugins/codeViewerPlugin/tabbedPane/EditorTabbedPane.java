@@ -38,11 +38,13 @@ public class EditorTabbedPane extends JTabbedPane {
 			//TODO What o.O
 			file = new File(showDir.getPath()+path);
 		}
-		EditorPanel myPanel = new EditorPanel(file, path, selected);
-		add(file.getName(), myPanel);
-		setSelectedIndex(indexOfComponent(myPanel));
-		this.setTabComponentAt(this.getTabCount() - 1, new ButtonTabComponent(this, myPanel));
-		myPanel.grabFocus();
+		if(file.exists()) { 
+			EditorPanel myPanel = new EditorPanel(file, path, selected);
+			add(file.getName(), myPanel);
+			setSelectedIndex(indexOfComponent(myPanel));
+			this.setTabComponentAt(this.getTabCount() - 1, new ButtonTabComponent(this, myPanel));
+			myPanel.grabFocus();
+		}
 	}
 	
 	public void closeFile(String path) {
