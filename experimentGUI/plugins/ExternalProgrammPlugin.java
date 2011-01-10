@@ -59,8 +59,7 @@ public class ExternalProgrammPlugin implements PluginInterface {
 
 	@Override
 	public String getKey() {
-		// TODO Auto-generated method stub
-		return null;
+		return KEY;
 	}
 
 	@Override
