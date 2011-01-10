@@ -3,6 +3,7 @@ package experimentGUI.plugins.codeViewerPlugin;
 import java.util.Vector;
 
 import experimentGUI.plugins.codeViewerPlugin.codeViewerPlugins.LineNumbersPlugin;
+import experimentGUI.plugins.codeViewerPlugin.codeViewerPlugins.OpenedByStartPlugin;
 import experimentGUI.plugins.codeViewerPlugin.codeViewerPlugins.RecorderPlugin;
 import experimentGUI.plugins.codeViewerPlugin.codeViewerPlugins.SearchBarPlugin;
 import experimentGUI.plugins.codeViewerPlugin.codeViewerPlugins.SyntaxHighlightingPlugin;
@@ -16,6 +17,7 @@ public class CodeViewerPluginList {
 			add(new LineNumbersPlugin());
 			add(new SearchBarPlugin());
 			add(new SyntaxHighlightingPlugin());
+			add(new OpenedByStartPlugin());
 		}
 	};
 	

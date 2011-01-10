@@ -35,6 +35,7 @@ public class EditorTabbedPane extends JTabbedPane {
 		}
 		File file = new File(saveDir.getPath()+path);
 		if (!file.exists()) {
+			//TODO What o.O
 			file = new File(showDir.getPath()+path);
 		}
 		EditorPanel myPanel = new EditorPanel(file, path, selected);
