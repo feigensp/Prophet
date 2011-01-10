@@ -3,6 +3,7 @@ package experimentGUI;
 import java.util.Vector;
 
 import experimentGUI.plugins.CodeViewerPlugin;
+import experimentGUI.plugins.ExternalProgrammPlugin;
 import experimentGUI.plugins.MailPlugin;
 import experimentGUI.plugins.MaxTimePlugin;
 import experimentGUI.plugins.QuestionListPlugin;
@@ -16,6 +17,7 @@ public class PluginList {
 			add(new QuestionListPlugin());
 			add(new MailPlugin());
 			add(new MaxTimePlugin());
+			add(new ExternalProgrammPlugin());
 		}
 	};
 	
