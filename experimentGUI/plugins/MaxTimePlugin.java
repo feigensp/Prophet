@@ -15,11 +15,12 @@ public class MaxTimePlugin implements PluginInterface {
 	public static final String MAX_TIME = "maxTime";
 
 	private ExperimentViewer experimentViewer;
-	private int maxTimeExperiment = 0;
-	private int maxTimeCategory = 0;
+	private int maxTimeExperiment;
+	private int maxTimeCategory;
 	private boolean experimentEnabled;
 	private boolean categoryEnabled;
-	private long startTimeCategory = 0;
+	private long startTimeCategory;
+	private long startTimeExperiment;
 	
 	private boolean experimentEnded = false;
 
@@ -47,44 +48,39 @@ public class MaxTimePlugin implements PluginInterface {
 
 	@Override
 	public Object enterNode(QuestionTreeNode node) {
-		try {
-			if (node.isExperiment()) {
-				experimentEnabled = Boolean.parseBoolean(node.getAttributeValue(KEY));
-				if (experimentEnabled) {
-					QuestionTreeNode attributes = node.getAttribute(KEY);
-					maxTimeExperiment = Integer.parseInt(attributes.getAttributeValue(MAX_TIME));
-				}
+		if (node.isExperiment()) {
+			experimentEnabled = Boolean.parseBoolean(node.getAttributeValue(KEY));
+			if (experimentEnabled) {
+				QuestionTreeNode attributes = node.getAttribute(KEY);
+				maxTimeExperiment = Integer.parseInt(attributes.getAttributeValue(MAX_TIME));
+				startTimeExperiment = System.currentTimeMillis();
 			}
-			if (node.isCategory()) {
-				categoryEnabled = Boolean.parseBoolean(node.getAttributeValue(KEY));
-				if (categoryEnabled) {
-					QuestionTreeNode attributes = node.getAttribute(KEY);
-					maxTimeCategory = Integer.parseInt(attributes.getAttributeValue(MAX_TIME));
-					startTimeCategory = System.currentTimeMillis();
-				} else {
-					maxTimeCategory = 0;
-				}
+		}
+		if (node.isCategory()) {
+			categoryEnabled = Boolean.parseBoolean(node.getAttributeValue(KEY));
+			if (categoryEnabled) {
+				QuestionTreeNode attributes = node.getAttribute(KEY);
+				maxTimeCategory = Integer.parseInt(attributes.getAttributeValue(MAX_TIME));
+				startTimeCategory = System.currentTimeMillis();
 			}
-		} catch (Exception e) {
-			// do nothing
 		}
 		return null;
 	}
 
 	@Override
 	public void exitNode(QuestionTreeNode node, Object pluginData) {
-		if (experimentEnabled && maxTimeExperiment != 0) {
-			int currentTime = (int) ((experimentViewer.getTime() / 1000) / 60);
-			if (currentTime >= maxTimeExperiment) {
+		if (experimentEnabled) {
+			long currentTimeInMins = (System.currentTimeMillis() - startTimeExperiment) / 1000 / 60;
+			if (currentTimeInMins >= maxTimeExperiment) {
 				experimentViewer.setEndFlag();
 				experimentEnded = true;
 				return;
 			}
 		}
-		if (categoryEnabled && startTimeCategory != 0 && maxTimeCategory != 0) {
-			long currentTime = System.currentTimeMillis();
-			currentTime -= startTimeCategory;
-			if ((int) (currentTime / 1000) >= maxTimeCategory) {
+		if (categoryEnabled) {
+			categoryEnabled=false;
+			long currentTimeInSecs = System.currentTimeMillis() - startTimeCategory / 1000;
+			if (currentTimeInSecs >= maxTimeCategory) {
 				experimentViewer.setNextCategoryFlag();
 				JOptionPane.showMessageDialog(null, "Bearbeitungszeit für Kategorie abgelaufen.");
 				return;
@@ -100,7 +96,7 @@ public class MaxTimePlugin implements PluginInterface {
 	@Override
 	public String finishExperiment() {
 		if(experimentEnded) {
-			return "Experiment wurde wegen Zeitüberschreitung beendet";
+			return "Experiment wurde wegen Zeitüberschreitung beendet.";
 		}
 		return null;
 	}

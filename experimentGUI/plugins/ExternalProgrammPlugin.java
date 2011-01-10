@@ -1,5 +1,7 @@
 package experimentGUI.plugins;
 
+import java.io.IOException;
+
 import experimentGUI.PluginInterface;
 import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.SettingsComponentDescription;
 import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.SettingsPluginComponentDescription;
@@ -9,19 +11,19 @@ import experimentGUI.experimentViewer.ExperimentViewer;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 
 public class ExternalProgrammPlugin implements PluginInterface {
+	//TODO: Prozess angenehm beenden
 
 	public static final String KEY = "startExternalProg";
 	public static final String COMMAND = "command";
-	private boolean categoryEnabled = false;
 	private Process p;
 
 	@Override
 	public SettingsComponentDescription getSettingsComponentDescription(QuestionTreeNode node) {
 		if (node.isCategory()) {
 			SettingsPluginComponentDescription result = new SettingsPluginComponentDescription(KEY,
-					"Externes Programm starten/Kommandozeilenbefehl ausführen");
+					"Externes Programm starten");
 			result.addSubComponent(new SettingsComponentDescription(SettingsTextField.class, COMMAND,
-					"Programmpfad/Kommandozeilenbefehl:"));
+					"Programmpfad"));
 			return result;
 		}
 		return null;
@@ -29,32 +31,31 @@ public class ExternalProgrammPlugin implements PluginInterface {
 
 	@Override
 	public void experimentViewerRun(ExperimentViewer experimentViewer) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public Object enterNode(QuestionTreeNode node) {
-		try {
-			if (node.isCategory()) {
-				if (categoryEnabled) {
-					p.destroy();
-				}
-				categoryEnabled = Boolean.parseBoolean(node.getAttributeValue(KEY));
-				if (categoryEnabled) {
-					QuestionTreeNode attributes = node.getAttribute(KEY);
-					String command = attributes.getAttributeValue(COMMAND);
+		if (node.isCategory()) {				
+			boolean categoryEnabled = Boolean.parseBoolean(node.getAttributeValue(KEY));
+			if (categoryEnabled) {
+				QuestionTreeNode attributes = node.getAttribute(KEY);
+				String command = attributes.getAttributeValue(COMMAND);
+				try {
 					p = Runtime.getRuntime().exec(command);
+				} catch (IOException e) {
+					e.printStackTrace();
 				}
 			}
-		} catch (Exception e) {
-			// do nothing
 		}
 		return null;
 	}
 
 	@Override
 	public void exitNode(QuestionTreeNode node, Object pluginData) {
+		if (node.isCategory() && p!=null) {
+			p.destroy();
+			p=null;
+		}
 	}
 
 	@Override
@@ -64,7 +65,6 @@ public class ExternalProgrammPlugin implements PluginInterface {
 
 	@Override
 	public String finishExperiment() {
-		p.destroy();
 		return null;
 	}
 

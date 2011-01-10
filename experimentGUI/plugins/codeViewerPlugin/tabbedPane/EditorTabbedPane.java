@@ -27,6 +27,9 @@ public class EditorTabbedPane extends JTabbedPane {
 	}
 
 	public void openFile(String path) {
+		if (!path.startsWith(System.getProperty("file.separator"))) {
+			path=System.getProperty("file.separator")+path;
+		}
 		EditorPanel e = getEditorPanel(path);
 		if (e!=null) {
 			this.setSelectedComponent(e);
@@ -35,7 +38,6 @@ public class EditorTabbedPane extends JTabbedPane {
 		}
 		File file = new File(saveDir.getPath()+path);
 		if (!file.exists()) {
-			//TODO What o.O
 			file = new File(showDir.getPath()+path);
 		}
 		if(file.exists()) { 

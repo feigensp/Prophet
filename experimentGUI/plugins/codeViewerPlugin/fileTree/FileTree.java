@@ -76,4 +76,8 @@ public class FileTree extends JScrollPane {
 				.hasMoreElements();)
 			((FileListener) e.nextElement()).fileEventOccured(event);			
 	}
+	
+	public void selectFile(String path) {
+		//TODO: Datei markieren
+	}
 }

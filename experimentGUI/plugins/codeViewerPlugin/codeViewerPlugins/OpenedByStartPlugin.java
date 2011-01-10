@@ -11,13 +11,13 @@ import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 public class OpenedByStartPlugin implements CodeViewerPluginInterface{
 	
 	public static final String KEY = "openedByStart";
-	public static final String PATH = "startPath";
+	public static final String KEY_PATH = "startPath";
 	
 
 	@Override
 	public SettingsComponentDescription getSettingsComponentDescription() {
-		SettingsPluginComponentDescription result = new SettingsPluginComponentDescription(KEY, "Datei standartmäßig öffnen");
-		result.addSubComponent(new SettingsComponentDescription(SettingsTextField.class,PATH, "Zu öffnende Datei "));
+		SettingsPluginComponentDescription result = new SettingsPluginComponentDescription(KEY, "Datei standardmäßig öffnen");
+		result.addSubComponent(new SettingsComponentDescription(SettingsTextField.class,KEY_PATH, "Zu öffnende Datei "));
 		return result;
 	}
 
@@ -25,8 +25,9 @@ public class OpenedByStartPlugin implements CodeViewerPluginInterface{
 	public void onFrameCreate(QuestionTreeNode selected, CodeViewer viewer) {
 		if(Boolean.parseBoolean(selected.getAttributeValue(KEY))) {
 			QuestionTreeNode attributes = selected.getAttribute(KEY);
-			String path = attributes.getAttributeValue(PATH);
+			String path = attributes.getAttributeValue(KEY_PATH).replace('/', System.getProperty("file.separator").charAt(0));
 			viewer.getTabbedPane().openFile(path);
+			viewer.getFileTree().selectFile(path);
 		}
 	}
 

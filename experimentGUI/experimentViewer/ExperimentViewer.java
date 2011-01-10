@@ -44,8 +44,8 @@ public class ExperimentViewer extends JFrame {
 
 	private File saveDir;
 	
-	boolean endFlag = false;
-	boolean nextCategoryFlag = false;
+	boolean endExperimentFlag = false;
+	boolean endCategoryFlag = false;
 
 	ActionListener myActionListener = new ActionListener() {
 		public void actionPerformed(ActionEvent arg0) {
@@ -131,11 +131,6 @@ public class ExperimentViewer extends JFrame {
 		timePanel = new JPanel();
 		nextNode();
 	}
-	
-	//TODO: Markus drüber gucken
-	public Long getTime() {
-		return totalTime.getCurrentTime();
-	}
 
 	private boolean nextNode() {
 		pauseClock();
@@ -215,16 +210,18 @@ public class ExperimentViewer extends JFrame {
 		for (PluginInterface plugin : PluginList.getPlugins()) {
 			plugin.exitNode(currentNode, currentNode.getPluginData(plugin.getKey()));
 		}
-		//TODO: Markus drüber gucken -- Hier das "&& !endFlag" eingefügt und die nächsten if abfragen
-		if (currentNode.isExperiment() && !endFlag) {
-			endQuestionnaire();
+		if(endExperimentFlag && !currentNode.isExperiment()) {
+			currentNode=(QuestionTreeNode)currentNode.getParent();
+			exitNode();
+			return;
 		}
-		if(endFlag) {
-			closePlugins();
-			endQuestionnaire();
+		if(endCategoryFlag && !currentNode.isCategory() && !currentNode.isExperiment()) {
+			currentNode=(QuestionTreeNode)currentNode.getParent();
+			exitNode();
+			return;
 		}
-		if(nextCategoryFlag) {
-			closeCategoryPlugins();
+		if (currentNode.isExperiment()) {
+			endQuestionnaire();
 		}
 	}
 
@@ -299,53 +296,49 @@ public class ExperimentViewer extends JFrame {
 		contentPane.add(output, BorderLayout.CENTER);
 	}
 	
-	//TODO: Markus drüber gucken
 	public void setEndFlag() {
-		endFlag = true;
+		endExperimentFlag = true;
 	}
 
-	//TODO: Markus drüber gucken
 	public void setNextCategoryFlag() {
-		nextCategoryFlag = true;
+		endCategoryFlag = true;
 	}
 
-	//TODO: Markus drüber gucken
-	private void closeCategoryPlugins() {
-		if(currentNode.isCategory()) {
-			if(currentNode.getChildCount()!= 0) {
-				currentNode.getChildAt(currentNode.getChildCount()-1);
-			}
-		}
-		if(currentNode.isQuestion()) {
-			for (PluginInterface plugin : PluginList.getPlugins()) {
-				plugin.exitNode(currentNode, currentNode.getPluginData(plugin.getKey()));
-			}
-			while(currentNode.getNextSibling()!= null) {
-				currentNode = (QuestionTreeNode) currentNode.getNextSibling();
-			}
-		} 
-		nextCategoryFlag = false;
-	}
+//	private void closeCategoryPlugins() {
+//		if(currentNode.isCategory()) {
+//			if(currentNode.getChildCount()!= 0) {
+//				currentNode.getChildAt(currentNode.getChildCount()-1);
+//			}
+//		}
+//		if(currentNode.isQuestion()) {
+//			for (PluginInterface plugin : PluginList.getPlugins()) {
+//				plugin.exitNode(currentNode, currentNode.getPluginData(plugin.getKey()));
+//			}
+//			while(currentNode.getNextSibling()!= null) {
+//				currentNode = (QuestionTreeNode) currentNode.getNextSibling();
+//			}
+//		} 
+//		nextCategoryFlag = false;
+//	}
 	
-	//TODO: Markus drüber gucken
-	private void closePlugins() {
-		pauseClock();
-		if(currentNode.isQuestion()) {
-			for (PluginInterface plugin : PluginList.getPlugins()) {
-				plugin.exitNode(currentNode, currentNode.getPluginData(plugin.getKey()));
-			}
-			currentNode = (QuestionTreeNode) currentNode.getParent();
-		} 
-		if(currentNode.isCategory()) {
-			for (PluginInterface plugin : PluginList.getPlugins()) {
-				plugin.exitNode(currentNode, currentNode.getPluginData(plugin.getKey()));
-			}
-			currentNode = (QuestionTreeNode) currentNode.getParent();
-		}
-		for (PluginInterface plugin : PluginList.getPlugins()) {
-			plugin.exitNode(currentNode, currentNode.getPluginData(plugin.getKey()));
-		}
-	}
+//	private void closePlugins() {
+//		pauseClock();
+//		if(currentNode.isQuestion()) {
+//			for (PluginInterface plugin : PluginList.getPlugins()) {
+//				plugin.exitNode(currentNode, currentNode.getPluginData(plugin.getKey()));
+//			}
+//			currentNode = (QuestionTreeNode) currentNode.getParent();
+//		} 
+//		if(currentNode.isCategory()) {
+//			for (PluginInterface plugin : PluginList.getPlugins()) {
+//				plugin.exitNode(currentNode, currentNode.getPluginData(plugin.getKey()));
+//			}
+//			currentNode = (QuestionTreeNode) currentNode.getParent();
+//		}
+//		for (PluginInterface plugin : PluginList.getPlugins()) {
+//			plugin.exitNode(currentNode, currentNode.getPluginData(plugin.getKey()));
+//		}
+//	}
 
 	public QuestionTreeNode getTree() {
 		return tree;
