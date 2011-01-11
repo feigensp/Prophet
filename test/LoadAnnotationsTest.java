@@ -10,7 +10,7 @@ import java.util.Iterator;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+import org.fife.ui.rtextarea.RTextScrollPane;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -36,13 +36,6 @@ public class LoadAnnotationsTest {
 		}
 	}
 
-	public static void colorTextArea(RSyntaxTextArea textArea,
-			ArrayList<Triple<Integer, Integer, ArrayList<String>>> colorInfos) {
-
-	}
-
-	// Hashmap(String, HashMap(Int, Pait(Int, String))) --> pfad (offset,
-	// (Length, (FeatureNames)))
 	public static HashMap<String, ArrayList<Triple<Integer, Integer, ArrayList<String>>>> loadXMLTree(
 			String path) throws FileNotFoundException {
 		HashMap<String, ArrayList<Triple<Integer, Integer, ArrayList<String>>>> infos = new HashMap<String, ArrayList<Triple<Integer, Integer, ArrayList<String>>>>();
@@ -74,14 +67,14 @@ public class LoadAnnotationsTest {
 			System.out.println(paths.next());
 			ArrayList<Triple<Integer, Integer, ArrayList<String>>> al = moreInfos.next();
 			System.out.println(al.size());
-			// for(int i=0; i<al.size(); i++) {
-			// System.out.println("\tOffset=" + al.get(i).getKey());
-			// System.out.println("\tLength=" + al.get(i).getValue1());
-			// for (int j = 0; j < al.get(i).getValue2().size(); j++) {
-			// System.out.println("\t\tFeature=" +
-			// al.get(i).getValue2().get(j));
-			// }
-			// }
+//			 for(int i=0; i<al.size(); i++) {
+//			 System.out.println("\tOffset=" + al.get(i).getKey());
+//			 System.out.println("\tLength=" + al.get(i).getValue1());
+//			 for (int j = 0; j < al.get(i).getValue2().size(); j++) {
+//			 System.out.println("\t\tFeature=" +
+//			 al.get(i).getValue2().get(j));
+//			 }
+//			 }
 		}
 		return infos;
 	}
@@ -90,11 +83,11 @@ public class LoadAnnotationsTest {
 			HashMap<String, ArrayList<Triple<Integer, Integer, ArrayList<String>>>> infos) {
 		for (int i = 0; i < list.getLength(); i++) {
 			if (list.item(i).getNodeName().equals(NODE_FOLDER)) {
-				String folder = list.item(i).getAttributes().getNamedItem(ATTRIBUE_NAME).toString();
-				filesAndDirs(list.item(i).getChildNodes(), path + "/" + folder, infos);
+				String folder = list.item(i).getAttributes().getNamedItem(ATTRIBUE_NAME).getNodeValue();
+				filesAndDirs(list.item(i).getChildNodes(), path + System.getProperty("file.separator") + folder, infos);
 			} else if (list.item(i).getNodeName().equals(NODE_FILE)) {
-				String file = list.item(i).getAttributes().getNamedItem(ATTRIBUE_NAME).toString();
-				fragments(list.item(i).getChildNodes(), path + "/" + file, infos);
+				String file = list.item(i).getAttributes().getNamedItem(ATTRIBUE_NAME).getNodeValue();
+				fragments(list.item(i).getChildNodes(), path + System.getProperty("file.separator") + file, infos);
 			}
 		}
 	}
@@ -109,19 +102,10 @@ public class LoadAnnotationsTest {
 				NamedNodeMap fragAttributes = fragment.getAttributes();
 				if (fragAttributes.getLength() > 0) {
 					try {
-						offset = Integer.parseInt(fragAttributes.getNamedItem(ATTRIBUE_OFFSET).toString());
-						length = Integer.parseInt(fragAttributes.getNamedItem(ATTRIBUE_LENGTH).toString());
+						offset = Integer.parseInt(fragAttributes.getNamedItem(ATTRIBUE_OFFSET).getNodeValue());
+						length = Integer.parseInt(fragAttributes.getNamedItem(ATTRIBUE_LENGTH).getNodeValue());
 					} catch (NumberFormatException e0) {
-						try {
-							String stringOffset = fragAttributes.getNamedItem(ATTRIBUE_OFFSET).toString();
-							String stringLength = fragAttributes.getNamedItem(ATTRIBUE_LENGTH).toString();
-							offset = Integer.parseInt(stringOffset.substring(stringOffset.indexOf("\"") + 1,
-									stringOffset.lastIndexOf("\"")));
-							length = Integer.parseInt(stringLength.substring(stringLength.indexOf("\"") + 1,
-									stringLength.lastIndexOf("\"")));
-						} catch (NumberFormatException e1) {
-							System.err.print("corrupt xml file");
-						}
+						System.err.print("corrupt xml file");
 					}
 					// Features
 					ArrayList<String> features = new ArrayList<String>();

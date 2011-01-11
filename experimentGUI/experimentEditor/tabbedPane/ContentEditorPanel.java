@@ -1,11 +1,15 @@
 package experimentGUI.experimentEditor.tabbedPane;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.HashMap;
 
+import javax.swing.BorderFactory;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
@@ -77,6 +81,12 @@ public class ContentEditorPanel extends ExperimentEditorTab {
 			toolBar = new ContentEditorToolBar(editArea);		
 			add(toolBar, BorderLayout.NORTH);
 			scrollPane = new RTextScrollPane(editArea);
+			Component lineNumbers = scrollPane.getRowHeader().getComponent(0);
+			JPanel panel = new JPanel();
+			panel.setLayout(new BorderLayout(0,0));
+			panel.add(lineNumbers, BorderLayout.WEST);
+			panel.add(new JLabel("test"), BorderLayout.CENTER);
+			scrollPane.setRowHeaderView(panel);
 			add(scrollPane, BorderLayout.CENTER);
 			searchBar = new SearchBar(editArea);
 			searchBar.setVisible(false);

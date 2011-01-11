@@ -81,17 +81,19 @@ public class FileTree extends JScrollPane {
 	}
 	
 	public void selectFile(String path) {
-		String myPath = path;
+		if(path.startsWith(System.getProperty("file.separator"))) {
+			path = path.substring(System.getProperty("file.separator").length());
+		}
 		ArrayList<String> pathElements = new ArrayList<String>();
 		if(root!= null) {
 			pathElements.add(root.toString());
-			int pos = myPath.indexOf(System.getProperty("file.separator"));
+			int pos = path.indexOf(System.getProperty("file.separator"));
 			while(pos != -1) {
-				pathElements.add(myPath.substring(0, pos));
-				myPath = myPath.substring(pos+1);
-				pos = myPath.indexOf(System.getProperty("file.separator"));
+				pathElements.add(path.substring(0, pos));
+				path = path.substring(pos+1);
+				pos = path.indexOf(System.getProperty("file.separator"));
 			}
-			pathElements.add(myPath);
+			pathElements.add(path);
 			ArrayList<Object> treePathList = new ArrayList<Object>();
 			treePathList.add(root);
 			FileTreeNode currentNode = root;
@@ -104,8 +106,9 @@ public class FileTree extends JScrollPane {
 					}
 				}
 			}
-			tree.expandPath(new TreePath(treePathList.toArray()));
-			tree.setSelectionPath(new TreePath(treePathList.toArray()));	
+			TreePath selection = new TreePath(treePathList.toArray());
+			tree.expandPath(selection);
+			tree.setSelectionPath(selection);	
 		}
 	}
 }

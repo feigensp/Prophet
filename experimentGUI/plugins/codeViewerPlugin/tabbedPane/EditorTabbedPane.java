@@ -46,7 +46,7 @@ public class EditorTabbedPane extends JTabbedPane {
 			this.setTabComponentAt(this.getTabCount() - 1, new ButtonTabComponent(this, myPanel));
 			myPanel.grabFocus();
 		} else {
-			JOptionPane.showMessageDialog(null,"Datei " + path + " konnte nicht automatisch geöffnet werden.");
+			JOptionPane.showMessageDialog(this,"Datei " + path + " konnte nicht automatisch geöffnet werden.", "Fehler", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 
