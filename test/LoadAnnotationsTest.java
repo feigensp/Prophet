@@ -10,7 +10,7 @@ import java.util.Iterator;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+import org.fife.ui.rtextarea.RTextArea;
 import org.fife.ui.rtextarea.RTextScrollPane;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
@@ -31,8 +31,6 @@ public class LoadAnnotationsTest {
 
 	public static void main(String[] args) {
 		try {
-//			RSyntaxTextArea textArea = new RSyntaxTextArea();
-//			RTextScrollPane scollPane = RTextScrollPane(textArea);
 			loadXMLTree("annotations.xml");
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
