@@ -10,6 +10,7 @@ import java.util.Iterator;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -35,10 +36,15 @@ public class LoadAnnotationsTest {
 		}
 	}
 
+	public static void colorTextArea(RSyntaxTextArea textArea,
+			ArrayList<Triple<Integer, Integer, ArrayList<String>>> colorInfos) {
+
+	}
+
 	// Hashmap(String, HashMap(Int, Pait(Int, String))) --> pfad (offset,
 	// (Length, (FeatureNames)))
-	public static HashMap<String, ArrayList<Triple<Integer, Integer, ArrayList<String>>>> loadXMLTree(String path)
-			throws FileNotFoundException {
+	public static HashMap<String, ArrayList<Triple<Integer, Integer, ArrayList<String>>>> loadXMLTree(
+			String path) throws FileNotFoundException {
 		HashMap<String, ArrayList<Triple<Integer, Integer, ArrayList<String>>>> infos = new HashMap<String, ArrayList<Triple<Integer, Integer, ArrayList<String>>>>();
 		File file = new File(path);
 		if (!file.exists()) {
@@ -62,18 +68,20 @@ public class LoadAnnotationsTest {
 			e.printStackTrace();
 		}
 		Iterator<String> paths = infos.keySet().iterator();
-		Iterator<ArrayList<Triple<Integer, Integer, ArrayList<String>>>> moreInfos = infos.values().iterator();
+		Iterator<ArrayList<Triple<Integer, Integer, ArrayList<String>>>> moreInfos = infos.values()
+				.iterator();
 		while (paths.hasNext()) {
 			System.out.println(paths.next());
 			ArrayList<Triple<Integer, Integer, ArrayList<String>>> al = moreInfos.next();
 			System.out.println(al.size());
-//			for(int i=0; i<al.size(); i++) {
-//				System.out.println("\tOffset=" + al.get(i).getKey());
-//				System.out.println("\tLength=" + al.get(i).getValue1());
-//				for (int j = 0; j < al.get(i).getValue2().size(); j++) {
-//					System.out.println("\t\tFeature=" + al.get(i).getValue2().get(j));
-//				}
-//			}
+			// for(int i=0; i<al.size(); i++) {
+			// System.out.println("\tOffset=" + al.get(i).getKey());
+			// System.out.println("\tLength=" + al.get(i).getValue1());
+			// for (int j = 0; j < al.get(i).getValue2().size(); j++) {
+			// System.out.println("\t\tFeature=" +
+			// al.get(i).getValue2().get(j));
+			// }
+			// }
 		}
 		return infos;
 	}
@@ -99,18 +107,14 @@ public class LoadAnnotationsTest {
 				int offset = -1;
 				int length = -1;
 				NamedNodeMap fragAttributes = fragment.getAttributes();
-				if(fragAttributes.getLength() > 0) {
+				if (fragAttributes.getLength() > 0) {
 					try {
-						offset = Integer.parseInt(fragAttributes.getNamedItem(ATTRIBUE_OFFSET)
-								.toString());
-						length = Integer.parseInt(fragAttributes.getNamedItem(ATTRIBUE_LENGTH)
-								.toString());
+						offset = Integer.parseInt(fragAttributes.getNamedItem(ATTRIBUE_OFFSET).toString());
+						length = Integer.parseInt(fragAttributes.getNamedItem(ATTRIBUE_LENGTH).toString());
 					} catch (NumberFormatException e0) {
 						try {
-							String stringOffset = fragAttributes.getNamedItem(ATTRIBUE_OFFSET)
-									.toString();
-							String stringLength = fragAttributes.getNamedItem(ATTRIBUE_LENGTH)
-									.toString();
+							String stringOffset = fragAttributes.getNamedItem(ATTRIBUE_OFFSET).toString();
+							String stringLength = fragAttributes.getNamedItem(ATTRIBUE_LENGTH).toString();
 							offset = Integer.parseInt(stringOffset.substring(stringOffset.indexOf("\"") + 1,
 									stringOffset.lastIndexOf("\"")));
 							length = Integer.parseInt(stringLength.substring(stringLength.indexOf("\"") + 1,
@@ -127,10 +131,11 @@ public class LoadAnnotationsTest {
 							features.add(featureList.item(j).getTextContent());
 						}
 					}
-					if(infos.get(path)==null) {
+					if (infos.get(path) == null) {
 						infos.put(path, new ArrayList<Triple<Integer, Integer, ArrayList<String>>>());
 					}
-					infos.get(path).add(new Triple<Integer, Integer, ArrayList<String>>(offset, length, features));
+					infos.get(path).add(
+							new Triple<Integer, Integer, ArrayList<String>>(offset, length, features));
 				}
 			}
 		}

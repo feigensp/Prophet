@@ -51,6 +51,7 @@ public class CodeViewer extends JFrame implements FileListener {
 	}
 	
 	public CodeViewer(QuestionTreeNode selected, File saveDir) {
+		setTitle("Quelltext");
 		this.setSize(800, 600);
 		
 		if (selected==null) {

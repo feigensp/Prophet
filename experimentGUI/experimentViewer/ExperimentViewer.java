@@ -86,6 +86,7 @@ public class ExperimentViewer extends JFrame {
 	 *            the categorieQuestionListsPanel where the overview is shown
 	 */
 	public ExperimentViewer() {
+		setTitle("Aufgaben");
 		this.setSize(800, 600);
 		setLocationRelativeTo(null);
 

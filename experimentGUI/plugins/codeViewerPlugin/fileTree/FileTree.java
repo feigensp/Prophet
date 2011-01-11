@@ -83,27 +83,29 @@ public class FileTree extends JScrollPane {
 	public void selectFile(String path) {
 		String myPath = path;
 		ArrayList<String> pathElements = new ArrayList<String>();
-		pathElements.add(root.toString());
-		int pos = myPath.indexOf(System.getProperty("file.separator"));
-		while(pos != -1) {
-			pathElements.add(myPath.substring(0, pos));
-			myPath = myPath.substring(pos+1);
-			pos = myPath.indexOf(System.getProperty("file.separator"));
-		}
-		pathElements.add(myPath);
-		ArrayList<Object> treePathList = new ArrayList<Object>();
-		treePathList.add(root);
-		FileTreeNode currentNode = root;
-		for(int i=0; i<pathElements.size(); i++) {
-			for(int j=0; j<currentNode.getChildCount(); j++) {
-				if(currentNode.getChildAt(j).toString().equals(pathElements.get(i))) {
-					currentNode = (FileTreeNode) currentNode.getChildAt(j);
-					treePathList.add(currentNode);
-					break;
+		if(root!= null) {
+			pathElements.add(root.toString());
+			int pos = myPath.indexOf(System.getProperty("file.separator"));
+			while(pos != -1) {
+				pathElements.add(myPath.substring(0, pos));
+				myPath = myPath.substring(pos+1);
+				pos = myPath.indexOf(System.getProperty("file.separator"));
+			}
+			pathElements.add(myPath);
+			ArrayList<Object> treePathList = new ArrayList<Object>();
+			treePathList.add(root);
+			FileTreeNode currentNode = root;
+			for(int i=0; i<pathElements.size(); i++) {
+				for(int j=0; j<currentNode.getChildCount(); j++) {
+					if(currentNode.getChildAt(j).toString().equals(pathElements.get(i))) {
+						currentNode = (FileTreeNode) currentNode.getChildAt(j);
+						treePathList.add(currentNode);
+						break;
+					}
 				}
 			}
+			tree.expandPath(new TreePath(treePathList.toArray()));
+			tree.setSelectionPath(new TreePath(treePathList.toArray()));	
 		}
-		tree.expandPath(new TreePath(treePathList.toArray()));
-		tree.setSelectionPath(new TreePath(treePathList.toArray()));		
 	}
 }
