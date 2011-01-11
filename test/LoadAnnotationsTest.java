@@ -1,16 +1,18 @@
 package test;
 
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
@@ -33,9 +35,11 @@ public class LoadAnnotationsTest {
 		}
 	}
 
-	public static void loadXMLTree(String path) throws FileNotFoundException {
-		String whitespaces = "";
-
+	// Hashmap(String, HashMap(Int, Pait(Int, String))) --> pfad (offset,
+	// (Length, (FeatureNames)))
+	public static HashMap<String, ArrayList<Triple<Integer, Integer, ArrayList<String>>>> loadXMLTree(String path)
+			throws FileNotFoundException {
+		HashMap<String, ArrayList<Triple<Integer, Integer, ArrayList<String>>>> infos = new HashMap<String, ArrayList<Triple<Integer, Integer, ArrayList<String>>>>();
 		File file = new File(path);
 		if (!file.exists()) {
 			throw new FileNotFoundException();
@@ -45,9 +49,10 @@ public class LoadAnnotationsTest {
 			// projekte
 			NodeList projectList = doc.getChildNodes();
 			for (int i = 0; i < projectList.getLength(); i++) {
-				System.out.println(projectList.item(i).getNodeName() + ":" + i);
 				// dateien und ordner
-				filesAndDirs(projectList.item(i).getChildNodes(), whitespaces + "\t");
+				if (projectList.item(i).getChildNodes().getLength() > 0) {
+					filesAndDirs(projectList.item(i).getChildNodes(), "", infos);
+				}
 			}
 		} catch (SAXException e) {
 			e.printStackTrace();
@@ -56,35 +61,76 @@ public class LoadAnnotationsTest {
 		} catch (ParserConfigurationException e) {
 			e.printStackTrace();
 		}
+		Iterator<String> paths = infos.keySet().iterator();
+		Iterator<ArrayList<Triple<Integer, Integer, ArrayList<String>>>> moreInfos = infos.values().iterator();
+		while (paths.hasNext()) {
+			System.out.println(paths.next());
+			ArrayList<Triple<Integer, Integer, ArrayList<String>>> al = moreInfos.next();
+			System.out.println(al.size());
+//			for(int i=0; i<al.size(); i++) {
+//				System.out.println("\tOffset=" + al.get(i).getKey());
+//				System.out.println("\tLength=" + al.get(i).getValue1());
+//				for (int j = 0; j < al.get(i).getValue2().size(); j++) {
+//					System.out.println("\t\tFeature=" + al.get(i).getValue2().get(j));
+//				}
+//			}
+		}
+		return infos;
 	}
 
-	private static void filesAndDirs(NodeList list, String whitespaces) throws IOException {
+	private static void filesAndDirs(NodeList list, String path,
+			HashMap<String, ArrayList<Triple<Integer, Integer, ArrayList<String>>>> infos) {
 		for (int i = 0; i < list.getLength(); i++) {
 			if (list.item(i).getNodeName().equals(NODE_FOLDER)) {
-				System.out.println(whitespaces + "folder (" + list.item(i).getNodeName() + "): "
-						+ list.item(i).getAttributes().getNamedItem(ATTRIBUE_NAME));
-				filesAndDirs(list.item(i).getChildNodes(), whitespaces + "\t");
+				String folder = list.item(i).getAttributes().getNamedItem(ATTRIBUE_NAME).toString();
+				filesAndDirs(list.item(i).getChildNodes(), path + "/" + folder, infos);
 			} else if (list.item(i).getNodeName().equals(NODE_FILE)) {
-				System.out.println(whitespaces + "file (" + list.item(i).getNodeName() + "): "
-						+ list.item(i).getAttributes().getNamedItem(ATTRIBUE_NAME));
-				fragments(list.item(i).getChildNodes(), whitespaces + "\t");
+				String file = list.item(i).getAttributes().getNamedItem(ATTRIBUE_NAME).toString();
+				fragments(list.item(i).getChildNodes(), path + "/" + file, infos);
 			}
 		}
 	}
 
-	private static void fragments(NodeList list, String whitespaces) throws IOException {
+	private static void fragments(NodeList list, String path,
+			HashMap<String, ArrayList<Triple<Integer, Integer, ArrayList<String>>>> infos) {
 		for (int i = 0; i < list.getLength(); i++) {
-			if (!list.item(i).getNodeName().equals("#text")) {
-				System.out.println(whitespaces + "Fragment (" + list.item(i).getNodeName() + "): offset="
-						+ list.item(i).getAttributes().getNamedItem(ATTRIBUE_OFFSET) + " : length="
-						+ list.item(i).getAttributes().getNamedItem(ATTRIBUE_LENGTH));
-				// Features
-				for (int j = 0; j < list.item(i).getChildNodes().getLength(); j++) {
-//					if (!list.item(i).getChildNodes().item(j).getNodeName().equals("#text")) {
-						System.out.println(whitespaces + "\tFeature ("
-								+ list.item(i).getChildNodes().item(j).getNodeName() + "): "
-								+ list.item(i).getChildNodes().item(j).getTextContent());
-//					}
+			Node fragment = list.item(i);
+			if (!fragment.getNodeName().equals("#text")) {
+				int offset = -1;
+				int length = -1;
+				NamedNodeMap fragAttributes = fragment.getAttributes();
+				if(fragAttributes.getLength() > 0) {
+					try {
+						offset = Integer.parseInt(fragAttributes.getNamedItem(ATTRIBUE_OFFSET)
+								.toString());
+						length = Integer.parseInt(fragAttributes.getNamedItem(ATTRIBUE_LENGTH)
+								.toString());
+					} catch (NumberFormatException e0) {
+						try {
+							String stringOffset = fragAttributes.getNamedItem(ATTRIBUE_OFFSET)
+									.toString();
+							String stringLength = fragAttributes.getNamedItem(ATTRIBUE_LENGTH)
+									.toString();
+							offset = Integer.parseInt(stringOffset.substring(stringOffset.indexOf("\"") + 1,
+									stringOffset.lastIndexOf("\"")));
+							length = Integer.parseInt(stringLength.substring(stringLength.indexOf("\"") + 1,
+									stringLength.lastIndexOf("\"")));
+						} catch (NumberFormatException e1) {
+							System.err.print("corrupt xml file");
+						}
+					}
+					// Features
+					ArrayList<String> features = new ArrayList<String>();
+					NodeList featureList = fragment.getChildNodes();
+					for (int j = 0; j < featureList.getLength(); j++) {
+						if (!featureList.item(j).getNodeName().equals("#text")) {
+							features.add(featureList.item(j).getTextContent());
+						}
+					}
+					if(infos.get(path)==null) {
+						infos.put(path, new ArrayList<Triple<Integer, Integer, ArrayList<String>>>());
+					}
+					infos.get(path).add(new Triple<Integer, Integer, ArrayList<String>>(offset, length, features));
 				}
 			}
 		}
