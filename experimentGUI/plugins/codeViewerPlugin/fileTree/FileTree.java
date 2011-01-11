@@ -4,6 +4,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Vector;
 
@@ -25,13 +26,15 @@ public class FileTree extends JScrollPane {
 	private JTree tree;
 	private File rootDir;
 	private Vector<FileListener> fileListeners;
+	
+	private FileTreeNode root;
 
 	public FileTree(File dir) {
 		rootDir = dir;
-		FileTreeNode treeNode;
+//		FileTreeNode treeNode;
 		try {
-			treeNode = new FileTreeNode(rootDir);
-			tree = new JTree(new DefaultTreeModel(treeNode));
+			root = new FileTreeNode(rootDir);
+			tree = new JTree(new DefaultTreeModel(root));
 		} catch (FileNotFoundException e1) {
 			tree = new JTree(new DefaultTreeModel(new DefaultMutableTreeNode()));
 			JOptionPane.showMessageDialog(this, "Der im Experiment angegebene Pfad ist nicht vorhanden.", "Fehler", JOptionPane.ERROR_MESSAGE);
@@ -78,6 +81,29 @@ public class FileTree extends JScrollPane {
 	}
 	
 	public void selectFile(String path) {
-		//TODO: Datei markieren
+		String myPath = path;
+		ArrayList<String> pathElements = new ArrayList<String>();
+		pathElements.add(root.toString());
+		int pos = myPath.indexOf(System.getProperty("file.separator"));
+		while(pos != -1) {
+			pathElements.add(myPath.substring(0, pos));
+			myPath = myPath.substring(pos+1);
+			pos = myPath.indexOf(System.getProperty("file.separator"));
+		}
+		pathElements.add(myPath);
+		ArrayList<Object> treePathList = new ArrayList<Object>();
+		treePathList.add(root);
+		FileTreeNode currentNode = root;
+		for(int i=0; i<pathElements.size(); i++) {
+			for(int j=0; j<currentNode.getChildCount(); j++) {
+				if(currentNode.getChildAt(j).toString().equals(pathElements.get(i))) {
+					currentNode = (FileTreeNode) currentNode.getChildAt(j);
+					treePathList.add(currentNode);
+					break;
+				}
+			}
+		}
+		tree.expandPath(new TreePath(treePathList.toArray()));
+		tree.setSelectionPath(new TreePath(treePathList.toArray()));		
 	}
 }
