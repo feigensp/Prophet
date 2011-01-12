@@ -7,7 +7,6 @@ import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 
 @SuppressWarnings("serial")
 public abstract class SettingsComponent extends JPanel {
-	private String key;
 	private QuestionTreeNode treeNode;
 
 	public QuestionTreeNode getTreeNode() {
