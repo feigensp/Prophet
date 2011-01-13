@@ -1,6 +1,7 @@
 package experimentGUI.plugins;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
@@ -19,6 +20,7 @@ public class ValidCodePlugin implements PluginInterface {
 	public static final String KEY = "validCode";
 	public static final String PATH = "path";
 	private boolean checked = false;
+	private boolean enabled;
 
 	@Override
 	public SettingsComponentDescription getSettingsComponentDescription(QuestionTreeNode node) {
@@ -39,7 +41,9 @@ public class ValidCodePlugin implements PluginInterface {
 
 	@Override
 	public Object enterNode(QuestionTreeNode node) {
-		if (!checked && !node.isExperiment()) {
+		if (node.isExperiment()) {
+			enabled = Boolean.parseBoolean(node.getAttributeValue(KEY));
+		} else if (!checked && enabled) {
 			QuestionTreeNode experimentNode = node;
 			while (!experimentNode.isExperiment()) {
 				experimentNode = (QuestionTreeNode) experimentNode.getParent();
@@ -47,20 +51,27 @@ public class ValidCodePlugin implements PluginInterface {
 			String subjectCode = experimentNode.getAttributeValue(Constants.KEY_SUBJECT);
 			String path = experimentNode.getAttribute(KEY).getAttributeValue(PATH);
 			try {
-				BufferedReader in = new BufferedReader(new FileReader(path));
-				String line = null;
-				while ((line = in.readLine()) != null) {
-					if(line.equals(subjectCode)) {
-						checked = true;
-						return null;
+				if (new File(path).exists()) {
+					BufferedReader in = new BufferedReader(new FileReader(path));
+					String line = null;
+					while ((line = in.readLine()) != null) {
+						if (line.equals(subjectCode)) {
+							checked = true;
+							return null;
+						}
 					}
+					JOptionPane.showMessageDialog(null,
+							"Kein gültiger Probandencode, Programm wird beendet.", "Ungültiger Code",
+							JOptionPane.ERROR_MESSAGE);
+					System.exit(0);
 				}
-				JOptionPane.showMessageDialog(null, "Kein gültiger Probandencode, Programm wird beendet.", "Ungültiger Code", JOptionPane.ERROR_MESSAGE);
-				System.exit(0);
 			} catch (IOException e) {
-				JOptionPane.showMessageDialog(null, "Problem beim auslesen der zulässigen Probandencodes, Programm wird beendet.", "Fehler", JOptionPane.ERROR_MESSAGE);
-				System.exit(0);
+				// do that what happens after the catch Block
 			}
+			JOptionPane.showMessageDialog(null,
+					"Problem beim auslesen der zulässigen Probandencodes, Programm wird beendet.", "Fehler",
+					JOptionPane.ERROR_MESSAGE);
+			System.exit(0);
 		}
 		return null;
 	}
