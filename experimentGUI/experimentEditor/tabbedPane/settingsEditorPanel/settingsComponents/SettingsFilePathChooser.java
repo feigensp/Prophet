@@ -28,17 +28,6 @@ public class SettingsFilePathChooser  extends SettingsComponent {
 		textField.setEditable(false);
 		add(textField,BorderLayout.CENTER);
 		textField.setColumns(20);
-		textField.getDocument().addDocumentListener(new DocumentListener() {
-			public void changedUpdate(DocumentEvent arg0) {
-				saveValue();
-			}
-			public void insertUpdate(DocumentEvent arg0) {
-				saveValue();
-			}
-			public void removeUpdate(DocumentEvent arg0) {
-				saveValue();
-			}			
-		});
 		pathButton = new JButton("Durchsuchen");
 		add(pathButton,BorderLayout.EAST);
 		pathButton.addActionListener(new ActionListener() {
@@ -46,16 +35,15 @@ public class SettingsFilePathChooser  extends SettingsComponent {
 				JFileChooser fc = new JFileChooser(new File("."));
 				fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
 				if (fc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
-					String currentPath = System.getProperty("user.dir");
 					String selectedPath = fc.getSelectedFile()
 							.getAbsolutePath();
-					if (selectedPath.equals(currentPath)) {
-						selectedPath = ".";
-					} else if (selectedPath.indexOf(currentPath) == 0) {
+					String currentPath = System.getProperty("user.dir");
+					if (selectedPath.indexOf(currentPath) == 0) {
 						selectedPath = selectedPath.substring(currentPath
-								.length() + 1) + "/";
+								.length() + 1);
 					}
 					textField.setText(selectedPath.replace('\\','/'));
+					saveValue();
 				}
 			}
 		});
@@ -71,6 +59,8 @@ public class SettingsFilePathChooser  extends SettingsComponent {
 	public void loadValue() {
 		textField.setText(getTreeNode().getValue());
 	}
+
+	@Override
 	public void saveValue() {
 		getTreeNode().setValue(textField.getText());
 	}
