@@ -10,7 +10,7 @@ import experimentGUI.PluginInterface;
 import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.SettingsComponentDescription;
 import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.SettingsPluginComponentDescription;
 import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.settingsComponents.SettingsCheckBox;
-import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.settingsComponents.SettingsPathChooser;
+import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.settingsComponents.SettingsDirectoryPathChooser;
 import experimentGUI.experimentViewer.ExperimentViewer;
 import experimentGUI.plugins.codeViewerPlugin.CodeViewer;
 import experimentGUI.plugins.codeViewerPlugin.CodeViewerPluginInterface;
@@ -30,7 +30,7 @@ public class CodeViewerPlugin implements PluginInterface {
 			QuestionTreeNode node) {
 		if (node.getType().equals(QuestionTreeNode.TYPE_CATEGORY)) {
 			SettingsPluginComponentDescription result = new SettingsPluginComponentDescription(KEY, "Codeviewer aktivieren");
-			result.addSubComponent(new SettingsComponentDescription(SettingsPathChooser.class, CodeViewer.KEY_PATH, "Pfad der Quelltexte:"));
+			result.addSubComponent(new SettingsComponentDescription(SettingsDirectoryPathChooser.class, CodeViewer.KEY_PATH, "Pfad der Quelltexte:"));
 			result.addSubComponent(new SettingsComponentDescription(SettingsCheckBox.class, CodeViewer.KEY_EDITABLE, "Quelltext editierbar"));
 			for (CodeViewerPluginInterface plugin : CodeViewerPluginList.getPlugins()) {
 				SettingsComponentDescription desc = plugin.getSettingsComponentDescription();

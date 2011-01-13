@@ -7,6 +7,7 @@ import experimentGUI.plugins.ExternalProgrammPlugin;
 import experimentGUI.plugins.MailPlugin;
 import experimentGUI.plugins.MaxTimePlugin;
 import experimentGUI.plugins.QuestionListPlugin;
+import experimentGUI.plugins.ValidCodePlugin;
 
 
 public class PluginList {
@@ -18,6 +19,7 @@ public class PluginList {
 			add(new MailPlugin());
 			add(new MaxTimePlugin());
 			add(new ExternalProgrammPlugin());
+			add(new ValidCodePlugin());
 		}
 	};
 	

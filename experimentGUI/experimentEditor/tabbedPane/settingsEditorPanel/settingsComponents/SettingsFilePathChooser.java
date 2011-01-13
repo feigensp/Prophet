@@ -14,14 +14,12 @@ import javax.swing.event.DocumentListener;
 
 import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.SettingsComponent;
 
-
-@SuppressWarnings("serial")
-public class SettingsPathChooser extends SettingsComponent {	
+public class SettingsFilePathChooser  extends SettingsComponent {
 	private JLabel caption;
 	private JTextField textField;
 	private JButton pathButton;
 
-	public SettingsPathChooser() {
+	public SettingsFilePathChooser() {
 		setLayout(new BorderLayout());
 		caption = new JLabel();
 		add(caption, BorderLayout.NORTH);;
@@ -46,7 +44,7 @@ public class SettingsPathChooser extends SettingsComponent {
 		pathButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				JFileChooser fc = new JFileChooser(new File("."));
-				fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+				fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
 				if (fc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
 					String currentPath = System.getProperty("user.dir");
 					String selectedPath = fc.getSelectedFile()

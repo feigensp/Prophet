@@ -9,7 +9,6 @@ package experimentGUI.experimentEditor.tabbedPane;
 
 import java.awt.BorderLayout;
 
-import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
@@ -21,9 +20,8 @@ import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.SettingsCom
 import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.SettingsComponentDescription;
 import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.settingsComponents.SettingsCheckBox;
 import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.settingsComponents.SettingsTextField;
-import experimentGUI.util.VerticalFlowLayout;
+import experimentGUI.util.VerticalLayout;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
-
 
 @SuppressWarnings("serial")
 public class SettingsEditorPanel extends ExperimentEditorTab {
@@ -40,41 +38,39 @@ public class SettingsEditorPanel extends ExperimentEditorTab {
 		setLayout(new BorderLayout());
 		myPanel = new JPanel();
 		myPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
-		myPanel.setLayout(new BoxLayout(myPanel, BoxLayout.Y_AXIS));		
+		myPanel.setLayout(new VerticalLayout(5, VerticalLayout.LEFT));
 		add(new JScrollPane(myPanel), BorderLayout.CENTER);
 	}
-	
+
 	public void activate(QuestionTreeNode selected) {
 		myPanel.removeAll();
-		myPanel.updateUI();		
-		
-		if (selected!=null) {
+		myPanel.updateUI();
+
+		if (selected != null) {
 			if (selected.isExperiment()) {
-				SettingsComponent scd = new SettingsComponentDescription(SettingsTextField.class, Constants.KEY_CODE, "Experiment-Code: ").build(selected);
-				scd.setPreferredSize(scd.getMinimumSize());
+				SettingsComponent scd = new SettingsComponentDescription(SettingsTextField.class,
+						Constants.KEY_CODE, "Experiment-Code: ").build(selected);
 				myPanel.add(scd);
 			} else {
-				SettingsComponent scd = new SettingsComponentDescription(SettingsCheckBox.class, Constants.KEY_INACTIVE, "Deaktivieren").build(selected);
-				scd.setPreferredSize(scd.getMinimumSize());
+				SettingsComponent scd = new SettingsComponentDescription(SettingsCheckBox.class,
+						Constants.KEY_INACTIVE, "Deaktivieren").build(selected);
 				myPanel.add(scd);
 			}
 			if (selected.isCategory()) {
-				SettingsComponent scd1 = new SettingsComponentDescription(SettingsCheckBox.class, Constants.KEY_DONOTSHOWCONTENT, "Inhalt nicht anzeigen").build(selected);
-				SettingsComponent scd2 = new SettingsComponentDescription(SettingsCheckBox.class, Constants.KEY_QUESTIONSWITCHING, "Vor- und Zurückblättern erlauben").build(selected);
-				scd1.setPreferredSize(scd1.getMinimumSize());
-				scd2.setPreferredSize(scd2.getMinimumSize());
+				SettingsComponent scd1 = new SettingsComponentDescription(SettingsCheckBox.class,
+						Constants.KEY_DONOTSHOWCONTENT, "Inhalt nicht anzeigen").build(selected);
+				SettingsComponent scd2 = new SettingsComponentDescription(SettingsCheckBox.class,
+						Constants.KEY_QUESTIONSWITCHING, "Vor- und Zurückblättern erlauben").build(selected);
 				myPanel.add(scd1);
 				myPanel.add(scd2);
 			}
 			for (PluginInterface plugin : PluginList.getPlugins()) {
 				SettingsComponentDescription desc = plugin.getSettingsComponentDescription(selected);
-				if (desc!=null) {
+				if (desc != null) {
 					SettingsComponent scd = desc.build(selected);
-					scd.setPreferredSize(scd.getMinimumSize());
 					myPanel.add(scd);
-					while ((desc=desc.getNextComponentDescription())!=null) {
+					while ((desc = desc.getNextComponentDescription()) != null) {
 						scd = desc.build(selected);
-						scd.setPreferredSize(scd.getMinimumSize());
 						myPanel.add(scd);
 					}
 				}
