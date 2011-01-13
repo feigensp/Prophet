@@ -21,6 +21,7 @@ public class ValidCodePlugin implements PluginInterface {
 	public static final String PATH = "path";
 	private boolean checked = false;
 	private boolean enabled;
+	private ExperimentViewer experimentViewer;
 
 	@Override
 	public SettingsComponentDescription getSettingsComponentDescription(QuestionTreeNode node) {
@@ -36,7 +37,7 @@ public class ValidCodePlugin implements PluginInterface {
 
 	@Override
 	public void experimentViewerRun(ExperimentViewer experimentViewer) {
-
+		this.experimentViewer = experimentViewer;
 	}
 
 	@Override
