@@ -49,6 +49,8 @@ public class EditorTabbedPane extends JTabbedPane {
 //	JPanel drawPanel;
 //	String whitespaces = "          ";
 //	int addToOffset = 0;
+//	RSyntaxTextAreaHighlighter hilit = new RSyntaxTextAreaHighlighter();
+//	DefaultHighlightPainter painterYellow = new DefaultHighlighter.DefaultHighlightPainter(Color.RED);
 	// ///////////////////////
 	private QuestionTreeNode selected;
 	private File showDir, saveDir;
@@ -91,46 +93,18 @@ public class EditorTabbedPane extends JTabbedPane {
 			myPanel.grabFocus();
 			// //////////////////
 //			System.out.println(path);
+//			myPanel.getTextArea().setHighlighter(hilit);
 //			ArrayList<Triple<Integer, Integer, ArrayList<String>>> fileColoringInfos = coloringInfos
 //					.get(path);
-//			// RTextScrollPane scrollPane = myPanel.getScrollPane();
-//
-//			// Component lineNumbers =
-//			// scrollPane.getRowHeader().getComponent(0);
-//			// drawPanel = new JPanel();
-//			// JPanel rowHeader = new JPanel();
-//			// rowHeader.setLayout(new BorderLayout());
-//			// rowHeader.add(lineNumbers, BorderLayout.WEST);
-//			// rowHeader.add(drawPanel, BorderLayout.CENTER);
-//
-//			// scrollPane.setRowHeaderView(rowHeader);
-//			/**
-//			 * 
-//			int lineOffset = textArea.getLineStartOffset(i + addToOffset);
-//			textArea.getDocument().insertString(lineOffset, whitespaces, null);
-//			 */
-//			
-//			int usedSize = 0;
+//			fileColoringInfos = correctXMLOffset(fileColoringInfos, myPanel.getTextArea(), whitespaces);
+//			addWhitespaces(whitespaces, myPanel.getTextArea());
 //			for (int i = 0; i < fileColoringInfos.size(); i++) {
 //				Triple<Integer, Integer, ArrayList<String>> infos = fileColoringInfos.get(i);
 //				int offset = infos.getKey();
 //				int length = infos.getValue1();
 //				ArrayList<String> features = infos.getValue2();
-//				if (features.size() > usedSize) {
-//					usedSize = features.size();
-//				}
-//				try {
-//					drawRect(myPanel.getTextArea(), offset, length, j * (rectWidth + 1), features);
-//				} catch (BadLocationException e1) {
-//					// TODO Auto-generated catch block
-//					e1.printStackTrace();
-//				}
+//				colorFeatures(offset, length, features, myPanel.getTextArea());
 //			}
-
-			// int lineNumberWidth = lineNumbers.getWidth();
-			// int colorWidth = (rectWidth+1)*usedSize;
-			// rowHeader.setPreferredSize(new Dimension(50,
-			// rowHeader.getHeight()));
 			// //////////////////
 		} else {
 			JOptionPane.showMessageDialog(this, "Datei " + path
@@ -139,24 +113,58 @@ public class EditorTabbedPane extends JTabbedPane {
 	}
 
 	// //////////////////
-//	private void drawRect(RSyntaxTextArea textArea, int offset, int length, int xPos,
-//			ArrayList<String> features) throws BadLocationException {
-//		int startLineNumber = textArea.getLineOfOffset(offset + addToOffset);
-//		int endLineNumber = textArea.getLineOfOffset(offset + addToOffset + length);
-//		addToOffset += whitespaces.length();
-//		for (int i = startLineNumber; i <= endLineNumber; i++) {
-//			for (int j = 0; j < features.size(); j++) {				
-//				RSyntaxTextAreaHighlighter hilit = new RSyntaxTextAreaHighlighter();
-//				DefaultHighlightPainter painterYellow = new DefaultHighlighter.DefaultHighlightPainter(
-//						Color.YELLOW);
-//				textArea.setHighlighter(hilit);
-//				try {
-//					hilit.addHighlight(1, 2, painterYellow);
-//				} catch (BadLocationException e1) {
-//					// TODO Auto-generated catch block
-//					e1.printStackTrace();
+//	private void addWhitespaces(String whitespaces, RSyntaxTextArea textArea) {
+//		int lineCount = textArea.getLineCount();
+//		int offset;
+//		for (int i = 0; i < lineCount; i++) {
+//			try {
+//				offset = textArea.getLineStartOffset(i);
+//				textArea.getDocument().insertString(offset, whitespaces, null);
+//			} catch (BadLocationException e) {
+//				e.printStackTrace();
+//			}
+//
+//		}
+//	}
+//
+//	private ArrayList<Triple<Integer, Integer, ArrayList<String>>> correctXMLOffset(
+//			ArrayList<Triple<Integer, Integer, ArrayList<String>>> infos, RSyntaxTextArea textArea,
+//			String whitespaces) {
+//		for (int i = 0; i < infos.size(); i++) {
+//			Triple<Integer, Integer, ArrayList<String>> triple = infos.get(i);
+//			try {
+//				int startLine = textArea.getLineOfOffset(triple.getKey());
+//				int endLine = textArea.getLineOfOffset(triple.getKey() + triple.getValue1());
+//				int newOffset = triple.getKey() + startLine*whitespaces.length();
+//				int newLength = ((endLine-startLine)*whitespaces.length())+triple.getValue1();
+////				System.out.println("startline="+startLine+" : endLine="+endLine);
+////				System.out.println("old Data: offset="+triple.getKey() + " : length="+triple.getValue1());
+////				System.out.println("new Data: offset="+newOffset+" : length="+newLength);
+////				System.out.println();
+//				infos.set(i,
+//						new Triple<Integer, Integer, ArrayList<String>>(newOffset, newLength, triple.getValue2()));
+//			} catch (BadLocationException e) {
+//				e.printStackTrace();
+//			}
+//		}
+//		return infos;
+//	}
+//
+//	private void colorFeatures(int offset, int length, ArrayList<String> features, RSyntaxTextArea textArea) {
+//		try {
+//			System.out.println("color");
+//			int startLine = textArea.getLineOfOffset(offset);
+//			int endLine = textArea.getLineOfOffset(offset + length);
+//			for (int i = startLine; i <= endLine; i++) {
+//				System.out.println(i);
+//				int colorOffset = textArea.getLineStartOffset(i);
+//				for (int j = 0; j < features.size(); j++) {
+//					System.out.println("_____" + (colorOffset + j - textArea.getLineStartOffset(i)));
+//					hilit.addHighlight(colorOffset + j, colorOffset + j + 1, painterYellow);
 //				}
 //			}
+//		} catch (BadLocationException e1) {
+//			e1.printStackTrace();
 //		}
 //	}
 

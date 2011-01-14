@@ -61,9 +61,11 @@ public class RSanHighlight extends JFrame {
 				DefaultHighlightPainter painterYellow = new DefaultHighlighter.DefaultHighlightPainter(
 						Color.YELLOW);
 				textPane.setHighlighter(hilit);
-				textPane.setText("0123456789");
+				textPane.setText("                       ");
 				try {
 					hilit.addHighlight(1, 2,
+							painterYellow);
+					hilit.addHighlight(4, 5,
 							painterYellow);
 				} catch (BadLocationException e1) {
 					// TODO Auto-generated catch block
