@@ -48,30 +48,26 @@ public class SettingsEditorPanel extends ExperimentEditorTab {
 
 		if (selected != null) {
 			if (selected.isExperiment()) {
-				SettingsComponent scd = new SettingsComponentDescription(SettingsTextField.class,
-						Constants.KEY_CODE, "Experiment-Code: ").build(selected);
-				myPanel.add(scd);
+				myPanel.add(new SettingsComponentDescription(SettingsTextField.class, Constants.KEY_CODE,
+						"Experiment-Code: ").build(selected));
+				myPanel.add(new SettingsComponentDescription(SettingsTextField.class, Constants.KEY_END_MESSAGE,
+						"Beendigungsnachricht: ").build(selected));
 			} else {
-				SettingsComponent scd = new SettingsComponentDescription(SettingsCheckBox.class,
-						Constants.KEY_INACTIVE, "Deaktivieren").build(selected);
-				myPanel.add(scd);
+				myPanel.add(new SettingsComponentDescription(SettingsCheckBox.class, Constants.KEY_INACTIVE,
+						"Deaktivieren").build(selected));
 			}
 			if (selected.isCategory()) {
-				SettingsComponent scd1 = new SettingsComponentDescription(SettingsCheckBox.class,
-						Constants.KEY_DONOTSHOWCONTENT, "Inhalt nicht anzeigen").build(selected);
-				SettingsComponent scd2 = new SettingsComponentDescription(SettingsCheckBox.class,
-						Constants.KEY_QUESTIONSWITCHING, "Vor- und Zurückblättern erlauben").build(selected);
-				myPanel.add(scd1);
-				myPanel.add(scd2);
+				myPanel.add(new SettingsComponentDescription(SettingsCheckBox.class,
+						Constants.KEY_DONOTSHOWCONTENT, "Inhalt nicht anzeigen").build(selected));
+				myPanel.add(new SettingsComponentDescription(SettingsCheckBox.class,
+						Constants.KEY_QUESTIONSWITCHING, "Vor- und Zurückblättern erlauben").build(selected));
 			}
 			for (PluginInterface plugin : PluginList.getPlugins()) {
 				SettingsComponentDescription desc = plugin.getSettingsComponentDescription(selected);
 				if (desc != null) {
-					SettingsComponent scd = desc.build(selected);
-					myPanel.add(scd);
+					myPanel.add(desc.build(selected));
 					while ((desc = desc.getNextComponentDescription()) != null) {
-						scd = desc.build(selected);
-						myPanel.add(scd);
+						myPanel.add(desc.build(selected));
 					}
 				}
 			}

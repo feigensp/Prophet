@@ -66,11 +66,13 @@ public class RTextAreaRowHeaderTest extends JFrame {
 		scrollPane.setRowHeaderView(rowHeader);
 
 		JButton button = new JButton("press me");
-
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				try {
 					drawRect(textArea, 0, 1, Color.RED);
+//					textArea.repaint();
+					textArea.revalidate();
+					textArea.validate();
 				} catch (BadLocationException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

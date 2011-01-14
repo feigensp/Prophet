@@ -13,4 +13,5 @@ public class Constants {
 	public static final String KEY_BACKWARD = "previousQuestion";
 	public static final String KEY_CODE = "experimentcode";
 	public static final String KEY_SUBJECT = "subjectcode";
+	public static final String KEY_END_MESSAGE = "lastMessage";
 }

@@ -5,8 +5,8 @@ import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.HashMap;
+import java.util.Iterator;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -125,7 +125,7 @@ public class ExperimentViewer extends JFrame {
 		QuestionTreeNode superRoot = new QuestionTreeNode();
 		superRoot.add(tree);
 		tree.setParent(null);
-		currentNode = superRoot;
+		currentNode = superRoot;				
 		textPanes = new HashMap<QuestionTreeNode, QuestionViewPane>();
 		times = new HashMap<QuestionTreeNode, ClockLabel>();
 		totalTime = new ClockLabel("Gesamtzeit");
@@ -286,7 +286,11 @@ public class ExperimentViewer extends JFrame {
 		JTextPane output = new JTextPane();
 		output.setEditable(false);
 		output.setEditorKit(new HTMLEditorKit());
-		String outputString = "<p>Befragung beendet.</p>";
+		String endMessage = tree.getAttributeValue(Constants.KEY_END_MESSAGE);
+		if(endMessage== null) {
+			endMessage = "Befragung beendet.";
+		}
+		String outputString = "<p>" + endMessage + "</p>";
 		QuestionTreeXMLHandler.saveXMLAnswerTree(tree,
 				saveDir.getPath() + System.getProperty("file.separator") + Constants.FILE_ANSWERS);
 		for (PluginInterface plugin : PluginList.getPlugins()) {
