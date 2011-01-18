@@ -9,6 +9,8 @@ import java.util.StringTokenizer;
 
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.text.Element;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.View;
@@ -88,8 +90,7 @@ public class QuestionViewPane extends JScrollPane {
 					}
 				};
 			}
-		});
-		
+		});		
 
 		URL trueBase = ClassLoader.getSystemResource(".");
 		((javax.swing.text.html.HTMLDocument)textPane.getDocument()).setBase(trueBase);

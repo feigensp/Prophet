@@ -49,8 +49,6 @@ public class EditorTabbedPane extends JTabbedPane {
 //	JPanel drawPanel;
 //	String whitespaces = "          ";
 //	int addToOffset = 0;
-//	RSyntaxTextAreaHighlighter hilit = new RSyntaxTextAreaHighlighter();
-//	DefaultHighlightPainter painterYellow = new DefaultHighlighter.DefaultHighlightPainter(Color.RED);
 	// ///////////////////////
 	private QuestionTreeNode selected;
 	private File showDir, saveDir;
@@ -92,6 +90,9 @@ public class EditorTabbedPane extends JTabbedPane {
 			this.setTabComponentAt(this.getTabCount() - 1, new ButtonTabComponent(this, myPanel));
 			myPanel.grabFocus();
 			// //////////////////
+
+//			RSyntaxTextAreaHighlighter hilit = new RSyntaxTextAreaHighlighter();
+//			DefaultHighlightPainter painterYellow = new DefaultHighlighter.DefaultHighlightPainter(Color.RED);
 //			System.out.println(path);
 //			myPanel.getTextArea().setHighlighter(hilit);
 //			ArrayList<Triple<Integer, Integer, ArrayList<String>>> fileColoringInfos = coloringInfos
@@ -103,7 +104,7 @@ public class EditorTabbedPane extends JTabbedPane {
 //				int offset = infos.getKey();
 //				int length = infos.getValue1();
 //				ArrayList<String> features = infos.getValue2();
-//				colorFeatures(offset, length, features, myPanel.getTextArea());
+//				colorFeatures(offset, length, features, myPanel.getTextArea(), hilit, painterYellow);
 //			}
 			// //////////////////
 		} else {
@@ -150,7 +151,7 @@ public class EditorTabbedPane extends JTabbedPane {
 //		return infos;
 //	}
 //
-//	private void colorFeatures(int offset, int length, ArrayList<String> features, RSyntaxTextArea textArea) {
+//	private void colorFeatures(int offset, int length, ArrayList<String> features, RSyntaxTextArea textArea, RSyntaxTextAreaHighlighter hilit, DefaultHighlightPainter painterYellow) {
 //		try {
 //			System.out.println("color");
 //			int startLine = textArea.getLineOfOffset(offset);
@@ -237,7 +238,7 @@ public class EditorTabbedPane extends JTabbedPane {
 	}
 
 	// //////////////////////////////
-
+//
 //	private HashMap<String, ArrayList<Triple<Integer, Integer, ArrayList<String>>>> loadXMLTree(String path)
 //			throws FileNotFoundException {
 //		HashMap<String, ArrayList<Triple<Integer, Integer, ArrayList<String>>>> infos = new HashMap<String, ArrayList<Triple<Integer, Integer, ArrayList<String>>>>();
