@@ -14,12 +14,12 @@ public class PluginList {
 	private static Vector<PluginInterface> plugins = new Vector<PluginInterface>() {
 		private static final long serialVersionUID = 1L;
 		{
+			add(new ValidCodePlugin());
 			add(new CodeViewerPlugin());
 			add(new QuestionListPlugin());
 			add(new MailPlugin());
 			add(new MaxTimePlugin());
 			add(new ExternalProgrammPlugin());
-			add(new ValidCodePlugin());
 		}
 	};
 	

@@ -211,22 +211,22 @@ public class ExperimentViewer extends JFrame {
 	}
 
 	private void exitNode() {
-		for (PluginInterface plugin : PluginList.getPlugins()) {
-			plugin.exitNode(currentNode, currentNode.getPluginData(plugin.getKey()));
-		}
-		if(endExperimentFlag && !currentNode.isExperiment()) {
-			currentNode=(QuestionTreeNode)currentNode.getParent();
-			exitNode();
-			return;
-		}
-		if(endCategoryFlag && !currentNode.isCategory() && !currentNode.isExperiment()) {
-			currentNode=(QuestionTreeNode)currentNode.getParent();
-			exitNode();
-			return;
-		}
-		if (currentNode.isExperiment()) {
-			endQuestionnaire();
-		}
+			for (PluginInterface plugin : PluginList.getPlugins()) {
+				plugin.exitNode(currentNode, currentNode.getPluginData(plugin.getKey()));
+			}
+			if(endExperimentFlag && !currentNode.isExperiment()) {
+				currentNode=(QuestionTreeNode)currentNode.getParent();
+				exitNode();
+				return;
+			}
+			if(endCategoryFlag && !currentNode.isCategory() && !currentNode.isExperiment()) {
+				currentNode=(QuestionTreeNode)currentNode.getParent();
+				exitNode();
+				return;
+			}
+			if (currentNode.isExperiment()) {
+				endQuestionnaire();
+			}
 	}
 
 	private void pauseClock() {
