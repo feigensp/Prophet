@@ -16,23 +16,34 @@ import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 
-import experimentGUI.experimentEditor.QuestionTree.QuestionTree;
 import experimentGUI.experimentEditor.tabbedPane.QuestionEditorTabbedPane;
 import experimentGUI.util.Language;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 import experimentGUI.util.questionTreeNode.QuestionTreeNodeEvent;
 import experimentGUI.util.questionTreeNode.QuestionTreeNodeListener;
 
-
-@SuppressWarnings("serial")
+/**
+ * An ExperimentEditor is a frame which allows its user to create and edit experiments usable in the ExperimentViewer
+ * @author Andreas Hasselberg
+ * @author Markus Köppen
+ */
 public class ExperimentEditor extends JFrame {
+	private static final long serialVersionUID = 1L;
+	/**
+	 * JTree component to the left of the ExperimentEditor
+	 */
 	private QuestionTree tree;
+	/**
+	 * JTabbedPane component to the right of the ExperimentEditor
+	 */
 	private QuestionEditorTabbedPane questionEditorTabbedPane;
-
+	/**
+	 * ContentPane of the ExperimentEditor, all components are put here
+	 */
 	private JPanel contentPane;
 
 	/**
-	 * the main method to launch the application
+	 * Main method to launch the ExperimentEditor
 	 * 
 	 * @param args
 	 *            not used
@@ -53,12 +64,10 @@ public class ExperimentEditor extends JFrame {
 	}
 
 	/**
-	 * the constructor, sets some basic settings and start the method to create
-	 * the view
+	 * Constructor of the ExperimentEditor, called by the main() method;<br>
+	 * sets some basic settings and adds used components
 	 */
 	public ExperimentEditor() {
-//		Language.init("language.xml");
-//		Language.setLanguage("arabisch");
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(800, 600);
@@ -71,15 +80,7 @@ public class ExperimentEditor extends JFrame {
 		
 		ExperimentEditorMenuBar menuBar = new ExperimentEditorMenuBar(this);
 		setJMenuBar(menuBar);
-		
-		build();
-	}
-	
-	public QuestionTree getTree() {
-		return tree;
-	}
-	
-	public void build() {		
+
 		tree = new QuestionTree();
 		tree.setPreferredSize(new Dimension(175, 10));
 		tree.addQuestionTreeNodeListener(new QuestionTreeNodeListener() {
@@ -92,9 +93,24 @@ public class ExperimentEditor extends JFrame {
 		questionEditorTabbedPane = new QuestionEditorTabbedPane();
 		contentPane.add(questionEditorTabbedPane, BorderLayout.CENTER);
 	}
+	/**
+	 * 
+	 * @return
+	 * 	The JTree that represents the question tree
+	 */
+	public QuestionTree getTree() {
+		return tree;
+	}
+	/**
+	 * Tells the QuestionTree to create a new tree, called when "New" item is selected in menu
+	 */
 	public void newTree() {
 		tree.newRoot();
 	}
+	/**
+	 * Loads a question tree into the JTree component
+	 * @param root
+	 */
 	public void loadTree(QuestionTreeNode root) {
 		tree.setRoot(root);
 	}

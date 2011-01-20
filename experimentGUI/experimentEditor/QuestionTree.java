@@ -1,4 +1,4 @@
-package experimentGUI.experimentEditor.QuestionTree;
+package experimentGUI.experimentEditor;
 
 /**
  * This Class inherits from JTree.
@@ -38,27 +38,57 @@ import experimentGUI.util.questionTreeNode.QuestionTreeNodeEvent;
 import experimentGUI.util.questionTreeNode.QuestionTreeNodeListener;
 
 
-@SuppressWarnings("serial")
+/**
+ * JTree within a JScrollPane component that displays the content of a tree based on the QuestionTreeNode class.
+ * @author Andreas Hasselberg
+ * @author Markus Köppen
+ *
+ */
 public class QuestionTree extends JScrollPane {
-	private JTree tree;
-	private QuestionTreeNode selected;
-	
-	private JPopupMenu experimentPopup; // the popup-menu of the tree itself
-	private JPopupMenu categoryPopup; // the popup-menu of categories
-	private JPopupMenu questionPopup; // the popup-menu of questions
-	
-	Vector<QuestionTreeNodeListener> questionTreeListeners;
-
 	/**
-	 * The Constructor of the class it creates the popup menu and some settings,
-	 * initialising
-	 * 
-	 * @param root
-	 *            root of the jtree
-	 * @param textPane
-	 *            pane for showing level 3 content
-	 * @param viewPane
-	 *            pane for showing level 3 content in html
+	 * the actual JTree component
+	 */
+	private JTree tree;
+	/**
+	 * currently selected QuestionTreeNode
+	 */
+	private QuestionTreeNode selected;
+	/**
+	 * popup menu shown when the experiment node is right clicked
+	 */
+	private JPopupMenu experimentPopup;
+	/**
+	 * popup menu shown when a category node is right clicked
+	 */
+	private JPopupMenu categoryPopup;
+	/**
+	 * popup menu shown when a question node is right clicked
+	 */
+	private JPopupMenu questionPopup;
+	
+	/**
+	 * Collection of listeners that listen on node selections.
+	 */
+	Vector<QuestionTreeNodeListener> questionTreeListeners;
+	
+	public final static String POPUP_NEW_CATEGORY = "Neue Kategorie";
+	public final static String POPUP_NEW_QUESTION = "Neue Frage";
+	public final static String POPUP_RENAME = "Umbenennen";
+	public final static String POPUP_REMOVE = "Löschen";
+	
+	public final static String MESSAGE_NAME = "Name:";
+	public final static String MESSAGE_NEW_NAME = "Neuer Name:";
+	
+	public final static String ACTION_NEW_CATEGORY = "newcategory";
+	public final static String ACTION_NEW_QUESTION = "newquestion";
+	public final static String ACTION_RENAME = "rename";
+	public final static String ACTION_REMOVE = "remove";
+	
+	public final static String DEFAULT_EXPERIMENT_NODE_NAME = "Experiment";
+	
+	/**
+	 * The Constructor of the class.<br>
+	 * It creates the popup menus and initializes some settings
 	 */
 	public QuestionTree() {
 		tree = new JTree((TreeModel)null);
@@ -98,24 +128,24 @@ public class QuestionTree extends JScrollPane {
 			public void actionPerformed(ActionEvent ae) {
 				String name;
 				// remove
-				if (ae.getActionCommand().equals("remove")) {
+				if (ae.getActionCommand().equals(ACTION_REMOVE)) {
 					removeNode(selected);
 				} else
 				// newcategory
-				if (ae.getActionCommand().equals("newcategory")) {
-					if ((name = JOptionPane.showInputDialog("Name:", "")) != null) {
-						addNode(selected, "category", name);
+				if (ae.getActionCommand().equals(ACTION_NEW_CATEGORY)) {
+					if ((name = JOptionPane.showInputDialog(MESSAGE_NAME, "")) != null) {
+						addNode(selected, QuestionTreeNode.TYPE_CATEGORY, name);
 					}
 				} else
 				// newquestion
-				if (ae.getActionCommand().equals("newquestion")) {
-					if ((name = JOptionPane.showInputDialog("Name:", "")) != null) {
-						addNode(selected, "question", name);
+				if (ae.getActionCommand().equals(ACTION_NEW_QUESTION)) {
+					if ((name = JOptionPane.showInputDialog(MESSAGE_NAME, "")) != null) {
+						addNode(selected, QuestionTreeNode.TYPE_QUESTION, name);
 					}
 				} else
 				// rename
-				if (ae.getActionCommand().equals("rename")) {
-					if ((name = JOptionPane.showInputDialog("Neuer Name:", selected.getName())) != null) {
+				if (ae.getActionCommand().equals(ACTION_RENAME)) {
+					if ((name = JOptionPane.showInputDialog(MESSAGE_NEW_NAME, selected.getName())) != null) {
 						renameNode(selected, name);
 					}
 				}
@@ -123,43 +153,45 @@ public class QuestionTree extends JScrollPane {
 		};
 		
 		experimentPopup = new JPopupMenu();
-		myMenuItem = new JMenuItem("Neue Kategorie");
+		myMenuItem = new JMenuItem(POPUP_NEW_CATEGORY);
 		myMenuItem.addActionListener(myActionlistener);
-		myMenuItem.setActionCommand("newcategory");
+		myMenuItem.setActionCommand(ACTION_NEW_CATEGORY);
 		experimentPopup.add(myMenuItem);
 		experimentPopup.addSeparator();
-		myMenuItem = new JMenuItem("Umbenennen");
+		myMenuItem = new JMenuItem(POPUP_RENAME);
 		myMenuItem.addActionListener(myActionlistener);
-		myMenuItem.setActionCommand("rename");		
+		myMenuItem.setActionCommand(ACTION_RENAME);		
 		experimentPopup.add(myMenuItem);
 		
 		categoryPopup = new JPopupMenu();
-		myMenuItem = new JMenuItem("Neue Frage");
+		myMenuItem = new JMenuItem(POPUP_NEW_QUESTION);
 		myMenuItem.addActionListener(myActionlistener);
-		myMenuItem.setActionCommand("newquestion");		
+		myMenuItem.setActionCommand(ACTION_NEW_QUESTION);		
 		categoryPopup.add(myMenuItem);
 		categoryPopup.addSeparator();
-		myMenuItem = new JMenuItem("Löschen");
+		myMenuItem = new JMenuItem(POPUP_RENAME);
 		myMenuItem.addActionListener(myActionlistener);
-		myMenuItem.setActionCommand("remove");
+		myMenuItem.setActionCommand(ACTION_RENAME);		
 		categoryPopup.add(myMenuItem);
-		myMenuItem = new JMenuItem("Umbenennen");
+		myMenuItem = new JMenuItem(POPUP_REMOVE);
 		myMenuItem.addActionListener(myActionlistener);
-		myMenuItem.setActionCommand("rename");		
+		myMenuItem.setActionCommand(ACTION_REMOVE);
 		categoryPopup.add(myMenuItem);
 		
 		questionPopup = new JPopupMenu();
-		myMenuItem = new JMenuItem("Löschen");
+		myMenuItem = new JMenuItem(POPUP_RENAME);
 		myMenuItem.addActionListener(myActionlistener);
-		myMenuItem.setActionCommand("remove");
+		myMenuItem.setActionCommand(ACTION_RENAME);		
 		questionPopup.add(myMenuItem);
-		myMenuItem = new JMenuItem("Umbenennen");
+		myMenuItem = new JMenuItem(POPUP_REMOVE);
 		myMenuItem.addActionListener(myActionlistener);
-		myMenuItem.setActionCommand("rename");		
+		myMenuItem.setActionCommand(ACTION_REMOVE);
 		questionPopup.add(myMenuItem);
 
 		tree.setDragEnabled(true);
 		tree.setDropTarget(new DropTarget() {
+			private static final long serialVersionUID = 1L;
+
 			public void dragOver(DropTargetDragEvent dtde) {
 				QuestionTreeNode source = (QuestionTreeNode) tree.getSelectionPath().getLastPathComponent();
 				Point p = dtde.getLocation();
@@ -245,7 +277,7 @@ public class QuestionTree extends JScrollPane {
 		tree.updateUI();
 	}
 	public void newRoot() {
-		setRoot(new QuestionTreeNode(QuestionTreeNode.TYPE_EXPERIMENT, "Experiment"));
+		setRoot(new QuestionTreeNode(QuestionTreeNode.TYPE_EXPERIMENT, DEFAULT_EXPERIMENT_NODE_NAME));
 	}
 	public void setRoot(QuestionTreeNode n) {
 		selected=null;

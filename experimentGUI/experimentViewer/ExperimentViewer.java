@@ -286,10 +286,7 @@ public class ExperimentViewer extends JFrame {
 		JTextPane output = new JTextPane();
 		output.setEditable(false);
 		output.setEditorKit(new HTMLEditorKit());
-		String endMessage = tree.getAttributeValue(Constants.KEY_END_MESSAGE);
-		if(endMessage== null) {
-			endMessage = "Befragung beendet.";
-		}
+		String endMessage = "Befragung beendet.";
 		String outputString = "<p>" + endMessage + "</p>";
 		QuestionTreeXMLHandler.saveXMLAnswerTree(tree,
 				saveDir.getPath() + System.getProperty("file.separator") + Constants.FILE_ANSWERS);

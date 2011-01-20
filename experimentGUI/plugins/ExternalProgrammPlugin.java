@@ -2,6 +2,8 @@ package experimentGUI.plugins;
 
 import java.io.IOException;
 
+import javax.swing.JOptionPane;
+
 import experimentGUI.PluginInterface;
 import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.SettingsComponentDescription;
 import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.SettingsPluginComponentDescription;
@@ -43,7 +45,7 @@ public class ExternalProgrammPlugin implements PluginInterface {
 				try {
 					p = Runtime.getRuntime().exec(command);
 				} catch (IOException e) {
-					e.printStackTrace();
+					JOptionPane.showMessageDialog(null, "Eine externe Anwendung konnte nicht gestartet werden.", "Fehler", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		}
@@ -53,7 +55,16 @@ public class ExternalProgrammPlugin implements PluginInterface {
 	@Override
 	public void exitNode(QuestionTreeNode node, Object pluginData) {
 		if (node.isCategory() && p!=null) {
-			p.destroy();
+			try {
+				p.exitValue();
+			} catch (Exception e) {
+				JOptionPane.showMessageDialog(null, "Bitte das gestartete Programm beenden.", "Hinweis", JOptionPane.INFORMATION_MESSAGE);
+				try {
+					p.waitFor();
+				} catch (InterruptedException e1) {
+					p.destroy();
+				}
+			}
 			p=null;
 		}
 	}

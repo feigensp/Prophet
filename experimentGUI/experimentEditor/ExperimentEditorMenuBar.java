@@ -14,19 +14,44 @@ import javax.swing.JOptionPane;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 import experimentGUI.util.questionTreeNode.QuestionTreeXMLHandler;
 
-@SuppressWarnings("serial")
+/**
+ * The menu bar of the ExperimentViewer. Separated to enhance readability. 
+ * @author Andreas Hasselberg
+ * @author Markus Köppen
+ *
+ */
 public class ExperimentEditorMenuBar extends JMenuBar {
+	private static final long serialVersionUID = 1L;
 	private ExperimentEditor questionEditor;
 	private File currentFile;
 	private JMenuItem saveAsMenuItem;
+	
+	public final static String MENU_FILE = "Datei";
+	public final static String MENU_FILE_NEW = "Neu";
+	public final static String MENU_FILE_LOAD = "Laden";
+	public final static String MENU_FILE_SAVE = "Speichern";
+	public final static String MENU_FILE_SAVE_AS = "Speichern unter...";
+	public final static String MENU_FILE_QUIT = "Beenden";
+	
+	public final static String MESSAGE_FILE_NOT_FOUND = "Datei nicht gefunden";
+	public final static String MESSAGE_FILE_NOT_FOUND_TITLE = "Fehler";
+	
+	public final static String MESSAGE_REPLACE_FILE = " ist bereits vorhanden.\nWollen Sie sie ersetzen?";
+	public final static String MESSAGE_REPLACE_FILE_TITLE = "Speichern unter bestätigen";
+	
 
+	/**
+	 * Constructor
+	 * @param qE
+	 * 	The ExperimentEditor object this menu bar is added to
+	 */
 	public ExperimentEditorMenuBar(ExperimentEditor qE) {
 		questionEditor = qE;
 		currentFile = null;
-		JMenu fileMenu = new JMenu(/*Language.getValue("fileMenu")*/"Datei");
+		JMenu fileMenu = new JMenu(MENU_FILE);
 		add(fileMenu);
 
-		JMenuItem newMenuItem = new JMenuItem(/*Language.getValue("newMenuItem")*/"Neu");
+		JMenuItem newMenuItem = new JMenuItem(MENU_FILE_NEW);
 		fileMenu.add(newMenuItem);
 		newMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
@@ -34,7 +59,7 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 			}
 		});
 
-		JMenuItem loadMenuItem = new JMenuItem("Laden");
+		JMenuItem loadMenuItem = new JMenuItem(MENU_FILE_NEW);
 		fileMenu.add(loadMenuItem);
 		loadMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -46,7 +71,7 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 						newRoot = QuestionTreeXMLHandler.loadXMLTree(currentFile
 								.getAbsolutePath());
 					} catch (FileNotFoundException e) {
-						JOptionPane.showMessageDialog(questionEditor, "Datei nicht gefunden.", "Fehler", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(questionEditor, MESSAGE_FILE_NOT_FOUND, MESSAGE_FILE_NOT_FOUND_TITLE, JOptionPane.ERROR_MESSAGE);
 						return;
 					}
 					questionEditor.loadTree(newRoot);
@@ -54,7 +79,7 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 			}
 		});
 
-		JMenuItem saveMenuItem = new JMenuItem("Speichern");
+		JMenuItem saveMenuItem = new JMenuItem(MENU_FILE_SAVE);
 		fileMenu.add(saveMenuItem);
 		saveMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -67,7 +92,7 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 			}
 		});
 
-		saveAsMenuItem = new JMenuItem("Speichern unter");
+		saveAsMenuItem = new JMenuItem(MENU_FILE_SAVE_AS);
 		fileMenu.add(saveAsMenuItem);
 		saveAsMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -75,8 +100,7 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 				if (fc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
 					File file = fc.getSelectedFile();
 					if (file.exists()) {
-						int n = JOptionPane.showConfirmDialog(null, "Wollen sie " + file.getName()
-								+ " ersetzen?", "Ersetzen?", JOptionPane.YES_NO_OPTION);
+						int n = JOptionPane.showConfirmDialog(null, file.getName()+MESSAGE_REPLACE_FILE, MESSAGE_REPLACE_FILE_TITLE, JOptionPane.YES_NO_OPTION);
 						if (n == JOptionPane.YES_OPTION) {
 							currentFile = file;
 							QuestionTreeXMLHandler.saveXMLTree(questionEditor.getTree().getRoot(),
@@ -90,7 +114,7 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 			}
 		});
 
-		JMenuItem closeMenuItem = new JMenuItem("Beenden");
+		JMenuItem closeMenuItem = new JMenuItem(MENU_FILE_QUIT);
 		fileMenu.add(closeMenuItem);
 		closeMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {

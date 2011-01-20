@@ -50,8 +50,6 @@ public class SettingsEditorPanel extends ExperimentEditorTab {
 			if (selected.isExperiment()) {
 				myPanel.add(new SettingsComponentDescription(SettingsTextField.class, Constants.KEY_CODE,
 						"Experiment-Code: ").build(selected));
-				myPanel.add(new SettingsComponentDescription(SettingsTextField.class, Constants.KEY_END_MESSAGE,
-						"Beendigungsnachricht: ").build(selected));
 			} else {
 				myPanel.add(new SettingsComponentDescription(SettingsCheckBox.class, Constants.KEY_INACTIVE,
 						"Deaktivieren").build(selected));
