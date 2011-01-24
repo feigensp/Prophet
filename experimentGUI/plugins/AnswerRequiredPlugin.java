@@ -60,7 +60,7 @@ public class AnswerRequiredPlugin implements PluginInterface {
 				if(keys.contains(components[i])) {
 					System.out.println("contains " + components[i]);
 					if(answers.get(components[i]).equals("")) {
-						experimentViewer.setNoNextFlag("Sie müssen " + components[i] + " ausfüllen um weiter zu können.");
+//						experimentViewer.setNoNextFlag("Sie müssen " + components[i] + " ausfüllen um weiter zu können.");
 					}
 				} else {
 					System.out.println("contains not " + components[i]);	
