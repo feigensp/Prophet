@@ -28,6 +28,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
@@ -113,12 +115,22 @@ public class QuestionTree extends JScrollPane {
 			}
 			@Override
 			public void mousePressed(MouseEvent e) {
-				TreePath selPath = tree.getPathForLocation(e.getX(), e.getY());
+//				TreePath selPath = tree.getPathForLocation(e.getX(), e.getY());
+//				if (selPath!=null) {
+//					selected = (QuestionTreeNode) selPath.getLastPathComponent();
+//					fireEvent(selected);
+//				}
+			}
+		});
+		tree.addTreeSelectionListener(new TreeSelectionListener() {
+			@Override
+			public void valueChanged(TreeSelectionEvent tse) {				
+				TreePath selPath = tse.getPath();
 				if (selPath!=null) {
 					selected = (QuestionTreeNode) selPath.getLastPathComponent();
 					fireEvent(selected);
 				}
-			}
+			}			
 		});
 		
 		// create popup menu

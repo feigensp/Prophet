@@ -96,7 +96,7 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 		fileMenu.add(saveAsMenuItem);
 		saveAsMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				JFileChooser fc = new JFileChooser();
+				JFileChooser fc = new JFileChooser(currentFile);
 				if (fc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
 					File file = fc.getSelectedFile();
 					if (file.exists()) {
@@ -107,6 +107,7 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 									file.getAbsolutePath());
 						}
 					} else {
+						currentFile = file;
 						QuestionTreeXMLHandler.saveXMLTree(questionEditor.getTree().getRoot(),
 								file.getAbsolutePath());
 					}
