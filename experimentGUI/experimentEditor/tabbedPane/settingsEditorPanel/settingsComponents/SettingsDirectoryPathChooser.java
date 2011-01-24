@@ -27,7 +27,7 @@ public class SettingsDirectoryPathChooser extends SettingsComponent {
 		add(caption, BorderLayout.NORTH);;
 
 		textField = new JTextField();
-		textField.setEditable(false);
+		textField.setEditable(true);
 		add(textField,BorderLayout.CENTER);
 		textField.setColumns(20);
 		textField.getDocument().addDocumentListener(new DocumentListener() {
