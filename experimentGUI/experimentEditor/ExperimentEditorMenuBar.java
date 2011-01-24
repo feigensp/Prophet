@@ -13,6 +13,9 @@ import javax.swing.JOptionPane;
 
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 import experimentGUI.util.questionTreeNode.QuestionTreeXMLHandler;
+import javax.swing.KeyStroke;
+import java.awt.event.KeyEvent;
+import java.awt.event.InputEvent;
 
 /**
  * The menu bar of the ExperimentViewer. Separated to enhance readability. 
@@ -52,6 +55,7 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 		add(fileMenu);
 
 		JMenuItem newMenuItem = new JMenuItem(MENU_FILE_NEW);
+		newMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_MASK));
 		fileMenu.add(newMenuItem);
 		newMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
@@ -59,7 +63,8 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 			}
 		});
 
-		JMenuItem loadMenuItem = new JMenuItem(MENU_FILE_NEW);
+		JMenuItem loadMenuItem = new JMenuItem(MENU_FILE_LOAD);
+		loadMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_L, InputEvent.CTRL_MASK));
 		fileMenu.add(loadMenuItem);
 		loadMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -80,6 +85,7 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 		});
 
 		JMenuItem saveMenuItem = new JMenuItem(MENU_FILE_SAVE);
+		saveMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_MASK));
 		fileMenu.add(saveMenuItem);
 		saveMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
