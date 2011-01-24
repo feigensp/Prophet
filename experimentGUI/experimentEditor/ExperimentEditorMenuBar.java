@@ -59,6 +59,8 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 		fileMenu.add(newMenuItem);
 		newMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
+				currentFile = null;
+				questionEditor.setTitle(questionEditor.TITLE);
 				questionEditor.newTree();
 			}
 		});
@@ -75,11 +77,12 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 					try {
 						newRoot = QuestionTreeXMLHandler.loadXMLTree(currentFile
 								.getAbsolutePath());
+						questionEditor.loadTree(newRoot);
+						questionEditor.setTitle(questionEditor.TITLE + " <" + currentFile.getAbsolutePath() + ">");
 					} catch (FileNotFoundException e) {
 						JOptionPane.showMessageDialog(questionEditor, MESSAGE_FILE_NOT_FOUND, MESSAGE_FILE_NOT_FOUND_TITLE, JOptionPane.ERROR_MESSAGE);
 						return;
 					}
-					questionEditor.loadTree(newRoot);
 				}
 			}
 		});
@@ -111,11 +114,13 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 							currentFile = file;
 							QuestionTreeXMLHandler.saveXMLTree(questionEditor.getTree().getRoot(),
 									file.getAbsolutePath());
+							questionEditor.setTitle(questionEditor.TITLE + " <" + currentFile.getAbsolutePath() + ">");
 						}
 					} else {
 						currentFile = file;
 						QuestionTreeXMLHandler.saveXMLTree(questionEditor.getTree().getRoot(),
 								file.getAbsolutePath());
+						questionEditor.setTitle(questionEditor.TITLE + " <" + currentFile.getAbsolutePath() + ">");
 					}
 				}
 			}

@@ -28,7 +28,9 @@ import experimentGUI.util.questionTreeNode.QuestionTreeNodeListener;
  * @author Markus Köppen
  */
 public class ExperimentEditor extends JFrame {
-	private static final long serialVersionUID = 1L;
+	public static final String TITLE = "ExperimentEditor";
+	
+	private static final long serialVersionUID = 1L;	
 	/**
 	 * JTree component to the left of the ExperimentEditor
 	 */
@@ -72,6 +74,7 @@ public class ExperimentEditor extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(800, 600);
 		setLocationRelativeTo(null);
+		setTitle(TITLE);
 
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
