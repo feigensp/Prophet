@@ -62,12 +62,13 @@ public class ExternalProgramsPlugin implements PluginInterface {
 					if(!commands[i].equals("")) {
 						int lastSep = commands[i].lastIndexOf(System.getProperty("file.separator"));
 						String caption = commands[i];
-						if(lastSep!= -1) {
-							caption = caption.substring(lastSep+1);
-						}
+//						if(lastSep!= -1) {
+//							caption = caption.substring(lastSep+1);
+//						}
 						addButton(caption, commands[i]);
 					}
 				}
+				frame.pack();
 			}
 		}
 		return null;
@@ -86,7 +87,8 @@ public class ExternalProgramsPlugin implements PluginInterface {
 	}
 	
 	private void addButton(String caption, final String command) {
-		JButton button = new JButton(caption);		
+		JButton button = new JButton(caption);
+		button.setSize(400, (int)button.getPreferredSize().getHeight());
 		int buttonHeight = (int) button.getPreferredSize().getHeight();
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
