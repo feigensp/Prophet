@@ -95,7 +95,6 @@ public class AusDemFormularGeholt {
 		});
 		contentPane.add(button, BorderLayout.SOUTH);
 		frame.setVisible(true);
-		
 	}
 
 }

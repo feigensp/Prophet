@@ -6,6 +6,7 @@ import experimentGUI.plugins.codeViewerPlugin.codeViewerPlugins.LineNumbersPlugi
 import experimentGUI.plugins.codeViewerPlugin.codeViewerPlugins.OpenedByStartPlugin;
 import experimentGUI.plugins.codeViewerPlugin.codeViewerPlugins.RecorderPlugin;
 import experimentGUI.plugins.codeViewerPlugin.codeViewerPlugins.SearchBarPlugin;
+import experimentGUI.plugins.codeViewerPlugin.codeViewerPlugins.ShowCIDECodePlugin;
 import experimentGUI.plugins.codeViewerPlugin.codeViewerPlugins.SyntaxHighlightingPlugin;
 
 
@@ -18,6 +19,7 @@ public class CodeViewerPluginList {
 			add(new SearchBarPlugin());
 			add(new SyntaxHighlightingPlugin());
 			add(new OpenedByStartPlugin());
+			add(new ShowCIDECodePlugin());
 		}
 	};
 	
