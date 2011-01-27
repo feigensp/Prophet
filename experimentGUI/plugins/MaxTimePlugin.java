@@ -31,7 +31,7 @@ public class MaxTimePlugin implements PluginInterface {
 	@Override
 	public SettingsComponentDescription getSettingsComponentDescription(QuestionTreeNode node) {
 		SettingsPluginComponentDescription result = new SettingsPluginComponentDescription(KEY,
-				"Maximale Bearbeitungszeit");
+				"Timeout");
 		if (node.isExperiment()) {
 			result.addSubComponent(new SettingsComponentDescription(SettingsTextField.class, KEY_MAX_TIME,
 					"Maximale Laufzeit (gesamtes Experiment, in Minuten):"));
@@ -45,15 +45,17 @@ public class MaxTimePlugin implements PluginInterface {
 					"Maximale Laufzeit (diese Frage, in Sekunden):"));
 		}
 		SettingsPluginComponentDescription hardExit = new SettingsPluginComponentDescription(KEY_HARD_EXIT,
-				"Aktuelle Frage bei Zeitüberschreitung beenden");
+				"Angezeigte Frage bei Zeitüberschreitung beenden (harter Timeout)");
 		SettingsPluginComponentDescription warning = new SettingsPluginComponentDescription(KEY_WARNING,
 				"Probanden vorwarnen");
 		warning.addSubComponent(new SettingsComponentDescription(SettingsTextField.class,KEY_WARNING_TIME,
 				"Vorwarnzeit (Sekunden):"));
 		hardExit.addSubComponent(warning);
 		result.addSubComponent(hardExit);
-		result.addNextComponentDescription(new SettingsComponentDescription(SettingsCheckBox.class,KEY_IGNORE_TIMEOUT,
-				"Diesen und alle Unterknoten auch bei Timeout anzeigen"));
+		if (node.isCategory()) {
+			result.addSubComponent(new SettingsComponentDescription(SettingsCheckBox.class,KEY_IGNORE_TIMEOUT,
+					"Diese Kategorie auch bei abgelaufenem Experiment-Timeout anzeigen; eigener Timeout dann wirkungslos"));
+		}
 		return result;
 	}
 

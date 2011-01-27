@@ -37,11 +37,11 @@ public class SettingsComponentDescription {
 		result.setTreeNode(myNode);
 		return result;
 	}
-	public void addNextComponentDescription(SettingsComponentDescription next) {
+	public void addNextComponent(SettingsComponentDescription next) {
 		if (this.next==null) {
 			this.next = next;
 		} else {
-			this.next.addNextComponentDescription(next);
+			this.next.addNextComponent(next);
 		}
 	}
 	public SettingsComponentDescription getNextComponentDescription() {

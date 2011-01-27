@@ -13,7 +13,7 @@ public class LineNumbersPlugin implements CodeViewerPluginInterface {
 	@Override
 	public SettingsComponentDescription getSettingsComponentDescription() {
 		SettingsComponentDescription result = new SettingsComponentDescription(SettingsCheckBox.class,"linenumbers_default", "Zeilennummern anzeigen");
-		result.addNextComponentDescription(new SettingsComponentDescription(SettingsCheckBox.class,"linenumbers_toggle", "Zeilennummern ein- und ausschaltbar"));
+		result.addNextComponent(new SettingsComponentDescription(SettingsCheckBox.class,"linenumbers_toggle", "Zeilennummern ein- und ausschaltbar"));
 		return result;
 	}
 	
