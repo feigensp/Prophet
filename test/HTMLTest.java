@@ -9,6 +9,7 @@ import java.util.Enumeration;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextPane;
 import javax.swing.border.EmptyBorder;
@@ -30,8 +31,10 @@ public class HTMLTest extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					HTMLTest frame = new HTMLTest();
-					frame.setVisible(true);
+					 JOptionPane.showMessageDialog
+                     (null,"<html>.<br> Ziehung:</html> ");
+//					HTMLTest frame = new HTMLTest();
+//					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
