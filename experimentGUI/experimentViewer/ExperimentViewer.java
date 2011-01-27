@@ -142,9 +142,6 @@ public class ExperimentViewer extends JFrame {
 						JOptionPane.ERROR_MESSAGE);
 				return false;
 			}
-			QuestionTreeNode subjectCodeAttribute = new QuestionTreeNode(QuestionTreeNode.TYPE_ATTRIBUTE);
-			subjectCodeAttribute.setValue(subject);
-			currentNode.setAttribute(Constants.KEY_SUBJECT, subjectCodeAttribute);
 			String experiment = currentNode.getAttributeValue(Constants.KEY_CODE);
 			if (experiment == null) {
 				experiment = "default";
@@ -221,6 +218,7 @@ public class ExperimentViewer extends JFrame {
 			}
 			if(endCategoryFlag && !currentNode.isCategory() && !currentNode.isExperiment()) {
 				currentNode=(QuestionTreeNode)currentNode.getParent();
+				endCategoryFlag=false;
 				exitNode();
 				return;
 			}

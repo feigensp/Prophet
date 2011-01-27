@@ -12,7 +12,7 @@ import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 public class MaxTimePlugin implements PluginInterface {
 
 	public static final String KEY = "maxTime";
-	public static final String MAX_TIME = "maxTime";
+	public static final String KEY_MAX_TIME = "maxTime";
 
 	private ExperimentViewer experimentViewer;
 	private int maxTimeExperiment;
@@ -29,12 +29,12 @@ public class MaxTimePlugin implements PluginInterface {
 		SettingsPluginComponentDescription result = new SettingsPluginComponentDescription(KEY,
 				"Maximale Bearbeitungszeit");
 		if (node.isExperiment()) {
-			result.addSubComponent(new SettingsComponentDescription(SettingsTextField.class, MAX_TIME,
+			result.addSubComponent(new SettingsComponentDescription(SettingsTextField.class, KEY_MAX_TIME,
 					"Maximale Laufzeit (in Minuten):"));
 			return result;
 		}
 		if (node.isCategory()) {
-			result.addSubComponent(new SettingsComponentDescription(SettingsTextField.class, MAX_TIME,
+			result.addSubComponent(new SettingsComponentDescription(SettingsTextField.class, KEY_MAX_TIME,
 					"Maximale Laufzeit (in Sekunden):"));
 			return result;
 		}
@@ -52,7 +52,7 @@ public class MaxTimePlugin implements PluginInterface {
 			experimentEnabled = Boolean.parseBoolean(node.getAttributeValue(KEY));
 			if (experimentEnabled) {
 				QuestionTreeNode attributes = node.getAttribute(KEY);
-				maxTimeExperiment = Integer.parseInt(attributes.getAttributeValue(MAX_TIME));
+				maxTimeExperiment = Integer.parseInt(attributes.getAttributeValue(KEY_MAX_TIME));
 				startTimeExperiment = System.currentTimeMillis();
 			}
 		}
@@ -60,7 +60,7 @@ public class MaxTimePlugin implements PluginInterface {
 			categoryEnabled = Boolean.parseBoolean(node.getAttributeValue(KEY));
 			if (categoryEnabled) {
 				QuestionTreeNode attributes = node.getAttribute(KEY);
-				maxTimeCategory = Integer.parseInt(attributes.getAttributeValue(MAX_TIME));
+				maxTimeCategory = Integer.parseInt(attributes.getAttributeValue(KEY_MAX_TIME));
 				startTimeCategory = System.currentTimeMillis();
 			}
 		}

@@ -22,10 +22,25 @@ public class SettingsFilePathChooser  extends SettingsComponent {
 	public SettingsFilePathChooser() {
 		setLayout(new BorderLayout());
 		caption = new JLabel();
-		add(caption, BorderLayout.NORTH);;
-
+		add(caption, BorderLayout.NORTH);
 		textField = new JTextField();
-		textField.setEditable(false);
+		textField.getDocument().addDocumentListener(new DocumentListener() {
+
+			@Override
+			public void changedUpdate(DocumentEvent arg0) {
+				saveValue();
+			}
+
+			@Override
+			public void insertUpdate(DocumentEvent arg0) {
+				saveValue();
+			}
+
+			@Override
+			public void removeUpdate(DocumentEvent arg0) {
+				saveValue();
+			}
+		});
 		add(textField,BorderLayout.CENTER);
 		textField.setColumns(20);
 		pathButton = new JButton("Durchsuchen");
@@ -43,7 +58,6 @@ public class SettingsFilePathChooser  extends SettingsComponent {
 								.length() + 1);
 					}
 					textField.setText(selectedPath.replace('\\','/'));
-					saveValue();
 				}
 			}
 		});

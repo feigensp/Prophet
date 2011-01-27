@@ -11,7 +11,8 @@ import javax.swing.event.DocumentListener;
 
 import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.SettingsComponent;
 
-public class SettingsTextArea extends SettingsComponent{	
+public class SettingsTextArea extends SettingsComponent {	
+	private static final long serialVersionUID = 1L;
 	private JLabel caption;
 	private JTextArea textArea; 
 	

@@ -31,7 +31,7 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 	
 	public final static String MENU_FILE = "Datei";
 	public final static String MENU_FILE_NEW = "Neu";
-	public final static String MENU_FILE_LOAD = "Laden";
+	public final static String MENU_FILE_OPEN = "Öffnen...";
 	public final static String MENU_FILE_SAVE = "Speichern";
 	public final static String MENU_FILE_SAVE_AS = "Speichern unter...";
 	public final static String MENU_FILE_QUIT = "Beenden";
@@ -65,8 +65,8 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 			}
 		});
 
-		JMenuItem loadMenuItem = new JMenuItem(MENU_FILE_LOAD);
-		loadMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_L, InputEvent.CTRL_MASK));
+		JMenuItem loadMenuItem = new JMenuItem(MENU_FILE_OPEN);
+		loadMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_MASK));
 		fileMenu.add(loadMenuItem);
 		loadMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -78,7 +78,7 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 						newRoot = QuestionTreeXMLHandler.loadXMLTree(currentFile
 								.getAbsolutePath());
 						questionEditor.loadTree(newRoot);
-						questionEditor.setTitle(questionEditor.TITLE + " <" + currentFile.getAbsolutePath() + ">");
+						questionEditor.setTitle(ExperimentEditor.TITLE + " - " + currentFile.getAbsolutePath());
 					} catch (FileNotFoundException e) {
 						JOptionPane.showMessageDialog(questionEditor, MESSAGE_FILE_NOT_FOUND, MESSAGE_FILE_NOT_FOUND_TITLE, JOptionPane.ERROR_MESSAGE);
 						return;
@@ -114,13 +114,13 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 							currentFile = file;
 							QuestionTreeXMLHandler.saveXMLTree(questionEditor.getTree().getRoot(),
 									file.getAbsolutePath());
-							questionEditor.setTitle(questionEditor.TITLE + " <" + currentFile.getAbsolutePath() + ">");
+							questionEditor.setTitle(ExperimentEditor.TITLE + " - " + currentFile.getAbsolutePath());
 						}
 					} else {
 						currentFile = file;
 						QuestionTreeXMLHandler.saveXMLTree(questionEditor.getTree().getRoot(),
 								file.getAbsolutePath());
-						questionEditor.setTitle(questionEditor.TITLE + " <" + currentFile.getAbsolutePath() + ">");
+						questionEditor.setTitle(ExperimentEditor.TITLE + " - " + currentFile.getAbsolutePath());
 					}
 				}
 			}
