@@ -29,12 +29,12 @@ import experimentGUI.util.ZipFile;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 
 public class MailPlugin implements PluginInterface {
-	public final static String KEY = "sendmail";
-	public final static String SMTP_SERVER = "smtp_server";
-	public final static String SMTP_USER = "smtp_user";
-	public final static String SMTP_PASS = "smtp_pass";
-	public final static String SMTP_SENDER = "smtp_sender";
-	public final static String SMTP_RECEIVER = "smtp_receiver";
+	private final static String KEY = "sendmail";
+	private final static String SMTP_SERVER = "smtp_server";
+	private final static String SMTP_USER = "smtp_user";
+	private final static String SMTP_PASS = "smtp_pass";
+	private final static String SMTP_SENDER = "smtp_sender";
+	private final static String SMTP_RECEIVER = "smtp_receiver";
 
 	private boolean enabled;
 	private String smtpServer;
@@ -107,7 +107,12 @@ public class MailPlugin implements PluginInterface {
 	}
 
 	@Override
-	public Object enterNode(QuestionTreeNode node) {
+	public boolean denyEnterNode(QuestionTreeNode node) {
+		return false;
+	}
+	
+	@Override
+	public void enterNode(QuestionTreeNode node) {
 		try {
 			if (node.isExperiment()) {
 				enabled = Boolean.parseBoolean(node.getAttributeValue(KEY));
@@ -123,11 +128,16 @@ public class MailPlugin implements PluginInterface {
 		} catch (Exception e) {
 
 		}
+	}
+	
+	@Override
+	public String denyNextNode(QuestionTreeNode currentNode) {
+		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public void exitNode(QuestionTreeNode node, Object pluginData) {
+	public void exitNode(QuestionTreeNode node) {
 	}
 
 	@Override

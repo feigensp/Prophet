@@ -7,10 +7,9 @@ import java.net.URL;
 import java.net.URLDecoder;
 import java.util.StringTokenizer;
 
+import javax.swing.JButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import javax.swing.text.Element;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.View;
@@ -34,22 +33,28 @@ import experimentGUI.util.questionTreeNode.QuestionTreeNode;
  */
 @SuppressWarnings("serial")
 public class QuestionViewPane extends JScrollPane {
+	public static final String FOOTER_FORWARD_CAPTION = "Weiter";
+	public static final String FOOTER_BACKWARD_CAPTION = "Zurück";
+	public static final String FOOTER_END_CATEGORY_CAPTION = "Kategorie Abschließen";
+	public static final String FOOTER_START_EXPERIMENT_CAPTION = "Experiment starten";
+	public static final String FOOTER_SUBJECT_CODE_CAPTION = "Probandencode:";
+	
 	//constants for the html navigation
 	private static final String HTML_START = "<html><body><form>";
 	private static final String HTML_DIVIDER = "<br /><br /><hr /><br /><br />";
-	private static final String FOOTER_FORWARD_CAPTION = "Weiter";
-	private static final String FOOTER_BACKWARD_CAPTION = "Zurück";
-	private static final String FOOTER_END_CATEGORY_CAPTION = "Kategorie Abschließen";
-	private static final String FOOTER_START_EXPERIMENT_CAPTION = "Experiment starten";
-	private static final String FOOTER_FORWARD = "<input name =\""+Constants.KEY_FORWARD+"\" type=\"submit\" value=\""+FOOTER_FORWARD_CAPTION+"\" />";
-	private static final String FOOTER_BACKWARD = "<input name =\""+Constants.KEY_BACKWARD+"\" type=\"submit\" value=\""+FOOTER_BACKWARD_CAPTION+"\" />";
-	private static final String FOOTER_END_CATEGORY = "<input name =\""+Constants.KEY_FORWARD+"\" type=\"submit\" value=\""+FOOTER_END_CATEGORY_CAPTION+"\" />";
-	private static final String FOOTER_START_EXPERIMENT = "<table><tr><td>Probandencode:</td><td><input name=\""+Constants.KEY_SUBJECT+"\" /></td></tr></table>"+HTML_DIVIDER+"<input name =\""+Constants.KEY_FORWARD+"\" type=\"submit\" value=\""+FOOTER_START_EXPERIMENT_CAPTION+"\" />";
+	private static final String HTML_TYPE_SUBMIT = "submit";
+	private static final String FOOTER_FORWARD = "<input name =\""+Constants.KEY_FORWARD+"\" type=\""+HTML_TYPE_SUBMIT+"\" value=\""+FOOTER_FORWARD_CAPTION+"\" />";
+	private static final String FOOTER_BACKWARD = "<input name =\""+Constants.KEY_BACKWARD+"\" type=\""+HTML_TYPE_SUBMIT+"\" value=\""+FOOTER_BACKWARD_CAPTION+"\" />";
+	private static final String FOOTER_END_CATEGORY = "<input name =\""+Constants.KEY_FORWARD+"\" type=\""+HTML_TYPE_SUBMIT+"\" value=\""+FOOTER_END_CATEGORY_CAPTION+"\" />";
+	private static final String FOOTER_START_EXPERIMENT = "<table><tr><td>"+FOOTER_SUBJECT_CODE_CAPTION+"</td><td><input name=\""+Constants.KEY_SUBJECT+"\" /></td></tr></table>"+HTML_DIVIDER+"<input name =\""+Constants.KEY_FORWARD+"\" type=\""+HTML_TYPE_SUBMIT+"\" value=\""+FOOTER_START_EXPERIMENT_CAPTION+"\" />";
 	private static final String HTML_END = "</form></body></html>";
 	
 	private ActionListener actionListener;
 	private QuestionTreeNode questionNode;
 	private JTextPane textPane;
+	
+	private FormView submitButton;
+	private boolean doNotFire = false;
 	
 	/**
 	 * With the call of the Constructor the data is loaded and everything is
@@ -73,9 +78,8 @@ public class QuestionViewPane extends JScrollPane {
 						Object o = elem.getAttributes().getAttribute(
 								StyleConstants.NameAttribute);
 						if (o instanceof HTML.Tag) {
-							HTML.Tag kind = (HTML.Tag) o;
-							if (kind == HTML.Tag.INPUT)
-								return new FormView(elem) {
+							if (o == HTML.Tag.INPUT || o == HTML.Tag.TEXTAREA || o == HTML.Tag.SELECT) {
+								FormView formView = new FormView(elem) {
 									// What should happen when the buttons are
 									// pressed?
 									protected void submitData(String data) {
@@ -85,6 +89,16 @@ public class QuestionViewPane extends JScrollPane {
 										}
 									}
 								};
+								if (o == HTML.Tag.INPUT &&
+										elem.getAttributes().getAttribute(HTML.Attribute.NAME)!=null &&
+										elem.getAttributes().getAttribute(HTML.Attribute.NAME).equals(
+												Constants.KEY_FORWARD) &&
+										elem.getAttributes().getAttribute(HTML.Attribute.TYPE)!=null &&
+										elem.getAttributes().getAttribute(HTML.Attribute.TYPE).equals(HTML_TYPE_SUBMIT)) {
+									submitButton=formView;
+								}
+								return formView;
+							}
 						}
 						return super.create(elem);
 					}
@@ -148,15 +162,12 @@ public class QuestionViewPane extends JScrollPane {
 		return result;
 	}
 	private boolean hasActiveNextNode(QuestionTreeNode node) {
-		boolean inactive;
 		if (node.isExperiment() || node.isCategory()) {
-			inactive = Boolean.parseBoolean(node.getAttributeValue(Constants.KEY_INACTIVE));
-			if (inactive || node.getChildCount()==0) {
+			if (ExperimentViewer.denyEnterNode(node) || node.getChildCount()==0) {
 				return false;
 			} else {
 				node = (QuestionTreeNode)node.getFirstChild();
-				inactive = Boolean.parseBoolean(node.getAttributeValue(Constants.KEY_INACTIVE));
-				if (!inactive) {
+				if (!ExperimentViewer.denyEnterNode(node)) {
 					return true;
 				}
 				return hasActiveNextNode(node);
@@ -166,8 +177,7 @@ public class QuestionViewPane extends JScrollPane {
 			if (node==null) {
 				return false;
 			}
-			inactive = Boolean.parseBoolean(node.getAttributeValue(Constants.KEY_INACTIVE));
-			if (!inactive) {
+			if (!ExperimentViewer.denyEnterNode(node)) {
 				return true;
 			}
 			return hasActiveNextNode(node);
@@ -181,8 +191,7 @@ public class QuestionViewPane extends JScrollPane {
 			if (node==null) {
 				return false;
 			}
-			boolean inactive = Boolean.parseBoolean(node.getAttributeValue(Constants.KEY_INACTIVE));
-			if (!inactive) {
+			if (!ExperimentViewer.denyEnterNode(node)) {
 				return true;
 			}
 			return hasActivePreviousNode(node);
@@ -197,9 +206,25 @@ public class QuestionViewPane extends JScrollPane {
 		return actionListener;
 	}
 	public void fireEvent(String action) {
-		if (actionListener != null) {
+		if (actionListener != null && !doNotFire) {
 			ActionEvent event = new ActionEvent(this, ActionEvent.ACTION_PERFORMED, action);
 			actionListener.actionPerformed(event);
 		}
+	}
+	public boolean clickSubmit() {
+		if (submitButton!=null && submitButton.getComponent()!=null && submitButton.getComponent() instanceof JButton) {
+			((JButton)submitButton.getComponent()).doClick();
+			return true;
+		}
+		return false;
+	}
+	public boolean saveCurrentAnswersToNode() {
+		if (submitButton!=null && submitButton.getComponent()!=null && submitButton.getComponent() instanceof JButton) {
+			doNotFire = true;
+			((JButton)submitButton.getComponent()).doClick();
+			doNotFire = false;
+			return true;
+		}
+		return false;
 	}
 }

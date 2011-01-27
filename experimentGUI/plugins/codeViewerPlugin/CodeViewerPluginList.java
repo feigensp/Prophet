@@ -14,11 +14,11 @@ public class CodeViewerPluginList {
 	private static Vector<CodeViewerPluginInterface> plugins = new Vector<CodeViewerPluginInterface>() {
 		private static final long serialVersionUID = 1L;
 		{
+			add(new OpenedByStartPlugin());
 			add(new RecorderPlugin());
 			add(new LineNumbersPlugin());
 			add(new SearchBarPlugin());
 			add(new SyntaxHighlightingPlugin());
-			add(new OpenedByStartPlugin());
 			add(new ShowCIDECodePlugin());
 		}
 	};

@@ -26,19 +26,35 @@ public interface PluginInterface {
 	 */
 	public void experimentViewerRun(ExperimentViewer experimentViewer);
 	/**
+	 * Called right before a new node is entered. If any plugin denies the currentNode to be entered (e.g. because of a timeout), it will just be skipped.
+	 * @param curentNode
+	 * 	The node to be entered
+	 * @return
+	 * 	true if the node shall not be visited<br>
+	 * 	false if it might be visited
+	 */
+	public boolean denyEnterNode(QuestionTreeNode node);
+	/**
 	 * Called when a node is entered, at the beginning of categories or questions. Is not called on inactive categories or questions.
 	 * @param node
 	 * 	The node entered
-	 * @return
-	 * 	Data that is returned in exitNode() as pluginData, only for plugin-intern use. May be null.
-	 */	
-	public Object enterNode(QuestionTreeNode node);
-	/**
-	 * Called when a node is exited, e.g. after a question or after all active questions of a category are exited. Is not called on inactive categories or questions.
-	 * @param node
-	 * @param pluginData
 	 */
-	public void exitNode(QuestionTreeNode node, Object pluginData);
+	
+	public void enterNode(QuestionTreeNode node);
+	/**
+	 * Called right before a new node is opened in the ExperimentViewer. If any plugin denies the currentNode to be finished (for example because needed answers are missing) the next Node won't be opened.
+	 * @param curentNode
+	 * 	The node to be finished
+	 * @return
+	 * 	A message shown to the subject to indicate what needs to be done to accept finishing this node (e.g. enter a needed answer)
+	 */
+	public String denyNextNode(QuestionTreeNode currentNode);
+	/**
+	 * Called when a node is exited, i.e. after a question, after all active questions of a category are exited, when the Experiment is finished (but before finishExperiment()). Is not called on inactive categories or questions.
+	 * @param node
+	 * 	The node to be exited
+	 */
+	public void exitNode(QuestionTreeNode node);
 	/**
 	 * @return
 	 * 	A (hopefully) unique name for the plugin.

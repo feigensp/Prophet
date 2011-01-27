@@ -48,11 +48,8 @@ public class SettingsEditorPanel extends ExperimentEditorTab {
 
 		if (selected != null) {
 			if (selected.isExperiment()) {
-				myPanel.add(new SettingsComponentDescription(SettingsTextField.class, Constants.KEY_CODE,
+				myPanel.add(new SettingsComponentDescription(SettingsTextField.class, Constants.KEY_EXPERIMENT_CODE,
 						"Experiment-Code: ").build(selected));
-			} else {
-				myPanel.add(new SettingsComponentDescription(SettingsCheckBox.class, Constants.KEY_INACTIVE,
-						"Deaktivieren").build(selected));
 			}
 			if (selected.isCategory()) {
 				myPanel.add(new SettingsComponentDescription(SettingsCheckBox.class,

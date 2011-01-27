@@ -22,21 +22,22 @@ import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 
 public class ExternalProgramsPlugin implements PluginInterface {
 
-	public static final String KEY = "startExternalProgs";
-	public static final String COMMAND = "commands";
+	private static final String KEY = "start_external_progs";
+	private static final String KEY_COMMANDS = "commands";
 	private ArrayList<Process> processes = new ArrayList<Process>();
 	private JFrame frame;
 	private JPanel panel;
-	private int buttons;
 	
-	private static Point location = null;
+	private Point location;
+	private ExperimentViewer experimentViewer;
+	private boolean enabled;
 
 	@Override
 	public SettingsComponentDescription getSettingsComponentDescription(QuestionTreeNode node) {
 		if (node.isCategory()) {
 			SettingsPluginComponentDescription result = new SettingsPluginComponentDescription(KEY,
 					"Externe Programme starten");
-			result.addSubComponent(new SettingsComponentDescription(SettingsTextArea.class, COMMAND,
+			result.addSubComponent(new SettingsComponentDescription(SettingsTextArea.class, KEY_COMMANDS,
 					"Programmpfade (durch Zeilenumbruch getrennt)"));
 			return result;
 		}
@@ -45,51 +46,54 @@ public class ExternalProgramsPlugin implements PluginInterface {
 
 	@Override
 	public void experimentViewerRun(ExperimentViewer experimentViewer) {
-		if(location == null) {
-			location = experimentViewer.getLocation();
-		}
+		this.experimentViewer=experimentViewer;
 	}
 
 	@Override
-	public Object enterNode(QuestionTreeNode node) {
+	public boolean denyEnterNode(QuestionTreeNode node) {
+		return false;
+	}
+	
+	@Override
+	public void enterNode(QuestionTreeNode node) {
 		if (node.isCategory()) {				
-			boolean categoryEnabled = Boolean.parseBoolean(node.getAttributeValue(KEY));
-			if (categoryEnabled) {
+			enabled = Boolean.parseBoolean(node.getAttributeValue(KEY));
+			if (enabled) {
 				QuestionTreeNode attributes = node.getAttribute(KEY);
-				String[] commands = attributes.getAttributeValue(COMMAND).split("\n");
+				String[] commands = attributes.getAttributeValue(KEY_COMMANDS).split("\n");
 				createWindow();
 				for(int i=0; i<commands.length; i++) {
 					if(!commands[i].equals("")) {
 						int lastSep = commands[i].lastIndexOf(System.getProperty("file.separator"));
 						String caption = commands[i];
-//						if(lastSep!= -1) {
-//							caption = caption.substring(lastSep+1);
-//						}
+						if(lastSep!= -1) {
+							caption = caption.substring(lastSep+1);
+						}
 						addButton(caption, commands[i]);
 					}
 				}
 				frame.pack();
+				if (location==null) {
+					frame.setLocationRelativeTo(experimentViewer);
+				} else {
+					frame.setLocation(location);
+				}
 			}
 		}
-		return null;
 	}
 	
 	private void createWindow() {
-		frame = new JFrame("Liste nutzbarer Programme");
+		frame = new JFrame("Programme");
 		frame.setLayout(new BorderLayout());
 		panel = new JPanel();
 		panel.setLayout(new VerticalLayout(0, 0));
 		frame.add(new JScrollPane(panel), BorderLayout.CENTER);
-		frame.setLocation(location);
 		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		frame.setVisible(true);
-		buttons = 0;
 	}
 	
 	private void addButton(String caption, final String command) {
 		JButton button = new JButton(caption);
-		button.setSize(400, (int)button.getPreferredSize().getHeight());
-		int buttonHeight = (int) button.getPreferredSize().getHeight();
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -101,27 +105,29 @@ public class ExternalProgramsPlugin implements PluginInterface {
 			}
 		});
 		panel.add(button);
-		buttons++;
-		if(buttons < 5) {
-			frame.setSize(150, buttons*buttonHeight+50);
-		} else {
-			frame.setSize(150, 5*buttonHeight+50);			
-		}
+	}	
+
+	@Override
+	public String denyNextNode(QuestionTreeNode currentNode) {
+		return null;
 	}
 
 	@Override
-	public void exitNode(QuestionTreeNode node, Object pluginData) {
-		location = frame.getLocation();
-		frame.setVisible(false);
-		frame.dispose();
-		if (node.isCategory()) {
-			for(int i=0; i<processes.size(); i++) {
-				if(processes.get(i) != null) {
-					processes.get(i).destroy();
+	public void exitNode(QuestionTreeNode node) {
+		if (enabled) {
+			location = frame.getLocation();
+			frame.setVisible(false);
+			frame.dispose();
+			if (node.isCategory()) {
+				for(int i=0; i<processes.size(); i++) {
+					if(processes.get(i) != null) {
+						processes.get(i).destroy();
+					}
 				}
+				processes.clear();
 			}
-			processes.clear();
 		}
+		enabled=false;
 	}
 
 	@Override
@@ -133,5 +139,4 @@ public class ExternalProgramsPlugin implements PluginInterface {
 	public String finishExperiment() {
 		return null;
 	}
-
 }

@@ -6,7 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.HashSet;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -44,8 +44,7 @@ public class ExperimentViewer extends JFrame {
 
 	private File saveDir;
 	
-	private boolean endExperimentFlag = false;
-	private boolean endCategoryFlag = false;
+	HashSet<QuestionTreeNode> enteredNodes;
 
 	ActionListener myActionListener = new ActionListener() {
 		public void actionPerformed(ActionEvent arg0) {
@@ -130,10 +129,14 @@ public class ExperimentViewer extends JFrame {
 		times = new HashMap<QuestionTreeNode, ClockLabel>();
 		totalTime = new ClockLabel("Gesamtzeit");
 		timePanel = new JPanel();
+		enteredNodes = new HashSet<QuestionTreeNode>();
 		nextNode();
 	}
 
 	private boolean nextNode() {
+		if (denyNextNode()) {
+			return false;
+		}
 		pauseClock();
 		if (currentNode == tree) {
 			String subject = currentNode.getAnswer(Constants.KEY_SUBJECT);
@@ -142,20 +145,19 @@ public class ExperimentViewer extends JFrame {
 						JOptionPane.ERROR_MESSAGE);
 				return false;
 			}
-			String experiment = currentNode.getAttributeValue(Constants.KEY_CODE);
+			String experiment = currentNode.getAttributeValue(Constants.KEY_EXPERIMENT_CODE);
 			if (experiment == null) {
 				experiment = "default";
 			}
 			saveDir = new File(experiment + "_" + subject);
 			totalTime.start();
 		}
-		boolean inactive = Boolean.parseBoolean(currentNode.getAttributeValue("inactive"));
-		if (!inactive && currentNode.getChildCount() != 0) {
+		
+		//step down if we may enter and there are children, else step aside if there is a sibling, else step up
+		if (!denyEnterNode() && currentNode.getChildCount() != 0) {
 			currentNode = (QuestionTreeNode) currentNode.getFirstChild();
 		} else {
-			if (!inactive) {
-				exitNode();
-			}
+			exitNode();
 			while (currentNode.getNextSibling() == null) {
 				currentNode = (QuestionTreeNode) currentNode.getParent();
 				if (currentNode == null) {
@@ -165,8 +167,9 @@ public class ExperimentViewer extends JFrame {
 			}
 			currentNode = (QuestionTreeNode) currentNode.getNextSibling();
 		}
-		inactive = Boolean.parseBoolean(currentNode.getAttributeValue(Constants.KEY_INACTIVE));
-		if (inactive) {
+		
+		//check if found node is visitable
+		if (denyEnterNode()) {
 			return nextNode();
 		} else {
 			boolean doNotShowContent = Boolean.parseBoolean(currentNode
@@ -183,13 +186,15 @@ public class ExperimentViewer extends JFrame {
 	}
 
 	private boolean previousNode() {
+		if (denyNextNode()) {
+			return false;
+		}
 		pauseClock();
 		if (currentNode.isQuestion()) {
 			QuestionTreeNode tempNode = currentNode;
 			while ((QuestionTreeNode) tempNode.getPreviousSibling() != null) {
 				tempNode = (QuestionTreeNode) tempNode.getPreviousSibling();
-				boolean inactive = Boolean.parseBoolean(tempNode.getAttributeValue(Constants.KEY_INACTIVE));
-				if (!inactive) {
+				if (!denyEnterNode()) {
 					exitNode();
 					currentNode = tempNode;
 					refresh();
@@ -201,29 +206,47 @@ public class ExperimentViewer extends JFrame {
 		return false;
 	}
 
-	private void enterNode() {
+	private boolean denyEnterNode() {
+		return denyEnterNode(currentNode);
+	}
+	public static boolean denyEnterNode(QuestionTreeNode node) {
 		for (PluginInterface plugin : PluginList.getPlugins()) {
-			currentNode.setPluginData(plugin.getKey(), plugin.enterNode(currentNode));
+			if(plugin.denyEnterNode(node)) {
+				return true;
+			}
 		}
+		return false;
+	}
+	
+	private void enterNode() {
+		enteredNodes.add(currentNode);
+		for (PluginInterface plugin : PluginList.getPlugins()) {
+			plugin.enterNode(currentNode);
+		}
+	}
+	
+	private boolean denyNextNode() {
+		for (PluginInterface plugin : PluginList.getPlugins()) {
+			String s = plugin.denyNextNode(currentNode);
+			if (s!=null) {
+				if (s.length()>0) {
+					JOptionPane.showMessageDialog(this, s, "Information", JOptionPane.INFORMATION_MESSAGE);
+				}
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private void exitNode() {
-			for (PluginInterface plugin : PluginList.getPlugins()) {
-				plugin.exitNode(currentNode, currentNode.getPluginData(plugin.getKey()));
-			}
-			if(endExperimentFlag && !currentNode.isExperiment()) {
-				currentNode=(QuestionTreeNode)currentNode.getParent();
-				exitNode();
-				return;
-			}
-			if(endCategoryFlag && !currentNode.isCategory() && !currentNode.isExperiment()) {
-				currentNode=(QuestionTreeNode)currentNode.getParent();
-				endCategoryFlag=false;
-				exitNode();
-				return;
-			}
-			if (currentNode.isExperiment()) {
-				endQuestionnaire();
+			if (enteredNodes.contains(currentNode)) {
+				for (PluginInterface plugin : PluginList.getPlugins()) {
+					plugin.exitNode(currentNode);
+				}
+				if (currentNode.isExperiment()) {
+					endQuestionnaire();
+				}
+				enteredNodes.remove(currentNode);
 			}
 	}
 
@@ -298,14 +321,6 @@ public class ExperimentViewer extends JFrame {
 		output.setCaretPosition(0);
 		contentPane.add(output, BorderLayout.CENTER);
 	}
-	
-	public void setEndFlag() {
-		endExperimentFlag = true;
-	}
-
-	public void setNextCategoryFlag() {
-		endCategoryFlag = true;
-	}
 
 	public QuestionTreeNode getTree() {
 		return tree;
@@ -313,5 +328,12 @@ public class ExperimentViewer extends JFrame {
 
 	public File getSaveDir() {
 		return saveDir;
+	}
+	
+	public void forceNextQuestion() {
+		currentViewPane.clickSubmit();
+	}
+	public void saveCurrentAnswers() {
+		currentViewPane.saveCurrentAnswersToNode();
 	}
 }

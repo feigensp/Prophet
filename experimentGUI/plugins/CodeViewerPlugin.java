@@ -3,6 +3,7 @@ package experimentGUI.plugins;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.io.File;
+import java.util.HashMap;
 
 import javax.swing.JFrame;
 
@@ -18,10 +19,12 @@ import experimentGUI.plugins.codeViewerPlugin.CodeViewerPluginList;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 
 public class CodeViewerPlugin implements PluginInterface {
-	public final static String KEY = "codeviewer";
+	private final static String KEY = "codeviewer";
 	
-	ExperimentViewer experimentViewer;
-	int count = 1;
+	private ExperimentViewer experimentViewer;
+	private int count = 1;
+	
+	private HashMap<QuestionTreeNode,CodeViewer> codeViewers;
 
 	private Rectangle bounds;
 
@@ -49,10 +52,16 @@ public class CodeViewerPlugin implements PluginInterface {
 	@Override
 	public void experimentViewerRun(ExperimentViewer experimentViewer) {
 		this.experimentViewer=experimentViewer;
+		codeViewers = new HashMap<QuestionTreeNode,CodeViewer>();
 	}
 
 	@Override
-	public Object enterNode(QuestionTreeNode node) {	
+	public boolean denyEnterNode(QuestionTreeNode node) {
+		return false;
+	}
+
+	@Override
+	public void enterNode(QuestionTreeNode node) {	
 		boolean enabled = Boolean.parseBoolean(node.getAttributeValue(KEY));
 		if (enabled) {
 			String savePath = experimentViewer.getSaveDir().getPath()+System.getProperty("file.separator")+(count++)+"_"+node.getName()+"_codeviewer";		
@@ -68,14 +77,18 @@ public class CodeViewerPlugin implements PluginInterface {
 			for (CodeViewerPluginInterface plugin : CodeViewerPluginList.getPlugins()) {
 				plugin.onFrameCreate(node.getAttribute(KEY), cv);
 			}
-			return cv;
+			codeViewers.put(node, cv);
 		}
+	}
+
+	@Override
+	public String denyNextNode(QuestionTreeNode currentNode) {
 		return null;
 	}
 
 	@Override
-	public void exitNode(QuestionTreeNode node, Object pluginData) {
-		CodeViewer cv = (CodeViewer)pluginData;
+	public void exitNode(QuestionTreeNode node) {
+		CodeViewer cv = codeViewers.get(node);
 		if (cv!=null) {
 			for (CodeViewerPluginInterface plugin : CodeViewerPluginList.getPlugins()) {
 				plugin.onClose();

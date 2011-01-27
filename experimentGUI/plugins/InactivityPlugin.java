@@ -1,45 +1,40 @@
 package experimentGUI.plugins;
 
-import java.awt.BorderLayout;
-
 import experimentGUI.PluginInterface;
 import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.SettingsComponentDescription;
+import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.settingsComponents.SettingsCheckBox;
 import experimentGUI.experimentViewer.ExperimentViewer;
-import experimentGUI.plugins.questionListPlugin.QuestionList;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 
-
-public class QuestionListPlugin implements PluginInterface {
-	private final static String KEY = "question_list";
-
-	private QuestionList overview;
+public class InactivityPlugin implements PluginInterface {
+	public static final String KEY = "inactive";
 
 	@Override
 	public SettingsComponentDescription getSettingsComponentDescription(
 			QuestionTreeNode node) {
-		return null;
+		if (!node.isExperiment()) {
+			return new SettingsComponentDescription(SettingsCheckBox.class, KEY,
+					"Diesen und alle Unterknoten deaktivieren");
+		} else {
+			return null;
+		}
 	}
 
 	@Override
-	public void experimentViewerRun(ExperimentViewer experimentViewer) {
-		overview = new QuestionList(experimentViewer.getTree());
-		//overview.setPreferredSize(new Dimension(150, 2));
-		experimentViewer.add(overview, BorderLayout.WEST);
+	public void experimentViewerRun(ExperimentViewer experimentViewer) {		
 	}
 
 	@Override
 	public boolean denyEnterNode(QuestionTreeNode node) {
-		return false;
+		return Boolean.parseBoolean(node.getAttributeValue(KEY));
 	}
-	
+
 	@Override
 	public void enterNode(QuestionTreeNode node) {
-		overview.visit(node);
-	}	
+	}
 
 	@Override
 	public String denyNextNode(QuestionTreeNode currentNode) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -56,4 +51,5 @@ public class QuestionListPlugin implements PluginInterface {
 	public String finishExperiment() {
 		return null;
 	}
+
 }

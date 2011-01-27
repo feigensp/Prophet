@@ -16,11 +16,6 @@ public class Constants {
 	 * name of the file answers are saved in
 	 */
 	public static final String FILE_ANSWERS = "answers.xml";
-	
-	/**
-	 * property name for inactive categories
-	 */
-	public static final String KEY_INACTIVE = "inactive";
 	/**
 	 * property name for categories whose content isn't shown and the first question within is started immediately
 	 */
@@ -33,7 +28,7 @@ public class Constants {
 	/**
 	 * property name for the experiment code (which is used for online usage)
 	 */
-	public static final String KEY_CODE = "experimentcode";
+	public static final String KEY_EXPERIMENT_CODE = "experimentcode";
 	
 	//constants for names in html-files - DO NOT USE
 	/**

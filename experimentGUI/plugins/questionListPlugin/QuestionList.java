@@ -1,15 +1,14 @@
 package experimentGUI.plugins.questionListPlugin;
 
-import java.awt.Color;
 import java.util.Enumeration;
 
-import javax.swing.BorderFactory;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 
+import experimentGUI.experimentViewer.ExperimentViewer;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 
 /**
@@ -21,7 +20,6 @@ import experimentGUI.util.questionTreeNode.QuestionTreeNode;
  */
 public class QuestionList extends JScrollPane {
 	private QuestionTreeNode root;
-	private JTextPane textPane;
 	private JTree tree;
 
 	/**
@@ -49,19 +47,14 @@ public class QuestionList extends JScrollPane {
 	// }
 
 	public void visit(QuestionTreeNode selectionNode) {
-		boolean inactive = Boolean.parseBoolean(root.getAttributeValue("inactive"));
-		if (!inactive) {
-	        DefaultMutableTreeNode root =
-	            (DefaultMutableTreeNode)tree.getModel().getRoot();
-	        Enumeration e = root.breadthFirstEnumeration();
-	        while(e.hasMoreElements()) {
-	            DefaultMutableTreeNode node = (DefaultMutableTreeNode)e.nextElement();
-	            if(node.equals(selectionNode)) {
-	                TreePath path = new TreePath(node.getPath());
-	                tree.setSelectionPath(path);
-	                break;
-	            }
-	        }
+		Enumeration e = root.breadthFirstEnumeration();
+		while(e.hasMoreElements()) {
+			DefaultMutableTreeNode node = (DefaultMutableTreeNode)e.nextElement();
+			if(node.equals(selectionNode)) {
+				TreePath path = new TreePath(node.getPath());
+				tree.setSelectionPath(path);
+				break;
+			}
 		}
 	}
 

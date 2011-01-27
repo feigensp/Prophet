@@ -19,16 +19,12 @@ import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.settingsCom
 import experimentGUI.experimentViewer.ExperimentViewer;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 
-public class ValidCodePlugin implements PluginInterface {
+public class ValidSubjectCodePlugin implements PluginInterface {
 
-	public static final String KEY = "validCode";
-	public static final String KEY_CODES = "codes";
-	public static final String KEY_FILE = "file";
-	public static final String KEY_PATH = "path";
-	public static final String KEY_IGNORE_CASE = "ignorecase";
-	private boolean checked = false;
-	private boolean enabled;
-	QuestionTreeNode experimentNode;
+	private static final String KEY = "valid_code";
+	private static final String KEY_CODES = "codes";
+	private static final String KEY_PATH = "path";
+	private static final String KEY_IGNORE_CASE = "ignorecase";
 
 	@Override
 	public SettingsComponentDescription getSettingsComponentDescription(QuestionTreeNode node) {
@@ -51,18 +47,26 @@ public class ValidCodePlugin implements PluginInterface {
 	}
 
 	@Override
-	public Object enterNode(QuestionTreeNode node) {
-		if (node.isExperiment()) {
-			enabled = Boolean.parseBoolean(node.getAttributeValue(KEY));
-			experimentNode = node;
-		} else if (!checked && enabled) {
-			String subjectCode = experimentNode.getAnswer(Constants.KEY_SUBJECT);
-			boolean ignoreCase = Boolean.parseBoolean(experimentNode.getAttribute(KEY).getAttributeValue(KEY_IGNORE_CASE));
+	public boolean denyEnterNode(QuestionTreeNode node) {
+		return false;
+	}
+	
+	@Override
+	public void enterNode(QuestionTreeNode node) {
+	}
+
+	@Override
+	public String denyNextNode(QuestionTreeNode currentNode) {
+		if (!currentNode.isExperiment()) {
+			return null;
+		} else if (Boolean.parseBoolean(currentNode.getAttributeValue(KEY))) {
+			String subjectCode = currentNode.getAnswer(Constants.KEY_SUBJECT);
+			boolean ignoreCase = Boolean.parseBoolean(currentNode.getAttribute(KEY).getAttributeValue(KEY_IGNORE_CASE));
 			if (ignoreCase) {
 				subjectCode = subjectCode.toLowerCase();
 			}
-			
-			String codes = experimentNode.getAttribute(KEY).getAttributeValue(KEY_CODES);
+		
+			String codes = currentNode.getAttribute(KEY).getAttributeValue(KEY_CODES);
 			if (codes!=null && !codes.equals("")) {
 				Scanner sc = new Scanner(codes);
 				while(sc.hasNext()) {
@@ -71,13 +75,12 @@ public class ValidCodePlugin implements PluginInterface {
 						line = line.toLowerCase();
 					}
 					if (subjectCode.equals(line)) {
-						checked = true;
 						return null;
 					}
 				}
 			}
-			
-			String path = experimentNode.getAttribute(KEY).getAttributeValue(KEY_PATH);
+		
+			String path = currentNode.getAttribute(KEY).getAttributeValue(KEY_PATH);
 			if (path!=null && !path.equals("")) {				
 				try {
 					Scanner sc = new Scanner(new FileReader(path));
@@ -87,27 +90,21 @@ public class ValidCodePlugin implements PluginInterface {
 							line = line.toLowerCase();
 						}
 						if (subjectCode.equals(line)) {
-							checked = true;
 							return null;
 						}
 					}
 				} catch (FileNotFoundException e) {
-					JOptionPane.showMessageDialog(null,
-							"Datei mit gültigen Probandencodes existiert nicht, Programm wird beendet.", "Fehler",
-							JOptionPane.ERROR_MESSAGE);
-					System.exit(0);
+					return "Datei mit gültigen Probandencodes nicht gefunden.";
 				}				
 			}
-			JOptionPane.showMessageDialog(null,
-					"Kein gültiger Probandencode, Programm wird beendet.", "Fehler",
-					JOptionPane.ERROR_MESSAGE);
-			System.exit(0);
+			return "Probandencode nicht gefunden.";
+		} else {
+			return null;
 		}
-		return null;
 	}
 
 	@Override
-	public void exitNode(QuestionTreeNode node, Object pluginData) {
+	public void exitNode(QuestionTreeNode node) {
 	}
 
 	@Override
@@ -119,5 +116,4 @@ public class ValidCodePlugin implements PluginInterface {
 	public String finishExperiment() {
 		return null;
 	}
-
 }

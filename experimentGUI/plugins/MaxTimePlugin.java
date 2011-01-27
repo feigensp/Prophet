@@ -1,28 +1,32 @@
 package experimentGUI.plugins;
 
-import javax.swing.JOptionPane;
+import java.util.HashMap;
+import java.util.HashSet;
 
 import experimentGUI.PluginInterface;
 import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.SettingsComponentDescription;
 import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.SettingsPluginComponentDescription;
+import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.settingsComponents.SettingsCheckBox;
 import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.settingsComponents.SettingsTextField;
 import experimentGUI.experimentViewer.ExperimentViewer;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 
 public class MaxTimePlugin implements PluginInterface {
 
-	public static final String KEY = "maxTime";
-	public static final String KEY_MAX_TIME = "maxTime";
+	private static final String KEY = "max_time";
+	private static final String KEY_MAX_TIME = "time";
+	private static final String KEY_HARD_EXIT = "hard_exit";
+	private static final String KEY_WARNING = "show_warning";
+	private static final String KEY_WARNING_TIME = "warning_time";
+	private static final String KEY_IGNORE_TIMEOUT = "ignore_timeout";
 
 	private ExperimentViewer experimentViewer;
-	private int maxTimeExperiment;
-	private int maxTimeCategory;
-	private boolean experimentEnabled;
-	private boolean categoryEnabled;
-	private long startTimeCategory;
-	private long startTimeExperiment;
-	
-	private boolean experimentEnded = false;
+	private HashMap<QuestionTreeNode,Integer> startTimes;
+	private HashMap<QuestionTreeNode,Thread> threads;
+	private HashSet<QuestionTreeNode> timeOuts;
+
+	private QuestionTreeNode experimentNode;
+	private boolean activateForExperiment;
 
 	@Override
 	public SettingsComponentDescription getSettingsComponentDescription(QuestionTreeNode node) {
@@ -30,15 +34,27 @@ public class MaxTimePlugin implements PluginInterface {
 				"Maximale Bearbeitungszeit");
 		if (node.isExperiment()) {
 			result.addSubComponent(new SettingsComponentDescription(SettingsTextField.class, KEY_MAX_TIME,
-					"Maximale Laufzeit (in Minuten):"));
-			return result;
+					"Maximale Laufzeit (gesamtes Experiment, in Minuten):"));
 		}
 		if (node.isCategory()) {
 			result.addSubComponent(new SettingsComponentDescription(SettingsTextField.class, KEY_MAX_TIME,
-					"Maximale Laufzeit (in Sekunden):"));
-			return result;
+					"Maximale Laufzeit (gesamte Kategorie, in Sekunden):"));
 		}
-		return null;
+		if (node.isQuestion()) {
+			result.addSubComponent(new SettingsComponentDescription(SettingsTextField.class, KEY_MAX_TIME,
+					"Maximale Laufzeit (diese Frage, in Sekunden):"));
+		}
+		SettingsPluginComponentDescription hardExit = new SettingsPluginComponentDescription(KEY_HARD_EXIT,
+				"Aktuelle Frage bei Zeitüberschreitung beenden");
+		SettingsPluginComponentDescription warning = new SettingsPluginComponentDescription(KEY_WARNING,
+				"Probanden vorwarnen");
+		warning.addSubComponent(new SettingsComponentDescription(SettingsTextField.class,KEY_WARNING_TIME,
+				"Vorwarnzeit (Sekunden):"));
+		hardExit.addSubComponent(warning);
+		result.addSubComponent(hardExit);
+		result.addNextComponentDescription(new SettingsComponentDescription(SettingsCheckBox.class,KEY_IGNORE_TIMEOUT,
+				"Diesen und alle Unterknoten auch bei Timeout anzeigen"));
+		return result;
 	}
 
 	@Override
@@ -47,45 +63,36 @@ public class MaxTimePlugin implements PluginInterface {
 	}
 
 	@Override
-	public Object enterNode(QuestionTreeNode node) {
+	public boolean denyEnterNode(QuestionTreeNode node) {
+		return false;
+	}
+	
+	@Override
+	public void enterNode(QuestionTreeNode node) {
+		boolean enabled = Boolean.parseBoolean(node.getAttributeValue(KEY));
 		if (node.isExperiment()) {
-			experimentEnabled = Boolean.parseBoolean(node.getAttributeValue(KEY));
-			if (experimentEnabled) {
-				QuestionTreeNode attributes = node.getAttribute(KEY);
-				maxTimeExperiment = Integer.parseInt(attributes.getAttributeValue(KEY_MAX_TIME));
-				startTimeExperiment = System.currentTimeMillis();
+			experimentNode = node;
+			if (enabled) {
+				activateForExperiment = true;
 			}
+			return;
 		}
-		if (node.isCategory()) {
-			categoryEnabled = Boolean.parseBoolean(node.getAttributeValue(KEY));
-			if (categoryEnabled) {
-				QuestionTreeNode attributes = node.getAttribute(KEY);
-				maxTimeCategory = Integer.parseInt(attributes.getAttributeValue(KEY_MAX_TIME));
-				startTimeCategory = System.currentTimeMillis();
-			}
+		if (activateForExperiment) {
+			//TimeOut für Experiment starten
+			activateForExperiment=false;
 		}
+		if (enabled) {
+			//TimeOut für aktuellen knoten starten
+		}
+	}
+
+	@Override
+	public String denyNextNode(QuestionTreeNode currentNode) {
 		return null;
 	}
 
 	@Override
-	public void exitNode(QuestionTreeNode node, Object pluginData) {
-		if (experimentEnabled) {
-			long currentTimeInMins = (System.currentTimeMillis() - startTimeExperiment) / 1000 / 60;
-			if (currentTimeInMins >= maxTimeExperiment) {
-				experimentViewer.setEndFlag();
-				experimentEnded = true;
-				return;
-			}
-		}
-		if (categoryEnabled) {
-			categoryEnabled=false;
-			long currentTimeInSecs = System.currentTimeMillis() - startTimeCategory / 1000;
-			if (currentTimeInSecs >= maxTimeCategory) {
-				experimentViewer.setNextCategoryFlag();
-				JOptionPane.showMessageDialog(null, "Bearbeitungszeit für Kategorie abgelaufen.");
-				return;
-			}
-		}
+	public void exitNode(QuestionTreeNode node) {
 	}
 
 	@Override
@@ -95,10 +102,9 @@ public class MaxTimePlugin implements PluginInterface {
 
 	@Override
 	public String finishExperiment() {
-		if(experimentEnded) {
+		if(timeOuts.contains(experimentNode)) {
 			return "Experiment wurde wegen Zeitüberschreitung beendet.";
 		}
 		return null;
 	}
-
 }

@@ -1,6 +1,6 @@
 package experimentGUI.plugins;
 
-import java.util.Iterator;
+import java.util.Scanner;
 import java.util.Set;
 import java.util.TreeMap;
 
@@ -13,64 +13,52 @@ import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 
 public class AnswerRequiredPlugin implements PluginInterface {
 	
-	public static final String KEY = "answerRequired";
-	
-	private boolean enabled;
-	private String requiredAnswers;
-	private String wrongComponents = "";
-	
-	private ExperimentViewer experimentViewer;
+	private static final String KEY = "answers_required";
+	private static final String KEY_NAMES = "names";
 
 	@Override
 	public SettingsComponentDescription getSettingsComponentDescription(QuestionTreeNode node) {
 		SettingsPluginComponentDescription result = new SettingsPluginComponentDescription(KEY,
-				"Benötigte Antworten:");
-		if (node.isCategory() || node.isQuestion()) {
-			result.addSubComponent(new SettingsComponentDescription(SettingsTextArea.class, KEY,
-					"Komponenten die Antworten enthalten müssen (zeilenweise eingeben):"));
-			return result;
-		}
-		return null;
+			"Benötigte Antworten");
+		result.addSubComponent(new SettingsComponentDescription(SettingsTextArea.class, KEY_NAMES,
+			"Komponenten, die Antworten enthalten müssen (zeilenweise eingeben):"));
+		return result;
 	}
 
 	@Override
 	public void experimentViewerRun(ExperimentViewer experimentViewer) {
-		this.experimentViewer = experimentViewer;
 	}
 
 	@Override
-	public Object enterNode(QuestionTreeNode node) {
-		if (node.isCategory() || node.isQuestion()) {
-			enabled = Boolean.parseBoolean(node.getAttributeValue(KEY));
+	public boolean denyEnterNode(QuestionTreeNode node) {
+		return false;
+	}
+	
+	@Override
+	public void enterNode(QuestionTreeNode node) {
+	}
+
+	@Override
+	public String denyNextNode(QuestionTreeNode currentNode) {
+		boolean enabled = Boolean.parseBoolean(currentNode.getAttributeValue(KEY));
 			if (enabled) {
-				QuestionTreeNode attributes = node.getAttribute(KEY);
-				requiredAnswers = attributes.getAttributeValue(KEY);
-			}
+				String requiredAnswers = currentNode.getAttribute(KEY).getAttributeValue(KEY_NAMES);
+				
+				TreeMap<String,String> answers = currentNode.getAnswers();
+				
+				Scanner sc = new Scanner(requiredAnswers);
+				while(sc.hasNext()) {
+					String requiredAnswerKey = sc.next();
+					if(!answers.containsKey(requiredAnswerKey) || answers.get(requiredAnswerKey).equals("")) {
+						return "Bitte alle benötigten Felder ausfüllen";
+					}
+				}
 		}
 		return null;
 	}
 
 	@Override
-	public void exitNode(QuestionTreeNode node, Object pluginData) {
-		if(enabled) {
-			String[] components = requiredAnswers.split("\n");
-			TreeMap answers = node.getAnswers();
-			Set keys = answers.keySet();
-			for(int i=0; i<components.length; i++) {
-				if(keys.contains(components[i])) {
-					System.out.println("contains " + components[i]);
-					if(answers.get(components[i]).equals("")) {
-//						experimentViewer.setNoNextFlag("Sie müssen " + components[i] + " ausfüllen um weiter zu können.");
-					}
-				} else {
-					System.out.println("contains not " + components[i]);	
-					wrongComponents += "<br>" + components[i];
-				}
-			}
-			if(wrongComponents.length()>0) {
-				wrongComponents = "<br>im Knoten " + node.toString() + " nicht gefunden werden.";
-			}
-		}
+	public void exitNode(QuestionTreeNode node) {
 	}
 
 	@Override
@@ -80,10 +68,6 @@ public class AnswerRequiredPlugin implements PluginInterface {
 
 	@Override
 	public String finishExperiment() {
-		if(wrongComponents.length()>0) {
-			return "<html>Es konnten die Komponenten"+wrongComponents+"</html>";
-		}
 		return null;
 	}
-
 }

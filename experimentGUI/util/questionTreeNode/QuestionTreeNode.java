@@ -18,7 +18,6 @@ public class QuestionTreeNode extends DefaultMutableTreeNode {
 
 	private TreeMap<String,QuestionTreeNode> attributes = new TreeMap<String,QuestionTreeNode>();
 	private TreeMap<String,String> answers = new TreeMap<String,String>();
-	private HashMap<String,Object> pluginData = new HashMap<String,Object>();
 	
 	long answerTime = 0;
 	public QuestionTreeNode() {
@@ -127,11 +126,5 @@ public class QuestionTreeNode extends DefaultMutableTreeNode {
 	}
 	public TreeMap<String,String> getAnswers() {
 		return answers;
-	}
-	public void setPluginData(String key, Object value) {
-		pluginData.put(key, value);
-	}
-	public Object getPluginData(String key) {
-		return pluginData.get(key);
 	}
 }
