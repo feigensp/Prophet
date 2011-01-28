@@ -132,7 +132,6 @@ public class MailPlugin implements PluginInterface {
 	
 	@Override
 	public String denyNextNode(QuestionTreeNode currentNode) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -156,7 +155,7 @@ public class MailPlugin implements PluginInterface {
 				}
 			}
 		} catch (Exception e) {
-
+			return "E-Mail-Versand gescheitert. Bitte beim Versuchsleiter melden.";
 		}
 		return null;
 	}

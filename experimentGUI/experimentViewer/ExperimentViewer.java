@@ -44,7 +44,9 @@ public class ExperimentViewer extends JFrame {
 
 	private File saveDir;
 	
-	HashSet<QuestionTreeNode> enteredNodes;
+	private HashSet<QuestionTreeNode> enteredNodes;
+	
+	private boolean ignoreDenyNextNode;
 
 	ActionListener myActionListener = new ActionListener() {
 		public void actionPerformed(ActionEvent arg0) {
@@ -226,11 +228,14 @@ public class ExperimentViewer extends JFrame {
 	}
 	
 	private boolean denyNextNode() {
+		if (ignoreDenyNextNode) {
+			return false;
+		}
 		for (PluginInterface plugin : PluginList.getPlugins()) {
-			String s = plugin.denyNextNode(currentNode);
-			if (s!=null) {
-				if (s.length()>0) {
-					JOptionPane.showMessageDialog(this, s, "Information", JOptionPane.INFORMATION_MESSAGE);
+			String message = plugin.denyNextNode(currentNode);
+			if (message!=null) {
+				if (message.length()>0) {
+					JOptionPane.showMessageDialog(this, message);
 				}
 				return true;
 			}
@@ -330,8 +335,10 @@ public class ExperimentViewer extends JFrame {
 		return saveDir;
 	}
 	
-	public void forceNextQuestion() {
+	public void forceNext(boolean hard) {
+		ignoreDenyNextNode = hard;
 		currentViewPane.clickSubmit();
+		ignoreDenyNextNode = false;
 	}
 	public void saveCurrentAnswers() {
 		currentViewPane.saveCurrentAnswersToNode();
