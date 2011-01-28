@@ -8,6 +8,7 @@ import experimentGUI.plugins.codeViewerPlugin.tabbedPane.EditorPanel;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 
 public class LineNumbersPlugin implements CodeViewerPluginInterface {
+	public static final String KEY = "linenumbers";
 	private QuestionTreeNode selected;
 	
 	@Override
@@ -34,7 +35,7 @@ public class LineNumbersPlugin implements CodeViewerPluginInterface {
 
 	@Override
 	public String getKey() {
-		return "linenumbers";
+		return KEY;
 	}
 
 	@Override

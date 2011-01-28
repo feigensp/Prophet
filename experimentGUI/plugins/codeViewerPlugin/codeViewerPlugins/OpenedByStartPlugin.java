@@ -17,7 +17,7 @@ public class OpenedByStartPlugin implements CodeViewerPluginInterface{
 	@Override
 	public SettingsComponentDescription getSettingsComponentDescription() {
 		SettingsPluginComponentDescription result = new SettingsPluginComponentDescription(KEY, "Datei standardmäßig öffnen");
-		result.addSubComponent(new SettingsComponentDescription(SettingsTextField.class,KEY_PATH, "Zu öffnende Datei "));
+		result.addSubComponent(new SettingsComponentDescription(SettingsTextField.class,KEY_PATH, "Zu öffnende Datei (vom Quelltextpfad aus):"));
 		return result;
 	}
 

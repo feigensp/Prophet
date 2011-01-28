@@ -70,7 +70,7 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 		fileMenu.add(loadMenuItem);
 		loadMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				JFileChooser fc = new JFileChooser(new File("."));
+				JFileChooser fc = new JFileChooser(currentFile==null ? new File(".") : currentFile);
 				if (fc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
 					currentFile = fc.getSelectedFile();
 					QuestionTreeNode newRoot;
