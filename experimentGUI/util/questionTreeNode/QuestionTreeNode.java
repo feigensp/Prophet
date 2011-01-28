@@ -1,6 +1,5 @@
 package experimentGUI.util.questionTreeNode;
 
-import java.util.HashMap;
 import java.util.TreeMap;
 
 import javax.swing.tree.DefaultMutableTreeNode;

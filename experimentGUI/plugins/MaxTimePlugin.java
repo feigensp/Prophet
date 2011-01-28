@@ -123,9 +123,9 @@ public class MaxTimePlugin implements PluginInterface {
 
 	private ExperimentViewer experimentViewer;
 	
-	private HashMap<QuestionTreeNode,String> allMessages;
-	private HashMap<QuestionTreeNode,Vector<TimeOut>> allClocks;
-	private HashSet<QuestionTreeNode> timeOuts;
+	private HashMap<QuestionTreeNode,String> allMessages = new HashMap<QuestionTreeNode,String>();
+	private HashMap<QuestionTreeNode,Vector<TimeOut>> allClocks = new HashMap<QuestionTreeNode,Vector<TimeOut>>();
+	private HashSet<QuestionTreeNode> timeOuts = new HashSet<QuestionTreeNode>();
 
 	private QuestionTreeNode experimentNode;
 	private QuestionTreeNode currentNode;
@@ -169,9 +169,6 @@ public class MaxTimePlugin implements PluginInterface {
 	@Override
 	public void experimentViewerRun(ExperimentViewer experimentViewer) {
 		this.experimentViewer = experimentViewer;
-		allMessages = new HashMap<QuestionTreeNode,String>();
-		allClocks = new HashMap<QuestionTreeNode,Vector<TimeOut>>();
-		timeOuts = new HashSet<QuestionTreeNode>();
 	}
 
 	private boolean isTimeOuted(QuestionTreeNode node) {
@@ -220,46 +217,56 @@ public class MaxTimePlugin implements PluginInterface {
 		Vector<TimeOut> nodeClocks = allClocks.get(node);
 		if (nodeClocks==null) {
 			boolean enabled = Boolean.parseBoolean(node.getAttributeValue(KEY));
-			if (enabled) {
-				QuestionTreeNode pluginNode = node.getAttribute(KEY);
-				
-				nodeClocks = new Vector<TimeOut>();
-				allClocks.put(node, nodeClocks);			
-				
-				long maxTime = Long.parseLong(pluginNode.getAttributeValue(KEY_MAX_TIME));
-				if (node.isExperiment()) {
-					maxTime*=60;
-				}
-				String message = pluginNode.getAttributeValue(KEY_MESSAGE);
-				
-				if (maxTime>0) {
-					boolean hard = Boolean.parseBoolean(pluginNode.getAttributeValue(KEY_HARD_EXIT));
-					TimeOut mainTimeOut = new TimeOut(node, maxTime*1000, message, true, hard);
-					nodeClocks.add(mainTimeOut);
-					mainTimeOut.start();
-					
-					if (hard) {
-						QuestionTreeNode hardNode = pluginNode.getAttribute(KEY_HARD_EXIT);
-						boolean hardWarning = Boolean.parseBoolean(hardNode.getAttributeValue(KEY_HARD_EXIT_WARNING));
-						if (hardWarning) {
-							QuestionTreeNode hardWarningNode = hardNode.getAttribute(KEY_HARD_EXIT_WARNING);
-							
-							String hardWarningTimeString = hardWarningNode.getAttributeValue(KEY_HARD_EXIT_WARNING_TIME);
-							String hardWarningMessage = hardWarningNode.getAttributeValue(KEY_HARD_EXIT_WARNING_MESSAGE);
-							
-							if (hardWarningTimeString!=null && hardWarningTimeString.length()>0 &&
-									hardWarningMessage!=null && hardWarningMessage.length()>0) {
-								long hardWarningTime = maxTime-Long.parseLong(hardWarningTimeString);
-								if (hardWarningTime>0) {
-									TimeOut warningTimeOut = new TimeOut(node, hardWarningTime*1000, hardWarningMessage, false, false);
-									nodeClocks.add(warningTimeOut);
-									warningTimeOut.start();
-								}
-							}
-						}						
-					}
-				}
+			if (!enabled) {
+				return;
 			}
+			QuestionTreeNode pluginNode = node.getAttribute(KEY);
+			
+			nodeClocks = new Vector<TimeOut>();
+			allClocks.put(node, nodeClocks);
+			
+			long maxTime = Long.parseLong(pluginNode.getAttributeValue(KEY_MAX_TIME));
+			if (node.isExperiment()) {
+				maxTime*=60;
+			}
+			String message = pluginNode.getAttributeValue(KEY_MESSAGE);
+			
+			if (maxTime<=0) {
+				return;
+			}
+			boolean hard = Boolean.parseBoolean(pluginNode.getAttributeValue(KEY_HARD_EXIT));
+			TimeOut mainTimeOut = new TimeOut(node, maxTime*1000, message, true, hard);
+			nodeClocks.add(mainTimeOut);
+			mainTimeOut.start();
+			
+			if (!hard) {
+				return;
+			}
+			QuestionTreeNode hardNode = pluginNode.getAttribute(KEY_HARD_EXIT);
+			boolean hardWarning = Boolean.parseBoolean(hardNode.getAttributeValue(KEY_HARD_EXIT_WARNING));
+			
+			if (!hardWarning) {
+				return;
+			}
+			
+			QuestionTreeNode hardWarningNode = hardNode.getAttribute(KEY_HARD_EXIT_WARNING);
+			
+			String hardWarningTimeString = hardWarningNode.getAttributeValue(KEY_HARD_EXIT_WARNING_TIME);
+			String hardWarningMessage = hardWarningNode.getAttributeValue(KEY_HARD_EXIT_WARNING_MESSAGE);
+			
+			if (hardWarningTimeString==null || hardWarningTimeString.length()>0 ||
+					hardWarningMessage==null || hardWarningMessage.length()>0) {
+				return;
+			}
+			long hardWarningTime = maxTime-Long.parseLong(hardWarningTimeString);
+			
+			if (hardWarningTime<=0) {
+				return;
+			}
+			
+			TimeOut warningTimeOut = new TimeOut(node, hardWarningTime*1000, hardWarningMessage, false, false);
+			nodeClocks.add(warningTimeOut);
+			warningTimeOut.start();
 		} else {
 			for (TimeOut clock : nodeClocks) {
 				clock.resume();
