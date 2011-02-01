@@ -1,9 +1,9 @@
 package experimentGUI.util.questionTreeNode;
 
+import java.util.Iterator;
 import java.util.TreeMap;
 
 import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.MutableTreeNode;
 
 @SuppressWarnings("serial")
 public class QuestionTreeNode extends DefaultMutableTreeNode {
@@ -118,6 +118,9 @@ public class QuestionTreeNode extends DefaultMutableTreeNode {
 		type=t;
 		return true;
 	}
+	public void setAnswers(TreeMap<String,String> answers) {
+		this.answers = answers;
+	}
 	public void setAnswer(String key, String value) {
 		answers.put(key, value);
 	}
@@ -129,9 +132,22 @@ public class QuestionTreeNode extends DefaultMutableTreeNode {
 	}
 	
 	public QuestionTreeNode copy() {
-		QuestionTreeNode ret = (QuestionTreeNode) this.clone();
+		QuestionTreeNode ret = new QuestionTreeNode();
+		ret.setType(this.getType());
+		ret.setName(this.getName());
+		ret.setValue(this.getValue());
+		Iterator<String> answerKeyIterator = answers.keySet().iterator();
+		Iterator<String> answerValueIterator = answers.values().iterator();
+		while(answerKeyIterator.hasNext()) {
+			ret.setAnswer(new String(answerKeyIterator.next()), new String(answerValueIterator.next()));
+		}
+		Iterator<String> attributeKeyIterator = attributes.keySet().iterator();
+		Iterator<QuestionTreeNode> attributeValueIterator = attributes.values().iterator();
+		while(attributeKeyIterator.hasNext()) {
+			ret.setAttribute(new String(attributeKeyIterator.next()), attributeValueIterator.next().copy());
+		}
 		for(int i=0; i<this.getChildCount(); i++) {
-			ret.add((MutableTreeNode) ((QuestionTreeNode)this.getChildAt(i)).clone());
+			ret.add(((QuestionTreeNode) this.getChildAt(i)).copy());
 		}
 		return ret;
 	}
