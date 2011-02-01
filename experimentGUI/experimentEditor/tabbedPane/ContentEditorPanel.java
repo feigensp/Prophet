@@ -1,15 +1,11 @@
 package experimentGUI.experimentEditor.tabbedPane;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.HashMap;
 
-import javax.swing.BorderFactory;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
@@ -18,6 +14,7 @@ import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 import org.fife.ui.rtextarea.RTextScrollPane;
 
 import experimentGUI.experimentEditor.tabbedPane.contentEditorToolBar.ContentEditorToolBar;
+import experimentGUI.util.ModifiedRSyntaxTextArea;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 import experimentGUI.util.searchBar.SearchBar;
 import experimentGUI.util.searchBar.SearchBarListener;
@@ -26,7 +23,7 @@ import experimentGUI.util.searchBar.SearchBarListener;
 public class ContentEditorPanel extends ExperimentEditorTab {
 	private ContentEditorToolBar toolBar;
 	private SearchBar searchBar;
-	private HashMap<QuestionTreeNode,RSyntaxTextArea> editAreas = new HashMap<QuestionTreeNode,RSyntaxTextArea>();
+	private HashMap<QuestionTreeNode, RSyntaxTextArea> editAreas = new HashMap<QuestionTreeNode,RSyntaxTextArea>();
 	private RSyntaxTextArea editArea;
 	private RTextScrollPane scrollPane;
 	private QuestionTreeNode selected;
@@ -71,7 +68,7 @@ public class ContentEditorPanel extends ExperimentEditorTab {
 		if (selected!=null) {
 			editArea = editAreas.get(selected);
 			if (editArea==null) {
-				editArea = new RSyntaxTextArea();
+				editArea = new ModifiedRSyntaxTextArea();
 				editArea.setText(selected.getValue());
 				editArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_HTML);
 				editArea.getDocument().addDocumentListener(myDocumentListener);			

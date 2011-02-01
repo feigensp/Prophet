@@ -5,7 +5,6 @@ import java.awt.Font;
 import java.io.File;
 import java.io.FileInputStream;
 
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -17,6 +16,7 @@ import org.fife.ui.rtextarea.RTextScrollPane;
 import experimentGUI.plugins.codeViewerPlugin.CodeViewer;
 import experimentGUI.plugins.codeViewerPlugin.CodeViewerPluginInterface;
 import experimentGUI.plugins.codeViewerPlugin.CodeViewerPluginList;
+import experimentGUI.util.ModifiedRSyntaxTextArea;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 
 
@@ -45,7 +45,7 @@ public class EditorPanel extends JPanel {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		textArea = new RSyntaxTextArea(doc);
+		textArea = new ModifiedRSyntaxTextArea(doc);
 		textArea.setFont(new Font("monospaced", Font.PLAIN, 12));
 		scrollPane = new RTextScrollPane(textArea);		
 		
