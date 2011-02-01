@@ -222,9 +222,9 @@ public class QuestionTree extends JScrollPane {
 		myMenuItem.addActionListener(myActionlistener);
 		myMenuItem.setActionCommand(ACTION_COPY);
 		categoryPopup.add(myMenuItem);
-		myMenuItem = new JMenuItem(POPUP_INSERT);
+		myMenuItem = new JMenuItem(POPUP_PASTE);
 		myMenuItem.addActionListener(myActionlistener);
-		myMenuItem.setActionCommand(ACTION_INSERT);
+		myMenuItem.setActionCommand(ACTION_PASTE);
 		categoryPopup.add(myMenuItem);
 
 		questionPopup = new JPopupMenu();
