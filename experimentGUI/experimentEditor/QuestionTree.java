@@ -83,7 +83,7 @@ public class QuestionTree extends JScrollPane {
 	public final static String POPUP_RENAME = "Umbenennen";
 	public final static String POPUP_REMOVE = "Löschen";
 	public final static String POPUP_COPY = "Kopieren";
-	public final static String POPUP_INSERT = "Einfügen";
+	public final static String POPUP_PASTE = "Einfügen";
 
 	public final static String MESSAGE_NAME = "Name:";
 	public final static String MESSAGE_NEW_NAME = "Neuer Name:";
@@ -92,8 +92,8 @@ public class QuestionTree extends JScrollPane {
 	public final static String ACTION_NEW_QUESTION = "newquestion";
 	public final static String ACTION_RENAME = "rename";
 	public final static String ACTION_REMOVE = "remove";
-	public final static String ACTION_COPY = "Kopieren";
-	public final static String ACTION_INSERT = "Einfügen";
+	public final static String ACTION_COPY = "copy";
+	public final static String ACTION_PASTE = "paste";
 
 	public final static String DEFAULT_EXPERIMENT_NODE_NAME = "Experiment";
 
@@ -166,7 +166,7 @@ public class QuestionTree extends JScrollPane {
 					clipboard = (QuestionTreeNode) selected.copy();
 				}
 				// insert
-				if (ae.getActionCommand().equals(ACTION_INSERT)) {
+				if (ae.getActionCommand().equals(ACTION_PASTE)) {
 					if (clipboard == null) {
 						JOptionPane.showMessageDialog(null, "Kein Knoten in der Zwischenablage.");
 					} else {
@@ -198,9 +198,9 @@ public class QuestionTree extends JScrollPane {
 		myMenuItem.setActionCommand(ACTION_RENAME);
 		experimentPopup.add(myMenuItem);
 		experimentPopup.addSeparator();
-		myMenuItem = new JMenuItem(POPUP_INSERT);
+		myMenuItem = new JMenuItem(POPUP_PASTE);
 		myMenuItem.addActionListener(myActionlistener);
-		myMenuItem.setActionCommand(ACTION_INSERT);
+		myMenuItem.setActionCommand(ACTION_PASTE);
 		experimentPopup.add(myMenuItem);
 
 		categoryPopup = new JPopupMenu();
