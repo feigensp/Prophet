@@ -6,7 +6,11 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 
+import javax.swing.JColorChooser;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultHighlighter;
@@ -22,13 +26,13 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import test.Triple;
 import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.SettingsComponentDescription;
 import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.SettingsPluginComponentDescription;
 import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.settingsComponents.SettingsTextField;
 import experimentGUI.plugins.codeViewerPlugin.CodeViewer;
 import experimentGUI.plugins.codeViewerPlugin.CodeViewerPluginInterface;
 import experimentGUI.plugins.codeViewerPlugin.tabbedPane.EditorPanel;
+import experimentGUI.util.Triple;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 
 public class ShowCIDECodePlugin implements CodeViewerPluginInterface{
@@ -47,9 +51,10 @@ public class ShowCIDECodePlugin implements CodeViewerPluginInterface{
 
 	final static int rectWidth = 5;
 
+	//Pfad --> Liste(offset, length, features)
 	HashMap<String, ArrayList<Triple<Integer, Integer, ArrayList<String>>>> coloringInfos;
 	JPanel drawPanel;
-	String whitespaces = "          ";
+	String whitespaces;
 	int addToOffset = 0;
 	String path;
 	
@@ -80,23 +85,31 @@ public class ShowCIDECodePlugin implements CodeViewerPluginInterface{
 	@Override
 	public void onEditorPanelCreate(EditorPanel editorPanel) {
 		if(enabled) {
-
-			// //////////////////
+			Color myColor = JColorChooser.showDialog(editorPanel, "bla", Color.WHITE);
+			
 			RSyntaxTextAreaHighlighter hilit = new RSyntaxTextAreaHighlighter();
 			DefaultHighlightPainter painterYellow = new DefaultHighlighter.DefaultHighlightPainter(Color.RED);
 			editorPanel.getTextArea().setHighlighter(hilit);
 			ArrayList<Triple<Integer, Integer, ArrayList<String>>> fileColoringInfos = coloringInfos
-					.get(path);
-			fileColoringInfos = correctXMLOffset(fileColoringInfos, editorPanel.getTextArea(), whitespaces);
-			addWhitespaces(whitespaces, editorPanel.getTextArea());
-			for (int i = 0; i < fileColoringInfos.size(); i++) {
-				Triple<Integer, Integer, ArrayList<String>> infos = fileColoringInfos.get(i);
-				int offset = infos.getKey();
-				int length = infos.getValue1();
-				ArrayList<String> features = infos.getValue2();
-				colorFeatures(offset, length, features, editorPanel.getTextArea(), hilit, painterYellow);
+					.get(editorPanel.getFilePath());
+			//wenn infos existieren, nutze sie
+			if(fileColoringInfos != null) {
+				//anzahl der meisten features die gleichzeitig vorhanden sind holen
+				int maxParallelFeatures = 0;
+				for(Triple<Integer, Integer, ArrayList<String>> fileInfos : fileColoringInfos) {
+					maxParallelFeatures = Math.max(maxParallelFeatures, fileInfos.getValue2().size());
+				}
+				whitespaces = createWhitespaceString(maxParallelFeatures);
+				fileColoringInfos = correctXMLOffset(fileColoringInfos, editorPanel.getTextArea(), whitespaces);
+				addWhitespaces(whitespaces, editorPanel.getTextArea());
+				for (int i = 0; i < fileColoringInfos.size(); i++) {
+					Triple<Integer, Integer, ArrayList<String>> infos = fileColoringInfos.get(i);
+					int offset = infos.getKey();
+					int length = infos.getValue1();
+					ArrayList<String> features = infos.getValue2();
+					colorFeatures(offset, length, features, editorPanel.getTextArea(), hilit, painterYellow);
+				}
 			}
-			// //////////////////
 		}
 	}
 
@@ -118,6 +131,32 @@ public class ShowCIDECodePlugin implements CodeViewerPluginInterface{
 	}
 	
 	
+	private String createWhitespaceString(int length) {
+		String ret = "";
+		for(int i=0; i<length; i++) {
+			ret += " ";
+		}
+		return ret + "| ";
+	}
+	
+	private void createColorMenu(int x, int y) {
+		//Get Features
+		Iterator<ArrayList<Triple<Integer, Integer, ArrayList<String>>>> colorInfosIterator = coloringInfos.values().iterator();
+		HashSet<String> features = new HashSet<String>();
+		while(colorInfosIterator.hasNext()) {
+			for(Triple<Integer, Integer, ArrayList<String>> fragmentInfos : colorInfosIterator.next()) {
+				for(String featureName : fragmentInfos.getValue2()) {
+					features.add(featureName);
+				}
+			}
+		}
+		
+		
+		JFrame colorFrame = new JFrame("Farbauswahl");
+		JPanel contentPane = new JPanel();
+		colorFrame.getContentPane().add(contentPane);
+		colorFrame.setLocation(x, y);		
+	}
 	
 	
 	
@@ -269,5 +308,7 @@ public class ShowCIDECodePlugin implements CodeViewerPluginInterface{
 			}
 		}
 	}
+	
+//	private class myComboBoxModel
 
 }

@@ -1,4 +1,4 @@
-package test;
+package experimentGUI.util;
 
 /**
  * This class represents a generic data structure version of a pair

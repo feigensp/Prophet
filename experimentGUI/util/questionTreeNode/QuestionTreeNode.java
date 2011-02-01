@@ -3,6 +3,7 @@ package experimentGUI.util.questionTreeNode;
 import java.util.TreeMap;
 
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.MutableTreeNode;
 
 @SuppressWarnings("serial")
 public class QuestionTreeNode extends DefaultMutableTreeNode {
@@ -125,5 +126,13 @@ public class QuestionTreeNode extends DefaultMutableTreeNode {
 	}
 	public TreeMap<String,String> getAnswers() {
 		return answers;
+	}
+	
+	public QuestionTreeNode copy() {
+		QuestionTreeNode ret = (QuestionTreeNode) this.clone();
+		for(int i=0; i<this.getChildCount(); i++) {
+			ret.add((MutableTreeNode) ((QuestionTreeNode)this.getChildAt(i)).clone());
+		}
+		return ret;
 	}
 }
