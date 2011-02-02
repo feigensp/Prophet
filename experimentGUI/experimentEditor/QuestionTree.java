@@ -72,6 +72,8 @@ public class QuestionTree extends JScrollPane {
 	 * popup menu shown when a question node is right clicked
 	 */
 	private JPopupMenu questionPopup;
+	private JMenuItem experimentPasteMenuItem;
+	private JMenuItem categoryPasteMenuItem;
 
 	/**
 	 * Collection of listeners that listen on node selections.
@@ -133,9 +135,6 @@ public class QuestionTree extends JScrollPane {
 			}
 		});
 
-		// create popup menu
-		JMenuItem myMenuItem;
-
 		ActionListener myActionlistener = new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				String name;
@@ -164,83 +163,84 @@ public class QuestionTree extends JScrollPane {
 				// copy
 				if (ae.getActionCommand().equals(ACTION_COPY)) {
 					clipboard = (QuestionTreeNode) selected.copy();
+					
+					enablePopupItems();
 				}
 				// insert
 				if (ae.getActionCommand().equals(ACTION_PASTE)) {
-					if (clipboard == null) {
-						JOptionPane.showMessageDialog(null, "Kein Knoten in der Zwischenablage.");
-					} else {
-						if (selected.getType().equals(QuestionTreeNode.TYPE_EXPERIMENT)
-								&& !clipboard.getType().equals(QuestionTreeNode.TYPE_CATEGORY)) {
-							JOptionPane.showMessageDialog(null,
-									"Dem Experimentknoten können nur Kategorien hinzugefügt werden.");
-						} else if (selected.getType().equals(QuestionTreeNode.TYPE_CATEGORY)
-								&& !clipboard.getType().equals(QuestionTreeNode.TYPE_QUESTION)) {
-							JOptionPane.showMessageDialog(null,
-									"Einer Kategorie können nur Fragen hinzugefügt werden.");
-						} else {
-							addNode(selected, (QuestionTreeNode) clipboard.copy());
-							
-						}
-					}
+//					if (clipboard == null) {
+//						JOptionPane.showMessageDialog(null, "Kein Knoten in der Zwischenablage.");
+//					} else {
+//						if (selected.getType().equals(QuestionTreeNode.TYPE_EXPERIMENT)
+//								&& !clipboard.getType().equals(QuestionTreeNode.TYPE_CATEGORY)) {
+//							JOptionPane.showMessageDialog(null,
+//									"Dem Experimentknoten können nur Kategorien hinzugefügt werden.");
+//						} else if (selected.getType().equals(QuestionTreeNode.TYPE_CATEGORY)
+//								&& !clipboard.getType().equals(QuestionTreeNode.TYPE_QUESTION)) {
+//							JOptionPane.showMessageDialog(null,
+//									"Einer Kategorie können nur Fragen hinzugefügt werden.");
+//						} else {
+							addNode(selected, (QuestionTreeNode) clipboard.copy());							
+//						}
+//					}
 				}
 			}
 		};
 
 		experimentPopup = new JPopupMenu();
-		myMenuItem = new JMenuItem(POPUP_NEW_CATEGORY);
-		myMenuItem.addActionListener(myActionlistener);
-		myMenuItem.setActionCommand(ACTION_NEW_CATEGORY);
-		experimentPopup.add(myMenuItem);
+		JMenuItem newCategoryMenuItem = new JMenuItem(POPUP_NEW_CATEGORY);
+		newCategoryMenuItem.addActionListener(myActionlistener);
+		newCategoryMenuItem.setActionCommand(ACTION_NEW_CATEGORY);
+		experimentPopup.add(newCategoryMenuItem);
 		experimentPopup.addSeparator();
-		myMenuItem = new JMenuItem(POPUP_RENAME);
-		myMenuItem.addActionListener(myActionlistener);
-		myMenuItem.setActionCommand(ACTION_RENAME);
-		experimentPopup.add(myMenuItem);
+		JMenuItem renameMenuItem = new JMenuItem(POPUP_RENAME);
+		renameMenuItem.addActionListener(myActionlistener);
+		renameMenuItem.setActionCommand(ACTION_RENAME);
+		experimentPopup.add(renameMenuItem);
 		experimentPopup.addSeparator();
-		myMenuItem = new JMenuItem(POPUP_PASTE);
-		myMenuItem.addActionListener(myActionlistener);
-		myMenuItem.setActionCommand(ACTION_PASTE);
-		experimentPopup.add(myMenuItem);
+		experimentPasteMenuItem = new JMenuItem(POPUP_PASTE);
+		experimentPasteMenuItem.addActionListener(myActionlistener);
+		experimentPasteMenuItem.setActionCommand(ACTION_PASTE);
+		experimentPopup.add(experimentPasteMenuItem);
 
 		categoryPopup = new JPopupMenu();
-		myMenuItem = new JMenuItem(POPUP_NEW_QUESTION);
-		myMenuItem.addActionListener(myActionlistener);
-		myMenuItem.setActionCommand(ACTION_NEW_QUESTION);
-		categoryPopup.add(myMenuItem);
+		JMenuItem newQuestionMenuItem = new JMenuItem(POPUP_NEW_QUESTION);
+		newQuestionMenuItem.addActionListener(myActionlistener);
+		newQuestionMenuItem.setActionCommand(ACTION_NEW_QUESTION);
+		categoryPopup.add(newQuestionMenuItem);
 		categoryPopup.addSeparator();
-		myMenuItem = new JMenuItem(POPUP_RENAME);
-		myMenuItem.addActionListener(myActionlistener);
-		myMenuItem.setActionCommand(ACTION_RENAME);
-		categoryPopup.add(myMenuItem);
-		myMenuItem = new JMenuItem(POPUP_REMOVE);
-		myMenuItem.addActionListener(myActionlistener);
-		myMenuItem.setActionCommand(ACTION_REMOVE);
-		categoryPopup.add(myMenuItem);
+		renameMenuItem = new JMenuItem(POPUP_RENAME);
+		renameMenuItem.addActionListener(myActionlistener);
+		renameMenuItem.setActionCommand(ACTION_RENAME);
+		categoryPopup.add(renameMenuItem);
+		JMenuItem removeMenuItem = new JMenuItem(POPUP_REMOVE);
+		removeMenuItem.addActionListener(myActionlistener);
+		removeMenuItem.setActionCommand(ACTION_REMOVE);
+		categoryPopup.add(removeMenuItem);
 		categoryPopup.addSeparator();
-		myMenuItem = new JMenuItem(POPUP_COPY);
-		myMenuItem.addActionListener(myActionlistener);
-		myMenuItem.setActionCommand(ACTION_COPY);
-		categoryPopup.add(myMenuItem);
-		myMenuItem = new JMenuItem(POPUP_PASTE);
-		myMenuItem.addActionListener(myActionlistener);
-		myMenuItem.setActionCommand(ACTION_PASTE);
-		categoryPopup.add(myMenuItem);
+		JMenuItem copyMenuItem = new JMenuItem(POPUP_COPY);
+		copyMenuItem.addActionListener(myActionlistener);
+		copyMenuItem.setActionCommand(ACTION_COPY);
+		categoryPopup.add(copyMenuItem);
+		categoryPasteMenuItem = new JMenuItem(POPUP_PASTE);
+		categoryPasteMenuItem.addActionListener(myActionlistener);
+		categoryPasteMenuItem.setActionCommand(ACTION_PASTE);
+		categoryPopup.add(categoryPasteMenuItem);
 
 		questionPopup = new JPopupMenu();
-		myMenuItem = new JMenuItem(POPUP_RENAME);
-		myMenuItem.addActionListener(myActionlistener);
-		myMenuItem.setActionCommand(ACTION_RENAME);
-		questionPopup.add(myMenuItem);
-		myMenuItem = new JMenuItem(POPUP_REMOVE);
-		myMenuItem.addActionListener(myActionlistener);
-		myMenuItem.setActionCommand(ACTION_REMOVE);
-		questionPopup.add(myMenuItem);
+		renameMenuItem = new JMenuItem(POPUP_RENAME);
+		renameMenuItem.addActionListener(myActionlistener);
+		renameMenuItem.setActionCommand(ACTION_RENAME);
+		questionPopup.add(renameMenuItem);
+		removeMenuItem = new JMenuItem(POPUP_REMOVE);
+		removeMenuItem.addActionListener(myActionlistener);
+		removeMenuItem.setActionCommand(ACTION_REMOVE);
+		questionPopup.add(removeMenuItem);
 		questionPopup.addSeparator();
-		myMenuItem = new JMenuItem(POPUP_COPY);
-		myMenuItem.addActionListener(myActionlistener);
-		myMenuItem.setActionCommand(ACTION_COPY);
-		questionPopup.add(myMenuItem);
+		copyMenuItem = new JMenuItem(POPUP_COPY);
+		copyMenuItem.addActionListener(myActionlistener);
+		copyMenuItem.setActionCommand(ACTION_COPY);
+		questionPopup.add(copyMenuItem);
 
 		tree.setDragEnabled(true);
 		tree.setDropTarget(new DropTarget() {
@@ -295,6 +295,23 @@ public class QuestionTree extends JScrollPane {
 		});
 
 		tree.setEditable(true);
+		
+		enablePopupItems();
+	}
+	
+	private void enablePopupItems() {
+		if(clipboard == null) {
+			experimentPasteMenuItem.setEnabled(false);
+			categoryPasteMenuItem.setEnabled(false);
+		} else {
+			if(clipboard.getType().equals(QuestionTreeNode.TYPE_CATEGORY)) {
+				categoryPasteMenuItem.setEnabled(false);
+				experimentPasteMenuItem.setEnabled(true);				
+			} else if (clipboard.getType().equals(QuestionTreeNode.TYPE_QUESTION)){
+				experimentPasteMenuItem.setEnabled(false);
+				categoryPasteMenuItem.setEnabled(true);				
+			}
+		}
 	}
 
 	/**

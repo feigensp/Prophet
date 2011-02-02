@@ -19,6 +19,7 @@ import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
+import experimentGUI.util.questionTreeNode.QuestionTreeNodeHTMLHandler;
 import experimentGUI.util.questionTreeNode.QuestionTreeXMLHandler;
 
 /**
@@ -30,9 +31,11 @@ import experimentGUI.util.questionTreeNode.QuestionTreeXMLHandler;
  */
 public class ExperimentEditorMenuBar extends JMenuBar {
 	private static final long serialVersionUID = 1L;
-	private ExperimentEditor questionEditor;
+	private ExperimentEditor experimentEditor;
 	private File currentFile;
+	private JMenuItem saveMenuItem;
 	private JMenuItem saveAsMenuItem;
+	private JMenu exportMenu;
 
 	public final static String MENU_FILE = "Datei";
 	public final static String MENU_FILE_NEW = "Neu";
@@ -50,11 +53,11 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 	/**
 	 * Constructor
 	 * 
-	 * @param qE
+	 * @param eE
 	 *            The ExperimentEditor object this menu bar is added to
 	 */
-	public ExperimentEditorMenuBar(ExperimentEditor qE) {
-		questionEditor = qE;
+	public ExperimentEditorMenuBar(ExperimentEditor eE) {
+		experimentEditor = eE;
 		currentFile = null;
 		JMenu fileMenu = new JMenu(MENU_FILE);
 		add(fileMenu);
@@ -65,8 +68,10 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 		newMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				currentFile = null;
-				questionEditor.setTitle(questionEditor.TITLE);
-				questionEditor.newTree();
+				experimentEditor.setTitle(ExperimentEditor.TITLE);
+				experimentEditor.newTree();
+				
+				enableMenuItems();
 			}
 		});
 
@@ -81,11 +86,13 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 					QuestionTreeNode newRoot;
 					try {
 						newRoot = QuestionTreeXMLHandler.loadXMLTree(currentFile.getAbsolutePath());
-						questionEditor.loadTree(newRoot);
-						questionEditor.setTitle(ExperimentEditor.TITLE + " - "
+						experimentEditor.loadTree(newRoot);
+						experimentEditor.setTitle(ExperimentEditor.TITLE + " - "
 								+ currentFile.getAbsolutePath());
+						
+						enableMenuItems();
 					} catch (FileNotFoundException e) {
-						JOptionPane.showMessageDialog(questionEditor, MESSAGE_FILE_NOT_FOUND,
+						JOptionPane.showMessageDialog(experimentEditor, MESSAGE_FILE_NOT_FOUND,
 								MESSAGE_FILE_NOT_FOUND_TITLE, JOptionPane.ERROR_MESSAGE);
 						return;
 					}
@@ -93,13 +100,13 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 			}
 		});
 
-		JMenuItem saveMenuItem = new JMenuItem(MENU_FILE_SAVE);
+		saveMenuItem = new JMenuItem(MENU_FILE_SAVE);
 		saveMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_MASK));
 		fileMenu.add(saveMenuItem);
 		saveMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if (currentFile != null) {
-					QuestionTreeXMLHandler.saveXMLTree(questionEditor.getTree().getRoot(),
+					QuestionTreeXMLHandler.saveXMLTree(experimentEditor.getTree().getRoot(),
 							currentFile.getAbsolutePath());
 				} else {
 					saveAsMenuItem.doClick();
@@ -120,16 +127,16 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 								MESSAGE_REPLACE_FILE_TITLE, JOptionPane.YES_NO_OPTION);
 						if (n == JOptionPane.YES_OPTION) {
 							currentFile = file;
-							QuestionTreeXMLHandler.saveXMLTree(questionEditor.getTree().getRoot(),
+							QuestionTreeXMLHandler.saveXMLTree(experimentEditor.getTree().getRoot(),
 									file.getAbsolutePath());
-							questionEditor.setTitle(ExperimentEditor.TITLE + " - "
+							experimentEditor.setTitle(ExperimentEditor.TITLE + " - "
 									+ currentFile.getAbsolutePath());
 						}
 					} else {
 						currentFile = file;
-						QuestionTreeXMLHandler.saveXMLTree(questionEditor.getTree().getRoot(),
+						QuestionTreeXMLHandler.saveXMLTree(experimentEditor.getTree().getRoot(),
 								file.getAbsolutePath());
-						questionEditor.setTitle(ExperimentEditor.TITLE + " - "
+						experimentEditor.setTitle(ExperimentEditor.TITLE + " - "
 								+ currentFile.getAbsolutePath());
 					}
 				}
@@ -138,12 +145,31 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 
 		fileMenu.addSeparator();
 
-		JMenu exportMenu = new JMenu("Exportieren");
+		exportMenu = new JMenu("Exportieren");
 		fileMenu.add(exportMenu);
+		
+		JMenuItem exportHTMLFileMenuItem = new JMenuItem("HTML (einzelne Datei)");
+		exportMenu.add(exportHTMLFileMenuItem);
+		exportHTMLFileMenuItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				JFileChooser fc = new JFileChooser(currentFile);
+				if (fc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+					File file = fc.getSelectedFile();
+					if (file.exists()) {
+						int n = JOptionPane.showConfirmDialog(null, file.getName() + MESSAGE_REPLACE_FILE,
+								MESSAGE_REPLACE_FILE_TITLE, JOptionPane.YES_NO_OPTION);
+						if(n == JOptionPane.NO_OPTION) {
+							return;
+						}
+					}
+					QuestionTreeNodeHTMLHandler.saveAsHTMLFile(file, experimentEditor.getTree().getRoot());
+				}
+			}
+		});
 
-		JMenuItem exportHTMLMenuItem = new JMenuItem("HTML");
-		exportMenu.add(exportHTMLMenuItem);
-		exportHTMLMenuItem.addActionListener(new ActionListener() {
+		JMenuItem exportHTMLFilesMenuItem = new JMenuItem("HTML (Ordnerstruktur)");
+		exportMenu.add(exportHTMLFilesMenuItem);
+		exportHTMLFilesMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				JFileChooser fc = new JFileChooser(currentFile);
 				fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
@@ -152,13 +178,11 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 					if (file.exists()) {
 						int n = JOptionPane.showConfirmDialog(null, file.getName() + MESSAGE_REPLACE_FILE,
 								MESSAGE_REPLACE_FILE_TITLE, JOptionPane.YES_NO_OPTION);
-						if (n == JOptionPane.YES_OPTION) {
-							file.mkdir();
-							saveAsHTML(file, questionEditor.getTree().getRoot());
+						if (n == JOptionPane.NO_OPTION) {
+							return;
 						}
 					} else {
-						file.mkdir();
-						saveAsHTML(file, questionEditor.getTree().getRoot());
+						QuestionTreeNodeHTMLHandler.saveAsHTMLFiles(file, experimentEditor.getTree().getRoot());
 					}
 				}
 			}
@@ -173,52 +197,19 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 				System.exit(0);
 			}
 		});
-	}
-
-	private void saveAsHTML(File file, QuestionTreeNode node) {
-		String nodeName = node.getName();
-		String nodeValue = node.getValue();
-		if (nodeName != null && nodeValue != null) {
-			writeFile(file.getAbsolutePath(),nodeName, nodeValue);
-		}
-		if(node.isCategory()) {
-			file = getFreeFile(new File(file.getAbsolutePath() + System.getProperty("file.separator") + nodeName));
-			file.mkdir();
-			System.out.println(file.getAbsolutePath());
-		}
-		for(int i=0; i<node.getChildCount(); i++) {
-			saveAsHTML(file, (QuestionTreeNode) node.getChildAt(i));
-		}
-	}
-
-	private void writeFile(String path, String name, String content) {
-		FileWriter fw;
-		BufferedWriter bw;
-		String newline = System.getProperty("line.separator");
-		try {
-			File f = getFreeFile(new File(path + System.getProperty("file.separator") +  name + ".html"));
-			fw = new FileWriter(f);
-			bw = new BufferedWriter(fw);
-		    bw.write("<HTML>"+newline); 
-			bw.write("<HEAD>"+newline); 
-		    bw.write("<TITLE>"+newline); 
-		    bw.write(name+newline); 
-		    bw.write("</TITLE>"+newline); 
-		    bw.write("</HEAD>"+newline); 
-		    bw.write("<BODY>"+newline); 
-		    bw.write(content+newline); 
-		    bw.write("</BODY>"+newline);
-		    bw.write("</HTML>"+newline); 
-			bw.close();
-		} catch (IOException ioe) {
-			ioe.printStackTrace();
-		}
+		
+		enableMenuItems();
 	}
 	
-	private File getFreeFile(File f) {
-		while(f.exists()) {
-			f = new File(f.getAbsoluteFile() + "_");
-		}
-		return f;
+	private void enableMenuItems() {
+		if(experimentEditor.getTree() == null) {
+			saveMenuItem.setEnabled(false);
+			saveAsMenuItem.setEnabled(false);
+			exportMenu.setEnabled(false);
+		} else {
+			saveMenuItem.setEnabled(true);
+			saveAsMenuItem.setEnabled(true);
+			exportMenu.setEnabled(true);			
+		}		
 	}
 }
