@@ -70,7 +70,7 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 				currentFile = null;
 				experimentEditor.setTitle(ExperimentEditor.TITLE);
 				experimentEditor.newTree();
-				
+
 				enableMenuItems();
 			}
 		});
@@ -89,7 +89,7 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 						experimentEditor.loadTree(newRoot);
 						experimentEditor.setTitle(ExperimentEditor.TITLE + " - "
 								+ currentFile.getAbsolutePath());
-						
+
 						enableMenuItems();
 					} catch (FileNotFoundException e) {
 						JOptionPane.showMessageDialog(experimentEditor, MESSAGE_FILE_NOT_FOUND,
@@ -125,20 +125,14 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 					if (file.exists()) {
 						int n = JOptionPane.showConfirmDialog(null, file.getName() + MESSAGE_REPLACE_FILE,
 								MESSAGE_REPLACE_FILE_TITLE, JOptionPane.YES_NO_OPTION);
-						if (n == JOptionPane.YES_OPTION) {
-							currentFile = file;
-							QuestionTreeXMLHandler.saveXMLTree(experimentEditor.getTree().getRoot(),
-									file.getAbsolutePath());
-							experimentEditor.setTitle(ExperimentEditor.TITLE + " - "
-									+ currentFile.getAbsolutePath());
+						if (n == JOptionPane.NO_OPTION) {
+							return;
 						}
-					} else {
-						currentFile = file;
-						QuestionTreeXMLHandler.saveXMLTree(experimentEditor.getTree().getRoot(),
-								file.getAbsolutePath());
-						experimentEditor.setTitle(ExperimentEditor.TITLE + " - "
-								+ currentFile.getAbsolutePath());
 					}
+					currentFile = file;
+					QuestionTreeXMLHandler.saveXMLTree(experimentEditor.getTree().getRoot(),
+							file.getAbsolutePath());
+					experimentEditor.setTitle(ExperimentEditor.TITLE + " - " + currentFile.getAbsolutePath());
 				}
 			}
 		});
@@ -147,7 +141,7 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 
 		exportMenu = new JMenu("Exportieren");
 		fileMenu.add(exportMenu);
-		
+
 		JMenuItem exportHTMLFileMenuItem = new JMenuItem("HTML (einzelne Datei)");
 		exportMenu.add(exportHTMLFileMenuItem);
 		exportHTMLFileMenuItem.addActionListener(new ActionListener() {
@@ -158,7 +152,7 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 					if (file.exists()) {
 						int n = JOptionPane.showConfirmDialog(null, file.getName() + MESSAGE_REPLACE_FILE,
 								MESSAGE_REPLACE_FILE_TITLE, JOptionPane.YES_NO_OPTION);
-						if(n == JOptionPane.NO_OPTION) {
+						if (n == JOptionPane.NO_OPTION) {
 							return;
 						}
 					}
@@ -182,7 +176,8 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 							return;
 						}
 					} else {
-						QuestionTreeNodeHTMLHandler.saveAsHTMLFiles(file, experimentEditor.getTree().getRoot());
+						QuestionTreeNodeHTMLHandler.saveAsHTMLFiles(file, experimentEditor.getTree()
+								.getRoot());
 					}
 				}
 			}
@@ -197,19 +192,19 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 				System.exit(0);
 			}
 		});
-		
+
 		enableMenuItems();
 	}
-	
+
 	private void enableMenuItems() {
-		if(experimentEditor.getTree() == null) {
+		if (experimentEditor.getTree() == null) {
 			saveMenuItem.setEnabled(false);
 			saveAsMenuItem.setEnabled(false);
 			exportMenu.setEnabled(false);
 		} else {
 			saveMenuItem.setEnabled(true);
 			saveAsMenuItem.setEnabled(true);
-			exportMenu.setEnabled(true);			
-		}		
+			exportMenu.setEnabled(true);
+		}
 	}
 }
