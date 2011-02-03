@@ -19,6 +19,7 @@ public class ContentEditorToolBar extends JToolBar {
 		add(new FontSizeBox(editArea));
 		add(new FormularBox(editArea));
 		add(new MacroBox(editArea));
+//		add(new MultipleNameTestButton(editArea, "Namenstest"));
 	}
 	public void setEnabled(boolean enabled) {
 		for (Component c : this.getComponents()) {
