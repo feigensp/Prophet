@@ -5,11 +5,15 @@ import java.awt.event.ActionListener;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.StringTokenizer;
 
 import javax.swing.JButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
+import javax.swing.text.BadLocationException;
 import javax.swing.text.Element;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.View;
@@ -49,12 +53,16 @@ public class QuestionViewPane extends JScrollPane {
 	private static final String FOOTER_START_EXPERIMENT = "<table><tr><td>"+FOOTER_SUBJECT_CODE_CAPTION+"</td><td><input name=\""+Constants.KEY_SUBJECT+"\" /></td></tr></table>"+HTML_DIVIDER+"<input name =\""+Constants.KEY_FORWARD+"\" type=\""+HTML_TYPE_SUBMIT+"\" value=\""+FOOTER_START_EXPERIMENT_CAPTION+"\" />";
 	private static final String HTML_END = "</form></body></html>";
 	
+	public static final String HEADER_ATTRIBUTE = "header";
+	
 	private ActionListener actionListener;
 	private QuestionTreeNode questionNode;
 	private JTextPane textPane;
 	
 	private FormView submitButton;
 	private boolean doNotFire = false;
+	
+	private HashSet<String> header = new HashSet<String>();
 	
 	/**
 	 * With the call of the Constructor the data is loaded and everything is
@@ -65,7 +73,7 @@ public class QuestionViewPane extends JScrollPane {
 	 * @param cqlp
 	 *            the categorieQuestionListsPanel where the overview is shown
 	 */
-	public QuestionViewPane(QuestionTreeNode questionNode) {
+	public QuestionViewPane(final QuestionTreeNode questionNode) {
 		this.questionNode=questionNode;
 		textPane = new JTextPane();
 		this.setViewportView(textPane);
@@ -76,7 +84,7 @@ public class QuestionViewPane extends JScrollPane {
 				return new HTMLEditorKit.HTMLFactory() {
 					public View create(Element elem) {
 						Object o = elem.getAttributes().getAttribute(
-								StyleConstants.NameAttribute);
+								StyleConstants.NameAttribute);						
 						if (o instanceof HTML.Tag) {
 							if (o == HTML.Tag.INPUT || o == HTML.Tag.TEXTAREA || o == HTML.Tag.SELECT) {
 								FormView formView = new FormView(elem) {
@@ -84,11 +92,13 @@ public class QuestionViewPane extends JScrollPane {
 									// pressed?
 									protected void submitData(String data) {
 										String action = saveAnswers(data);
+										questionNode.setAnswer(HEADER_ATTRIBUTE, header.toString());
 										if (action!=null) {
 											fireEvent(action);
 										}
 									}
 								};
+								
 								if (o == HTML.Tag.INPUT &&
 										elem.getAttributes().getAttribute(HTML.Attribute.NAME)!=null &&
 										elem.getAttributes().getAttribute(HTML.Attribute.NAME).equals(
@@ -96,6 +106,8 @@ public class QuestionViewPane extends JScrollPane {
 										elem.getAttributes().getAttribute(HTML.Attribute.TYPE)!=null &&
 										elem.getAttributes().getAttribute(HTML.Attribute.TYPE).equals(HTML_TYPE_SUBMIT)) {
 									submitButton=formView;
+								} else {									
+									header.add(formView.getAttributes().getAttribute(HTML.Attribute.NAME).toString());									
 								}
 								return formView;
 							}
@@ -161,6 +173,7 @@ public class QuestionViewPane extends JScrollPane {
 		}
 		return result;
 	}
+	
 	private boolean hasActiveNextNode(QuestionTreeNode node) {
 		if (node.isExperiment() || node.isCategory()) {
 			if (ExperimentViewer.denyEnterNode(node) || node.getChildCount()==0) {
