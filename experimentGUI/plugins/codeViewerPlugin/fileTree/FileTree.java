@@ -1,5 +1,6 @@
 package experimentGUI.plugins.codeViewerPlugin.fileTree;
 
+import java.awt.Dimension;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
@@ -39,6 +40,7 @@ public class FileTree extends JScrollPane {
 			tree = new JTree(new DefaultTreeModel(new DefaultMutableTreeNode()));
 			JOptionPane.showMessageDialog(this, "Der im Experiment angegebene Pfad ist nicht vorhanden.", "Fehler", JOptionPane.ERROR_MESSAGE);
 		}
+		this.setMinimumSize(new Dimension(150,0));
 		tree.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {

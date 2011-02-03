@@ -12,6 +12,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JSplitPane;
 
+import experimentGUI.plugins.CodeViewerPlugin;
 import experimentGUI.plugins.codeViewerPlugin.fileTree.FileEvent;
 import experimentGUI.plugins.codeViewerPlugin.fileTree.FileListener;
 import experimentGUI.plugins.codeViewerPlugin.fileTree.FileTree;
@@ -103,6 +104,12 @@ public class CodeViewer extends JFrame implements FileListener {
 		splitPane.setRightComponent(tabbedPane);
 		
 		setContentPane(splitPane);	
+		for (CodeViewerPluginInterface plugin : CodeViewerPluginList.getPlugins()) {
+			plugin.init(selected);
+		}
+		for (CodeViewerPluginInterface plugin : CodeViewerPluginList.getPlugins()) {
+			plugin.onFrameCreate(this);
+		}
 	}
 
 	@Override

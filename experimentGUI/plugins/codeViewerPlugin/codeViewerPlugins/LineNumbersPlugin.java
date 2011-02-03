@@ -17,14 +17,19 @@ public class LineNumbersPlugin implements CodeViewerPluginInterface {
 		result.addNextComponent(new SettingsComponentDescription(SettingsCheckBox.class,"linenumbers_toggle", "Zeilennummern ein- und ausschaltbar"));
 		return result;
 	}
-	
+
 	@Override
-	public void onFrameCreate(QuestionTreeNode selected, CodeViewer viewer) {
+	public void init(QuestionTreeNode selected) {
 		this.selected=selected;
 	}
 
 	@Override
+	public void onFrameCreate(CodeViewer viewer) {
+	}
+
+	@Override
 	public void onEditorPanelCreate(EditorPanel editorPanel) {
+		System.out.println("OnEditorPanelCreate: "+selected);
 		boolean lineNumbers = Boolean.parseBoolean(selected.getAttributeValue("linenumbers_default"));
 		editorPanel.getScrollPane().setLineNumbersEnabled(lineNumbers);
 	}

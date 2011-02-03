@@ -12,6 +12,7 @@ public class OpenedByStartPlugin implements CodeViewerPluginInterface{
 	
 	public static final String KEY = "openedByStart";
 	public static final String KEY_PATH = "startPath";
+	private QuestionTreeNode selected;
 	
 
 	@Override
@@ -22,13 +23,18 @@ public class OpenedByStartPlugin implements CodeViewerPluginInterface{
 	}
 
 	@Override
-	public void onFrameCreate(QuestionTreeNode selected, CodeViewer viewer) {
+	public void init(QuestionTreeNode selected) {
+		this.selected = selected;		
+	}
+
+	@Override
+	public void onFrameCreate(CodeViewer viewer) {
 		if(Boolean.parseBoolean(selected.getAttributeValue(KEY))) {
 			QuestionTreeNode attributes = selected.getAttribute(KEY);
 			String path = attributes.getAttributeValue(KEY_PATH).replace('/', System.getProperty("file.separator").charAt(0));
 			viewer.getTabbedPane().openFile(path);
 			viewer.getFileTree().selectFile(path);
-		}
+		}		
 	}
 
 	@Override

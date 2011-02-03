@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import experimentGUI.experimentViewer.QuestionViewPane;
+
 public class QuestionTreeNodeHTMLHandler {
 
 	public static final int EXPERIMENT_LEVEL = 0;
@@ -63,20 +65,22 @@ public class QuestionTreeNodeHTMLHandler {
 	private static String getHTMLString(String name, String content, int level) {
 		String headline = "";
 		String newline = System.getProperty("line.separator");
+		String bottomLine = QuestionViewPane.HTML_DIVIDER;
 		if (name != null && content != null) {
 			switch (level) {
 			case EXPERIMENT_LEVEL:
 				headline = "<h1>" + name + "</h1>";
+				bottomLine = QuestionViewPane.HTML_DIVIDER + QuestionViewPane.FOOTER_EXPERIMENT_CODE + bottomLine;
 				break;
 			case CATEGORY_LEVEL:
-				headline = "<h3>" + name + "</h3>";
+				headline = "<h2>" + name + "</h2>";
 				break;
 			case QUESTION_LEVEL:
-				headline = "<b>" + name + "</b>";
+				headline = "<h3>" + name + "</h3>";
 				break;
 			}
-			return newline + "<br><br><br>" + newline + headline + newline + "<br><br>" + newline
-					+ content;
+			return newline + newline + headline + newline + "<br><br>" + newline
+					+ content + bottomLine;
 		}
 		return "";
 	}

@@ -5,7 +5,7 @@ import java.awt.event.ActionListener;
 import java.io.StringReader;
 
 import javax.swing.JButton;
-import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.DocumentBuilder;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.w3c.dom.Document;
@@ -23,7 +23,7 @@ public class MultipleNameTestButton extends JButton implements ActionListener {
 	}
 
 	public void actionPerformed(ActionEvent arg0) {
-//		Document doc = DocumentBuilderFactory.newDocumentBuilder().parse(new InputSource(new StringReader(
+//		Document doc = new DocumentBuilder().parse(new InputSource(new StringReader(
 //				textArea.getText())));
 //		NamedNodeMap nodeMap = doc.getAttributes();
 //		for (int i = 0; i < nodeMap.getLength(); i++) {

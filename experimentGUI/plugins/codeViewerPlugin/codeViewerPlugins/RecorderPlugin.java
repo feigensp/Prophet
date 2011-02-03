@@ -39,6 +39,7 @@ public class RecorderPlugin implements CodeViewerPluginInterface,ChangeListener 
 	private EditorPanel currentTab;
 	
 	private HashSet<Component> openTabs;
+	private QuestionTreeNode selected;
 
 	@Override
 	public SettingsComponentDescription getSettingsComponentDescription() {
@@ -56,7 +57,12 @@ public class RecorderPlugin implements CodeViewerPluginInterface,ChangeListener 
 	}
 
 	@Override
-	public void onFrameCreate(QuestionTreeNode selected, CodeViewer viewer) {
+	public void init(QuestionTreeNode selected) {
+		this.selected = selected;
+	}
+
+	@Override
+	public void onFrameCreate(CodeViewer viewer) {
 		enabled = Boolean.parseBoolean(selected.getAttributeValue(KEY));
 		if (enabled) {
 			rootNode = new LoggingTreeNode(LoggingTreeNode.TYPE_LOGFILE);
@@ -141,5 +147,4 @@ public class RecorderPlugin implements CodeViewerPluginInterface,ChangeListener 
 		// TODO Auto-generated method stub
 		
 	}
-
 }

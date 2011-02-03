@@ -44,14 +44,15 @@ public class QuestionViewPane extends JScrollPane {
 	public static final String FOOTER_SUBJECT_CODE_CAPTION = "Probandencode:";
 	
 	//constants for the html navigation
-	private static final String HTML_START = "<html><body><form>";
-	private static final String HTML_DIVIDER = "<br /><br /><hr /><br /><br />";
-	private static final String HTML_TYPE_SUBMIT = "submit";
-	private static final String FOOTER_FORWARD = "<input name =\""+Constants.KEY_FORWARD+"\" type=\""+HTML_TYPE_SUBMIT+"\" value=\""+FOOTER_FORWARD_CAPTION+"\" />";
-	private static final String FOOTER_BACKWARD = "<input name =\""+Constants.KEY_BACKWARD+"\" type=\""+HTML_TYPE_SUBMIT+"\" value=\""+FOOTER_BACKWARD_CAPTION+"\" />";
-	private static final String FOOTER_END_CATEGORY = "<input name =\""+Constants.KEY_FORWARD+"\" type=\""+HTML_TYPE_SUBMIT+"\" value=\""+FOOTER_END_CATEGORY_CAPTION+"\" />";
-	private static final String FOOTER_START_EXPERIMENT = "<table><tr><td>"+FOOTER_SUBJECT_CODE_CAPTION+"</td><td><input name=\""+Constants.KEY_SUBJECT+"\" /></td></tr></table>"+HTML_DIVIDER+"<input name =\""+Constants.KEY_FORWARD+"\" type=\""+HTML_TYPE_SUBMIT+"\" value=\""+FOOTER_START_EXPERIMENT_CAPTION+"\" />";
-	private static final String HTML_END = "</form></body></html>";
+	public static final String HTML_START = "<html><body><form>";
+	public static final String HTML_DIVIDER = "<br /><br /><hr /><br /><br />";
+	public static final String HTML_TYPE_SUBMIT = "submit";
+	public static final String FOOTER_FORWARD = "<input name =\""+Constants.KEY_FORWARD+"\" type=\""+HTML_TYPE_SUBMIT+"\" value=\""+FOOTER_FORWARD_CAPTION+"\" />";
+	public static final String FOOTER_BACKWARD = "<input name =\""+Constants.KEY_BACKWARD+"\" type=\""+HTML_TYPE_SUBMIT+"\" value=\""+FOOTER_BACKWARD_CAPTION+"\" />";
+	public static final String FOOTER_END_CATEGORY = "<input name =\""+Constants.KEY_FORWARD+"\" type=\""+HTML_TYPE_SUBMIT+"\" value=\""+FOOTER_END_CATEGORY_CAPTION+"\" />";
+	public static final String FOOTER_EXPERIMENT_CODE = "<table><tr><td>"+FOOTER_SUBJECT_CODE_CAPTION+"</td><td><input name=\""+Constants.KEY_SUBJECT+"\" /></td></tr></table>";
+	public static final String FOOTER_START_EXPERIMENT = FOOTER_EXPERIMENT_CODE+HTML_DIVIDER+"<input name =\""+Constants.KEY_FORWARD+"\" type=\""+HTML_TYPE_SUBMIT+"\" value=\""+FOOTER_START_EXPERIMENT_CAPTION+"\" />";
+	public static final String HTML_END = "</form></body></html>";
 	
 	public static final String HEADER_ATTRIBUTE = "header";
 	
@@ -106,7 +107,10 @@ public class QuestionViewPane extends JScrollPane {
 										elem.getAttributes().getAttribute(HTML.Attribute.TYPE)!=null &&
 										elem.getAttributes().getAttribute(HTML.Attribute.TYPE).equals(HTML_TYPE_SUBMIT)) {
 									submitButton=formView;
-								} else {									
+								} else {	
+//									if (key.equals(Constants.KEY_FORWARD) || key.equals(Constants.KEY_BACKWARD)) {
+//									result=key;
+//									}								
 									header.add(formView.getAttributes().getAttribute(HTML.Attribute.NAME).toString());									
 								}
 								return formView;

@@ -68,7 +68,7 @@ public class ShowCIDECodePlugin implements CodeViewerPluginInterface{
 	}
 
 	@Override
-	public void onFrameCreate(QuestionTreeNode selected, CodeViewer viewer) {
+	public void init(QuestionTreeNode selected) {
 		enabled = Boolean.parseBoolean(selected.getAttributeValue(KEY));	
 		if(enabled) {
 			try {
@@ -80,6 +80,12 @@ public class ShowCIDECodePlugin implements CodeViewerPluginInterface{
 				e.printStackTrace();
 			}
 		}
+	}
+
+	@Override
+	public void onFrameCreate(CodeViewer viewer) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override

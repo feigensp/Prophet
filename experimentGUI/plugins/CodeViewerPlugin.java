@@ -19,7 +19,7 @@ import experimentGUI.plugins.codeViewerPlugin.CodeViewerPluginList;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 
 public class CodeViewerPlugin implements PluginInterface {
-	private final static String KEY = "codeviewer";
+	public final static String KEY = "codeviewer";
 	
 	private ExperimentViewer experimentViewer;
 	private int count = 1;
@@ -74,9 +74,6 @@ public class CodeViewerPlugin implements PluginInterface {
 			}
 			cv.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 			cv.setVisible(true);
-			for (CodeViewerPluginInterface plugin : CodeViewerPluginList.getPlugins()) {
-				plugin.onFrameCreate(node.getAttribute(KEY), cv);
-			}
 			codeViewers.put(node, cv);
 		}
 	}

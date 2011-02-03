@@ -24,8 +24,11 @@ public class SearchBarPlugin implements CodeViewerPluginInterface {
 		return new SettingsComponentDescription(SettingsCheckBox.class,KEY, "Suchfunktion einschalten");
 	}
 	@Override
-	public void onFrameCreate(QuestionTreeNode selected, CodeViewer viewer) {	
-		enabled = Boolean.parseBoolean(selected.getAttributeValue(KEY));
+	public void init(QuestionTreeNode selected) {
+		enabled = Boolean.parseBoolean(selected.getAttributeValue(KEY));		
+	}
+	@Override
+	public void onFrameCreate(CodeViewer viewer) {
 	}
 	@Override
 	public void onEditorPanelCreate(EditorPanel editorPanel) {

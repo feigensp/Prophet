@@ -24,7 +24,7 @@ public class SyntaxHighlightingPlugin implements CodeViewerPluginInterface {
 	}
 
 	@Override
-	public void onFrameCreate(QuestionTreeNode selected, CodeViewer viewer) {
+	public void init(QuestionTreeNode selected) {
 		enabled = Boolean.parseBoolean(selected.getAttributeValue(KEY));
 		if (enabled) {
 			extensionMap = new HashMap<String,String>();
@@ -49,6 +49,12 @@ public class SyntaxHighlightingPlugin implements CodeViewerPluginInterface {
 			extensionMap.put(".sql", SyntaxConstants.SYNTAX_STYLE_SQL);
 			extensionMap.put(".xml", SyntaxConstants.SYNTAX_STYLE_XML);
 		}
+	}
+
+	@Override
+	public void onFrameCreate(CodeViewer viewer) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
