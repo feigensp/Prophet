@@ -1,16 +1,11 @@
-package experimentGUI.experimentEditor.tabbedPane.contentEditorToolBar;
+package experimentGUI.experimentEditor.tabbedPane.editorTabs.contentEditorToolBar;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.StringReader;
 
 import javax.swing.JButton;
-import javax.xml.parsers.DocumentBuilder;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
-import org.w3c.dom.Document;
-import org.w3c.dom.NamedNodeMap;
-import org.xml.sax.InputSource;
 
 public class MultipleNameTestButton extends JButton implements ActionListener {
 

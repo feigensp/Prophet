@@ -1,4 +1,4 @@
-package experimentGUI.experimentEditor.tabbedPane.contentEditorToolBar;
+package experimentGUI.experimentEditor.tabbedPane.editorTabs.contentEditorToolBar;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
