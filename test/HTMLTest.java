@@ -21,6 +21,10 @@ import javax.swing.text.html.HTMLEditorKit;
 
 public class HTMLTest extends JFrame {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextPane textPane;
 

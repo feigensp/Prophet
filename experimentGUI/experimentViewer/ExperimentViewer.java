@@ -17,7 +17,6 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.text.html.HTMLEditorKit;
 
 import experimentGUI.Constants;
-import experimentGUI.PluginInterface;
 import experimentGUI.PluginList;
 import experimentGUI.util.QuestionViewPane;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
@@ -218,6 +217,7 @@ public class ExperimentViewer extends JFrame {
 	private void enterNode() {
 		enteredNodes.add(currentNode);
 		PluginList.enterNode(currentNode);
+		currentViewPane.grabFocus();
 	}
 	
 	private boolean denyNextNode() {
@@ -235,13 +235,13 @@ public class ExperimentViewer extends JFrame {
 	}
 
 	private void exitNode() {
-			if (enteredNodes.contains(currentNode)) {
-				PluginList.exitNode(currentNode);
-				if (currentNode.isExperiment()) {
-					endQuestionnaire();
-				}
-				enteredNodes.remove(currentNode);
+		if (enteredNodes.contains(currentNode)) {
+			PluginList.exitNode(currentNode);
+			if (currentNode.isExperiment()) {
+				endQuestionnaire();
 			}
+			enteredNodes.remove(currentNode);
+		}
 	}
 
 	private void pauseClock() {

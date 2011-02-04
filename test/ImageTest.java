@@ -12,6 +12,10 @@ import javax.swing.text.html.HTMLEditorKit;
 
 public class ImageTest extends JFrame {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 
 	/**

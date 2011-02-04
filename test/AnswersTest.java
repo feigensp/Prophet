@@ -8,7 +8,6 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.Vector;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -21,7 +20,7 @@ import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
 
 public class AnswersTest extends JFrame implements ActionListener {
-
+	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	static JTextPane textPane;
 	

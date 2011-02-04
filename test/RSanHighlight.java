@@ -19,6 +19,11 @@ import org.fife.ui.rsyntaxtextarea.RSyntaxTextAreaHighlighter;
 
 public class RSanHighlight extends JFrame {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	private JPanel contentPane;
 	
 	private RSyntaxTextArea textPane;
@@ -56,8 +61,8 @@ public class RSanHighlight extends JFrame {
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				RSyntaxTextAreaHighlighter hilit = new RSyntaxTextAreaHighlighter();
-				DefaultHighlightPainter painterGray = new DefaultHighlighter.DefaultHighlightPainter(
-						Color.GRAY);
+//				DefaultHighlightPainter painterGray = new DefaultHighlighter.DefaultHighlightPainter(
+//						Color.GRAY);
 				DefaultHighlightPainter painterYellow = new DefaultHighlighter.DefaultHighlightPainter(
 						Color.YELLOW);
 				textPane.setHighlighter(hilit);

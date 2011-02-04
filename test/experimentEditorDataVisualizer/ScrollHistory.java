@@ -3,6 +3,11 @@ package test.experimentEditorDataVisualizer;
 import javax.swing.JFrame;
 
 public class ScrollHistory extends JFrame {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 //
 //	private FileTree fileTree;
 //	private EditorTabbedPane editorTabbedPane;

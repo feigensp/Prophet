@@ -30,9 +30,30 @@
 
 package test;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.Frame;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
 
 /*
  * ListDialog.java is meant to be used by programs such as
@@ -56,7 +77,11 @@ import java.awt.event.*;
  */
 public class ListDialog extends JDialog
                         implements ActionListener {
-    private static ListDialog dialog;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private static ListDialog dialog;
     private static String value = "";
     private JList list;
 
@@ -113,7 +138,12 @@ public class ListDialog extends JDialog
 
         //main part of the dialog
         list = new JList(data) {
-            //Subclass JList to workaround bug 4832765, which can cause the
+            /**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			//Subclass JList to workaround bug 4832765, which can cause the
             //scroll pane to not let the user easily scroll up to the beginning
             //of the list.  An alternative would be to set the unitIncrement
             //of the JScrollBar to a fixed value. You wouldn't get the nice

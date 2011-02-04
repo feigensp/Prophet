@@ -10,8 +10,6 @@ import java.util.Iterator;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.fife.ui.rtextarea.RTextArea;
-import org.fife.ui.rtextarea.RTextScrollPane;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;

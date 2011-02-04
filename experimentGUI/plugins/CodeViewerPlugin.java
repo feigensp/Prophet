@@ -8,15 +8,12 @@ import java.util.HashMap;
 import javax.swing.JFrame;
 
 import experimentGUI.PluginInterface;
-import experimentGUI.PluginList;
 import experimentGUI.experimentViewer.ExperimentViewer;
 import experimentGUI.plugins.codeViewerPlugin.CodeViewer;
-import experimentGUI.plugins.codeViewerPlugin.CodeViewerPluginInterface;
 import experimentGUI.plugins.codeViewerPlugin.CodeViewerPluginList;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 import experimentGUI.util.settingsComponents.SettingsComponentDescription;
 import experimentGUI.util.settingsComponents.SettingsPluginComponentDescription;
-import experimentGUI.util.settingsComponents.components.SettingsCheckBox;
 import experimentGUI.util.settingsComponents.components.SettingsDirectoryPathChooser;
 
 public class CodeViewerPlugin implements PluginInterface {
@@ -35,7 +32,6 @@ public class CodeViewerPlugin implements PluginInterface {
 		if (node.getType().equals(QuestionTreeNode.TYPE_CATEGORY)) {
 			SettingsPluginComponentDescription result = new SettingsPluginComponentDescription(KEY, "Codeviewer aktivieren");
 			result.addSubComponent(new SettingsComponentDescription(SettingsDirectoryPathChooser.class, CodeViewer.KEY_PATH, "Pfad der Quelltexte:"));
-//			result.addSubComponent(new SettingsComponentDescription(SettingsCheckBox.class, CodeViewer.KEY_EDITABLE, "Quelltext editierbar"));
 			SettingsComponentDescription desc = CodeViewerPluginList.getSettingsComponentDescription();
 			if (desc!=null) {
 				result.addSubComponent(desc);

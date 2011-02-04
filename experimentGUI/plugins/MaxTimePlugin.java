@@ -9,7 +9,6 @@ import java.util.Vector;
 import javax.swing.JOptionPane;
 
 import experimentGUI.PluginInterface;
-import experimentGUI.PluginList;
 import experimentGUI.experimentViewer.ExperimentViewer;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 import experimentGUI.util.settingsComponents.SettingsComponentDescription;

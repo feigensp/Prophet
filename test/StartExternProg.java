@@ -5,7 +5,6 @@ import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -14,6 +13,10 @@ import javax.swing.border.EmptyBorder;
 
 public class StartExternProg extends JFrame {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private Process p;
 

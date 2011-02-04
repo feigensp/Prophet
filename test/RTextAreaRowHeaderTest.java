@@ -20,6 +20,10 @@ import org.fife.ui.rtextarea.RTextScrollPane;
 
 public class RTextAreaRowHeaderTest extends JFrame {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JPanel drawPanel;
 	private RTextArea textArea;

@@ -4,7 +4,6 @@ import java.util.Scanner;
 import java.util.TreeMap;
 
 import experimentGUI.PluginInterface;
-import experimentGUI.PluginList;
 import experimentGUI.experimentViewer.ExperimentViewer;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 import experimentGUI.util.settingsComponents.SettingsComponentDescription;

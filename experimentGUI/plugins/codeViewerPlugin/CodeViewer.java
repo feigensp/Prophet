@@ -2,14 +2,11 @@ package experimentGUI.plugins.codeViewerPlugin;
 
 import java.awt.Dimension;
 import java.awt.EventQueue;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
 import javax.swing.JSplitPane;
 
 import experimentGUI.plugins.codeViewerPlugin.fileTree.FileEvent;

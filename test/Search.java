@@ -25,6 +25,10 @@ import javax.swing.text.Highlighter;
 
 public class Search extends JPanel implements KeyListener, ActionListener,
 		MouseListener {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String text;
 	private String word;
 	JTextArea textarea = null;

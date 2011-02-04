@@ -19,7 +19,6 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
 import experimentGUI.PluginInterface;
-import experimentGUI.PluginList;
 import experimentGUI.experimentViewer.ExperimentViewer;
 import experimentGUI.plugins.mailPlugin.ZipFile;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;

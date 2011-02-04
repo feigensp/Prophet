@@ -3,6 +3,11 @@ package test.experimentEditorDataVisualizer;
 import javax.swing.JFrame;
 
 public class VideoRecordAlternative extends JFrame {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 //
 //	private JTextField minutesTextField;
 //	private JTextField secondsTextField;
