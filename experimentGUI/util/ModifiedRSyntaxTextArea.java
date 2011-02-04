@@ -1,6 +1,5 @@
 package experimentGUI.util;
 
-import java.awt.Event;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 

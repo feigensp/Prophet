@@ -31,6 +31,7 @@ import experimentGUI.util.questionTreeNode.QuestionTreeXMLHandler;
  * 
  */
 public class ExperimentViewer extends JFrame {
+	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	// the textpanes (one for each question)
 	private QuestionViewPane currentViewPane;

@@ -10,7 +10,7 @@ import experimentGUI.util.settingsComponents.SettingsComponentDescription;
 public class SearchedPlugin implements RecorderPluginInterface{
 	public final static String KEY = "search";
 	
-	private boolean enabled;
+//	private boolean enabled;
 
 	@Override
 	public SettingsComponentDescription getSettingsComponentDescription() {
@@ -21,7 +21,7 @@ public class SearchedPlugin implements RecorderPluginInterface{
 	@Override
 	public void onFrameCreate(QuestionTreeNode selected, CodeViewer viewer,
 			LoggingTreeNode currentNode) {
-		enabled = Boolean.parseBoolean(selected.getAttributeValue(KEY));
+//		enabled = Boolean.parseBoolean(selected.getAttributeValue(KEY));
 	}
 
 	@Override

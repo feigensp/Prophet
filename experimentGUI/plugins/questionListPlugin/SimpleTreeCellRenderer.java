@@ -5,8 +5,6 @@ import java.awt.Component;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
-import experimentGUI.util.questionTreeNode.QuestionTreeNode;
-
 @SuppressWarnings("serial")
 public class SimpleTreeCellRenderer extends DefaultTreeCellRenderer{
 	

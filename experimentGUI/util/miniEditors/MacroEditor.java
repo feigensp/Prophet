@@ -56,6 +56,7 @@ import java.awt.Color;
  * 
  */
 public class MacroEditor extends JFrame {
+	private static final long serialVersionUID = 1L;
 
 	private JPanel contentPane;
 

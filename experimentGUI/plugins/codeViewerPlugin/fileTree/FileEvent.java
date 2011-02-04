@@ -1,7 +1,6 @@
 package experimentGUI.plugins.codeViewerPlugin.fileTree;
 
 import java.awt.AWTEvent;
-import java.io.File;
 
 @SuppressWarnings("serial")
 public class FileEvent extends AWTEvent{

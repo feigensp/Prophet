@@ -3,12 +3,10 @@ package experimentGUI.plugins.questionListPlugin;
 import java.util.Enumeration;
 
 import javax.swing.JScrollPane;
-import javax.swing.JTextPane;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 
-import experimentGUI.experimentViewer.ExperimentViewer;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 
 /**
@@ -19,6 +17,7 @@ import experimentGUI.util.questionTreeNode.QuestionTreeNode;
  * 
  */
 public class QuestionList extends JScrollPane {
+	private static final long serialVersionUID = 1L;
 	private QuestionTreeNode root;
 	private JTree tree;
 

@@ -15,6 +15,7 @@ import javax.swing.event.DocumentListener;
 import experimentGUI.util.settingsComponents.SettingsComponent;
 
 public class SettingsFilePathChooser  extends SettingsComponent {
+	private static final long serialVersionUID = 1L;
 	private JLabel caption;
 	private JTextField textField;
 	private JButton pathButton;

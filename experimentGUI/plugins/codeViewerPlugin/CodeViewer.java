@@ -12,14 +12,11 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JSplitPane;
 
-import experimentGUI.plugins.CodeViewerPlugin;
 import experimentGUI.plugins.codeViewerPlugin.fileTree.FileEvent;
 import experimentGUI.plugins.codeViewerPlugin.fileTree.FileListener;
 import experimentGUI.plugins.codeViewerPlugin.fileTree.FileTree;
 import experimentGUI.plugins.codeViewerPlugin.tabbedPane.EditorTabbedPane;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
-
-
 
 @SuppressWarnings("serial")
 public class CodeViewer extends JFrame implements FileListener {

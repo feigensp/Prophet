@@ -8,12 +8,12 @@ import javax.swing.JButton;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
 public class MultipleNameTestButton extends JButton implements ActionListener {
-
-	private RSyntaxTextArea textArea;
+	private static final long serialVersionUID = 1L;
+//	private RSyntaxTextArea textArea;
 
 	public MultipleNameTestButton(RSyntaxTextArea textArea, String text) {
 		super(text);
-		this.textArea = textArea;
+//		this.textArea = textArea;
 		this.addActionListener(this);
 	}
 

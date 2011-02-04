@@ -48,6 +48,7 @@ import experimentGUI.util.questionTreeNode.QuestionTreeNodeListener;
  * 
  */
 public class QuestionTree extends JScrollPane {
+	private static final long serialVersionUID = 1L;
 	/**
 	 * the actual JTree component
 	 */
