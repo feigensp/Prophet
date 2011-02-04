@@ -15,7 +15,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import experimentGUI.Constants;
-import experimentGUI.PluginInterface;
 import experimentGUI.PluginList;
 import experimentGUI.experimentEditor.tabbedPane.ExperimentEditorTab;
 import experimentGUI.experimentEditor.tabbedPane.ExperimentEditorTabbedPane;
@@ -55,13 +54,11 @@ public class SettingsEditorPanel extends ExperimentEditorTab {
 					settingsPanel.add(new SettingsComponentDescription(SettingsCheckBox.class,
 							Constants.KEY_QUESTIONSWITCHING, "Vor- und Zurückblättern erlauben").build(selected));
 				}
-				for (PluginInterface plugin : PluginList.getPlugins()) {
-					SettingsComponentDescription desc = plugin.getSettingsComponentDescription(selected);
-					if (desc != null) {
+				SettingsComponentDescription desc =PluginList.getSettingsComponentDescription(selected);
+				if (desc != null) {
+					settingsPanel.add(desc.build(selected));
+					while ((desc = desc.getNextComponentDescription()) != null) {
 						settingsPanel.add(desc.build(selected));
-						while ((desc = desc.getNextComponentDescription()) != null) {
-							settingsPanel.add(desc.build(selected));
-						}
 					}
 				}
 				scrollPane = new JScrollPane(settingsPanel);

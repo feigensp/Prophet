@@ -69,25 +69,8 @@ public class CodeViewer extends JFrame implements FileListener {
 		setJMenuBar(menuBar);			
 		fileMenu = new JMenu("Datei");
 		menuBar.add(fileMenu);
-		boolean editable = Boolean.parseBoolean(selected.getAttributeValue(KEY_EDITABLE));
-		getViewerMenuBar().setVisible(editable);
-		if (editable) {
-			tabbedPane = getTabbedPane();
-			JMenuItem saveMenuItem = new JMenuItem("Speichern");
-			fileMenu.add(saveMenuItem);
-			saveMenuItem.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					tabbedPane.saveActiveFile();
-				}
-			});
-			JMenuItem saveAllMenuItem = new JMenuItem("Alle Speichern");
-			fileMenu.add(saveAllMenuItem);
-			saveAllMenuItem.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					tabbedPane.saveAllFiles();
-				}
-			});
-		}
+		menuBar.setVisible(false);
+		fileMenu.setVisible(false);
 		
 		splitPane = new JSplitPane();
 		splitPane.setBorder(null);
@@ -97,16 +80,12 @@ public class CodeViewer extends JFrame implements FileListener {
 		myTree.addFileListener(this);
 		splitPane.setLeftComponent(myTree);
 		
-		tabbedPane = new EditorTabbedPane(selected, showDir, new File(saveDir.getPath()+System.getProperty("file.separator")+"savedFiles"));
+		tabbedPane = new EditorTabbedPane(selected, showDir);
 		splitPane.setRightComponent(tabbedPane);
 		
 		setContentPane(splitPane);	
-		for (CodeViewerPluginInterface plugin : CodeViewerPluginList.getPlugins()) {
-			plugin.init(selected);
-		}
-		for (CodeViewerPluginInterface plugin : CodeViewerPluginList.getPlugins()) {
-			plugin.onFrameCreate(this);
-		}
+		CodeViewerPluginList.init(selected);
+		CodeViewerPluginList.onFrameCreate(this);
 	}
 
 	@Override

@@ -4,14 +4,14 @@ import java.util.Scanner;
 import java.util.TreeMap;
 
 import experimentGUI.PluginInterface;
+import experimentGUI.PluginList;
 import experimentGUI.experimentViewer.ExperimentViewer;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 import experimentGUI.util.settingsComponents.SettingsComponentDescription;
 import experimentGUI.util.settingsComponents.SettingsPluginComponentDescription;
 import experimentGUI.util.settingsComponents.components.SettingsTextArea;
 
-public class AnswerRequiredPlugin implements PluginInterface {
-	
+public class AnswerRequiredPlugin implements PluginInterface {	
 	private static final String KEY = "answers_required";
 	private static final String KEY_NAMES = "names";
 

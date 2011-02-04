@@ -8,6 +8,7 @@ import java.util.HashMap;
 import javax.swing.JFrame;
 
 import experimentGUI.PluginInterface;
+import experimentGUI.PluginList;
 import experimentGUI.experimentViewer.ExperimentViewer;
 import experimentGUI.plugins.codeViewerPlugin.CodeViewer;
 import experimentGUI.plugins.codeViewerPlugin.CodeViewerPluginInterface;
@@ -34,14 +35,12 @@ public class CodeViewerPlugin implements PluginInterface {
 		if (node.getType().equals(QuestionTreeNode.TYPE_CATEGORY)) {
 			SettingsPluginComponentDescription result = new SettingsPluginComponentDescription(KEY, "Codeviewer aktivieren");
 			result.addSubComponent(new SettingsComponentDescription(SettingsDirectoryPathChooser.class, CodeViewer.KEY_PATH, "Pfad der Quelltexte:"));
-			result.addSubComponent(new SettingsComponentDescription(SettingsCheckBox.class, CodeViewer.KEY_EDITABLE, "Quelltext editierbar"));
-			for (CodeViewerPluginInterface plugin : CodeViewerPluginList.getPlugins()) {
-				SettingsComponentDescription desc = plugin.getSettingsComponentDescription();
-				if (desc!=null) {
+//			result.addSubComponent(new SettingsComponentDescription(SettingsCheckBox.class, CodeViewer.KEY_EDITABLE, "Quelltext editierbar"));
+			SettingsComponentDescription desc = CodeViewerPluginList.getSettingsComponentDescription();
+			if (desc!=null) {
+				result.addSubComponent(desc);
+				while ((desc = desc.getNextComponentDescription()) != null) {
 					result.addSubComponent(desc);
-					while ((desc = desc.getNextComponentDescription()) != null) {
-						result.addSubComponent(desc);
-					}
 				}
 			}
 			return result;
@@ -87,12 +86,10 @@ public class CodeViewerPlugin implements PluginInterface {
 	public void exitNode(QuestionTreeNode node) {
 		CodeViewer cv = codeViewers.get(node);
 		if (cv!=null) {
-			for (CodeViewerPluginInterface plugin : CodeViewerPluginList.getPlugins()) {
-				plugin.onClose();
-			}
+			CodeViewerPluginList.onClose();
 			bounds = cv.getBounds();
 			cv.dispose();
-			cv=null;
+			codeViewers.remove(node);
 		}
 	}
 

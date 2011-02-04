@@ -29,7 +29,6 @@ public class LineNumbersPlugin implements CodeViewerPluginInterface {
 
 	@Override
 	public void onEditorPanelCreate(EditorPanel editorPanel) {
-		System.out.println("OnEditorPanelCreate: "+selected);
 		boolean lineNumbers = Boolean.parseBoolean(selected.getAttributeValue("linenumbers_default"));
 		editorPanel.getScrollPane().setLineNumbersEnabled(lineNumbers);
 	}

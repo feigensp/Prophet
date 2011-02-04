@@ -13,6 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import experimentGUI.PluginInterface;
+import experimentGUI.PluginList;
 import experimentGUI.experimentViewer.ExperimentViewer;
 import experimentGUI.util.VerticalLayout;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;

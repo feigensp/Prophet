@@ -2,6 +2,10 @@ package experimentGUI.plugins.codeViewerPlugin.codeViewerPlugins;
 
 import java.util.HashMap;
 
+import javax.swing.event.DocumentListener;
+import javax.swing.text.Document;
+
+import org.fife.ui.rsyntaxtextarea.RSyntaxDocument;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 
 import experimentGUI.plugins.codeViewerPlugin.CodeViewer;
@@ -50,9 +54,7 @@ public class SyntaxHighlightingPlugin implements CodeViewerPluginInterface {
 	}
 
 	@Override
-	public void onFrameCreate(CodeViewer viewer) {
-		// TODO Auto-generated method stub
-		
+	public void onFrameCreate(CodeViewer viewer) {		
 	}
 
 	@Override
@@ -64,7 +66,24 @@ public class SyntaxHighlightingPlugin implements CodeViewerPluginInterface {
 			if (mimeType==null) {
 				mimeType = SyntaxConstants.SYNTAX_STYLE_NONE;
 			}
+			Document doc = editorPanel.getTextArea().getDocument();
+			
+			DocumentListener[] listeners = removeDocumentListener((RSyntaxDocument)doc);
 			editorPanel.getTextArea().setSyntaxEditingStyle(mimeType);
+			readdDocumentListeners((RSyntaxDocument)doc,listeners);
+		}
+	}
+	
+	private DocumentListener[] removeDocumentListener(RSyntaxDocument doc) {
+		DocumentListener[] listeners = doc.getDocumentListeners();
+		for (DocumentListener listener : listeners) {
+			doc.removeDocumentListener(listener);
+		}
+		return listeners;
+	}
+	private void readdDocumentListeners(RSyntaxDocument doc, DocumentListener[] listeners) {
+		for (DocumentListener listener : listeners) {
+			doc.addDocumentListener(listener);
 		}
 	}
 

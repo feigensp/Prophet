@@ -121,9 +121,7 @@ public class ExperimentViewer extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout());
 		this.setContentPane(contentPane);
-		for (PluginInterface plugin : PluginList.getPlugins()) {
-			plugin.experimentViewerRun(this);
-		}
+		PluginList.experimentViewerRun(this);
 		// Starte Experiment
 		QuestionTreeNode superRoot = new QuestionTreeNode();
 		superRoot.add(tree);
@@ -214,42 +212,31 @@ public class ExperimentViewer extends JFrame {
 		return denyEnterNode(currentNode);
 	}
 	public static boolean denyEnterNode(QuestionTreeNode node) {
-		for (PluginInterface plugin : PluginList.getPlugins()) {
-			if(plugin.denyEnterNode(node)) {
-				return true;
-			}
-		}
-		return false;
+		return PluginList.denyEnterNode(node);
 	}
 	
 	private void enterNode() {
 		enteredNodes.add(currentNode);
-		for (PluginInterface plugin : PluginList.getPlugins()) {
-			plugin.enterNode(currentNode);
-		}
+		PluginList.enterNode(currentNode);
 	}
 	
 	private boolean denyNextNode() {
 		if (ignoreDenyNextNode) {
 			return false;
 		}
-		for (PluginInterface plugin : PluginList.getPlugins()) {
-			String message = plugin.denyNextNode(currentNode);
-			if (message!=null) {
-				if (message.length()>0) {
-					JOptionPane.showMessageDialog(this, message);
-				}
-				return true;
+		String message = PluginList.denyNextNode(currentNode);
+		if (message!=null) {
+			if (message.length()>0) {
+				JOptionPane.showMessageDialog(this, message);
 			}
+			return true;
 		}
 		return false;
 	}
 
 	private void exitNode() {
 			if (enteredNodes.contains(currentNode)) {
-				for (PluginInterface plugin : PluginList.getPlugins()) {
-					plugin.exitNode(currentNode);
-				}
+				PluginList.exitNode(currentNode);
 				if (currentNode.isExperiment()) {
 					endQuestionnaire();
 				}
@@ -318,12 +305,7 @@ public class ExperimentViewer extends JFrame {
 		String outputString = "<p>" + endMessage + "</p>";
 		QuestionTreeXMLHandler.saveXMLAnswerTree(tree,
 				saveDir.getPath() + System.getProperty("file.separator") + Constants.FILE_ANSWERS);
-		for (PluginInterface plugin : PluginList.getPlugins()) {
-			String tmp = plugin.finishExperiment();
-			if (tmp != null) {
-				outputString += "<p>" + tmp + "</p>";
-			}
-		}
+		outputString += PluginList.finishExperiment();
 		output.setText(outputString);
 		output.setCaretPosition(0);
 		contentPane.add(output, BorderLayout.CENTER);

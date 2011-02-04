@@ -2,27 +2,26 @@ package experimentGUI.plugins.codeViewerPlugin.tabbedPane;
 
 import java.awt.Component;
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.util.HashSet;
 
 import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
 
-import experimentGUI.plugins.codeViewerPlugin.CodeViewerPluginInterface;
 import experimentGUI.plugins.codeViewerPlugin.CodeViewerPluginList;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 
 @SuppressWarnings("serial")
 public class EditorTabbedPane extends JTabbedPane {
 	private QuestionTreeNode selected;
-	private File showDir, saveDir;
+	private File showDir;
+	HashSet<EditorPanel> editorPanels;
 
-	public EditorTabbedPane(QuestionTreeNode selected, File showDir, File saveDir) {
+	public EditorTabbedPane(QuestionTreeNode selected, File showDir) {
 		super(JTabbedPane.TOP);
 		this.selected = selected;
 		this.showDir = showDir;
-		this.saveDir = saveDir;
 		this.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
+		editorPanels = new HashSet<EditorPanel>();
 	}
 
 	public void openFile(String path) {
@@ -35,15 +34,12 @@ public class EditorTabbedPane extends JTabbedPane {
 			e.grabFocus();
 			return;
 		}
-		File file = new File(saveDir.getPath() + path);
-		if (!file.exists()) {
-			file = new File(showDir.getPath() + path);
-		}
+		File file = new File(showDir.getPath() + path);
 		if (file.exists()) {
 			EditorPanel myPanel = new EditorPanel(file, path, selected);
 			add(file.getName(), myPanel);
-			setSelectedIndex(indexOfComponent(myPanel));
 			this.setTabComponentAt(this.getTabCount() - 1, new ButtonTabComponent(this, myPanel));
+			this.setSelectedComponent(myPanel);
 			myPanel.grabFocus();
 		} else {
 			JOptionPane.showMessageDialog(this, "Datei " + path
@@ -56,17 +52,10 @@ public class EditorTabbedPane extends JTabbedPane {
 	}
 
 	public void closeEditorPanel(EditorPanel editorPanel) {
-		if (editorPanel.isChanged()) {
-			int n = JOptionPane.showConfirmDialog(null, "Änderungen speichern?", "Speichern?",
-					JOptionPane.YES_NO_OPTION);
-			if (n == JOptionPane.YES_OPTION) {
-				saveEditorPanel(editorPanel);
-			}
+		if (editorPanel!=null) {
+			CodeViewerPluginList.onEditorPanelClose(editorPanel);
+			this.remove(editorPanel);
 		}
-		for (CodeViewerPluginInterface plugin : CodeViewerPluginList.getPlugins()) {
-			plugin.onEditorPanelClose(editorPanel);
-		}
-		this.remove(editorPanel);
 	}
 
 	public EditorPanel getEditorPanel(String path) {
@@ -81,39 +70,5 @@ public class EditorTabbedPane extends JTabbedPane {
 
 	public File getShowDir() {
 		return showDir;
-	}
-
-	public File getSaveDir() {
-		return saveDir;
-	}
-
-	public void saveActiveFile() {
-		Component activeComp = getSelectedComponent();
-		if (activeComp != null && activeComp instanceof EditorPanel) {
-			saveEditorPanel((EditorPanel) activeComp);
-		}
-	}
-
-	public void saveAllFiles() {
-		for (int i = 0; i < getTabCount(); i++) {
-			Component myComp = getComponentAt(i);
-			if (myComp instanceof EditorPanel) {
-				saveEditorPanel((EditorPanel) myComp);
-			}
-		}
-	}
-
-	protected void saveEditorPanel(EditorPanel editorPanel) {
-		File file = new File(getSaveDir().getPath() + editorPanel.getFilePath());
-		FileWriter fileWriter = null;
-		try {
-			file.getParentFile().mkdirs();
-			fileWriter = new FileWriter(file);
-			fileWriter.write(editorPanel.getTextArea().getText());
-			fileWriter.flush();
-			fileWriter.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 }

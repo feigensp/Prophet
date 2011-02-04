@@ -25,8 +25,6 @@ public class EditorPanel extends JPanel {
 	private String filePath;
 	private RTextScrollPane scrollPane;
 	private RSyntaxTextArea textArea;
-	
-	private boolean changed = false;
 
 	/**
 	 * Create the panel.
@@ -46,38 +44,14 @@ public class EditorPanel extends JPanel {
 			e.printStackTrace();
 		}
 		textArea = new ModifiedRSyntaxTextArea(doc);
+		textArea.setEditable(false);
 		textArea.setFont(new Font("monospaced", Font.PLAIN, 12));
 		scrollPane = new RTextScrollPane(textArea);		
 		
 		setLayout(new BorderLayout());
 		add(scrollPane, BorderLayout.CENTER);	
 		
-		for (CodeViewerPluginInterface plugin : CodeViewerPluginList.getPlugins()) {
-			plugin.onEditorPanelCreate(this);
-		}
-		
-		boolean editable = Boolean.parseBoolean(selected.getAttributeValue(CodeViewer.KEY_EDITABLE));
-		textArea.setEditable(editable);
-		if (editable) {
-			textArea.getDocument().addDocumentListener(new DocumentListener() {			
-				private void changeOccured() {
-					changed=true;
-				}
-				public void changedUpdate(DocumentEvent arg0) {
-					changeOccured();
-				}
-
-				@Override
-				public void insertUpdate(DocumentEvent arg0) {
-					changeOccured();
-				}
-
-				@Override
-				public void removeUpdate(DocumentEvent arg0) {
-					changeOccured();
-				}			
-			});
-		}
+		CodeViewerPluginList.onEditorPanelCreate(this);
 	}	
 	public void grabFocus() {
 		textArea.grabFocus();
@@ -90,8 +64,5 @@ public class EditorPanel extends JPanel {
 	}
 	public String getFilePath() {
 		return filePath;
-	}
-	public boolean isChanged() {
-		return changed;
 	}
 }

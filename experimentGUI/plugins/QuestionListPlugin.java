@@ -3,6 +3,7 @@ package experimentGUI.plugins;
 import java.awt.BorderLayout;
 
 import experimentGUI.PluginInterface;
+import experimentGUI.PluginList;
 import experimentGUI.experimentViewer.ExperimentViewer;
 import experimentGUI.plugins.questionListPlugin.QuestionList;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
