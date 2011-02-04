@@ -182,6 +182,10 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 				}
 			}
 		});
+		
+		exportMenu.addSeparator();
+		JMenuItem exportCSVMenuItem = new JMenuItem("CSV Datei erstellen");
+		exportMenu.add(exportCSVMenuItem);
 
 		fileMenu.addSeparator();
 
