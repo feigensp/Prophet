@@ -1,8 +1,9 @@
-package experimentGUI.experimentEditor.tabbedPane;
+package experimentGUI.experimentEditor.tabbedPane.editorTabs;
 
 import java.awt.BorderLayout;
 
-import experimentGUI.experimentViewer.QuestionViewPane;
+import experimentGUI.experimentEditor.tabbedPane.ExperimentEditorTab;
+import experimentGUI.util.QuestionViewPane;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 
 @SuppressWarnings("serial")
@@ -12,6 +13,7 @@ public class ContentViewerPanel extends ExperimentEditorTab {
 	
 	public ContentViewerPanel() {
 		setLayout(new BorderLayout());
+		this.setOpaque(false);
 	}
 	
 	public void activate(QuestionTreeNode selected) {

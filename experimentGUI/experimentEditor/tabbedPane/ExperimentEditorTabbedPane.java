@@ -7,10 +7,10 @@ import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import experimentGUI.experimentEditor.tabbedPane.EditorTabs.ContentEditorPanel;
-import experimentGUI.experimentEditor.tabbedPane.EditorTabs.ContentViewerPanel;
-import experimentGUI.experimentEditor.tabbedPane.EditorTabs.NoteEditorPanel;
-import experimentGUI.experimentEditor.tabbedPane.EditorTabs.SettingsEditorPanel;
+import experimentGUI.experimentEditor.tabbedPane.editorTabs.ContentEditorPanel;
+import experimentGUI.experimentEditor.tabbedPane.editorTabs.ContentViewerPanel;
+import experimentGUI.experimentEditor.tabbedPane.editorTabs.NoteEditorPanel;
+import experimentGUI.experimentEditor.tabbedPane.editorTabs.SettingsEditorPanel;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 
 
