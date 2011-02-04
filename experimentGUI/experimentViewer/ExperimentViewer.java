@@ -151,6 +151,13 @@ public class ExperimentViewer extends JFrame {
 				experiment = "default";
 			}
 			saveDir = new File(experiment + "_" + subject);
+			if (saveDir.exists()) {
+				int i = 1;
+				while (saveDir.exists()) {
+					saveDir = new File(experiment + "_" + subject + "_" + i);
+					i++;
+				}
+			}
 			totalTime.start();
 		}
 		
