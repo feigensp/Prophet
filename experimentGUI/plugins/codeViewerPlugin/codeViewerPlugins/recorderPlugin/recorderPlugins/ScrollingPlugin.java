@@ -6,20 +6,18 @@ import java.awt.Rectangle;
 import javax.swing.JViewport;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.event.DocumentEvent;
 import javax.swing.text.BadLocationException;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
-import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.SettingsComponentDescription;
-import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.SettingsPluginComponentDescription;
-import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.settingsComponents.SettingsCheckBox;
-import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.settingsComponents.SettingsTextField;
 import experimentGUI.plugins.codeViewerPlugin.CodeViewer;
 import experimentGUI.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin.RecorderPluginInterface;
+import experimentGUI.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin.logingTreeNode.LoggingTreeNode;
 import experimentGUI.plugins.codeViewerPlugin.tabbedPane.EditorPanel;
-import experimentGUI.util.loggingTreeNode.LoggingTreeNode;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
+import experimentGUI.util.settingsComponents.SettingsComponentDescription;
+import experimentGUI.util.settingsComponents.SettingsPluginComponentDescription;
+import experimentGUI.util.settingsComponents.components.SettingsTextField;
 
 public class ScrollingPlugin implements RecorderPluginInterface {
 	public final static String KEY = "scrolling";

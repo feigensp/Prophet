@@ -5,7 +5,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import experimentGUI.experimentViewer.QuestionViewPane;
+import experimentGUI.util.QuestionViewPane;
 
 public class QuestionTreeNodeHTMLHandler {
 

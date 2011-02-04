@@ -1,12 +1,12 @@
 package experimentGUI.plugins.codeViewerPlugin.codeViewerPlugins;
 
-import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.SettingsComponentDescription;
-import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.SettingsPluginComponentDescription;
-import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.settingsComponents.SettingsTextField;
 import experimentGUI.plugins.codeViewerPlugin.CodeViewer;
 import experimentGUI.plugins.codeViewerPlugin.CodeViewerPluginInterface;
 import experimentGUI.plugins.codeViewerPlugin.tabbedPane.EditorPanel;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
+import experimentGUI.util.settingsComponents.SettingsComponentDescription;
+import experimentGUI.util.settingsComponents.SettingsPluginComponentDescription;
+import experimentGUI.util.settingsComponents.components.SettingsTextField;
 
 public class OpenedByStartPlugin implements CodeViewerPluginInterface{
 	

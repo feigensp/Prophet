@@ -1,17 +1,5 @@
-package experimentGUI.util.experimentEditorDataVisualizer;
+package test.experimentEditorDataVisualizer;
 
-import java.io.File;
-
-import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
-
-import experimentGUI.plugins.codeViewerPlugin.CodeViewer;
-import experimentGUI.plugins.codeViewerPlugin.codeViewerPlugins.RecorderPlugin;
-import experimentGUI.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin.recorderPlugins.ChangePlugin;
-import experimentGUI.plugins.codeViewerPlugin.fileTree.FileTree;
-import experimentGUI.plugins.codeViewerPlugin.tabbedPane.EditorTabbedPane;
-import experimentGUI.util.Conversion;
-import experimentGUI.util.loggingTreeNode.LoggingTreeNode;
-import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 
 public class VideoRecordController {
 //

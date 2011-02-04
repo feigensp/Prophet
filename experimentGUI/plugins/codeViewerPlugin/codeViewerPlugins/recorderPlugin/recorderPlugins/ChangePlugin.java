@@ -5,14 +5,14 @@ import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 
-import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.SettingsComponentDescription;
-import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.SettingsPluginComponentDescription;
-import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.settingsComponents.SettingsTextField;
 import experimentGUI.plugins.codeViewerPlugin.CodeViewer;
 import experimentGUI.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin.RecorderPluginInterface;
+import experimentGUI.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin.logingTreeNode.LoggingTreeNode;
 import experimentGUI.plugins.codeViewerPlugin.tabbedPane.EditorPanel;
-import experimentGUI.util.loggingTreeNode.LoggingTreeNode;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
+import experimentGUI.util.settingsComponents.SettingsComponentDescription;
+import experimentGUI.util.settingsComponents.SettingsPluginComponentDescription;
+import experimentGUI.util.settingsComponents.components.SettingsTextField;
 
 public class ChangePlugin implements RecorderPluginInterface {
 	public final static String KEY = "change";

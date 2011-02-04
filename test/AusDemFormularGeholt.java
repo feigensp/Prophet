@@ -3,8 +3,6 @@ package test;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Enumeration;
-import java.util.Vector;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -19,8 +17,6 @@ import javax.swing.text.ViewFactory;
 import javax.swing.text.html.FormView;
 import javax.swing.text.html.HTML;
 import javax.swing.text.html.HTMLEditorKit;
-
-import experimentGUI.experimentViewer.QuestionViewPane;
 
 public class AusDemFormularGeholt {	
 		

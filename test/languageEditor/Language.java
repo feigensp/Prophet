@@ -1,6 +1,7 @@
-package experimentGUI.util;
+package test.languageEditor;
 
 import java.util.TreeMap;
+
 
 /**
  * this class can load language specifications from xml files you can set the

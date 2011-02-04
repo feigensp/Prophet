@@ -19,6 +19,7 @@ import javax.swing.text.html.HTMLEditorKit;
 import experimentGUI.Constants;
 import experimentGUI.PluginInterface;
 import experimentGUI.PluginList;
+import experimentGUI.util.QuestionViewPane;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 import experimentGUI.util.questionTreeNode.QuestionTreeXMLHandler;
 

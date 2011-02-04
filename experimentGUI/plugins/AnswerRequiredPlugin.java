@@ -1,15 +1,14 @@
 package experimentGUI.plugins;
 
 import java.util.Scanner;
-import java.util.Set;
 import java.util.TreeMap;
 
 import experimentGUI.PluginInterface;
-import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.SettingsComponentDescription;
-import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.SettingsPluginComponentDescription;
-import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.settingsComponents.SettingsTextArea;
 import experimentGUI.experimentViewer.ExperimentViewer;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
+import experimentGUI.util.settingsComponents.SettingsComponentDescription;
+import experimentGUI.util.settingsComponents.SettingsPluginComponentDescription;
+import experimentGUI.util.settingsComponents.components.SettingsTextArea;
 
 public class AnswerRequiredPlugin implements PluginInterface {
 	

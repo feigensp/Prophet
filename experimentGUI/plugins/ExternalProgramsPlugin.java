@@ -13,12 +13,12 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import experimentGUI.PluginInterface;
-import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.SettingsComponentDescription;
-import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.SettingsPluginComponentDescription;
-import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.settingsComponents.SettingsTextArea;
 import experimentGUI.experimentViewer.ExperimentViewer;
 import experimentGUI.util.VerticalLayout;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
+import experimentGUI.util.settingsComponents.SettingsComponentDescription;
+import experimentGUI.util.settingsComponents.SettingsPluginComponentDescription;
+import experimentGUI.util.settingsComponents.components.SettingsTextArea;
 
 public class ExternalProgramsPlugin implements PluginInterface {
 

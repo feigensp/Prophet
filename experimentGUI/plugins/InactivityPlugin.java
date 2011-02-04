@@ -1,10 +1,10 @@
 package experimentGUI.plugins;
 
 import experimentGUI.PluginInterface;
-import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.SettingsComponentDescription;
-import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.settingsComponents.SettingsCheckBox;
 import experimentGUI.experimentViewer.ExperimentViewer;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
+import experimentGUI.util.settingsComponents.SettingsComponentDescription;
+import experimentGUI.util.settingsComponents.components.SettingsCheckBox;
 
 public class InactivityPlugin implements PluginInterface {
 	public static final String KEY = "inactive";

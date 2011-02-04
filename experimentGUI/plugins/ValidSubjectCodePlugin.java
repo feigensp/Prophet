@@ -1,23 +1,18 @@
 package experimentGUI.plugins;
 
-import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.IOException;
 import java.util.Scanner;
-
-import javax.swing.JOptionPane;
 
 import experimentGUI.Constants;
 import experimentGUI.PluginInterface;
-import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.SettingsComponentDescription;
-import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.SettingsPluginComponentDescription;
-import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.settingsComponents.SettingsCheckBox;
-import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.settingsComponents.SettingsFilePathChooser;
-import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.settingsComponents.SettingsTextArea;
 import experimentGUI.experimentViewer.ExperimentViewer;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
+import experimentGUI.util.settingsComponents.SettingsComponentDescription;
+import experimentGUI.util.settingsComponents.SettingsPluginComponentDescription;
+import experimentGUI.util.settingsComponents.components.SettingsCheckBox;
+import experimentGUI.util.settingsComponents.components.SettingsFilePathChooser;
+import experimentGUI.util.settingsComponents.components.SettingsTextArea;
 
 public class ValidSubjectCodePlugin implements PluginInterface {
 

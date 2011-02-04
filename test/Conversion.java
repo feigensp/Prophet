@@ -1,4 +1,4 @@
-package experimentGUI.util;
+package test;
 
 /**
  * File which contains useful conversion methods

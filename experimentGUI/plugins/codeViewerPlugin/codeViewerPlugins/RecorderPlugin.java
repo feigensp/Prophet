@@ -1,25 +1,23 @@
 package experimentGUI.plugins.codeViewerPlugin.codeViewerPlugins;
 
 import java.awt.Component;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.SettingsComponentDescription;
-import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.SettingsPluginComponentDescription;
-import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.settingsComponents.SettingsTextField;
 import experimentGUI.plugins.codeViewerPlugin.CodeViewer;
 import experimentGUI.plugins.codeViewerPlugin.CodeViewerPluginInterface;
 import experimentGUI.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin.RecorderPluginInterface;
 import experimentGUI.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin.RecorderPluginList;
+import experimentGUI.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin.logingTreeNode.LoggingTreeNode;
+import experimentGUI.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin.logingTreeNode.LoggingTreeXMLHandler;
 import experimentGUI.plugins.codeViewerPlugin.tabbedPane.EditorPanel;
 import experimentGUI.plugins.codeViewerPlugin.tabbedPane.EditorTabbedPane;
-import experimentGUI.util.loggingTreeNode.LoggingTreeNode;
-import experimentGUI.util.loggingTreeNode.LoggingTreeXMLHandler;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
+import experimentGUI.util.settingsComponents.SettingsComponentDescription;
+import experimentGUI.util.settingsComponents.SettingsPluginComponentDescription;
 
 public class RecorderPlugin implements CodeViewerPluginInterface,ChangeListener {
 	public final static String KEY = "recorder";

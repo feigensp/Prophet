@@ -1,8 +1,7 @@
-package experimentGUI.util.miniEditors;
+package test.languageEditor;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
@@ -40,9 +39,6 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-
-import experimentGUI.util.LanguageXMLHandler;
-import experimentGUI.util.Pair;
 
 /**
  * This ist a little programm to create/manipulate a xml File, which could be

@@ -1,8 +1,8 @@
 package experimentGUI.plugins.codeViewerPlugin;
 
-import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.SettingsComponentDescription;
 import experimentGUI.plugins.codeViewerPlugin.tabbedPane.EditorPanel;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
+import experimentGUI.util.settingsComponents.SettingsComponentDescription;
 
 public interface CodeViewerPluginInterface {
 	public SettingsComponentDescription getSettingsComponentDescription();

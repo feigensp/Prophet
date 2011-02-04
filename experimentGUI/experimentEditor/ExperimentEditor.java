@@ -16,8 +16,7 @@ import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 
-import experimentGUI.experimentEditor.tabbedPane.QuestionEditorTabbedPane;
-import experimentGUI.util.Language;
+import experimentGUI.experimentEditor.tabbedPane.ExperimentEditorTabbedPane;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 import experimentGUI.util.questionTreeNode.QuestionTreeNodeEvent;
 import experimentGUI.util.questionTreeNode.QuestionTreeNodeListener;
@@ -38,7 +37,7 @@ public class ExperimentEditor extends JFrame {
 	/**
 	 * JTabbedPane component to the right of the ExperimentEditor
 	 */
-	private QuestionEditorTabbedPane questionEditorTabbedPane;
+	private ExperimentEditorTabbedPane questionEditorTabbedPane;
 	/**
 	 * ContentPane of the ExperimentEditor, all components are put here
 	 */
@@ -93,7 +92,7 @@ public class ExperimentEditor extends JFrame {
 		});		
 		contentPane.add(tree, BorderLayout.WEST);
 
-		questionEditorTabbedPane = new QuestionEditorTabbedPane();
+		questionEditorTabbedPane = new ExperimentEditorTabbedPane();
 		contentPane.add(questionEditorTabbedPane, BorderLayout.CENTER);
 	}
 	/**

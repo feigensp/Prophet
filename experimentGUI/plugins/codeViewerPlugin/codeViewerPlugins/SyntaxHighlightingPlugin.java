@@ -1,17 +1,15 @@
 package experimentGUI.plugins.codeViewerPlugin.codeViewerPlugins;
 
 import java.util.HashMap;
-import java.util.List;
-import java.util.Vector;
 
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 
-import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.SettingsComponentDescription;
-import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.settingsComponents.SettingsCheckBox;
 import experimentGUI.plugins.codeViewerPlugin.CodeViewer;
 import experimentGUI.plugins.codeViewerPlugin.CodeViewerPluginInterface;
 import experimentGUI.plugins.codeViewerPlugin.tabbedPane.EditorPanel;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
+import experimentGUI.util.settingsComponents.SettingsComponentDescription;
+import experimentGUI.util.settingsComponents.components.SettingsCheckBox;
 
 public class SyntaxHighlightingPlugin implements CodeViewerPluginInterface {
 	public final static String KEY = "syntaxhighlighting";

@@ -3,7 +3,6 @@ package experimentGUI.plugins;
 import java.io.File;
 import java.util.Date;
 import java.util.Properties;
-import java.util.logging.Logger;
 
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
@@ -20,13 +19,13 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
 import experimentGUI.PluginInterface;
-import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.SettingsComponentDescription;
-import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.SettingsPluginComponentDescription;
-import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.settingsComponents.SettingsPasswordField;
-import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.settingsComponents.SettingsTextField;
 import experimentGUI.experimentViewer.ExperimentViewer;
-import experimentGUI.util.ZipFile;
+import experimentGUI.plugins.mailPlugin.ZipFile;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
+import experimentGUI.util.settingsComponents.SettingsComponentDescription;
+import experimentGUI.util.settingsComponents.SettingsPluginComponentDescription;
+import experimentGUI.util.settingsComponents.components.SettingsPasswordField;
+import experimentGUI.util.settingsComponents.components.SettingsTextField;
 
 public class MailPlugin implements PluginInterface {
 	private final static String KEY = "sendmail";

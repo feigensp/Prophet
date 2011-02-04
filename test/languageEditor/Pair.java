@@ -1,4 +1,4 @@
-package experimentGUI.util;
+package test.languageEditor;
 
 /**
  * This class represents a generic data structure version of a pair
@@ -8,19 +8,17 @@ package experimentGUI.util;
  * @param <K> type of the key
  * @param <V> type of the value
  */
-public class Triple<K,V1,V2> {
+public class Pair<K,V> {
 
 	K key;
-	V1 value1;
-	V2 value2;
+	V value;
 	
 	/**
 	 * Constructor which initialize key and value with null
 	 */
-	public Triple() {
+	public Pair() {
 		key = null;
-		value1 = null;
-		value2 = null;
+		value = null;
 	}
 	
 	/**
@@ -28,17 +26,16 @@ public class Triple<K,V1,V2> {
 	 * @param key value of the key
 	 * @param value value of the value
 	 */
-	public Triple(K key, V1 value1, V2 value2) {
+	public Pair(K key, V value) {
 		this.key = key;
-		this.value1 = value1;
-		this.value2 = value2;
+		this.value = value;
 	}
 	
 	/**
 	 * returns a String representation of the pair
 	 */
 	public String toString() {
-		return key.toString() + ":" + value1.toString() + ":" + value2.toString();
+		return key.toString() + ":" + value.toString();
 	}
 
 	/**
@@ -61,21 +58,15 @@ public class Triple<K,V1,V2> {
 	 * returns the value
 	 * @return value
 	 */
-	public V1 getValue1() {
-		return value1;
-	}
-	public V2 getValue2() {
-		return value2;
+	public V getValue() {
+		return value;
 	}
 
 	/**
 	 * sets the value
 	 * @param value new value
 	 */
-	public void setValue1(V1 value1) {
-		this.value1 = value1;
-	}
-	public void setValue2(V2 value2) {
-		this.value2 = value2;
+	public void setValue(V value) {
+		this.value = value;
 	}
 }

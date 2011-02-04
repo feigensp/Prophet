@@ -1,8 +1,8 @@
 package experimentGUI;
 
-import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.SettingsComponentDescription;
 import experimentGUI.experimentViewer.ExperimentViewer;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
+import experimentGUI.util.settingsComponents.SettingsComponentDescription;
 /**
  * Interface for all plugins to be used immediately within the product. It represents methods called on special occasions.
  * 

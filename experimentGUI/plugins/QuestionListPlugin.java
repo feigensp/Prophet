@@ -3,10 +3,10 @@ package experimentGUI.plugins;
 import java.awt.BorderLayout;
 
 import experimentGUI.PluginInterface;
-import experimentGUI.experimentEditor.tabbedPane.settingsEditorPanel.SettingsComponentDescription;
 import experimentGUI.experimentViewer.ExperimentViewer;
 import experimentGUI.plugins.questionListPlugin.QuestionList;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
+import experimentGUI.util.settingsComponents.SettingsComponentDescription;
 
 
 public class QuestionListPlugin implements PluginInterface {

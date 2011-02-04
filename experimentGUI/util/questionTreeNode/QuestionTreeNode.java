@@ -12,12 +12,12 @@ public class QuestionTreeNode extends DefaultMutableTreeNode {
 	public final static String TYPE_QUESTION = "question";
 	public final static String TYPE_ATTRIBUTE = "attribute";
 	
-	private String type = "(default)";
-	private String name = "(default)";
-	private String value = "";
+	private String type;
+	private String name;
+	private String value;
 
-	private TreeMap<String,QuestionTreeNode> attributes = new TreeMap<String,QuestionTreeNode>();
-	private TreeMap<String,String> answers = new TreeMap<String,String>();
+	private TreeMap<String,QuestionTreeNode> attributes;
+	private TreeMap<String,String> answers;
 	
 	long answerTime = 0;
 	public QuestionTreeNode() {
@@ -27,12 +27,14 @@ public class QuestionTreeNode extends DefaultMutableTreeNode {
 		this(t,"");
 	}
 	public QuestionTreeNode(String t, String n) {
-		if (!(t.trim().equals(""))) {
-			type=t;
-		}
-		if (!(n.trim().equals(""))) {
-			name=n;
-		}
+		value = "";
+		attributes = new TreeMap<String,QuestionTreeNode>();
+		answers = new TreeMap<String,String>();
+		
+		type = "(default)";
+		setType(t);
+		name = "(default)";
+		setName(n);
 	}
 	
 	public long getAnswerTime() {
@@ -58,7 +60,7 @@ public class QuestionTreeNode extends DefaultMutableTreeNode {
 		return name;
 	}
 	public boolean setName(String n) {
-		if (n.trim().equals("")) {
+		if (n==null || n.trim().equals("")) {
 			return false;
 		}
 		name=n;
@@ -106,13 +108,15 @@ public class QuestionTreeNode extends DefaultMutableTreeNode {
 		return value;
 	}
 	public void setValue(String v) {
-		value=v;
+		if (v!=null) {
+			value=v;
+		}
 	}
 	public String getType() {
 		return type;
 	}
 	public boolean setType(String t) {
-		if (t.trim().equals("")) {
+		if (t==null || t.trim().equals("")) {
 			return false;
 		}
 		type=t;

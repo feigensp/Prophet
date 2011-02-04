@@ -1,4 +1,4 @@
-package experimentGUI.util;
+package experimentGUI.plugins.mailPlugin;
 
 import java.io.BufferedWriter;
 import java.io.File;
