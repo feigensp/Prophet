@@ -186,6 +186,18 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 		exportMenu.addSeparator();
 		JMenuItem exportCSVMenuItem = new JMenuItem("CSV Datei erstellen");
 		exportMenu.add(exportCSVMenuItem);
+		exportCSVMenuItem.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// Header für Fragen rausholen und speichern
+				
+				// Ordnerstruktur traversieren und Antwortdateien suchen + Daten speichern
+				
+				//csv Datei erstellen
+			}
+			
+		});
 
 		fileMenu.addSeparator();
 
