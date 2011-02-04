@@ -1,4 +1,4 @@
-package experimentGUI.experimentEditor.tabbedPane.editorTabs2;
+package experimentGUI.experimentEditor.tabbedPane.editorTabs;
 
 import java.awt.BorderLayout;
 
