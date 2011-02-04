@@ -1,4 +1,4 @@
-package experimentGUI.experimentEditor.tabbedPane.editorTabs;
+package experimentGUI.experimentEditor.tabbedPane.editorTabs2;
 
 /**
  * A Dialog to adjust some settings.

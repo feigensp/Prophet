@@ -1,4 +1,4 @@
-package experimentGUI.experimentEditor.tabbedPane.editorTabs;
+package experimentGUI.experimentEditor.tabbedPane.editorTabs2;
 
 import java.awt.BorderLayout;
 import java.awt.event.KeyAdapter;
@@ -17,7 +17,7 @@ import org.fife.ui.rtextarea.RTextScrollPane;
 
 import experimentGUI.experimentEditor.tabbedPane.ExperimentEditorTab;
 import experimentGUI.experimentEditor.tabbedPane.ExperimentEditorTabbedPane;
-import experimentGUI.experimentEditor.tabbedPane.editorTabs.contentEditorToolBar.ContentEditorToolBar;
+import experimentGUI.experimentEditor.tabbedPane.editorTabs2.contentEditorToolBar.ContentEditorToolBar;
 import experimentGUI.util.ModifiedRSyntaxTextArea;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 import experimentGUI.util.searchBar.SearchBar;
