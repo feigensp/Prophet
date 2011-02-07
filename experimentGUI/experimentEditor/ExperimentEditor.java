@@ -116,4 +116,8 @@ public class ExperimentEditor extends JFrame {
 	public void loadTree(QuestionTreeNode root) {
 		tree.setRoot(root);
 	}
+	
+	public ExperimentEditorTabbedPane getTabbedPane() {
+		return questionEditorTabbedPane;
+	}
 }
