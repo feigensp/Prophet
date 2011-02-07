@@ -16,7 +16,7 @@ public class Browser extends JFrame implements HyperlinkListener {
 	private JEditorPane htmlPane;
 
 	public Browser(String initialURL) {
-		super("Simple Browser");
+		super("Browser");
 
 		try {
 			htmlPane = new JEditorPane(initialURL);
@@ -25,7 +25,7 @@ public class Browser extends JFrame implements HyperlinkListener {
 			JScrollPane scrollPane = new JScrollPane(htmlPane);
 			getContentPane().add(scrollPane, BorderLayout.CENTER);
 		} catch (IOException ioe) {
-			warnUser("Can't build HTML pane for " + initialURL + ": " + ioe);
+			JOptionPane.showMessageDialog(this, "Kann Seite nicht aufbauen.", "Error", JOptionPane.ERROR_MESSAGE);
 		}
 
 		Dimension screenSize = getToolkit().getScreenSize();
@@ -40,12 +40,8 @@ public class Browser extends JFrame implements HyperlinkListener {
 			try {
 				htmlPane.setPage(event.getURL());
 			} catch (IOException ioe) {
-				warnUser("Can't follow link to " + event.getURL().toExternalForm() + ": " + ioe);
+				JOptionPane.showMessageDialog(this, "Linkverfolgung nicht möglich.", "Error", JOptionPane.ERROR_MESSAGE);
 			}
 		}
-	}
-
-	private void warnUser(String message) {
-		JOptionPane.showMessageDialog(this, message, "Error", JOptionPane.ERROR_MESSAGE);
 	}
 }

@@ -1,15 +1,18 @@
 package experimentGUI.util;
 
+import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.util.HashSet;
 import java.util.StringTokenizer;
 
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 import javax.swing.event.HyperlinkEvent;
@@ -131,7 +134,23 @@ public class QuestionViewPane extends JScrollPane {
 		textPane.addHyperlinkListener(new HyperlinkListener() {
 			public void hyperlinkUpdate(HyperlinkEvent event) {
 				if (event.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-					new Browser(event.getURL().toString());
+					Desktop desktop = null;
+				    if (Desktop.isDesktopSupported()) {
+				        desktop = Desktop.getDesktop();
+				        if(desktop.isSupported(Desktop.Action.BROWSE)) {
+				        	try {
+								desktop.browse(event.getURL().toURI());
+							} catch (IOException e) {
+					        	JOptionPane.showMessageDialog(textPane, "Fehler beim Starten des Browsers.");
+							} catch (URISyntaxException e) {
+					        	JOptionPane.showMessageDialog(textPane, "Fehlerhafte URL.");
+							}
+				        } else {
+				        	JOptionPane.showMessageDialog(textPane, "Konnte keinen Standardbrowser öffnen.");
+				        }
+				    }  else {
+			        	JOptionPane.showMessageDialog(textPane, "Konnte keinen Standardbrowser öffnen.");
+				    }
 				}
 			}
 
