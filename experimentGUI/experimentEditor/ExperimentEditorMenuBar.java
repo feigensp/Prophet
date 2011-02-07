@@ -186,7 +186,7 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				// Header für Fragen rausholen und speichern
+				// Namen für Formulare einzelner Fragen speichern
 				
 				// Ordnerstruktur traversieren und Antwortdateien suchen + Daten speichern
 				
