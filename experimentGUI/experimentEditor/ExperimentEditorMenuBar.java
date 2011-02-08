@@ -4,12 +4,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.Iterator;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.swing.JFileChooser;
 import javax.swing.JMenu;
@@ -18,6 +16,8 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 
+import experimentGUI.Constants;
+import experimentGUI.util.Pair;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 import experimentGUI.util.questionTreeNode.QuestionTreeNodeHTMLHandler;
 import experimentGUI.util.questionTreeNode.QuestionTreeXMLHandler;
@@ -182,7 +182,7 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 				}
 			}
 		});
-		
+
 		exportMenu.addSeparator();
 		JMenuItem exportCSVMenuItem = new JMenuItem("CSV Datei erstellen");
 		exportMenu.add(exportCSVMenuItem);
@@ -190,13 +190,20 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				// Header für Fragen rausholen und speichern
-				
-				// Ordnerstruktur traversieren und Antwortdateien suchen + Daten speichern
-				
-				//csv Datei erstellen
+				QuestionTreeNode experimentNode = experimentEditor.getTree().getRoot();
+				HashMap<QuestionTreeNode, ArrayList<Pair<String, String>>> formInfos = QuestionTreeNodeHTMLHandler
+						.getForms(experimentNode);
+				String experimentCode = experimentNode.getAttributeValue(Constants.KEY_EXPERIMENT_CODE);
+				System.out.println("Code = " + experimentCode);
+
+				String path = currentFile.getPath();
+				int index = path.lastIndexOf(System.getProperty("file.separator"));
+				path = index != -1 ? path.substring(0, index) : path;
+				File directory = new File(path);
+
+				// csv Datei erstellen
 			}
-			
+
 		});
 
 		fileMenu.addSeparator();
@@ -210,6 +217,20 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 		});
 
 		enableMenuItems();
+	}
+
+	private void getAnswerFiles(File file, ArrayList<File> answerFiles, String experimentCode) {
+		File[] directoryFiles = file.listFiles();
+		for(int i=0; i<directoryFiles.length; i++) {
+			File currentFile = directoryFiles[i];
+			if(currentFile.isDirectory()) {
+				getAnswerFiles(currentFile, answerFiles, experimentCode);
+			} else if(currentFile.getName().startsWith(experimentCode + "_")){
+				if(currentFile.getName().equals("answers.xml")) {
+					
+				}
+			}
+		}
 	}
 
 	private void enableMenuItems() {

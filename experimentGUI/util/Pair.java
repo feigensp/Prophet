@@ -35,7 +35,9 @@ public class Pair<K,V> {
 	 * returns a String representation of the pair
 	 */
 	public String toString() {
-		return key.toString() + ":" + value.toString();
+		String keyOutput = key == null ? null : key.toString();
+		String valueOutput = value == null ? null : value.toString();
+		return keyOutput + ":" + valueOutput;
 	}
 
 	/**

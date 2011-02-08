@@ -4,16 +4,21 @@ import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.io.StringReader;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.JTextPane;
 import javax.swing.border.EmptyBorder;
 import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
 import javax.swing.text.html.HTML;
 import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
+
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
 public class HTMLTest extends JFrame {
 
@@ -22,7 +27,7 @@ public class HTMLTest extends JFrame {
 	 */
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JTextPane textPane;
+	private RSyntaxTextArea textPane;
 
 	/**
 	 * Launch the application.
@@ -54,8 +59,7 @@ public class HTMLTest extends JFrame {
 		JButton button = new JButton("New button");
 		contentPane.add(button, BorderLayout.SOUTH);
 
-		textPane = new JTextPane();
-		textPane.setEditorKit(new HTMLEditorKit());
+		textPane = new RSyntaxTextArea();
 		textPane.setText("<form id=\"formname\">"
 				+ "frage 1 test<br><input name=\"vorname\" type=\"text\" size=\"5\">"
 				+ "<br><br><input name ='nextQuestion' type='submit' value='Weiter'>" + "<form>");
@@ -63,9 +67,20 @@ public class HTMLTest extends JFrame {
 
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
+				HTMLEditorKit editKit = new HTMLEditorKit();
+				HTMLDocument htmlDoc = (HTMLDocument) editKit.createDefaultDocument();
+				StringReader reader = new StringReader(textPane.getText());
+				try {
+					editKit.read(reader, htmlDoc, 0);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (BadLocationException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				
-				
-				HTMLDocument htmlDoc = (HTMLDocument) textPane.getDocument();
+//				HTMLDocument htmlDoc = (HTMLDocument) textPane.getDocument();
 
 				for (HTMLDocument.Iterator iterator = htmlDoc.getIterator(HTML.Tag.INPUT); iterator.isValid(); iterator
 						.next()) {
