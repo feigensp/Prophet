@@ -70,8 +70,6 @@ public class QuestionViewPane extends JScrollPane {
 	private FormView submitButton;
 	private boolean doNotFire = false;
 
-	private HashSet<String> header = new HashSet<String>();
-
 	/**
 	 * With the call of the Constructor the data is loaded and everything is
 	 * initialized. The first question is showed.
@@ -99,7 +97,6 @@ public class QuestionViewPane extends JScrollPane {
 									// pressed?
 									protected void submitData(String data) {
 										String action = saveAnswers(data);
-										questionNode.setAnswer(HEADER_ATTRIBUTE, header.toString());
 										if (action != null) {
 											fireEvent(action);
 										}
@@ -114,13 +111,6 @@ public class QuestionViewPane extends JScrollPane {
 										&& elem.getAttributes().getAttribute(HTML.Attribute.TYPE)
 												.equals(HTML_TYPE_SUBMIT)) {
 									submitButton = formView;
-								} else {
-									// if (key.equals(Constants.KEY_FORWARD) ||
-									// key.equals(Constants.KEY_BACKWARD)) {
-									// result=key;
-									// }
-									header.add(formView.getAttributes().getAttribute(HTML.Attribute.NAME)
-											.toString());
 								}
 								return formView;
 							}
