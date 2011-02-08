@@ -19,7 +19,7 @@ import javax.swing.KeyStroke;
 import experimentGUI.Constants;
 import experimentGUI.util.Pair;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
-import experimentGUI.util.questionTreeNode.QuestionTreeNodeHTMLHandler;
+import experimentGUI.util.questionTreeNode.QuestionTreeHTMLHandler;
 import experimentGUI.util.questionTreeNode.QuestionTreeXMLHandler;
 
 /**
@@ -156,7 +156,7 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 							return;
 						}
 					}
-					QuestionTreeNodeHTMLHandler.saveAsHTMLFile(file, experimentEditor.getTree().getRoot());
+					QuestionTreeHTMLHandler.saveAsHTMLFile(file, experimentEditor.getTree().getRoot());
 				}
 			}
 		});
@@ -176,8 +176,7 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 							return;
 						}
 					} else {
-						QuestionTreeNodeHTMLHandler.saveAsHTMLFiles(file, experimentEditor.getTree()
-								.getRoot());
+						QuestionTreeHTMLHandler.saveAsHTMLFiles(file, experimentEditor.getTree().getRoot());
 					}
 				}
 			}
@@ -191,17 +190,23 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				QuestionTreeNode experimentNode = experimentEditor.getTree().getRoot();
-				HashMap<QuestionTreeNode, ArrayList<Pair<String, String>>> formInfos = QuestionTreeNodeHTMLHandler
+				ArrayList<Pair<QuestionTreeNode, ArrayList<Pair<String, String>>>> formInfos = QuestionTreeHTMLHandler
 						.getForms(experimentNode);
+				ArrayList<QuestionTreeNode> answerNodes = new ArrayList<QuestionTreeNode>();
 				String experimentCode = experimentNode.getAttributeValue(Constants.KEY_EXPERIMENT_CODE);
-				System.out.println("Code = " + experimentCode);
 
 				String path = currentFile.getPath();
 				int index = path.lastIndexOf(System.getProperty("file.separator"));
 				path = index != -1 ? path.substring(0, index) : path;
-				File directory = new File(path);
+				File f = new File(path);
+				if (f.getName().startsWith(experimentCode + "_")) {
+					getAnswerFiles(f, answerNodes, experimentCode, true);
+				} else {
+					getAnswerFiles(f, answerNodes, experimentCode, false);
+				}
 
 				// csv Datei erstellen
+				QuestionTreeXMLHandler.saveAsCSVFile(formInfos, answerNodes, experimentCode);
 			}
 
 		});
@@ -219,15 +224,23 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 		enableMenuItems();
 	}
 
-	private void getAnswerFiles(File file, ArrayList<File> answerFiles, String experimentCode) {
+	private void getAnswerFiles(File file, ArrayList<QuestionTreeNode> answerNodes, String experimentCode,
+			boolean search) {
 		File[] directoryFiles = file.listFiles();
-		for(int i=0; i<directoryFiles.length; i++) {
+		for (int i = 0; i < directoryFiles.length; i++) {
 			File currentFile = directoryFiles[i];
-			if(currentFile.isDirectory()) {
-				getAnswerFiles(currentFile, answerFiles, experimentCode);
-			} else if(currentFile.getName().startsWith(experimentCode + "_")){
-				if(currentFile.getName().equals("answers.xml")) {
-					
+			if (currentFile.isDirectory()) {
+				if (currentFile.getName().startsWith(experimentCode + "_")) {
+					getAnswerFiles(currentFile, answerNodes, experimentCode, true);
+				} else {
+					getAnswerFiles(currentFile, answerNodes, experimentCode, false);
+				}
+			} else if (search && currentFile.getName().equals("answers.xml")) {
+				try {
+					answerNodes.add(QuestionTreeXMLHandler.loadXMLTree(currentFile.getPath()));
+				} catch (FileNotFoundException e) {
+					JOptionPane.showMessageDialog(null, "Datei " + currentFile.getAbsolutePath()
+							+ " nciht gefunden.");
 				}
 			}
 		}

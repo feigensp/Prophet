@@ -7,11 +7,15 @@
 
 package experimentGUI.util.questionTreeNode;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Map.Entry;
 
+import javax.swing.JOptionPane;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerFactory;
@@ -24,6 +28,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import experimentGUI.Constants;
+import experimentGUI.util.Pair;
 
 public class QuestionTreeXMLHandler {
 	public final static String ATTRIBUTE_NAME = "name";
@@ -45,11 +51,11 @@ public class QuestionTreeXMLHandler {
 	 *            the xml-document
 	 */
 	private static void saveXMLNode(Document xmlTree, Element xmlNode, QuestionTreeNode treeNode) {
-		//Name und Value hinzufügen
+		// Name und Value hinzufügen
 		xmlNode.setAttribute(ATTRIBUTE_NAME, treeNode.getName());
 		xmlNode.setAttribute(ATTRIBUTE_VALUE, treeNode.getValue());
 		// evtl. Attribute hinzufügen
-		if (treeNode.getAttributes().size()>0) {
+		if (treeNode.getAttributes().size() > 0) {
 			Element xmlAttributesNode = xmlTree.createElement(TYPE_ATTRIBUTES);
 			xmlNode.appendChild(xmlAttributesNode);
 			for (Entry<String, QuestionTreeNode> attributeNode : treeNode.getAttributes().entrySet()) {
@@ -60,11 +66,11 @@ public class QuestionTreeXMLHandler {
 			}
 		}
 		// evtl. Kinder hinzufügen
-		if (treeNode.getChildCount()>0) {
+		if (treeNode.getChildCount() > 0) {
 			Element xmlChildrenNode = xmlTree.createElement(TYPE_CHILDREN);
 			xmlNode.appendChild(xmlChildrenNode);
-			for (int i=0; i<treeNode.getChildCount(); i++) {
-				QuestionTreeNode treeChild = (QuestionTreeNode)treeNode.getChildAt(i);
+			for (int i = 0; i < treeNode.getChildCount(); i++) {
+				QuestionTreeNode treeChild = (QuestionTreeNode) treeNode.getChildAt(i);
 				Element xmlChild = xmlTree.createElement(treeChild.getType());
 				xmlChildrenNode.appendChild(xmlChild);
 				saveXMLNode(xmlTree, xmlChild, treeChild);
@@ -88,8 +94,7 @@ public class QuestionTreeXMLHandler {
 			if (!dir.exists()) {
 				dir.mkdirs();
 			}
-			xmlTree = DocumentBuilderFactory.newInstance().newDocumentBuilder()
-					.newDocument();
+			xmlTree = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
 			// Wurzelknoten erschaffen
 			Element xmlRoot = xmlTree.createElement(treeRoot.getType());
 			xmlTree.appendChild(xmlRoot);
@@ -100,11 +105,8 @@ public class QuestionTreeXMLHandler {
 		// Fragebogen in Datei speichern
 		try {
 			if (xmlTree != null) {
-				TransformerFactory
-						.newInstance()
-						.newTransformer()
-						.transform(new DOMSource(xmlTree),
-								new StreamResult(path));
+				TransformerFactory.newInstance().newTransformer()
+						.transform(new DOMSource(xmlTree), new StreamResult(path));
 			}
 		} catch (Exception e1) {
 			e1.printStackTrace();
@@ -112,7 +114,7 @@ public class QuestionTreeXMLHandler {
 			e1.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * method which adds recursively the childs (to an xml file)
 	 * 
@@ -124,11 +126,11 @@ public class QuestionTreeXMLHandler {
 	 *            the xml-document
 	 */
 	private static void saveXMLAnswerNode(Document xmlTree, Element xmlNode, QuestionTreeNode treeNode) {
-		//Name hinzufügen
+		// Name hinzufügen
 		xmlNode.setAttribute(ATTRIBUTE_NAME, treeNode.getName());
-		xmlNode.setAttribute(ATTRIBUTE_TIME, ""+treeNode.getAnswerTime());
+		xmlNode.setAttribute(ATTRIBUTE_TIME, "" + treeNode.getAnswerTime());
 		// evtl. Antworten hinzufügen
-		if (treeNode.getAnswers().size()>0) {
+		if (treeNode.getAnswers().size() > 0) {
 			Element xmlAnswersNode = xmlTree.createElement(TYPE_ANSWERS);
 			xmlNode.appendChild(xmlAnswersNode);
 			for (Entry<String, String> answerEntry : treeNode.getAnswers().entrySet()) {
@@ -139,11 +141,11 @@ public class QuestionTreeXMLHandler {
 			}
 		}
 		// evtl. Kinder hinzufügen
-		if (treeNode.getChildCount()>0) {
+		if (treeNode.getChildCount() > 0) {
 			Element xmlChildrenNode = xmlTree.createElement(TYPE_CHILDREN);
 			xmlNode.appendChild(xmlChildrenNode);
-			for (int i=0; i<treeNode.getChildCount(); i++) {
-				QuestionTreeNode treeChild = (QuestionTreeNode)treeNode.getChildAt(i);
+			for (int i = 0; i < treeNode.getChildCount(); i++) {
+				QuestionTreeNode treeChild = (QuestionTreeNode) treeNode.getChildAt(i);
 				Element xmlChild = xmlTree.createElement(treeChild.getType());
 				xmlChildrenNode.appendChild(xmlChild);
 				saveXMLAnswerNode(xmlTree, xmlChild, treeChild);
@@ -167,8 +169,7 @@ public class QuestionTreeXMLHandler {
 			if (!dir.exists()) {
 				dir.mkdirs();
 			}
-			xmlTree = DocumentBuilderFactory.newInstance().newDocumentBuilder()
-					.newDocument();
+			xmlTree = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
 			// Wurzelknoten erschaffen
 			Element xmlRoot = xmlTree.createElement(treeRoot.getType());
 			xmlTree.appendChild(xmlRoot);
@@ -179,11 +180,8 @@ public class QuestionTreeXMLHandler {
 		// Fragebogen in Datei speichern
 		try {
 			if (xmlTree != null) {
-				TransformerFactory
-						.newInstance()
-						.newTransformer()
-						.transform(new DOMSource(xmlTree),
-								new StreamResult(path));
+				TransformerFactory.newInstance().newTransformer()
+						.transform(new DOMSource(xmlTree), new StreamResult(path));
 			}
 		} catch (Exception e1) {
 			e1.printStackTrace();
@@ -202,31 +200,31 @@ public class QuestionTreeXMLHandler {
 	 */
 	private static QuestionTreeNode loadXMLNode(Node xmlNode) {
 		QuestionTreeNode result = new QuestionTreeNode(xmlNode.getNodeName());
-		//Name und Value setzen
+		// Name und Value setzen
 		Node xmlNameNode = xmlNode.getAttributes().getNamedItem(ATTRIBUTE_NAME);
-		if (xmlNameNode !=null) {
+		if (xmlNameNode != null) {
 			result.setName(xmlNameNode.getNodeValue());
 		}
 		Node xmlValueNode = xmlNode.getAttributes().getNamedItem(ATTRIBUTE_VALUE);
-		if (xmlValueNode!=null) {
+		if (xmlValueNode != null) {
 			result.setValue(xmlValueNode.getNodeValue());
 		}
-		//Attribute und Kinder hinzufügen
+		// Attribute und Kinder hinzufügen
 		NodeList xmlMetaNodes = xmlNode.getChildNodes();
 		for (int i = 0; i < xmlMetaNodes.getLength(); i++) {
 			Node xmlMetaNode = xmlMetaNodes.item(i);
 			if (xmlMetaNode.getNodeName().equals(TYPE_ATTRIBUTES) && xmlMetaNode.hasChildNodes()) {
 				NodeList xmlAttributesList = xmlMetaNode.getChildNodes();
-				for (int j=0; j<xmlAttributesList.getLength();j++) {
+				for (int j = 0; j < xmlAttributesList.getLength(); j++) {
 					Node xmlAttributeNode = xmlAttributesList.item(j);
 					QuestionTreeNode attributeNode = loadXMLNode(xmlAttributeNode);
-					result.setAttribute(attributeNode.getName(), attributeNode);					
+					result.setAttribute(attributeNode.getName(), attributeNode);
 				}
 			} else if (xmlMetaNode.getNodeName().equals(TYPE_CHILDREN) && xmlMetaNode.hasChildNodes()) {
 				NodeList xmlChildrenList = xmlMetaNode.getChildNodes();
-				for (int j=0; j<xmlChildrenList.getLength();j++) {
+				for (int j = 0; j < xmlChildrenList.getLength(); j++) {
 					Node xmlChildNode = xmlChildrenList.item(j);
-					result.add(loadXMLNode(xmlChildNode));					
+					result.add(loadXMLNode(xmlChildNode));
 				}
 			}
 		}
@@ -245,10 +243,9 @@ public class QuestionTreeXMLHandler {
 		if (!file.exists()) {
 			throw new FileNotFoundException();
 		}
-		try {			
+		try {
 			// Document lesen
-			Document doc = DocumentBuilderFactory.newInstance()
-					.newDocumentBuilder().parse(file);
+			Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(file);
 			// Wurzel holen
 			Node xmlRoot = doc.getFirstChild();
 			return loadXMLNode(xmlRoot);
@@ -260,5 +257,41 @@ public class QuestionTreeXMLHandler {
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	public static void saveAsCSVFile(ArrayList<Pair<QuestionTreeNode, ArrayList<Pair<String, String>>>> formInfos,
+			ArrayList<QuestionTreeNode> answerNodes, String experimentCode) {
+		FileWriter fw;
+		BufferedWriter bw;
+		String header;
+
+		try {
+			fw = new FileWriter(new File(experimentCode + ".csv"));
+			bw = new BufferedWriter(fw);
+			
+			header = "\"expCode\";\"probCode\"";
+			for(int i=0; i<formInfos.size(); i++) {
+				Pair<QuestionTreeNode, ArrayList<Pair<String, String>>> questionInfos = formInfos.get(i);
+				header += ";\"" + questionInfos.getKey().getName() + "::time\"";
+				ArrayList<Pair<String, String>> questionForms = questionInfos.getValue();
+				for(int j=0; j<questionForms.size(); j++) {
+					String formName = questionForms.get(j).getKey();
+					if(formName!= null) {
+						header += ";\"" + questionInfos.getKey().getName() + "::" + formName+"\"";
+					}
+				}
+			}
+			
+			
+			
+
+			bw.write(header + System.getProperty("line.separator"));
+			
+			
+			bw.close();
+		} catch (IOException ioe) {
+			JOptionPane.showMessageDialog(null, "Fehler beim Speichern der CSV-Datei.");
+		}
+
 	}
 }

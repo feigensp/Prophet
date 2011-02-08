@@ -6,8 +6,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.swing.JOptionPane;
 import javax.swing.text.AttributeSet;
@@ -19,15 +17,15 @@ import javax.swing.text.html.HTMLEditorKit;
 import experimentGUI.util.Pair;
 import experimentGUI.util.QuestionViewPane;
 
-public class QuestionTreeNodeHTMLHandler {
+public class QuestionTreeHTMLHandler {
 
 	public static final int EXPERIMENT_LEVEL = 0;
 	public static final int CATEGORY_LEVEL = 1;
 	public static final int QUESTION_LEVEL = 2;
 
-	public static HashMap<QuestionTreeNode, ArrayList<Pair<String, String>>> getForms(
+	public static ArrayList<Pair<QuestionTreeNode, ArrayList<Pair<String, String>>>> getForms(
 			QuestionTreeNode startNode) {
-		HashMap<QuestionTreeNode, ArrayList<Pair<String, String>>> ret = new HashMap<QuestionTreeNode, ArrayList<Pair<String, String>>>();
+		ArrayList<Pair<QuestionTreeNode, ArrayList<Pair<String, String>>>> ret = new ArrayList<Pair<QuestionTreeNode, ArrayList<Pair<String, String>>>>();
 		QuestionTreeNode node = startNode;
 		HTML.Tag[] tags = { HTML.Tag.INPUT, HTML.Tag.SELECT, HTML.Tag.TEXTAREA };
 
@@ -52,7 +50,7 @@ public class QuestionTreeNodeHTMLHandler {
 					}
 				}
 
-				ret.put(node, forms);
+				ret.add(new Pair<QuestionTreeNode, ArrayList<Pair<String, String>>>(node, forms));
 				node = (QuestionTreeNode) node.getNextNode();
 			}
 		} catch (IOException e) {
