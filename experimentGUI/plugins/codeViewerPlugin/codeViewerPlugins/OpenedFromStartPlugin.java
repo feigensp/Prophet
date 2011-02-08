@@ -8,7 +8,7 @@ import experimentGUI.util.settingsComponents.SettingsComponentDescription;
 import experimentGUI.util.settingsComponents.SettingsPluginComponentDescription;
 import experimentGUI.util.settingsComponents.components.SettingsTextField;
 
-public class OpenedByStartPlugin implements CodeViewerPluginInterface{
+public class OpenedFromStartPlugin implements CodeViewerPluginInterface{
 	
 	public static final String KEY = "openedByStart";
 	public static final String KEY_PATH = "startPath";
@@ -18,7 +18,7 @@ public class OpenedByStartPlugin implements CodeViewerPluginInterface{
 	@Override
 	public SettingsComponentDescription getSettingsComponentDescription() {
 		SettingsPluginComponentDescription result = new SettingsPluginComponentDescription(KEY, "Datei standardmäßig öffnen");
-		result.addSubComponent(new SettingsComponentDescription(SettingsTextField.class,KEY_PATH, "Zu öffnende Datei (vom Quelltextpfad aus):"));
+		result.addSubComponent(new SettingsComponentDescription(SettingsTextField.class,KEY_PATH, "Zu öffnende Datei (relativ zum Pfad der Quelltexte):"));
 		return result;
 	}
 

@@ -4,10 +4,12 @@ import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.IOException;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -48,17 +50,31 @@ public class SettingsFilePathChooser  extends SettingsComponent {
 		add(pathButton,BorderLayout.EAST);
 		pathButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				JFileChooser fc = new JFileChooser(new File("."));
+				File userDir = new File(".");
+				JFileChooser fc = new JFileChooser(userDir);
 				fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
 				if (fc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
-					String selectedPath = fc.getSelectedFile()
-							.getAbsolutePath();
-					String currentPath = System.getProperty("user.dir");
-					if (selectedPath.indexOf(currentPath) == 0) {
+					String selectedPath;
+					try {
+						selectedPath = fc.getSelectedFile()
+								.getCanonicalPath();
+					} catch (IOException e) {
+						e.printStackTrace();
+						return;
+					}
+					String currentPath;
+					try {
+						currentPath = userDir.getCanonicalPath();
+					} catch (IOException e) {
+						e.printStackTrace();
+						return;
+					}
+					if (selectedPath.startsWith(currentPath)) {
 						selectedPath = selectedPath.substring(currentPath
 								.length() + 1);
+						JOptionPane.showMessageDialog(null, "Bitte beachten Sie:\nDie eben durchgeführte Aktion hat einen Pfad erzeugt, der relativ zum aktuellen Arbeitsverzeichnis steht. Sollte Ihre XML-Datei nicht unmittelbar im aktuellen Arbeitsverzeichnis liegen, müssen Sie den erzeugten Pfad anpassen.");
 					}
-					textField.setText(selectedPath.replace('\\','/'));
+					textField.setText(selectedPath.replace('\\','/'));					
 				}
 			}
 		});
