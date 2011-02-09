@@ -99,13 +99,10 @@ public class ExternalProgramsPlugin extends Thread implements PluginInterface {
 		JButton button = new JButton(caption);
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				System.out.println("id="+id);
 				ProgramThread process = processes.get(id);
 				if (process == null) {
-					System.out.println("neuer process");
 					processes.add(id, new ProgramThread(command));
 				} else if(!process.isRunning()) {
-					System.out.println("process beendet - starte neu");
 					processes.add(id, new ProgramThread(command));
 				} else {
 					JOptionPane
