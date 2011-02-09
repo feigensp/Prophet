@@ -6,8 +6,9 @@ import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Iterator;
 
 import javax.swing.JFileChooser;
 import javax.swing.JMenu;
@@ -18,8 +19,8 @@ import javax.swing.KeyStroke;
 
 import experimentGUI.Constants;
 import experimentGUI.util.Pair;
-import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 import experimentGUI.util.questionTreeNode.QuestionTreeHTMLHandler;
+import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 import experimentGUI.util.questionTreeNode.QuestionTreeXMLHandler;
 
 /**
@@ -35,6 +36,7 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 	private File currentFile;
 	private JMenuItem saveMenuItem;
 	private JMenuItem saveAsMenuItem;
+	private JMenuItem nameCheckMenuItem;
 	private JMenu exportMenu;
 
 	public final static String MENU_FILE = "Datei";
@@ -186,35 +188,80 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 		JMenuItem exportCSVMenuItem = new JMenuItem("CSV Datei erstellen");
 		exportMenu.add(exportCSVMenuItem);
 		exportCSVMenuItem.addActionListener(new ActionListener() {
-
-			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				QuestionTreeNode experimentNode = experimentEditor.getTree().getRoot();
-				ArrayList<Pair<QuestionTreeNode, ArrayList<Pair<String, String>>>> formInfos = QuestionTreeHTMLHandler
-						.getForms(experimentNode);
-				ArrayList<QuestionTreeNode> answerNodes = new ArrayList<QuestionTreeNode>();
-				String experimentCode = experimentNode.getAttributeValue(Constants.KEY_EXPERIMENT_CODE);
-
-				String path = currentFile.getPath();
-				int index = path.lastIndexOf(System.getProperty("file.separator"));
-				path = index != -1 ? path.substring(0, index) : path;
-				File f = new File(path);
-				if (f.getName().startsWith(experimentCode + "_")) {
+				try {
+					QuestionTreeNode experimentNode = experimentEditor.getTree().getRoot();
+					ArrayList<Pair<QuestionTreeNode, ArrayList<Pair<String, String>>>> formInfos = QuestionTreeHTMLHandler
+							.getForms(experimentNode);
+					ArrayList<QuestionTreeNode> answerNodes = new ArrayList<QuestionTreeNode>();
+					String experimentCode = experimentNode.getAttributeValue(Constants.KEY_EXPERIMENT_CODE);
+					// Antwortdateien ermitteln
+					String path;
+						path = currentFile.getCanonicalPath();
+					int index = path.lastIndexOf(System.getProperty("file.separator"));
+					path = index != -1 ? path.substring(0, index) : path;
+					File f = new File(path);
 					getAnswerFiles(f, answerNodes, experimentCode, true);
-				} else {
-					getAnswerFiles(f, answerNodes, experimentCode, false);
+					// csv Datei erstellen
+					QuestionTreeXMLHandler.saveAsCSVFile(formInfos, answerNodes, experimentCode, path);
+				} catch (IOException e) {
+					JOptionPane.showMessageDialog(null, "Fehler bei der Ermittlung des Pfades der geladenen Datei.");
 				}
-
-				// csv Datei erstellen
-				QuestionTreeXMLHandler.saveAsCSVFile(formInfos, answerNodes, experimentCode);
 			}
-
 		});
 
 		fileMenu.addSeparator();
 
 		JMenuItem closeMenuItem = new JMenuItem(MENU_FILE_QUIT);
 		fileMenu.add(closeMenuItem);
+
+		JMenu extrasMenu = new JMenu("Extras");
+		add(extrasMenu);
+
+		nameCheckMenuItem = new JMenuItem("\u00DCberpr\u00FCfung Formularnamen");
+		extrasMenu.add(nameCheckMenuItem);
+		nameCheckMenuItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String output = "";
+				// get infos
+				QuestionTreeNode experimentNode = experimentEditor.getTree().getRoot();
+				ArrayList<Pair<QuestionTreeNode, ArrayList<Pair<String, String>>>> formInfos = QuestionTreeHTMLHandler
+						.getForms(experimentNode);
+
+				for (Pair<QuestionTreeNode, ArrayList<Pair<String, String>>> nodeInfo : formInfos) {
+					output += "<b>" + nodeInfo.getKey().getName() + ":</b><br>";
+					ArrayList<Pair<String, String>> forms = nodeInfo.getValue();
+					for (int i = 0; i < forms.size() - 1; i++) {
+						Pair<String, String> currentForm = forms.get(i);
+						int appearances = 1;
+						// anzahl der vorkommen des derzeitigen
+						// formularelementes berechnen
+						for (int j = i + 1; j < forms.size(); j++) {
+							if (currentForm.getKey() != null
+									&& currentForm.getKey().equals(forms.get(j).getKey())) {
+								if ((currentForm.getValue() != null && currentForm.getValue().equals(
+										forms.get(j).getValue()))
+										|| currentForm.getValue() == null && forms.get(j).getValue() == null) {
+									appearances++;
+									forms.remove(forms.get(j));
+									j--;
+								}
+							}
+						}
+						if (appearances > 1) {
+							output += "Name = " + currentForm.getKey() + "; Value = "
+									+ currentForm.getValue() + "; Vorkommen = " + appearances + "<br>";
+						}
+					}
+					output += "<br>";
+				}
+
+				JOptionPane.showMessageDialog(null,
+						"<html>Auflistung der Formularkomponenten mit gleichem name- und value-Attribut in einem Knoten:<br><br>"
+								+ output + "</html>");
+			}
+		});
+
 		closeMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				System.exit(0);
@@ -252,10 +299,12 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 			saveMenuItem.setEnabled(false);
 			saveAsMenuItem.setEnabled(false);
 			exportMenu.setEnabled(false);
+			nameCheckMenuItem.setEnabled(false);
 		} else {
 			saveMenuItem.setEnabled(true);
 			saveAsMenuItem.setEnabled(true);
 			exportMenu.setEnabled(true);
+			nameCheckMenuItem.setEnabled(true);
 		}
 	}
 }

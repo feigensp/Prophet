@@ -336,12 +336,12 @@ public class QuestionTreeXMLHandler {
 	 */
 	public static void saveAsCSVFile(
 			ArrayList<Pair<QuestionTreeNode, ArrayList<Pair<String, String>>>> formInfos,
-			ArrayList<QuestionTreeNode> answerNodes, String experimentCode) {
+			ArrayList<QuestionTreeNode> answerNodes, String experimentCode, String path) {
 		FileWriter fw;
 		BufferedWriter bw;
 		String line;
 		try {
-			fw = new FileWriter(new File(experimentCode + ".csv"));
+			fw = new FileWriter(new File(path + System.getProperty("file.separator") +  experimentCode + ".csv"));
 			bw = new BufferedWriter(fw);
 			// header schreiben
 			line = "\"expCode\";\"probCode\"";
