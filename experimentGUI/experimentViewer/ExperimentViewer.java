@@ -109,7 +109,12 @@ public class ExperimentViewer extends JFrame {
 				JOptionPane.showMessageDialog(this, "Experiment nicht im aktuellen Verzeichnis.");
 				System.exit(0);
 			}
-			tree = QuestionTreeXMLHandler.loadXMLTree(fileName);
+			QuestionTreeNode myTree = QuestionTreeXMLHandler.loadXMLTree(fileName);
+			if(myTree!=null) {
+				tree=myTree;
+			} else {
+				JOptionPane.showMessageDialog(this, "Keine gültige Experiment-Datei.");
+			}
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(this, "Experiment nicht gefunden.");
 			System.exit(0);

@@ -100,7 +100,7 @@ public class ExperimentEditor extends JFrame {
 	 * @return
 	 * 	The JTree that represents the question tree
 	 */
-	public QuestionTree getTree() {
+	public QuestionTree getTreeComponent() {
 		return tree;
 	}
 	/**

@@ -17,6 +17,7 @@ import javax.swing.event.DocumentListener;
 import experimentGUI.util.settingsComponents.SettingsComponent;
 
 public class SettingsFilePathChooser  extends SettingsComponent {
+	private int mode = JFileChooser.FILES_ONLY;
 	private static final long serialVersionUID = 1L;
 	private JLabel caption;
 	private JTextField textField;
@@ -50,9 +51,9 @@ public class SettingsFilePathChooser  extends SettingsComponent {
 		add(pathButton,BorderLayout.EAST);
 		pathButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				File userDir = new File(".");
+				File userDir = new File(".");				
 				JFileChooser fc = new JFileChooser(userDir);
-				fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+				fc.setFileSelectionMode(mode);
 				if (fc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
 					String selectedPath;
 					try {
@@ -69,6 +70,7 @@ public class SettingsFilePathChooser  extends SettingsComponent {
 						e.printStackTrace();
 						return;
 					}
+					System.out.println(""+(selectedPath.startsWith(currentPath)));
 					if (selectedPath.startsWith(currentPath)) {
 						selectedPath = selectedPath.substring(currentPath
 								.length() + 1);
@@ -78,6 +80,10 @@ public class SettingsFilePathChooser  extends SettingsComponent {
 				}
 			}
 		});
+	}
+	
+	public void setMode(int mode) {
+		this.mode = mode;
 	}
 
 	public void setCaption(String cap) {

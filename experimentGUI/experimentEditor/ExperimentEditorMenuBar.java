@@ -8,7 +8,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import javax.swing.JFileChooser;
 import javax.swing.JMenu;
@@ -37,6 +36,7 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 	private JMenuItem saveMenuItem;
 	private JMenuItem saveAsMenuItem;
 	private JMenuItem nameCheckMenuItem;
+	private JMenuItem exportCSVMenuItem;
 	private JMenu exportMenu;
 
 	public final static String MENU_FILE = "Datei";
@@ -85,14 +85,18 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 				JFileChooser fc = new JFileChooser(currentFile == null ? new File(".") : currentFile);
 				if (fc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
 					currentFile = fc.getSelectedFile();
-					QuestionTreeNode newRoot;
 					try {
-						newRoot = QuestionTreeXMLHandler.loadXMLTree(currentFile.getAbsolutePath());
-						experimentEditor.loadTree(newRoot);
-						experimentEditor.setTitle(ExperimentEditor.TITLE + " - "
-								+ currentFile.getAbsolutePath());
+						QuestionTreeNode myTree = QuestionTreeXMLHandler.loadXMLTree(currentFile.getAbsolutePath());
+						if(myTree!=null) {
+							experimentEditor.loadTree(myTree);
+							experimentEditor.setTitle(ExperimentEditor.TITLE + " - "
+									+ currentFile.getAbsolutePath());
 
-						enableMenuItems();
+							enableMenuItems();
+						} else {
+							JOptionPane.showMessageDialog(experimentEditor, "Keine gültige Experiment-Datei.");
+						}
+						
 					} catch (FileNotFoundException e) {
 						JOptionPane.showMessageDialog(experimentEditor, MESSAGE_FILE_NOT_FOUND,
 								MESSAGE_FILE_NOT_FOUND_TITLE, JOptionPane.ERROR_MESSAGE);
@@ -108,7 +112,7 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 		saveMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if (currentFile != null) {
-					QuestionTreeXMLHandler.saveXMLTree(experimentEditor.getTree().getRoot(),
+					QuestionTreeXMLHandler.saveXMLTree(experimentEditor.getTreeComponent().getRoot(),
 							currentFile.getAbsolutePath());
 				} else {
 					saveAsMenuItem.doClick();
@@ -132,9 +136,10 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 						}
 					}
 					currentFile = file;
-					QuestionTreeXMLHandler.saveXMLTree(experimentEditor.getTree().getRoot(),
+					QuestionTreeXMLHandler.saveXMLTree(experimentEditor.getTreeComponent().getRoot(),
 							file.getAbsolutePath());
 					experimentEditor.setTitle(ExperimentEditor.TITLE + " - " + currentFile.getAbsolutePath());
+					enableMenuItems();
 				}
 			}
 		});
@@ -144,7 +149,7 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 		exportMenu = new JMenu("Exportieren");
 		fileMenu.add(exportMenu);
 
-		JMenuItem exportHTMLFileMenuItem = new JMenuItem("HTML (einzelne Datei)");
+		JMenuItem exportHTMLFileMenuItem = new JMenuItem("HTML-Datei der Fragen");
 		exportMenu.add(exportHTMLFileMenuItem);
 		exportHTMLFileMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -158,46 +163,23 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 							return;
 						}
 					}
-					QuestionTreeHTMLHandler.saveAsHTMLFile(file, experimentEditor.getTree().getRoot());
+					QuestionTreeHTMLHandler.saveAsHTMLFile(file, experimentEditor.getTreeComponent().getRoot());
 				}
 			}
 		});
-
-		JMenuItem exportHTMLFilesMenuItem = new JMenuItem("HTML (Ordnerstruktur)");
-		exportMenu.add(exportHTMLFilesMenuItem);
-		exportHTMLFilesMenuItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				JFileChooser fc = new JFileChooser(currentFile);
-				fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-				if (fc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
-					File file = fc.getSelectedFile();
-					if (file.exists()) {
-						int n = JOptionPane.showConfirmDialog(null, file.getName() + MESSAGE_REPLACE_FILE,
-								MESSAGE_REPLACE_FILE_TITLE, JOptionPane.YES_NO_OPTION);
-						if (n == JOptionPane.NO_OPTION) {
-							return;
-						}
-					} else {
-						QuestionTreeHTMLHandler.saveAsHTMLFiles(file, experimentEditor.getTree().getRoot());
-					}
-				}
-			}
-		});
-
-		exportMenu.addSeparator();
-		JMenuItem exportCSVMenuItem = new JMenuItem("CSV Datei erstellen");
+		
+		exportCSVMenuItem = new JMenuItem("CSV-Datei der Antworten");
 		exportMenu.add(exportCSVMenuItem);
 		exportCSVMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				try {
-					QuestionTreeNode experimentNode = experimentEditor.getTree().getRoot();
+					QuestionTreeNode experimentNode = experimentEditor.getTreeComponent().getRoot();
 					ArrayList<Pair<QuestionTreeNode, ArrayList<Pair<String, String>>>> formInfos = QuestionTreeHTMLHandler
 							.getForms(experimentNode);
 					ArrayList<QuestionTreeNode> answerNodes = new ArrayList<QuestionTreeNode>();
 					String experimentCode = experimentNode.getAttributeValue(Constants.KEY_EXPERIMENT_CODE);
 					// Antwortdateien ermitteln
-					String path;
-						path = currentFile.getCanonicalPath();
+					String path = currentFile.getCanonicalPath();
 					int index = path.lastIndexOf(System.getProperty("file.separator"));
 					path = index != -1 ? path.substring(0, index) : path;
 					File f = new File(path);
@@ -222,14 +204,15 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 		extrasMenu.add(nameCheckMenuItem);
 		nameCheckMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String output = "";
+				String globalOutput = "";
 				// get infos
-				QuestionTreeNode experimentNode = experimentEditor.getTree().getRoot();
+				QuestionTreeNode experimentNode = experimentEditor.getTreeComponent().getRoot();
 				ArrayList<Pair<QuestionTreeNode, ArrayList<Pair<String, String>>>> formInfos = QuestionTreeHTMLHandler
 						.getForms(experimentNode);
 
 				for (Pair<QuestionTreeNode, ArrayList<Pair<String, String>>> nodeInfo : formInfos) {
-					output += "<b>" + nodeInfo.getKey().getName() + ":</b><br>";
+					String output = "<b>" + nodeInfo.getKey().getName() + ":</b><br>";
+					boolean add = false;
 					ArrayList<Pair<String, String>> forms = nodeInfo.getValue();
 					for (int i = 0; i < forms.size() - 1; i++) {
 						Pair<String, String> currentForm = forms.get(i);
@@ -249,16 +232,17 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 							}
 						}
 						if (appearances > 1) {
-							output += "Name = " + currentForm.getKey() + "; Value = "
-									+ currentForm.getValue() + "; Vorkommen = " + appearances + "<br>";
+							output += "Name = " + currentForm.getKey() + (currentForm.getValue() != null ? "; Value = "
+									+ currentForm.getValue() : "; kein Value") + "; Vorkommen = " + appearances + "<br>";
+							add=true;
 						}
 					}
-					output += "<br>";
+					globalOutput += add ? output+"<br>" : "";
 				}
 
 				JOptionPane.showMessageDialog(null,
-						"<html>Auflistung der Formularkomponenten mit gleichem name- und value-Attribut in einem Knoten:<br><br>"
-								+ output + "</html>");
+						globalOutput.length()>0 ? "<html>Auflistung der Formularkomponenten mit gleichem name- und value-Attribut in einem Knoten:<br><br>"
+								+ globalOutput + "</html>" : "Keine Duplikate gefunden.");
 			}
 		});
 
@@ -285,7 +269,9 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 			} else if (search && currentFile.getName().equals("answers.xml")) {
 				try {
 					QuestionTreeNode node = QuestionTreeXMLHandler.loadAnswerXMLTree(currentFile.getPath());
-					answerNodes.add(node);
+					if(node != null) {
+						answerNodes.add(node);
+					}
 				} catch (FileNotFoundException e) {
 					JOptionPane.showMessageDialog(null, "Datei " + currentFile.getAbsolutePath()
 							+ " nciht gefunden.");
@@ -295,16 +281,21 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 	}
 
 	private void enableMenuItems() {
-		if (experimentEditor.getTree() == null) {
-			saveMenuItem.setEnabled(false);
-			saveAsMenuItem.setEnabled(false);
-			exportMenu.setEnabled(false);
-			nameCheckMenuItem.setEnabled(false);
-		} else {
+		if (experimentEditor.getTreeComponent()!=null && experimentEditor.getTreeComponent().getRoot()!=null) {
+			if(currentFile == null) {
+				exportCSVMenuItem.setEnabled(false);
+			} else {
+				exportCSVMenuItem.setEnabled(true);
+			}
 			saveMenuItem.setEnabled(true);
 			saveAsMenuItem.setEnabled(true);
 			exportMenu.setEnabled(true);
 			nameCheckMenuItem.setEnabled(true);
+		} else {
+			saveMenuItem.setEnabled(false);
+			saveAsMenuItem.setEnabled(false);
+			exportMenu.setEnabled(false);
+			nameCheckMenuItem.setEnabled(false);
 		}
 	}
 }

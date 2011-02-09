@@ -250,14 +250,9 @@ public class QuestionTreeXMLHandler {
 			// Wurzel holen
 			Node xmlRoot = doc.getFirstChild();
 			return loadXMLNode(xmlRoot);
-		} catch (SAXException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (ParserConfigurationException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			return null;
 		}
-		return null;
 	}
 
 	private static QuestionTreeNode loadAnswerXMLNode(Node xmlNode) {
@@ -314,14 +309,9 @@ public class QuestionTreeXMLHandler {
 			// Wurzel holen
 			Node xmlRoot = doc.getFirstChild();
 			return loadAnswerXMLNode(xmlRoot);
-		} catch (SAXException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (ParserConfigurationException e) {
-			e.printStackTrace();
-		}
-		return null;
+		} catch (Exception e) {
+			return null;
+		} 
 	}
 
 	/**
