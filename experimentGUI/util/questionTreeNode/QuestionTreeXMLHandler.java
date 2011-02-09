@@ -24,6 +24,7 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
@@ -259,39 +260,136 @@ public class QuestionTreeXMLHandler {
 		return null;
 	}
 
-	public static void saveAsCSVFile(ArrayList<Pair<QuestionTreeNode, ArrayList<Pair<String, String>>>> formInfos,
+	private static QuestionTreeNode loadAnswerXMLNode(Node xmlNode) {
+		QuestionTreeNode result = new QuestionTreeNode(xmlNode.getNodeName());
+		Node xmlNameNode = xmlNode.getAttributes().getNamedItem(ATTRIBUTE_NAME);
+		// Name und Value setzen
+		if (xmlNameNode != null) {
+			result.setName(xmlNameNode.getNodeValue());
+		}
+		Node xmlValueNode = xmlNode.getAttributes().getNamedItem(ATTRIBUTE_VALUE);
+		if (xmlValueNode != null) {
+			result.setValue(xmlValueNode.getNodeValue());
+		}
+		// Attribute hinzufügen
+		NamedNodeMap xmlAttributeMap = xmlNode.getAttributes();
+		for (int i = 0; i < xmlAttributeMap.getLength(); i++) {
+			Node xmlAttribute = xmlAttributeMap.item(i);
+			QuestionTreeNode attributeNode = new QuestionTreeNode(QuestionTreeNode.TYPE_ATTRIBUTE,
+					xmlAttribute.getNodeName());
+			attributeNode.setValue(xmlAttribute.getNodeValue());
+			result.setAttribute(xmlAttribute.getNodeName(), attributeNode);
+		}
+		// Answers und Kinder hinzufügen
+		NodeList xmlMetaNodes = xmlNode.getChildNodes();
+		for (int i = 0; i < xmlMetaNodes.getLength(); i++) {
+			Node xmlMetaNode = xmlMetaNodes.item(i);
+			if (xmlMetaNode.getNodeName().equals(TYPE_ANSWERS) && xmlMetaNode.hasChildNodes()) {
+				NodeList xmlAttributesList = xmlMetaNode.getChildNodes();
+				for (int j = 0; j < xmlAttributesList.getLength(); j++) {
+					Node xmlAttributeNode = xmlAttributesList.item(j);
+					result.setAnswer(xmlAttributeNode.getAttributes().getNamedItem(ATTRIBUTE_NAME)
+							.getNodeValue(), xmlAttributeNode.getAttributes().getNamedItem(ATTRIBUTE_VALUE)
+							.getNodeValue());
+				}
+			} else if (xmlMetaNode.getNodeName().equals(TYPE_CHILDREN) && xmlMetaNode.hasChildNodes()) {
+				NodeList xmlChildrenList = xmlMetaNode.getChildNodes();
+				for (int j = 0; j < xmlChildrenList.getLength(); j++) {
+					Node xmlChildNode = xmlChildrenList.item(j);
+					result.add(loadAnswerXMLNode(xmlChildNode));
+				}
+			}
+		}
+		return result;
+	}
+
+	public static QuestionTreeNode loadAnswerXMLTree(String path) throws FileNotFoundException {
+		File file = new File(path);
+		if (!file.exists()) {
+			throw new FileNotFoundException();
+		}
+		try {
+			// Document lesen
+			Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(file);
+			// Wurzel holen
+			Node xmlRoot = doc.getFirstChild();
+			return loadAnswerXMLNode(xmlRoot);
+		} catch (SAXException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ParserConfigurationException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	/**
+	 * 
+	 * @param formInfos
+	 *            Liste(Knotenname, Liste(Formname, Formvalue)) --> enthält alle
+	 *            formularknoten
+	 * @param answerNodes
+	 *            Alle root Knoten aus den answer-xml Dateien (1 pro datei)
+	 * @param experimentCode
+	 *            code des derzeitigen Experimentes
+	 */
+	public static void saveAsCSVFile(
+			ArrayList<Pair<QuestionTreeNode, ArrayList<Pair<String, String>>>> formInfos,
 			ArrayList<QuestionTreeNode> answerNodes, String experimentCode) {
 		FileWriter fw;
 		BufferedWriter bw;
-		String header;
-
+		String line;
 		try {
 			fw = new FileWriter(new File(experimentCode + ".csv"));
 			bw = new BufferedWriter(fw);
-			
-			header = "\"expCode\";\"probCode\"";
-			for(int i=0; i<formInfos.size(); i++) {
+			// header schreiben
+			line = "\"expCode\";\"probCode\"";
+			for (int i = 0; i < formInfos.size(); i++) {
 				Pair<QuestionTreeNode, ArrayList<Pair<String, String>>> questionInfos = formInfos.get(i);
-				header += ";\"" + questionInfos.getKey().getName() + "::time\"";
+				line += ";\"" + questionInfos.getKey().getName() + "::time\"";
 				ArrayList<Pair<String, String>> questionForms = questionInfos.getValue();
-				for(int j=0; j<questionForms.size(); j++) {
+				for (int j = 0; j < questionForms.size(); j++) {
 					String formName = questionForms.get(j).getKey();
-					if(formName!= null) {
-						header += ";\"" + questionInfos.getKey().getName() + "::" + formName+"\"";
+					if (formName != null) {
+						line += ";\"" + questionInfos.getKey().getName() + "::" + formName + "\"";
 					}
 				}
 			}
-			
-			
-			
+			bw.write(line + System.getProperty("line.separator"));
+			// Daten schreiben
+			for (int i = 0; i < answerNodes.size(); i++) {
+				int nodeIndex = 0;
+				QuestionTreeNode currentNode = answerNodes.get(i);
+				line = "\"" + experimentCode.replaceAll("\"", "\"\"") + "\""; //expCode
+				//probCode
+				if (currentNode.getAnswer(Constants.KEY_SUBJECT) != null) {
+					line += ";\"" + currentNode.getAnswer(Constants.KEY_SUBJECT).replaceAll("\"", "\"\"")
+							+ "\"";
+				} else {
+					line += ";\"\"";
+				}
 
-			bw.write(header + System.getProperty("line.separator"));
-			
-			
+				while (currentNode != null) {
+					line += ";\"" + currentNode.getAttributeValue(ATTRIBUTE_TIME) + "\""; // Knotenzeit
+					// Knotenantworten
+					ArrayList<Pair<String, String>> questionForms = formInfos.get(nodeIndex).getValue();
+					for (int j = 0; j < questionForms.size(); j++) {
+						String value = currentNode.getAnswer(questionForms.get(j).getKey());
+						if (value == null) {
+							line += ";\"\"";
+						} else {
+							line += ";\"" + value.replaceAll("\"", "\"\"") + "\"";
+						}
+					}
+					currentNode = (QuestionTreeNode) currentNode.getNextNode();
+					nodeIndex++;
+				}
+				bw.write(line + System.getProperty("line.separator"));
+			}
 			bw.close();
 		} catch (IOException ioe) {
 			JOptionPane.showMessageDialog(null, "Fehler beim Speichern der CSV-Datei.");
 		}
-
 	}
 }

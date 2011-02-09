@@ -237,7 +237,8 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 				}
 			} else if (search && currentFile.getName().equals("answers.xml")) {
 				try {
-					answerNodes.add(QuestionTreeXMLHandler.loadXMLTree(currentFile.getPath()));
+					QuestionTreeNode node = QuestionTreeXMLHandler.loadAnswerXMLTree(currentFile.getPath());
+					answerNodes.add(node);
 				} catch (FileNotFoundException e) {
 					JOptionPane.showMessageDialog(null, "Datei " + currentFile.getAbsolutePath()
 							+ " nciht gefunden.");
