@@ -15,7 +15,6 @@ import javax.swing.JScrollPane;
 
 import experimentGUI.PluginInterface;
 import experimentGUI.experimentViewer.ExperimentViewer;
-import experimentGUI.util.ProgramThread;
 import experimentGUI.util.VerticalLayout;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 import experimentGUI.util.settingsComponents.SettingsComponentDescription;
@@ -26,7 +25,7 @@ public class ExternalProgramsPlugin extends Thread implements PluginInterface {
 
 	private static final String KEY = "start_external_progs";
 	private static final String KEY_COMMANDS = "commands";
-	private ArrayList<ProgramThread> processes = new ArrayList<ProgramThread>();
+	private ArrayList<Process> processes = new ArrayList<Process>();
 	private JFrame frame;
 	private JPanel panel;
 
@@ -99,15 +98,25 @@ public class ExternalProgramsPlugin extends Thread implements PluginInterface {
 		JButton button = new JButton(caption);
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ProgramThread process = processes.get(id);
-				if (process == null) {
-					processes.add(id, new ProgramThread(command));
-				} else if(!process.isRunning()) {
-					processes.add(id, new ProgramThread(command));
-				} else {
-					JOptionPane
-							.showMessageDialog(null,
-									"Diese Funktion kann erst wieder aufgerufen werden, wenn die bestehende Programminstanz beendet wurde.");
+				Process p = processes.get(id);
+				try {
+					if (p == null) {
+						p = Runtime.getRuntime().exec(command);
+						processes.add(id, p);
+					} else {
+						try {
+							p.exitValue();
+							p = Runtime.getRuntime().exec(command);
+							processes.add(id, p);
+						} catch (Exception e1) {
+							JOptionPane
+									.showMessageDialog(null,
+											"Diese Funktion kann erst wieder aufgerufen werden, wenn die bestehende Programminstanz beendet wurde.");
+						}
+					}
+				} catch (IOException e1) {
+					JOptionPane.showMessageDialog(null,
+							"Programm konnte nicht korrekt gestartet werden: " + e1.getMessage());
 				}
 			}
 		});
@@ -128,7 +137,7 @@ public class ExternalProgramsPlugin extends Thread implements PluginInterface {
 			if (node.isCategory()) {
 				for (int i = 0; i < processes.size(); i++) {
 					if (processes.get(i) != null) {
-						processes.get(i).endProcess();
+						processes.get(i).destroy();
 					}
 				}
 				processes.clear();
