@@ -339,4 +339,8 @@ public class ExperimentViewer extends JFrame {
 	public void saveCurrentAnswers() {
 		currentViewPane.saveCurrentAnswersToNode();
 	}
+	
+	public JPanel getContentPanel() {
+		return contentPane;
+	}
 }

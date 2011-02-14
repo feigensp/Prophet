@@ -7,6 +7,7 @@ import experimentGUI.plugins.AnswerRequiredPlugin;
 import experimentGUI.plugins.CodeViewerPlugin;
 import experimentGUI.plugins.ExternalProgramsPlugin;
 import experimentGUI.plugins.InactivityPlugin;
+import experimentGUI.plugins.KeyPressedPlugin;
 import experimentGUI.plugins.MailPlugin;
 import experimentGUI.plugins.MaxTimePlugin;
 import experimentGUI.plugins.QuestionListPlugin;
@@ -33,6 +34,7 @@ public class PluginList {
 			add(new MaxTimePlugin());
 			add(new ExternalProgramsPlugin());
 			add(new AnswerRequiredPlugin());
+//			add(new KeyPressedPlugin());
 		}
 	};
 	/**
