@@ -1,8 +1,6 @@
 package experimentGUI.plugins;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -35,8 +33,6 @@ public class KeyPressedPlugin implements PluginInterface {
         contentPanel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("X"), "xAction");
         contentPanel.getActionMap().put("xAction", xAction);
 
-
-		
 	}
 
 	@Override
