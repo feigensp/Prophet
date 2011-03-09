@@ -81,6 +81,9 @@ public class QuestionTree extends JScrollPane {
 	 */
 	Vector<QuestionTreeNodeListener> questionTreeListeners;
 
+	/**
+	 * String constants for the popup menus
+	 */
 	public final static String POPUP_NEW_CATEGORY = "Neue Kategorie";
 	public final static String POPUP_NEW_QUESTION = "Neue Frage";
 	public final static String POPUP_RENAME = "Umbenennen";
@@ -88,9 +91,15 @@ public class QuestionTree extends JScrollPane {
 	public final static String POPUP_COPY = "Kopieren";
 	public final static String POPUP_PASTE = "Einfügen";
 
+	/**
+	 * String constants for messages
+	 */
 	public final static String MESSAGE_NAME = "Name:";
 	public final static String MESSAGE_NEW_NAME = "Neuer Name:";
 
+	/**
+	 * String constants for actions
+	 */
 	public final static String ACTION_NEW_CATEGORY = "newcategory";
 	public final static String ACTION_NEW_QUESTION = "newquestion";
 	public final static String ACTION_RENAME = "rename";
@@ -98,6 +107,9 @@ public class QuestionTree extends JScrollPane {
 	public final static String ACTION_COPY = "copy";
 	public final static String ACTION_PASTE = "paste";
 
+	/**
+	 * constant which selects the standard name of the root-node in the tree
+	 */
 	public final static String DEFAULT_EXPERIMENT_NODE_NAME = "Experiment";
 
 	/**
@@ -300,6 +312,9 @@ public class QuestionTree extends JScrollPane {
 		enablePopupItems();
 	}
 	
+	/**
+	 * (de)activate the popup menu items matching to the current state and selected node
+	 */
 	private void enablePopupItems() {
 		if(clipboard == null) {
 			experimentPasteMenuItem.setEnabled(false);

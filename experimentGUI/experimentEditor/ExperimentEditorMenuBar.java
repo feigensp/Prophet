@@ -30,15 +30,12 @@ import experimentGUI.util.questionTreeNode.QuestionTreeXMLHandler;
  * 
  */
 public class ExperimentEditorMenuBar extends JMenuBar {
+	
 	private static final long serialVersionUID = 1L;
-	private ExperimentEditor experimentEditor;
-	private File currentFile;
-	private JMenuItem saveMenuItem;
-	private JMenuItem saveAsMenuItem;
-	private JMenuItem nameCheckMenuItem;
-	private JMenuItem exportCSVMenuItem;
-	private JMenu exportMenu;
-
+	
+	/**
+	 * String constants for the menu(items)
+	 */
 	public final static String MENU_FILE = "Datei";
 	public final static String MENU_FILE_NEW = "Neu";
 	public final static String MENU_FILE_OPEN = "Laden";
@@ -46,11 +43,21 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 	public final static String MENU_FILE_SAVE_AS = "Speichern unter...";
 	public final static String MENU_FILE_QUIT = "Beenden";
 
+	/**
+	 * String constants for (error) messages
+	 */
 	public final static String MESSAGE_FILE_NOT_FOUND = "Datei nicht gefunden";
 	public final static String MESSAGE_FILE_NOT_FOUND_TITLE = "Fehler";
-
 	public final static String MESSAGE_REPLACE_FILE = " ist bereits vorhanden.\nWollen Sie sie ersetzen?";
 	public final static String MESSAGE_REPLACE_FILE_TITLE = "Speichern unter bestätigen";
+	
+	private ExperimentEditor experimentEditor;
+	private File currentFile;
+	private JMenuItem saveMenuItem;
+	private JMenuItem saveAsMenuItem;
+	private JMenuItem nameCheckMenuItem;
+	private JMenuItem exportCSVMenuItem;
+	private JMenu exportMenu;
 
 	/**
 	 * Constructor
@@ -255,6 +262,15 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 		enableMenuItems();
 	}
 
+	/**
+	 * Search after answer.xml files in the directory of file and its subdirectories.
+	 * Loads the Data from this files and saves it to the answerNodes-ArrayList.
+	 * Select directories after name (if the correct prob-code is used)
+	 * @param file file or directory in which is searched
+	 * @param answerNodes storage for the data from the answer.xml files
+	 * @param experimentCode used prob code 
+	 * @param search if false the answer.xml files of this directory are not used - but the files of the subdirectories are still used
+	 */
 	private void getAnswerFiles(File file, ArrayList<QuestionTreeNode> answerNodes, String experimentCode,
 			boolean search) {
 		File[] directoryFiles = file.listFiles();
@@ -280,6 +296,9 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 		}
 	}
 
+	/**
+	 * (de)activate the menu items matching to the current state
+	 */
 	private void enableMenuItems() {
 		if (experimentEditor.getTreeComponent()!=null && experimentEditor.getTreeComponent().getRoot()!=null) {
 			if(currentFile == null) {

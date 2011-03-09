@@ -23,6 +23,9 @@ import experimentGUI.util.settingsComponents.SettingsComponentDescription;
  *
  */
 public class PluginList {
+	/**
+	 * the order of the plugins in this vector assigns the order of the calls
+	 */
 	private static Vector<PluginInterface> plugins = new Vector<PluginInterface>() {
 		private static final long serialVersionUID = 1L;
 		{
