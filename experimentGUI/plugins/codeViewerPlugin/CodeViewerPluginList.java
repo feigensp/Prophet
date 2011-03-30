@@ -17,13 +17,13 @@ public class CodeViewerPluginList {
 	private static Vector<CodeViewerPluginInterface> plugins = new Vector<CodeViewerPluginInterface>() {
 		private static final long serialVersionUID = 1L;
 		{
-			add(new OpenedFromStartPlugin());
 			add(new EditAndSavePlugin());
 			add(new RecorderPlugin());
 			add(new LineNumbersPlugin());
 			add(new SearchBarPlugin());
 			add(new SyntaxHighlightingPlugin());
 //			add(new ShowCIDECodePlugin());
+			add(new OpenedFromStartPlugin());
 		}
 	};
 	
@@ -40,45 +40,69 @@ public class CodeViewerPluginList {
 	public static SettingsComponentDescription getSettingsComponentDescription() {
 		SettingsComponentDescription result = null;
 		for (CodeViewerPluginInterface plugin : plugins) {
-			SettingsComponentDescription desc = plugin.getSettingsComponentDescription();
-			if (desc!=null) {
-				if (result==null) {
-					result=desc;
-				} else {
-					result.addNextComponent(desc);
+			try {
+				SettingsComponentDescription desc = plugin.getSettingsComponentDescription();
+				if (desc!=null) {
+					if (result==null) {
+						result=desc;
+					} else {
+						result.addNextComponent(desc);
+					}
 				}
-			}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}			
 		}
 		return result;
 	}
 
 	public static void init(QuestionTreeNode selected) {
 		for (CodeViewerPluginInterface plugin : plugins) {
-			plugin.init(selected);
+			try {
+				plugin.init(selected);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
 	public static void onFrameCreate(CodeViewer viewer) {
 		for (CodeViewerPluginInterface plugin : plugins) {
-			plugin.onFrameCreate(viewer);
+			try {
+				plugin.onFrameCreate(viewer);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
 	public static void onEditorPanelCreate(EditorPanel editorPanel) {
 		for (CodeViewerPluginInterface plugin : plugins) {
-			plugin.onEditorPanelCreate(editorPanel);
+			try {
+				plugin.onEditorPanelCreate(editorPanel);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
 	public static void onEditorPanelClose(EditorPanel editorPanel) {
 		for (CodeViewerPluginInterface plugin : plugins) {
-			plugin.onEditorPanelClose(editorPanel);
+			try {
+				plugin.onEditorPanelClose(editorPanel);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
 	public static void onClose() {
 		for (CodeViewerPluginInterface plugin : plugins) {
-			plugin.onClose();
+			try {
+				plugin.onClose();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 }

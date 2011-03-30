@@ -7,9 +7,9 @@ import experimentGUI.plugins.AnswerRequiredPlugin;
 import experimentGUI.plugins.CodeViewerPlugin;
 import experimentGUI.plugins.ExternalProgramsPlugin;
 import experimentGUI.plugins.InactivityPlugin;
-import experimentGUI.plugins.KeyPressedPlugin;
 import experimentGUI.plugins.MailPlugin;
 import experimentGUI.plugins.MaxTimePlugin;
+import experimentGUI.plugins.PHPExportPlugin;
 import experimentGUI.plugins.QuestionListPlugin;
 import experimentGUI.plugins.ValidSubjectCodePlugin;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
@@ -38,6 +38,7 @@ public class PluginList {
 			add(new ExternalProgramsPlugin());
 			add(new AnswerRequiredPlugin());
 //			add(new KeyPressedPlugin());
+			add(new PHPExportPlugin());
 		}
 	};
 	/**
@@ -72,13 +73,17 @@ public class PluginList {
 			QuestionTreeNode node) {
 		SettingsComponentDescription result = null;
 		for (PluginInterface plugin : plugins) {
-			SettingsComponentDescription desc = plugin.getSettingsComponentDescription(node);
-			if (desc!=null) {
-				if (result==null) {
-					result=desc;
-				} else {
-					result.addNextComponent(desc);
+			try {
+				SettingsComponentDescription desc = plugin.getSettingsComponentDescription(node);
+				if (desc!=null) {
+					if (result==null) {
+						result=desc;
+					} else {
+						result.addNextComponent(desc);
+					}
 				}
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		}
 		return result;
@@ -86,14 +91,22 @@ public class PluginList {
 
 	public static void experimentViewerRun(ExperimentViewer experimentViewer) {
 		for (PluginInterface plugin : plugins) {
-			plugin.experimentViewerRun(experimentViewer);
+			try {
+				plugin.experimentViewerRun(experimentViewer);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}		
 	}
 
 	public static boolean denyEnterNode(QuestionTreeNode node) {
 		for (PluginInterface plugin : plugins) {
-			if (plugin.denyEnterNode(node)) {
-				return true;
+			try {
+				if (plugin.denyEnterNode(node)) {
+					return true;
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		}
 		return false;
@@ -101,19 +114,27 @@ public class PluginList {
 
 	public static void enterNode(QuestionTreeNode node) {
 		for (PluginInterface plugin : plugins) {
-			plugin.enterNode(node);
+			try {
+				plugin.enterNode(node);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
 	public static String denyNextNode(QuestionTreeNode currentNode) {
 		String result = null;
 		for (PluginInterface plugin : plugins) {
-			String ret = plugin.denyNextNode(currentNode);
-			if (ret!=null) {
-				result="";
-				if (ret.length()>0) {
-					return ret;
+			try {
+				String ret = plugin.denyNextNode(currentNode);
+				if (ret!=null) {
+					result="";
+					if (ret.length()>0) {
+						return ret;
+					}
 				}
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		}
 		return result;
@@ -121,16 +142,24 @@ public class PluginList {
 
 	public static void exitNode(QuestionTreeNode node) {
 		for (PluginInterface plugin : plugins) {
-			plugin.exitNode(node);
+			try {
+				plugin.exitNode(node);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
 	public static String finishExperiment() {
 		String result = "";
 		for (PluginInterface plugin : plugins) {
-			String ret = plugin.finishExperiment();
-			if (ret!=null && ret.length()>0) {
-				result+="<p>"+ret+"</p>";
+			try {
+				String ret = plugin.finishExperiment();
+				if (ret!=null && ret.length()>0) {
+					result+="<p>"+ret+"</p>";
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		}
 		return result;

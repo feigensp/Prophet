@@ -63,6 +63,7 @@ public class SettingsEditorPanel extends ExperimentEditorTab {
 				}
 				scrollPane = new JScrollPane(settingsPanel);
 				scrollPane.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
+				scrollPane.getVerticalScrollBar().setUnitIncrement(16);
 				ExperimentEditorTabbedPane.recursiveSetOpaque(scrollPane);
 				scrollPanes.put(selected, scrollPane);
 			}

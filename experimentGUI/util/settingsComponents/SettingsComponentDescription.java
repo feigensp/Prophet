@@ -24,8 +24,7 @@ public class SettingsComponentDescription {
 	public String getCaption() {
 		return caption;
 	}
-	public SettingsComponent build(QuestionTreeNode treeNode) {
-		QuestionTreeNode myNode = treeNode.getAddAttribute(key);
+	public SettingsComponent build(QuestionTreeNode treeNode) {		
 		SettingsComponent result;
 		try {
 			result = myClass.newInstance();
@@ -34,7 +33,10 @@ public class SettingsComponentDescription {
 			return null;
 		}
 		result.setCaption(caption);
-		result.setTreeNode(myNode);
+		if (key!=null) {
+			QuestionTreeNode myNode = treeNode.getAddAttribute(key);
+			result.setTreeNode(myNode);
+		}
 		return result;
 	}
 	public void addNextComponent(SettingsComponentDescription next) {
