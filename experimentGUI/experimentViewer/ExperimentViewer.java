@@ -249,7 +249,7 @@ public class ExperimentViewer extends JFrame {
 	}
 	
 	private boolean denyNextNode() {
-		if (ignoreDenyNextNode) {
+		if (ignoreDenyNextNode || exitExperiment) {
 			return false;
 		}
 		String message = PluginList.denyNextNode(currentNode);
