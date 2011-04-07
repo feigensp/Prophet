@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -47,7 +49,9 @@ public class ExperimentViewer extends JFrame {
 	
 	private HashSet<QuestionTreeNode> enteredNodes;
 	
-	private boolean ignoreDenyNextNode;
+	private boolean ignoreDenyNextNode = false;
+	private boolean exitExperiment = false;
+	private boolean experimentNotRunning = true;
 
 	ActionListener myActionListener = new ActionListener() {
 		public void actionPerformed(ActionEvent arg0) {
@@ -120,7 +124,18 @@ public class ExperimentViewer extends JFrame {
 			System.exit(0);
 		}
 
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		this.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent arg0) {
+				if (experimentNotRunning) {
+					System.exit(0);
+				} else if (JOptionPane.showConfirmDialog(null, "Das Experiment ist noch nicht abgeschlossen. Experiment beenden?", "Bestätigung", JOptionPane.YES_NO_OPTION)==JOptionPane.YES_OPTION) {
+					exitExperiment = true;
+					currentViewPane.clickSubmit();
+				}
+			}			
+		});
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout());
@@ -164,6 +179,7 @@ public class ExperimentViewer extends JFrame {
 				}
 			}
 			totalTime.start();
+			experimentNotRunning=false;
 		}
 		
 		//step down if we may enter and there are children, else step aside if there is a sibling, else step up
@@ -220,7 +236,7 @@ public class ExperimentViewer extends JFrame {
 	}
 
 	private boolean denyEnterNode() {
-		return denyEnterNode(currentNode);
+		return exitExperiment || denyEnterNode(currentNode);
 	}
 	public static boolean denyEnterNode(QuestionTreeNode node) {
 		return PluginList.denyEnterNode(node);
@@ -321,6 +337,7 @@ public class ExperimentViewer extends JFrame {
 		output.setText(outputString);
 		output.setCaretPosition(0);
 		contentPane.add(output, BorderLayout.CENTER);
+		experimentNotRunning=true;
 	}
 
 	public QuestionTreeNode getTree() {
@@ -342,5 +359,8 @@ public class ExperimentViewer extends JFrame {
 	
 	public JPanel getContentPanel() {
 		return contentPane;
+	}
+	public boolean getExperimentNotRunning() {
+		return experimentNotRunning;
 	}
 }
