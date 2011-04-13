@@ -8,7 +8,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLDecoder;
-import java.util.HashSet;
 import java.util.StringTokenizer;
 
 import javax.swing.JButton;
