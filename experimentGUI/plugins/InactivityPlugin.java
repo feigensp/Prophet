@@ -12,9 +12,12 @@ public class InactivityPlugin implements PluginInterface {
 	@Override
 	public SettingsComponentDescription getSettingsComponentDescription(
 			QuestionTreeNode node) {
-		if (!node.isExperiment()) {
+		if (node.isCategory()) {
 			return new SettingsComponentDescription(SettingsCheckBox.class, KEY,
 					"Diesen und alle Unterknoten deaktivieren");
+		} else if (node.isQuestion()) {
+			return new SettingsComponentDescription(SettingsCheckBox.class, KEY,
+					"Diesen Knoten deaktivieren");
 		} else {
 			return null;
 		}

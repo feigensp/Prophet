@@ -6,6 +6,7 @@ import java.awt.event.KeyEvent;
 import java.util.HashMap;
 
 import javax.swing.JPanel;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
@@ -81,6 +82,7 @@ public class ContentEditorPanel extends ExperimentEditorTab {
 				ContentEditorToolBar toolBar = new ContentEditorToolBar(editArea);		
 				editPanel.add(toolBar, BorderLayout.NORTH);
 				RTextScrollPane scrollPane = new RTextScrollPane(editArea);
+				editArea.setLineWrap(true);
 				editPanel.add(scrollPane, BorderLayout.CENTER);
 				SearchBar searchBar = new SearchBar(editArea);
 				searchBar.setVisible(false);

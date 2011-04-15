@@ -66,6 +66,7 @@ public class NoteEditorPanel extends ExperimentEditorTab {
 						myChange();
 					}
 				});
+				editArea.setLineWrap(true);
 				editPanel.add(editArea, BorderLayout.CENTER);
 				
 				scrollPane = new JScrollPane(editPanel);
