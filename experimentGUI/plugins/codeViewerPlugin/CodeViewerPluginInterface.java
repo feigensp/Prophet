@@ -10,6 +10,6 @@ public interface CodeViewerPluginInterface {
 	public void onFrameCreate(CodeViewer viewer);
 	public void onEditorPanelCreate(EditorPanel editorPanel);
 	public void onEditorPanelClose(EditorPanel editorPanel);
-	public String getKey();
+	//public String getKey();
 	public void onClose();
 }

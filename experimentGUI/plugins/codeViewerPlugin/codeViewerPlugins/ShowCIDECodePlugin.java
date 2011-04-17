@@ -124,12 +124,7 @@ public class ShowCIDECodePlugin implements CodeViewerPluginInterface{
 		// TODO Auto-generated method stub
 		
 	}
-
-	@Override
-	public String getKey() {
-		return KEY;
-	}
-
+	
 	@Override
 	public void onClose() {
 		// TODO Auto-generated method stub

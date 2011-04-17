@@ -56,11 +56,6 @@ public interface PluginInterface {
 	 */
 	public void exitNode(QuestionTreeNode node);
 	/**
-	 * @return
-	 * 	A (hopefully) unique name for the plugin.
-	 */
-	public String getKey();
-	/**
 	 * Called after all nodes have been visited. Allows the plugin to do last steps upon finishing the experiment
 	 * @return
 	 * 	A message shown to the subject at experiment's end

@@ -176,11 +176,6 @@ public class EditAndSavePlugin implements CodeViewerPluginInterface {
 	}
 
 	@Override
-	public String getKey() {
-		return KEY;
-	}
-
-	@Override
 	public void onClose() {
 		if (editable) {
 			boolean ask = false;

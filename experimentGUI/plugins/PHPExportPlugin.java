@@ -40,11 +40,6 @@ public class PHPExportPlugin implements PluginInterface {
 	}
 
 	@Override
-	public String getKey() {
-		return null;
-	}
-
-	@Override
 	public String finishExperiment() {
 		return null;
 	}

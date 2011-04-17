@@ -58,13 +58,7 @@ public class KeyPressedPlugin implements PluginInterface {
 		// TODO Auto-generated method stub
 		
 	}
-
-	@Override
-	public String getKey() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
+	
 	@Override
 	public String finishExperiment() {
 		// TODO Auto-generated method stub

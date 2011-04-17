@@ -118,9 +118,4 @@ public class RecorderPlugin implements CodeViewerPluginInterface {
 			LoggingTreeXMLHandler.saveXMLTree(rootNode, codeViewer.getSaveDir().getPath()+System.getProperty("file.separator")+"recorder.xml");
 		}
 	}
-
-	@Override
-	public String getKey() {
-		return KEY;
-	}
 }

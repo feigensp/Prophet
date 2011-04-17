@@ -60,11 +60,6 @@ public class AnswerRequiredPlugin implements PluginInterface {
 	}
 
 	@Override
-	public String getKey() {
-		return KEY;
-	}
-
-	@Override
 	public String finishExperiment() {
 		return null;
 	}

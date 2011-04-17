@@ -42,10 +42,6 @@ public class SearchBarPlugin implements CodeViewerPluginInterface {
 	public void onClose() {
 	}
 	@Override
-	public String getKey() {
-		return KEY;
-	}
-	@Override
 	public void onEditorPanelClose(EditorPanel editorPanel) {
 		// TODO Auto-generated method stub
 		

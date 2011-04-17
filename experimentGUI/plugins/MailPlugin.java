@@ -139,11 +139,6 @@ public class MailPlugin implements PluginInterface {
 	}
 
 	@Override
-	public String getKey() {
-		return KEY;
-	}
-
-	@Override
 	public String finishExperiment() {
 		try {
 			if (enabled) {

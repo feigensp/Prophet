@@ -50,11 +50,6 @@ public class OpenedFromStartPlugin implements CodeViewerPluginInterface{
 	}
 
 	@Override
-	public String getKey() {
-		return KEY;
-	}
-
-	@Override
 	public void onClose() {
 		// TODO Auto-generated method stub
 		
