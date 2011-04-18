@@ -8,6 +8,7 @@ package experimentGUI.experimentEditor.tabbedPane.editorTabs;
  */
 
 import java.awt.BorderLayout;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.swing.BorderFactory;
@@ -20,21 +21,24 @@ import experimentGUI.experimentEditor.tabbedPane.ExperimentEditorTab;
 import experimentGUI.experimentEditor.tabbedPane.ExperimentEditorTabbedPane;
 import experimentGUI.util.VerticalLayout;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
+import experimentGUI.util.settingsComponents.SettingsComponent;
 import experimentGUI.util.settingsComponents.SettingsComponentDescription;
 import experimentGUI.util.settingsComponents.components.SettingsCheckBox;
 import experimentGUI.util.settingsComponents.components.SettingsTextField;
 
 @SuppressWarnings("serial")
 public class SettingsEditorPanel extends ExperimentEditorTab {
-	private HashMap<QuestionTreeNode, JScrollPane> scrollPanes;
+	private HashMap<QuestionTreeNode, JScrollPane> scrollPanes = new HashMap<QuestionTreeNode,JScrollPane>();
+	private HashMap<QuestionTreeNode, ArrayList<SettingsComponent>> settingsComponents = new HashMap<QuestionTreeNode, ArrayList<SettingsComponent>>();
+	private QuestionTreeNode selected;
 		
 	public SettingsEditorPanel() {
 		setLayout(new BorderLayout());
-		scrollPanes = new HashMap<QuestionTreeNode,JScrollPane>();
 		this.setOpaque(false);
 	}
 
-	public void activate(QuestionTreeNode selected) {
+	public void activate(QuestionTreeNode s) {
+		selected=s;
 		this.removeAll();
 		this.updateUI();
 		if (selected!=null) {
@@ -56,10 +60,12 @@ public class SettingsEditorPanel extends ExperimentEditorTab {
 				}
 				SettingsComponentDescription desc =PluginList.getSettingsComponentDescription(selected);
 				if (desc != null) {
-					settingsPanel.add(desc.build(selected));
-					while ((desc = desc.getNextComponentDescription()) != null) {
-						settingsPanel.add(desc.build(selected));
-					}
+					settingsComponents.put(s, new ArrayList<SettingsComponent>());
+					do {
+						SettingsComponent c = desc.build(selected);
+						settingsComponents.get(s).add(c);
+						settingsPanel.add(c);
+					} while ((desc = desc.getNextComponentDescription()) != null);
 				}
 				scrollPane = new JScrollPane(settingsPanel);
 				scrollPane.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
@@ -68,6 +74,18 @@ public class SettingsEditorPanel extends ExperimentEditorTab {
 				scrollPanes.put(selected, scrollPane);
 			}
 			add(scrollPane, BorderLayout.CENTER);
+		}
+	}
+
+	@Override
+	public void save() {
+		if (selected!=null) {
+			ArrayList<SettingsComponent> comps = settingsComponents.get(selected);
+			if (comps!=null) {
+				for (SettingsComponent c : comps) {
+					c.saveValue();
+				}
+			}
 		}
 	}
 }

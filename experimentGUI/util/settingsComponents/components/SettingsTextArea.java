@@ -23,30 +23,27 @@ public class SettingsTextArea extends SettingsComponent {
 		add(caption, BorderLayout.NORTH);
 		textArea = new JTextArea();
 		add(new JScrollPane(textArea), BorderLayout.CENTER);
-		textArea.getDocument().addDocumentListener(new DocumentListener() {
-
-			@Override
-			public void changedUpdate(DocumentEvent arg0) {
-				saveValue();
-			}
-
-			@Override
-			public void insertUpdate(DocumentEvent arg0) {
-				saveValue();
-			}
-
-			@Override
-			public void removeUpdate(DocumentEvent arg0) {
-				saveValue();
-			}			
-		});
+//		textArea.getDocument().addDocumentListener(new DocumentListener() {
+//
+//			@Override
+//			public void changedUpdate(DocumentEvent arg0) {
+//				saveValue();
+//			}
+//
+//			@Override
+//			public void insertUpdate(DocumentEvent arg0) {
+//				saveValue();
+//			}
+//
+//			@Override
+//			public void removeUpdate(DocumentEvent arg0) {
+//				saveValue();
+//			}			
+//		});
 	}
 	
 	public void setCaption(String cap) {
 		caption.setText(cap);
-	}
-	public String getCaption() {
-		return caption.getText();
 	}
 
 	public void loadValue() {

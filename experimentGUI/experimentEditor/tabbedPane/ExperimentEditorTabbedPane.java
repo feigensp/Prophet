@@ -3,6 +3,7 @@ package experimentGUI.experimentEditor.tabbedPane;
 import java.awt.Component;
 
 import javax.swing.JComponent;
+import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -17,11 +18,16 @@ import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 @SuppressWarnings("serial")
 public class ExperimentEditorTabbedPane extends JTabbedPane {
 	private QuestionTreeNode selected;
+	private ExperimentEditorTab currentTab;
 	
 	public ExperimentEditorTabbedPane() {
 		addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent arg0) {
+				if (currentTab!=null) {
+					save();
+				}
 				activate();
+				currentTab = (ExperimentEditorTab)getSelectedComponent();
 			}
 		});
 		
@@ -35,11 +41,15 @@ public class ExperimentEditorTabbedPane extends JTabbedPane {
 		addTab(caption, null, panel, null);
 	}
 	public void setSelected(QuestionTreeNode selected) {
+		currentTab.save();
 		this.selected=selected;
 		activate();
 	}
 	private void activate() {
 		((ExperimentEditorTab)getSelectedComponent()).activate(selected);
+	}
+	public void save() {
+		currentTab.save();
 	}
 	public static void recursiveSetOpaque(JComponent component) {
 		component.setOpaque(false);

@@ -24,4 +24,8 @@ public class ContentViewerPanel extends ExperimentEditorTab {
 			add(viewerPane,BorderLayout.CENTER);
 		}
 	}
+
+	@Override
+	public void save() {		
+	}
 }

@@ -119,6 +119,7 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 		saveMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if (currentFile != null) {
+					experimentEditor.getTabbedPane().save();
 					QuestionTreeXMLHandler.saveXMLTree(experimentEditor.getTreeComponent().getRoot(),
 							currentFile.getAbsolutePath());
 				} else {

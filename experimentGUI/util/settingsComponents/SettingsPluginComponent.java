@@ -25,8 +25,7 @@ public class SettingsPluginComponent extends SettingsComponent {
 		activatedCheckBox.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				saveValue();
-				loadValue();				
+				optionPanel.setVisible(activatedCheckBox.isSelected());				
 			}
 		});
 		add(activatedCheckBox,BorderLayout.NORTH);
@@ -40,28 +39,25 @@ public class SettingsPluginComponent extends SettingsComponent {
 	public void setCaption(String caption) {
 		activatedCheckBox.setText(caption);
 	}
-	
-	public String getCaption() {
-		return activatedCheckBox.getText();
-	}
 	public void addComponent(SettingsComponent component) {
 		subSettingsComponents.add(component);
 		optionPanel.add(component);
-		component.loadValue();
+//		component.loadValue();
 	}
 
 	public void loadValue() {
 		boolean active = Boolean.parseBoolean(getTreeNode().getValue());
 		activatedCheckBox.setSelected(active);
 		optionPanel.setVisible(active);
-		if (active) {		
-			for (SettingsComponent component : subSettingsComponents) {
-				component.loadValue();
-			}
+		for (SettingsComponent component : subSettingsComponents) {
+			component.loadValue();
 		}
 	}
 
 	public void saveValue() {
 		getTreeNode().setValue(""+activatedCheckBox.isSelected());
+		for (SettingsComponent component : subSettingsComponents) {
+			component.saveValue();
+		}
 	}
 }

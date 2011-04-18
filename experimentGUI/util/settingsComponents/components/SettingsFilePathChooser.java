@@ -28,23 +28,23 @@ public class SettingsFilePathChooser  extends SettingsComponent {
 		caption = new JLabel();
 		add(caption, BorderLayout.NORTH);
 		textField = new JTextField();
-		textField.getDocument().addDocumentListener(new DocumentListener() {
-
-			@Override
-			public void changedUpdate(DocumentEvent arg0) {
-				saveValue();
-			}
-
-			@Override
-			public void insertUpdate(DocumentEvent arg0) {
-				saveValue();
-			}
-
-			@Override
-			public void removeUpdate(DocumentEvent arg0) {
-				saveValue();
-			}
-		});
+//		textField.getDocument().addDocumentListener(new DocumentListener() {
+//
+//			@Override
+//			public void changedUpdate(DocumentEvent arg0) {
+//				saveValue();
+//			}
+//
+//			@Override
+//			public void insertUpdate(DocumentEvent arg0) {
+//				saveValue();
+//			}
+//
+//			@Override
+//			public void removeUpdate(DocumentEvent arg0) {
+//				saveValue();
+//			}
+//		});
 		add(textField,BorderLayout.CENTER);
 		textField.setColumns(20);
 		pathButton = new JButton("Durchsuchen");
@@ -70,7 +70,7 @@ public class SettingsFilePathChooser  extends SettingsComponent {
 						e.printStackTrace();
 						return;
 					}
-					System.out.println(""+(selectedPath.startsWith(currentPath)));
+//					System.out.println(""+(selectedPath.startsWith(currentPath)));
 					if (selectedPath.startsWith(currentPath)) {
 						selectedPath = selectedPath.substring(currentPath
 								.length() + 1);
@@ -88,9 +88,6 @@ public class SettingsFilePathChooser  extends SettingsComponent {
 
 	public void setCaption(String cap) {
 		caption.setText(cap);
-	}
-	public String getCaption() {
-		return caption.getText();
 	}
 
 	public void loadValue() {

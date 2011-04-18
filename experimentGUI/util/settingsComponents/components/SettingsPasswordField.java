@@ -46,30 +46,27 @@ public class SettingsPasswordField extends SettingsComponent{
 		add(caption, BorderLayout.NORTH);
 		textField = new JPasswordField();
 		add(textField, BorderLayout.CENTER);
-		textField.getDocument().addDocumentListener(new DocumentListener() {
-
-			@Override
-			public void changedUpdate(DocumentEvent arg0) {
-				saveValue();
-			}
-
-			@Override
-			public void insertUpdate(DocumentEvent arg0) {
-				saveValue();
-			}
-
-			@Override
-			public void removeUpdate(DocumentEvent arg0) {
-				saveValue();
-			}			
-		});
+//		textField.getDocument().addDocumentListener(new DocumentListener() {
+//
+//			@Override
+//			public void changedUpdate(DocumentEvent arg0) {
+//				saveValue();
+//			}
+//
+//			@Override
+//			public void insertUpdate(DocumentEvent arg0) {
+//				saveValue();
+//			}
+//
+//			@Override
+//			public void removeUpdate(DocumentEvent arg0) {
+//				saveValue();
+//			}			
+//		});
 	}
 	
 	public void setCaption(String cap) {
 		caption.setText(cap);
-	}
-	public String getCaption() {
-		return caption.getText();
 	}
 
 	public void loadValue() {

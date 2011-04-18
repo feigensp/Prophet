@@ -1,4 +1,4 @@
-package experimentGUI.plugins;
+package test;
 
 import java.awt.event.ActionEvent;
 

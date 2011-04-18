@@ -114,11 +114,6 @@ public class PHPExportComponent extends SettingsComponent {
 	}
 
 	@Override
-	public String getCaption() {
-		return null;
-	}
-
-	@Override
 	public void loadValue() {
 	}
 

@@ -16,21 +16,11 @@ public class SettingsCheckBox extends SettingsComponent {
 	public SettingsCheckBox() {
 		setLayout(new BorderLayout());
 		myCheckBox = new JCheckBox();
-		myCheckBox.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				saveValue();				
-			}
-		});
-		//myCheckBox.setBorder(new EmptyBorder(0,0,0,0));
 		add(myCheckBox,BorderLayout.CENTER);
 	}
 	
 	public void setCaption(String cap) {
-		myCheckBox.setText(cap);		
-	}
-	public String getCaption() {
-		return myCheckBox.getText();
+		myCheckBox.setText(cap);
 	}
 	public void loadValue() {
 		myCheckBox.setSelected(Boolean.parseBoolean(getTreeNode().getValue()));
