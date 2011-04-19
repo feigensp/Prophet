@@ -21,7 +21,6 @@ public class SettingsPluginComponent extends SettingsComponent {
 	public SettingsPluginComponent() {
 		setLayout(new BorderLayout());		
 		activatedCheckBox = new JCheckBox("");
-		activatedCheckBox.setOpaque(false);
 		activatedCheckBox.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -30,7 +29,6 @@ public class SettingsPluginComponent extends SettingsComponent {
 		});
 		add(activatedCheckBox,BorderLayout.NORTH);
 		optionPanel = new JPanel();
-		optionPanel.setOpaque(false);
 		optionPanel.setBorder(BorderFactory.createTitledBorder(""));
 		optionPanel.setLayout(new VerticalLayout(5,VerticalLayout.LEFT,VerticalLayout.TOP));
 		add(optionPanel,BorderLayout.CENTER);
@@ -42,7 +40,6 @@ public class SettingsPluginComponent extends SettingsComponent {
 	public void addComponent(SettingsComponent component) {
 		subSettingsComponents.add(component);
 		optionPanel.add(component);
-//		component.loadValue();
 	}
 
 	public void loadValue() {
