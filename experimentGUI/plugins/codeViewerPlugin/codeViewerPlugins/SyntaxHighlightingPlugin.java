@@ -41,6 +41,7 @@ public class SyntaxHighlightingPlugin implements CodeViewerPluginInterface {
 			extensionMap.put(".css", SyntaxConstants.SYNTAX_STYLE_CSS);
 			extensionMap.put(".dfm", SyntaxConstants.SYNTAX_STYLE_DELPHI);
 			extensionMap.put(".dpr", SyntaxConstants.SYNTAX_STYLE_DELPHI);
+			extensionMap.put(".h", SyntaxConstants.SYNTAX_STYLE_C);
 			extensionMap.put(".htm", SyntaxConstants.SYNTAX_STYLE_HTML);
 			extensionMap.put(".html", SyntaxConstants.SYNTAX_STYLE_HTML);
 			extensionMap.put(".java", SyntaxConstants.SYNTAX_STYLE_JAVA);
