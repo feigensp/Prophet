@@ -28,6 +28,7 @@ import org.xml.sax.SAXException;
 
 import experimentGUI.plugins.codeViewerPlugin.CodeViewer;
 import experimentGUI.plugins.codeViewerPlugin.CodeViewerPluginInterface;
+import experimentGUI.plugins.codeViewerPlugin.Recorder;
 import experimentGUI.plugins.codeViewerPlugin.codeViewerPlugins.showCIDECodePlugin.Triple;
 import experimentGUI.plugins.codeViewerPlugin.tabbedPane.EditorPanel;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
@@ -62,7 +63,7 @@ public class ShowCIDECodePlugin implements CodeViewerPluginInterface{
 
 	@Override
 	public SettingsComponentDescription getSettingsComponentDescription() {
-		SettingsPluginComponentDescription result = new SettingsPluginComponentDescription(KEY, "CIDE Highlights anzeigen (funktioniert nur wenn Text nicht editierbar)");
+		SettingsPluginComponentDescription result = new SettingsPluginComponentDescription(KEY, "CIDE Highlights anzeigen (funktioniert nur wenn Text nicht editierbar)", true);
 		result.addSubComponent(new SettingsComponentDescription(SettingsTextField.class, CIDE_INFO_PATH, "annotations.xml"));
 		return result;
 	}

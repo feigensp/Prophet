@@ -1,4 +1,4 @@
-package experimentGUI.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin.loggingTreeNode;
+package experimentGUI.plugins.codeViewerPlugin.recorder.loggingTreeNode;
 
 import java.util.TreeMap;
 

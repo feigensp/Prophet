@@ -17,7 +17,7 @@ public class AnswerRequiredPlugin implements PluginInterface {
 	@Override
 	public SettingsComponentDescription getSettingsComponentDescription(QuestionTreeNode node) {
 		SettingsPluginComponentDescription result = new SettingsPluginComponentDescription(KEY,
-			"Benötigte Antworten");
+			"Benötigte Antworten", true);
 		result.addSubComponent(new SettingsComponentDescription(SettingsTextArea.class, KEY_NAMES,
 			"Komponenten, die Antworten enthalten müssen (zeilenweise eingeben):"));
 		return result;

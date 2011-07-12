@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.Vector;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -44,6 +45,16 @@ public class SearchBar extends JToolBar implements ActionListener {
 	private JButton backwardButton = new JButton(CAPTION_PREVIOUS);
 	private JCheckBox regexCB = new JCheckBox(CAPTION_REGEX);
 	private JCheckBox matchCaseCB = new JCheckBox(CAPTION_MATCH_CASE);
+	
+	private Vector<SearchBarListener> listeners = new Vector<SearchBarListener>();
+	
+	public void addSearchBarListener(SearchBarListener l) {
+		listeners.add(l);
+	}
+	
+	public void removeSearchBarListener(SearchBarListener l) {
+		listeners.remove(l);
+	}
 
 	/**
 	 * Grabs the focus
@@ -80,39 +91,44 @@ public class SearchBar extends JToolBar implements ActionListener {
 	}
 
 	public void actionPerformed(ActionEvent e) {
-
 		String command = e.getActionCommand();
+		
+		if (command.equals(ACTION_HIDE)) {
+			setVisible(false);
+			return;
+		}
+		
+		String text = searchField.getText();
+		if (text.length() == 0) {
+			return;
+		}
+		
+		boolean matchCase = matchCaseCB.isSelected();
+		boolean wholeWord = false;
+		boolean regex = regexCB.isSelected();
+		
+		boolean forward = false;
 
 		if (command.equals(ACTION_NEXT)) {
-			String text = searchField.getText();
-			if (text.length() == 0) {
-				return;
-			}
-			boolean forward = true;
-			boolean matchCase = matchCaseCB.isSelected();
-			boolean wholeWord = false;
-			boolean regex = regexCB.isSelected();
-			boolean found = SearchEngine.find(textArea, text, forward,
-					matchCase, wholeWord, regex);
-			if (!found) {
-				JOptionPane.showMessageDialog(this, MESSAGE_NOT_FOUND);
-			}
+			forward = true;			
 		} else if (command.equals(ACTION_PREVIOUS)) {
-			String text = searchField.getText();
-			if (text.length() == 0) {
-				return;
+			forward = false;
+		} else {
+			return;
+		}
+		
+		boolean found = SearchEngine.find(textArea, text, forward,
+				matchCase, wholeWord, regex);
+		if (!found) {
+			JOptionPane.showMessageDialog(this, MESSAGE_NOT_FOUND);
+
+			for (SearchBarListener l : listeners) {
+				l.searched(command, text, false);
 			}
-			boolean forward = false;
-			boolean matchCase = matchCaseCB.isSelected();
-			boolean wholeWord = false;
-			boolean regex = regexCB.isSelected();
-			boolean found = SearchEngine.find(textArea, text, forward,
-					matchCase, wholeWord, regex);
-			if (!found) {
-				JOptionPane.showMessageDialog(this, MESSAGE_NOT_FOUND);
+		} else {
+			for (SearchBarListener l : listeners) {
+				l.searched(command, text, true);
 			}
-		} else if (command.equals(ACTION_HIDE)) {
-			setVisible(false);
 		}
 	}
 }

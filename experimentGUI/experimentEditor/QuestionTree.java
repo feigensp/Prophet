@@ -279,6 +279,11 @@ public class QuestionTree extends JScrollPane {
 
 			public void drop(DropTargetDropEvent dtde) {
 				QuestionTreeNode source = (QuestionTreeNode) tree.getSelectionPath().getLastPathComponent();
+				
+				if (source.isExperiment()) {
+					return;
+				}
+				
 				Point p = dtde.getLocation();
 				TreePath selPath = tree.getPathForLocation(p.x, p.y);
 				if (selPath == null) {

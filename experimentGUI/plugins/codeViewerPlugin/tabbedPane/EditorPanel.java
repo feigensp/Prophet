@@ -12,6 +12,7 @@ import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rtextarea.RTextScrollPane;
 
 import experimentGUI.plugins.codeViewerPlugin.CodeViewerPluginList;
+import experimentGUI.plugins.codeViewerPlugin.Recorder;
 import experimentGUI.util.ModifiedRSyntaxTextArea;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 
@@ -25,11 +26,8 @@ public class EditorPanel extends JPanel {
 	/**
 	 * Create the panel.
 	 */
-	public EditorPanel(File file, String path, QuestionTreeNode selected) {
+	public EditorPanel(File file, String path) {
 		this.filePath=path;
-		if (selected==null) {
-			selected=new QuestionTreeNode();
-		}
 		RSyntaxDocument doc = new RSyntaxDocument("text/plain");
 		try {
 			byte[] buffer = new byte[(int) file.length()];
@@ -45,9 +43,7 @@ public class EditorPanel extends JPanel {
 		scrollPane = new RTextScrollPane(textArea);		
 		
 		setLayout(new BorderLayout());
-		add(scrollPane, BorderLayout.CENTER);	
-		
-		CodeViewerPluginList.onEditorPanelCreate(this);
+		add(scrollPane, BorderLayout.CENTER);
 	}	
 	public void grabFocus() {
 		textArea.grabFocus();

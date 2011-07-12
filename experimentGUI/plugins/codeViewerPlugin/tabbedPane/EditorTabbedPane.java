@@ -8,20 +8,23 @@ import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
 
 import experimentGUI.plugins.codeViewerPlugin.CodeViewerPluginList;
+import experimentGUI.plugins.codeViewerPlugin.Recorder;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 
 @SuppressWarnings("serial")
 public class EditorTabbedPane extends JTabbedPane {
 	private QuestionTreeNode selected;
 	private File showDir;
+	private Recorder recorder;
 	HashSet<EditorPanel> editorPanels;
 
-	public EditorTabbedPane(QuestionTreeNode selected, File showDir) {
+	public EditorTabbedPane(QuestionTreeNode selected, File showDir, Recorder recorder) {
 		super(JTabbedPane.TOP);
 		this.selected = selected;
 		this.showDir = showDir;
 		this.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 		editorPanels = new HashSet<EditorPanel>();
+		this.recorder=recorder;
 	}
 
 	public void openFile(String path) {
@@ -36,7 +39,9 @@ public class EditorTabbedPane extends JTabbedPane {
 		}
 		File file = new File(showDir.getPath() + path);
 		if (file.exists()) {
-			EditorPanel myPanel = new EditorPanel(file, path, selected);
+			EditorPanel myPanel = new EditorPanel(file, path);
+			recorder.onEditorPanelCreate(myPanel);
+			CodeViewerPluginList.onEditorPanelCreate(myPanel);
 			add(file.getName(), myPanel);
 			this.setTabComponentAt(this.getTabCount() - 1, new ButtonTabComponent(this, myPanel));
 			this.setSelectedComponent(myPanel);
@@ -54,6 +59,7 @@ public class EditorTabbedPane extends JTabbedPane {
 	public void closeEditorPanel(EditorPanel editorPanel) {
 		if (editorPanel!=null) {
 			CodeViewerPluginList.onEditorPanelClose(editorPanel);
+			recorder.onEditorPanelClose(editorPanel);
 			this.remove(editorPanel);
 		}
 	}

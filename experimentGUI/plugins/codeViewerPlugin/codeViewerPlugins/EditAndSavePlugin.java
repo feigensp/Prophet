@@ -21,6 +21,7 @@ import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
 import experimentGUI.plugins.codeViewerPlugin.CodeViewer;
 import experimentGUI.plugins.codeViewerPlugin.CodeViewerPluginInterface;
+import experimentGUI.plugins.codeViewerPlugin.Recorder;
 import experimentGUI.plugins.codeViewerPlugin.tabbedPane.EditorPanel;
 import experimentGUI.plugins.codeViewerPlugin.tabbedPane.EditorTabbedPane;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;

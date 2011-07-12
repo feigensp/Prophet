@@ -28,6 +28,8 @@ public class CodeViewer extends JFrame implements FileListener {
 	
 	private File showDir;
 	private File saveDir;
+	
+	private Recorder recorder;
 
 	/**
 	 * Launch the application.
@@ -76,12 +78,16 @@ public class CodeViewer extends JFrame implements FileListener {
 		myTree.setPreferredSize(new Dimension(200, 400));
 		myTree.addFileListener(this);
 		splitPane.setLeftComponent(myTree);
+
+		recorder = new Recorder(selected);
 		
-		tabbedPane = new EditorTabbedPane(selected, showDir);
+		tabbedPane = new EditorTabbedPane(selected, showDir, recorder);
 		splitPane.setRightComponent(tabbedPane);
 		
-		setContentPane(splitPane);	
+		setContentPane(splitPane);
+		
 		CodeViewerPluginList.init(selected);
+		recorder.onFrameCreate(this);
 		CodeViewerPluginList.onFrameCreate(this);
 	}
 
@@ -90,6 +96,10 @@ public class CodeViewer extends JFrame implements FileListener {
 		if (arg0.getID()==FileEvent.FILE_OPENED) {
 			tabbedPane.openFile(arg0.getFilePath());
 		}
+	}
+	
+	public Recorder getRecorder() {
+		return recorder;
 	}
 
 	public JSplitPane getSplitPane() {

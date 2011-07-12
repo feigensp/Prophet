@@ -1,9 +1,9 @@
-package experimentGUI.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin;
+package experimentGUI.plugins.codeViewerPlugin.recorder;
 
 import java.util.Vector;
 
-import experimentGUI.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin.recorderPlugins.ChangePlugin;
-import experimentGUI.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin.recorderPlugins.ScrollingPlugin;
+import experimentGUI.plugins.codeViewerPlugin.recorder.recorderPlugins.ChangePlugin;
+import experimentGUI.plugins.codeViewerPlugin.recorder.recorderPlugins.ScrollingPlugin;
 
 
 public class RecorderPluginList {

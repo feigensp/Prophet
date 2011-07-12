@@ -22,7 +22,7 @@ import experimentGUI.experimentEditor.tabbedPane.editorTabs.contentEditorToolBar
 import experimentGUI.util.ModifiedRSyntaxTextArea;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 import experimentGUI.util.searchBar.SearchBar;
-import experimentGUI.util.searchBar.SearchBarListener;
+import experimentGUI.util.searchBar.SearchBarCtrlFListener;
 
 @SuppressWarnings("serial")
 public class ContentEditorPanel extends ExperimentEditorTab {
@@ -70,7 +70,7 @@ public class ContentEditorPanel extends ExperimentEditorTab {
 				editPanel.add(scrollPane, BorderLayout.CENTER);
 				SearchBar searchBar = new SearchBar(editArea);
 				searchBar.setVisible(false);
-				editArea.addKeyListener(new SearchBarListener(searchBar));
+				editArea.addKeyListener(new SearchBarCtrlFListener(searchBar));
 				editPanel.add(searchBar, BorderLayout.SOUTH);				
 				ExperimentEditorTabbedPane.recursiveSetOpaque(editPanel);
 				editPanels.put(s, editPanel);

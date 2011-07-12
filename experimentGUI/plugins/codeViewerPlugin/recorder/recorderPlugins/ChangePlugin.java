@@ -1,4 +1,4 @@
-package experimentGUI.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin.recorderPlugins;
+package experimentGUI.plugins.codeViewerPlugin.recorder.recorderPlugins;
 
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -6,8 +6,8 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 
 import experimentGUI.plugins.codeViewerPlugin.CodeViewer;
-import experimentGUI.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin.RecorderPluginInterface;
-import experimentGUI.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin.loggingTreeNode.LoggingTreeNode;
+import experimentGUI.plugins.codeViewerPlugin.recorder.RecorderPluginInterface;
+import experimentGUI.plugins.codeViewerPlugin.recorder.loggingTreeNode.LoggingTreeNode;
 import experimentGUI.plugins.codeViewerPlugin.tabbedPane.EditorPanel;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 import experimentGUI.util.settingsComponents.SettingsComponentDescription;
@@ -35,8 +35,8 @@ public class ChangePlugin implements RecorderPluginInterface {
 
 	@Override
 	public SettingsComponentDescription getSettingsComponentDescription() {
-		SettingsPluginComponentDescription resultDesc = new SettingsPluginComponentDescription(KEY, "Quelltextänderungen");
-		SettingsPluginComponentDescription joinDesc = new SettingsPluginComponentDescription(KEY_JOIN, "Änderungen zusammenfassen");
+		SettingsPluginComponentDescription resultDesc = new SettingsPluginComponentDescription(KEY, "Quelltextänderungen", true);
+		SettingsPluginComponentDescription joinDesc = new SettingsPluginComponentDescription(KEY_JOIN, "Änderungen zusammenfassen", true);
 		SettingsComponentDescription joinTimeDesc = new SettingsComponentDescription(SettingsTextField.class,KEY_JOIN_TIME, "Grenzzeit (ms, z.B. 1000)");
 		joinDesc.addSubComponent(joinTimeDesc);
 		resultDesc.addSubComponent(joinDesc);

@@ -1,4 +1,4 @@
-package experimentGUI.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin.recorderPlugins;
+package experimentGUI.plugins.codeViewerPlugin.recorder.recorderPlugins;
 
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -11,8 +11,8 @@ import javax.swing.text.BadLocationException;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
 import experimentGUI.plugins.codeViewerPlugin.CodeViewer;
-import experimentGUI.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin.RecorderPluginInterface;
-import experimentGUI.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin.loggingTreeNode.LoggingTreeNode;
+import experimentGUI.plugins.codeViewerPlugin.recorder.RecorderPluginInterface;
+import experimentGUI.plugins.codeViewerPlugin.recorder.loggingTreeNode.LoggingTreeNode;
 import experimentGUI.plugins.codeViewerPlugin.tabbedPane.EditorPanel;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 import experimentGUI.util.settingsComponents.SettingsComponentDescription;
@@ -40,8 +40,8 @@ public class ScrollingPlugin implements RecorderPluginInterface {
 
 	@Override
 	public SettingsComponentDescription getSettingsComponentDescription() {
-		SettingsPluginComponentDescription resultDesc = new SettingsPluginComponentDescription(KEY, "Scrollverhalten");
-		SettingsPluginComponentDescription joinDesc = new SettingsPluginComponentDescription(KEY_JOIN, "Scrollvorgänge zusammenfassen");
+		SettingsPluginComponentDescription resultDesc = new SettingsPluginComponentDescription(KEY, "Scrollverhalten", true);
+		SettingsPluginComponentDescription joinDesc = new SettingsPluginComponentDescription(KEY_JOIN, "Scrollvorgänge zusammenfassen", true);
 		SettingsComponentDescription joinTimeDesc = new SettingsComponentDescription(SettingsTextField.class,KEY_JOIN_TIME, "Grenzzeit (ms, z.B. 1000)");
 		joinDesc.addSubComponent(joinTimeDesc);
 		resultDesc.addSubComponent(joinDesc);

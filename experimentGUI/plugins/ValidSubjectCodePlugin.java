@@ -25,7 +25,7 @@ public class ValidSubjectCodePlugin implements PluginInterface {
 	public SettingsComponentDescription getSettingsComponentDescription(QuestionTreeNode node) {
 		if (node.isExperiment()) {
 			SettingsPluginComponentDescription result = new SettingsPluginComponentDescription(KEY,
-					"Auf Probandencode überprüfen");
+					"Auf Probandencode überprüfen", true);
 			result.addSubComponent(new SettingsComponentDescription(SettingsTextArea.class, KEY_CODES,
 			"gültige Codes (optional)"));
 			result.addSubComponent(new SettingsComponentDescription(SettingsFilePathChooser.class, KEY_PATH,

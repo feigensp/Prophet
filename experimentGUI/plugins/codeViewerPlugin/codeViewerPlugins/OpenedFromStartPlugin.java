@@ -2,6 +2,7 @@ package experimentGUI.plugins.codeViewerPlugin.codeViewerPlugins;
 
 import experimentGUI.plugins.codeViewerPlugin.CodeViewer;
 import experimentGUI.plugins.codeViewerPlugin.CodeViewerPluginInterface;
+import experimentGUI.plugins.codeViewerPlugin.Recorder;
 import experimentGUI.plugins.codeViewerPlugin.tabbedPane.EditorPanel;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 import experimentGUI.util.settingsComponents.SettingsComponentDescription;
@@ -17,7 +18,7 @@ public class OpenedFromStartPlugin implements CodeViewerPluginInterface{
 
 	@Override
 	public SettingsComponentDescription getSettingsComponentDescription() {
-		SettingsPluginComponentDescription result = new SettingsPluginComponentDescription(KEY, "Datei standardmäßig öffnen");
+		SettingsPluginComponentDescription result = new SettingsPluginComponentDescription(KEY, "Datei standardmäßig öffnen", true);
 		result.addSubComponent(new SettingsComponentDescription(SettingsTextField.class,KEY_PATH, "Zu öffnende Datei (relativ zum Pfad der Quelltexte):"));
 		return result;
 	}

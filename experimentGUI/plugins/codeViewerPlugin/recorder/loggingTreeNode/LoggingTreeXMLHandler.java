@@ -5,7 +5,7 @@
  * @author Markus Köppen, Andreas Hasselberg
  */
 
-package experimentGUI.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin.loggingTreeNode;
+package experimentGUI.plugins.codeViewerPlugin.recorder.loggingTreeNode;
 
 import java.io.File;
 import java.io.IOException;

@@ -84,7 +84,7 @@ public class MailPlugin implements PluginInterface {
 	public SettingsComponentDescription getSettingsComponentDescription(QuestionTreeNode node) {
 		if (node.isExperiment()) {
 			SettingsPluginComponentDescription result = new SettingsPluginComponentDescription(KEY,
-					"E-Mail versenden");
+					"E-Mail versenden", true);
 			result.addSubComponent(new SettingsComponentDescription(SettingsTextField.class, SMTP_SERVER,
 					"SMTP-Server:"));
 			result.addSubComponent(new SettingsComponentDescription(SettingsTextField.class, SMTP_USER,

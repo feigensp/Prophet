@@ -2,6 +2,7 @@ package experimentGUI.plugins.codeViewerPlugin.codeViewerPlugins;
 
 import experimentGUI.plugins.codeViewerPlugin.CodeViewer;
 import experimentGUI.plugins.codeViewerPlugin.CodeViewerPluginInterface;
+import experimentGUI.plugins.codeViewerPlugin.Recorder;
 import experimentGUI.plugins.codeViewerPlugin.tabbedPane.EditorPanel;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 import experimentGUI.util.settingsComponents.SettingsComponentDescription;

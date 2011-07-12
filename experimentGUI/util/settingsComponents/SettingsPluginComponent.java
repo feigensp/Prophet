@@ -57,4 +57,10 @@ public class SettingsPluginComponent extends SettingsComponent {
 			component.saveValue();
 		}
 	}
+	
+	protected void notEnableable() {
+		activatedCheckBox.setVisible(false);
+		optionPanel.setVisible(true);
+		optionPanel.setBorder(BorderFactory.createTitledBorder(activatedCheckBox.getText()));
+	}
 }

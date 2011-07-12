@@ -5,7 +5,6 @@ import java.util.Vector;
 import experimentGUI.plugins.codeViewerPlugin.codeViewerPlugins.EditAndSavePlugin;
 import experimentGUI.plugins.codeViewerPlugin.codeViewerPlugins.LineNumbersPlugin;
 import experimentGUI.plugins.codeViewerPlugin.codeViewerPlugins.OpenedFromStartPlugin;
-import experimentGUI.plugins.codeViewerPlugin.codeViewerPlugins.RecorderPlugin;
 import experimentGUI.plugins.codeViewerPlugin.codeViewerPlugins.SearchBarPlugin;
 import experimentGUI.plugins.codeViewerPlugin.codeViewerPlugins.SyntaxHighlightingPlugin;
 import experimentGUI.plugins.codeViewerPlugin.tabbedPane.EditorPanel;
@@ -18,7 +17,6 @@ public class CodeViewerPluginList {
 		private static final long serialVersionUID = 1L;
 		{
 			add(new EditAndSavePlugin());
-			add(new RecorderPlugin());
 			add(new LineNumbersPlugin());
 			add(new SearchBarPlugin());
 			add(new SyntaxHighlightingPlugin());

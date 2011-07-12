@@ -37,7 +37,7 @@ public class ExternalProgramsPlugin extends Thread implements PluginInterface {
 	public SettingsComponentDescription getSettingsComponentDescription(QuestionTreeNode node) {
 		if (node.isCategory()) {
 			SettingsPluginComponentDescription result = new SettingsPluginComponentDescription(KEY,
-					"Externe Programme starten");
+					"Externe Programme starten", true);
 			result.addSubComponent(new SettingsComponentDescription(SettingsTextArea.class, KEY_COMMANDS,
 					"Programmpfade (durch Zeilenumbruch getrennt)"));
 			return result;

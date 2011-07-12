@@ -11,6 +11,7 @@ import experimentGUI.PluginInterface;
 import experimentGUI.experimentViewer.ExperimentViewer;
 import experimentGUI.plugins.codeViewerPlugin.CodeViewer;
 import experimentGUI.plugins.codeViewerPlugin.CodeViewerPluginList;
+import experimentGUI.plugins.codeViewerPlugin.Recorder;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 import experimentGUI.util.settingsComponents.SettingsComponentDescription;
 import experimentGUI.util.settingsComponents.SettingsPluginComponentDescription;
@@ -30,8 +31,9 @@ public class CodeViewerPlugin implements PluginInterface {
 	public SettingsComponentDescription getSettingsComponentDescription(
 			QuestionTreeNode node) {
 		if (node.getType().equals(QuestionTreeNode.TYPE_CATEGORY)) {
-			SettingsPluginComponentDescription result = new SettingsPluginComponentDescription(KEY, "Codeviewer aktivieren");
+			SettingsPluginComponentDescription result = new SettingsPluginComponentDescription(KEY, "Codeviewer aktivieren", true);
 			result.addSubComponent(new SettingsComponentDescription(SettingsDirectoryPathChooser.class, CodeViewer.KEY_PATH, "Pfad der Quelltexte:"));
+			result.addNextComponent(Recorder.getSettingsComponentDescription());
 			SettingsComponentDescription desc = CodeViewerPluginList.getSettingsComponentDescription();
 			if (desc!=null) {
 				result.addSubComponent(desc);
@@ -83,6 +85,7 @@ public class CodeViewerPlugin implements PluginInterface {
 		CodeViewer cv = codeViewers.get(node);
 		if (cv!=null) {
 			CodeViewerPluginList.onClose();
+			cv.getRecorder().onClose();
 			bounds = cv.getBounds();
 			cv.dispose();
 			codeViewers.remove(node);
