@@ -33,7 +33,7 @@ public class CodeViewerPlugin implements PluginInterface {
 		if (node.getType().equals(QuestionTreeNode.TYPE_CATEGORY)) {
 			SettingsPluginComponentDescription result = new SettingsPluginComponentDescription(KEY, "Codeviewer aktivieren", true);
 			result.addSubComponent(new SettingsComponentDescription(SettingsDirectoryPathChooser.class, CodeViewer.KEY_PATH, "Pfad der Quelltexte:"));
-			result.addNextComponent(Recorder.getSettingsComponentDescription());
+			result.addSubComponent(Recorder.getSettingsComponentDescription());
 			SettingsComponentDescription desc = CodeViewerPluginList.getSettingsComponentDescription();
 			if (desc!=null) {
 				result.addSubComponent(desc);
