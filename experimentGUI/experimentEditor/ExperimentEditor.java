@@ -8,13 +8,14 @@ package experimentGUI.experimentEditor;
  */
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
-import javax.swing.JPanel;
+import javax.swing.JSplitPane;
 import javax.swing.UIManager;
-import javax.swing.border.EmptyBorder;
+import javax.swing.plaf.basic.BasicSplitPaneDivider;
 
 import experimentGUI.experimentEditor.tabbedPane.ExperimentEditorTabbedPane;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
@@ -38,10 +39,6 @@ public class ExperimentEditor extends JFrame {
 	 * JTabbedPane component to the right of the ExperimentEditor
 	 */
 	private ExperimentEditorTabbedPane questionEditorTabbedPane;
-	/**
-	 * ContentPane of the ExperimentEditor, all components are put here
-	 */
-	private JPanel contentPane;
 
 	/**
 	 * Main method to launch the ExperimentEditor
@@ -68,17 +65,15 @@ public class ExperimentEditor extends JFrame {
 	 * Constructor of the ExperimentEditor, called by the main() method;<br>
 	 * sets some basic settings and adds used components
 	 */
-	public ExperimentEditor() {
-		
+	public ExperimentEditor() {		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(800, 600);
+		setLayout(new BorderLayout());
 		setLocationRelativeTo(null);
 		setTitle(TITLE);
 
-		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		contentPane.setLayout(new BorderLayout(0, 0));
-		setContentPane(contentPane);
+		JSplitPane splitPane = new JSplitPane();
+		add(splitPane);
 		
 		ExperimentEditorMenuBar menuBar = new ExperimentEditorMenuBar(this);
 		setJMenuBar(menuBar);
@@ -90,10 +85,19 @@ public class ExperimentEditor extends JFrame {
 				questionEditorTabbedPane.setSelected(e.getNode());
 			}			
 		});		
-		contentPane.add(tree, BorderLayout.WEST);
+		tree.setBorder(null);
+		splitPane.setLeftComponent(tree);
 
 		questionEditorTabbedPane = new ExperimentEditorTabbedPane();
-		contentPane.add(questionEditorTabbedPane, BorderLayout.CENTER);
+		questionEditorTabbedPane.setBorder(null);
+		splitPane.setRightComponent(questionEditorTabbedPane);
+		
+		splitPane.setBorder(null);
+		for (Component component : splitPane.getComponents())
+			if (component instanceof BasicSplitPaneDivider)
+				((BasicSplitPaneDivider) component).setBorder(null);
+		
+		add(splitPane, BorderLayout.CENTER);
 	}
 	/**
 	 * 

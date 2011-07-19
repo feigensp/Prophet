@@ -18,7 +18,7 @@ public class FileTreeNode extends DefaultMutableTreeNode {
 		this(file,"", true);
 	}
 	private FileTreeNode(File file, String containingPath, boolean root) throws FileNotFoundException {
-		if (!file.exists()) {
+		if (file==null || !file.exists()) {
 			throw new FileNotFoundException();
 		}
 		name=file.getName();
@@ -55,11 +55,27 @@ public class FileTreeNode extends DefaultMutableTreeNode {
 	public String toString() {
 		return name;
 	}
-	@Override
-	public boolean isLeaf() {
-		return isFile;
-	}
+//	@Override
+//	public boolean isLeaf() {
+//		return isFile;
+//	}
 	public boolean isFile() {
 		return isFile;
+	}
+	public FileTreeNode clone() {
+		FileTreeNode result = (FileTreeNode) super.clone();
+		result.name=name;
+		result.path=path;
+		result.isFile=isFile;
+		return result;
+	}
+	public FileTreeNode deepClone() {
+		FileTreeNode result = this.clone();
+		Vector<FileTreeNode> oldChildren = (Vector<FileTreeNode>) children;
+		result.removeAllChildren();
+		for (FileTreeNode child : oldChildren) {
+			result.add(child.deepClone());
+		}
+		return result;
 	}
 }

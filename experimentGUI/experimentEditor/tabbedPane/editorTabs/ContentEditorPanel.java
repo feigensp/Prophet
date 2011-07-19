@@ -6,9 +6,6 @@ import java.awt.event.KeyEvent;
 import java.util.HashMap;
 
 import javax.swing.JPanel;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxDocument;
@@ -22,12 +19,12 @@ import experimentGUI.experimentEditor.tabbedPane.editorTabs.contentEditorToolBar
 import experimentGUI.util.ModifiedRSyntaxTextArea;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 import experimentGUI.util.searchBar.SearchBar;
-import experimentGUI.util.searchBar.SearchBarCtrlFListener;
 
 @SuppressWarnings("serial")
 public class ContentEditorPanel extends ExperimentEditorTab {
 	private HashMap<QuestionTreeNode, JPanel> editPanels = new HashMap<QuestionTreeNode,JPanel>();
 	private HashMap<QuestionTreeNode, RSyntaxTextArea> editAreas = new HashMap<QuestionTreeNode,RSyntaxTextArea>();
+	private HashMap<QuestionTreeNode, SearchBar> searchBars = new HashMap<QuestionTreeNode,SearchBar>();
 	private QuestionTreeNode selected;
 	
 	public ContentEditorPanel() {
@@ -70,7 +67,8 @@ public class ContentEditorPanel extends ExperimentEditorTab {
 				editPanel.add(scrollPane, BorderLayout.CENTER);
 				SearchBar searchBar = new SearchBar(editArea);
 				searchBar.setVisible(false);
-				editArea.addKeyListener(new SearchBarCtrlFListener(searchBar));
+				searchBars.put(selected, searchBar);
+				
 				editPanel.add(searchBar, BorderLayout.SOUTH);				
 				ExperimentEditorTabbedPane.recursiveSetOpaque(editPanel);
 				editPanels.put(s, editPanel);
@@ -86,6 +84,13 @@ public class ContentEditorPanel extends ExperimentEditorTab {
 			if (editArea!=null) {
 				selected.setValue(editArea.getText());
 			}
+		}
+	}
+	public void search() {
+		SearchBar searchBar = searchBars.get(selected);
+		if (searchBar!=null) {
+			searchBar.setVisible(true);
+			searchBar.grabFocus();
 		}
 	}
 }

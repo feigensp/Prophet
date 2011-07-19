@@ -131,4 +131,34 @@ public class SearchBar extends JToolBar implements ActionListener {
 			}
 		}
 	}
+
+	public RSyntaxTextArea getTextArea() {
+		return textArea;
+	}
+
+	public JButton getHideButton() {
+		return hideButton;
+	}
+
+	public JTextField getSearchField() {
+		return searchField;
+	}
+
+	public JButton getForwardButton() {
+		return forwardButton;
+	}
+
+	public JButton getBackwardButton() {
+		return backwardButton;
+	}
+
+	public JCheckBox getRegexCB() {
+		return regexCB;
+	}
+
+	public JCheckBox getMatchCaseCB() {
+		return matchCaseCB;
+	}
+	
+	
 }

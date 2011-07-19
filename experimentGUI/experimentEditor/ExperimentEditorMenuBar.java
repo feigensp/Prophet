@@ -1,5 +1,6 @@
 package experimentGUI.experimentEditor;
 
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
@@ -17,6 +18,7 @@ import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 
 import experimentGUI.Constants;
+import experimentGUI.experimentEditor.tabbedPane.editorTabs.ContentEditorPanel;
 import experimentGUI.util.Pair;
 import experimentGUI.util.questionTreeNode.QuestionTreeHTMLHandler;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
@@ -42,6 +44,9 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 	public final static String MENU_FILE_SAVE = "Speichern";
 	public final static String MENU_FILE_SAVE_AS = "Speichern unter...";
 	public final static String MENU_FILE_QUIT = "Beenden";
+	
+	public final static String MENU_EDIT = "Bearbeiten";
+	public final static String MENU_EDIT_FIND = "Suchen";
 
 	/**
 	 * String constants for (error) messages
@@ -65,9 +70,12 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 	 * @param eE
 	 *            The ExperimentEditor object this menu bar is added to
 	 */
-	public ExperimentEditorMenuBar(ExperimentEditor eE) {
+	public ExperimentEditorMenuBar(final ExperimentEditor eE) {
 		experimentEditor = eE;
 		currentFile = null;
+		
+		//DATEI
+		
 		JMenu fileMenu = new JMenu(MENU_FILE);
 		add(fileMenu);
 
@@ -204,6 +212,25 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 
 		JMenuItem closeMenuItem = new JMenuItem(MENU_FILE_QUIT);
 		fileMenu.add(closeMenuItem);
+		
+		// BEARBEITEN
+		
+		JMenu editMenu = new JMenu(MENU_EDIT);
+		add(editMenu);
+
+		newMenuItem = new JMenuItem(MENU_EDIT_FIND);
+		newMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F, InputEvent.CTRL_MASK));
+		editMenu.add(newMenuItem);
+		newMenuItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				Component current = eE.getTabbedPane().getSelectedComponent();
+				if (current instanceof ContentEditorPanel) {
+					((ContentEditorPanel)current).search();
+				}
+			}
+		});
+		
+		// EXTRAS
 
 		JMenu extrasMenu = new JMenu("Extras");
 		add(extrasMenu);

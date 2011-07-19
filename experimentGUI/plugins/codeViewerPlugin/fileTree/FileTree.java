@@ -35,10 +35,9 @@ public class FileTree extends JScrollPane {
 //		FileTreeNode treeNode;
 		try {
 			root = new FileTreeNode(rootDir);
-			tree = new JTree(new DefaultTreeModel(root));
+			tree = new JTree(new FileTreeModel(root));
 		} catch (FileNotFoundException e1) {
 			tree = new JTree(new DefaultTreeModel(new DefaultMutableTreeNode()));
-			JOptionPane.showMessageDialog(this, "Der im Experiment angegebene Pfad ist nicht vorhanden.", "Fehler", JOptionPane.ERROR_MESSAGE);
 		}
 		this.setMinimumSize(new Dimension(150,0));
 		tree.addMouseListener(new MouseAdapter() {
@@ -112,5 +111,8 @@ public class FileTree extends JScrollPane {
 			tree.expandPath(selection);
 			tree.setSelectionPath(selection);	
 		}
+	}
+	public JTree getTree() {
+		return tree;
 	}
 }

@@ -1,5 +1,7 @@
 package experimentGUI.plugins.codeViewerPlugin;
 
+import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.io.File;
@@ -7,7 +9,10 @@ import java.io.File;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JSplitPane;
+import javax.swing.plaf.basic.BasicSplitPaneDivider;
 
 import experimentGUI.plugins.codeViewerPlugin.fileTree.FileEvent;
 import experimentGUI.plugins.codeViewerPlugin.fileTree.FileListener;
@@ -22,6 +27,8 @@ public class CodeViewer extends JFrame implements FileListener {
 	
 	private JMenuBar menuBar;
 	private JMenu fileMenu;
+	private JMenu editMenu;
+	
 	private JSplitPane splitPane;
 	private FileTree myTree;
 	private EditorTabbedPane tabbedPane;
@@ -49,7 +56,8 @@ public class CodeViewer extends JFrame implements FileListener {
 	
 	public CodeViewer(QuestionTreeNode selected, File saveDir) {
 		setTitle("Quelltext");
-		this.setSize(800, 600);
+		setSize(800, 600);
+		setLayout(new BorderLayout());
 		
 		if (selected==null) {
 			selected = new QuestionTreeNode();
@@ -63,18 +71,26 @@ public class CodeViewer extends JFrame implements FileListener {
 		
 		String showPath = selected.getAttributeValue(KEY_PATH).replace('/', System.getProperty("file.separator").charAt(0));
 		showDir = new File(showPath==null || showPath.length()==0 ? "." : showPath);
+		if (!showDir.exists()) {
+			JOptionPane.showMessageDialog(this, "Der im Experiment angegebene Pfad ist nicht vorhanden.", "Fehler", JOptionPane.ERROR_MESSAGE);
+		}
 		
 		menuBar = new JMenuBar();
-		setJMenuBar(menuBar);			
+		setJMenuBar(menuBar);
+		menuBar.setVisible(false);	
+		
 		fileMenu = new JMenu("Datei");
 		menuBar.add(fileMenu);
-		menuBar.setVisible(false);
 		fileMenu.setVisible(false);
 		
+		editMenu = new JMenu("Bearbeiten");
+		menuBar.add(editMenu);
+		editMenu.setVisible(false);
+		
 		splitPane = new JSplitPane();
-		splitPane.setBorder(null);
 		
 		myTree = new FileTree(showDir);
+		myTree.setBorder(null);
 		myTree.setPreferredSize(new Dimension(200, 400));
 		myTree.addFileListener(this);
 		splitPane.setLeftComponent(myTree);
@@ -82,9 +98,15 @@ public class CodeViewer extends JFrame implements FileListener {
 		recorder = new Recorder(selected);
 		
 		tabbedPane = new EditorTabbedPane(selected, showDir, recorder);
+		tabbedPane.setBorder(null);
 		splitPane.setRightComponent(tabbedPane);
 		
-		setContentPane(splitPane);
+		splitPane.setBorder(null);
+		for (Component component : splitPane.getComponents())
+			if (component instanceof BasicSplitPaneDivider)
+				((BasicSplitPaneDivider) component).setBorder(null);
+		
+		add(splitPane, BorderLayout.CENTER);
 		
 		CodeViewerPluginList.init(selected);
 		recorder.onFrameCreate(this);
@@ -113,15 +135,26 @@ public class CodeViewer extends JFrame implements FileListener {
 	public EditorTabbedPane getTabbedPane() {
 		return tabbedPane;
 	}
+	public File getShowDir() {
+		return showDir;
+	}
 	public File getSaveDir() {
 		return saveDir;
 	}
-
-	public JMenuBar getViewerMenuBar() {
-		return menuBar;
+	
+	public void addMenu(JMenu menu) {
+		menuBar.add(menu);
+		menuBar.setVisible(true);
 	}
 
-	public JMenu getFileMenu() {
-		return fileMenu;
+	public void addMenuItemToFileMenu(JMenuItem item) {
+		fileMenu.add(item);
+		fileMenu.setVisible(true);
+		menuBar.setVisible(true);
+	}
+	public void addMenuItemToEditMenu(JMenuItem item) {
+		editMenu.add(item);
+		editMenu.setVisible(true);
+		menuBar.setVisible(true);
 	}
 }

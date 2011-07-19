@@ -11,6 +11,7 @@ import java.util.HashMap;
 
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.KeyStroke;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
@@ -21,7 +22,6 @@ import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
 import experimentGUI.plugins.codeViewerPlugin.CodeViewer;
 import experimentGUI.plugins.codeViewerPlugin.CodeViewerPluginInterface;
-import experimentGUI.plugins.codeViewerPlugin.Recorder;
 import experimentGUI.plugins.codeViewerPlugin.tabbedPane.EditorPanel;
 import experimentGUI.plugins.codeViewerPlugin.tabbedPane.EditorTabbedPane;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
@@ -49,19 +49,19 @@ public class EditAndSavePlugin implements CodeViewerPluginInterface {
 	public void onFrameCreate(CodeViewer viewer) {
 		if (editable) {
 			tabbedPane=viewer.getTabbedPane();
-			viewer.getViewerMenuBar().setVisible(true);
-			viewer.getFileMenu().setVisible(true);
 			saveDir = new File(viewer.getSaveDir().getPath()+System.getProperty("file.separator")+"savedFiles");
 			isChanged = new HashMap<EditorPanel,Boolean>();
 			JMenuItem saveMenuItem = new JMenuItem("Speichern");
-			viewer.getFileMenu().add(saveMenuItem);
+			saveMenuItem.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.Event.CTRL_MASK));
+			viewer.addMenuItemToFileMenu(saveMenuItem);
 			saveMenuItem.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					saveActiveFile();
 				}
 			});
 			JMenuItem saveAllMenuItem = new JMenuItem("Alle Speichern");
-			viewer.getFileMenu().add(saveAllMenuItem);
+			saveAllMenuItem.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.Event.CTRL_MASK | java.awt.Event.SHIFT_MASK));
+			viewer.addMenuItemToFileMenu(saveAllMenuItem);
 			saveAllMenuItem.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					saveAllFiles();
