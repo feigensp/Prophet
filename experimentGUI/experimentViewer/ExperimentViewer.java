@@ -27,9 +27,9 @@ import experimentGUI.util.questionTreeNode.QuestionTreeXMLHandler;
 /**
  * This class shows the html files (questions) creates the navigation and
  * navigates everything...
- * 
- * @author Markus Köppen, Andreas Hasselberg
- * 
+ *
+ * @author Markus Kï¿½ppen, Andreas Hasselberg
+ *
  */
 public class ExperimentViewer extends JFrame {
 	private static final long serialVersionUID = 1L;
@@ -46,9 +46,9 @@ public class ExperimentViewer extends JFrame {
 	private QuestionTreeNode currentNode;
 
 	private File saveDir;
-	
+
 	private HashSet<QuestionTreeNode> enteredNodes;
-	
+
 	private boolean ignoreDenyNextNode = false;
 	private boolean exitExperiment = false;
 	private boolean experimentNotRunning = true;
@@ -85,7 +85,7 @@ public class ExperimentViewer extends JFrame {
 	/**
 	 * With the call of the Constructor the data is loaded and everything is
 	 * initialized. The first question is showed.
-	 * 
+	 *
 	 * @param path
 	 *            path of the xml file with the data
 	 * @param cqlp
@@ -117,7 +117,7 @@ public class ExperimentViewer extends JFrame {
 			if(myTree!=null) {
 				tree=myTree;
 			} else {
-				JOptionPane.showMessageDialog(this, "Keine gültige Experiment-Datei.");
+				JOptionPane.showMessageDialog(this, "Keine g\u00fcltige Experiment-Datei.");
 			}
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(this, "Experiment nicht gefunden.");
@@ -130,11 +130,11 @@ public class ExperimentViewer extends JFrame {
 			public void windowClosing(WindowEvent arg0) {
 				if (experimentNotRunning) {
 					System.exit(0);
-				} else if (JOptionPane.showConfirmDialog(null, "Das Experiment ist noch nicht abgeschlossen. Experiment beenden?", "Bestätigung", JOptionPane.YES_NO_OPTION)==JOptionPane.YES_OPTION) {
+				} else if (JOptionPane.showConfirmDialog(null, "Das Experiment ist noch nicht abgeschlossen. Experiment beenden?", "Best\u00e4tigung", JOptionPane.YES_NO_OPTION)==JOptionPane.YES_OPTION) {
 					exitExperiment = true;
 					currentViewPane.clickSubmit();
 				}
-			}			
+			}
 		});
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -145,7 +145,7 @@ public class ExperimentViewer extends JFrame {
 		QuestionTreeNode superRoot = new QuestionTreeNode();
 		superRoot.add(tree);
 		tree.setParent(null);
-		currentNode = superRoot;				
+		currentNode = superRoot;
 		textPanes = new HashMap<QuestionTreeNode, QuestionViewPane>();
 		times = new HashMap<QuestionTreeNode, ClockLabel>();
 		totalTime = new ClockLabel("Gesamtzeit");
@@ -181,7 +181,7 @@ public class ExperimentViewer extends JFrame {
 			totalTime.start();
 			experimentNotRunning=false;
 		}
-		
+
 		//step down if we may enter and there are children, else step aside if there is a sibling, else step up
 		if (!denyEnterNode() && currentNode.getChildCount() != 0) {
 			currentNode = (QuestionTreeNode) currentNode.getFirstChild();
@@ -196,7 +196,7 @@ public class ExperimentViewer extends JFrame {
 			}
 			currentNode = (QuestionTreeNode) currentNode.getNextSibling();
 		}
-		
+
 		//check if found node is visitable
 		if (denyEnterNode()) {
 			return nextNode();
@@ -241,13 +241,13 @@ public class ExperimentViewer extends JFrame {
 	public static boolean denyEnterNode(QuestionTreeNode node) {
 		return PluginList.denyEnterNode(node);
 	}
-	
+
 	private void enterNode() {
 		enteredNodes.add(currentNode);
 		PluginList.enterNode(currentNode);
 		currentViewPane.grabFocus();
 	}
-	
+
 	private boolean denyNextNode() {
 		if (ignoreDenyNextNode || exitExperiment) {
 			return false;
@@ -347,7 +347,7 @@ public class ExperimentViewer extends JFrame {
 	public File getSaveDir() {
 		return saveDir;
 	}
-	
+
 	public void forceNext(boolean hard) {
 		ignoreDenyNextNode = hard;
 		currentViewPane.clickSubmit();
@@ -356,7 +356,7 @@ public class ExperimentViewer extends JFrame {
 	public void saveCurrentAnswers() {
 		currentViewPane.saveCurrentAnswersToNode();
 	}
-	
+
 	public JPanel getContentPanel() {
 		return contentPane;
 	}

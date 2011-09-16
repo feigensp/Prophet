@@ -4,7 +4,7 @@ package experimentGUI.experimentEditor.tabbedPane.editorTabs;
  * A Dialog to adjust some settings.
  * One is a path an the others are predefined (Settings.java) and could be true oder false
  * 
- * @author Markus Köppen, Andreas Hasselberg
+ * @author Markus Kï¿½ppen, Andreas Hasselberg
  */
 
 import java.awt.BorderLayout;
@@ -56,7 +56,7 @@ public class SettingsEditorPanel extends ExperimentEditorTab {
 					settingsPanel.add(new SettingsComponentDescription(SettingsCheckBox.class,
 							Constants.KEY_DONOTSHOWCONTENT, "Inhalt nicht anzeigen").build(selected));
 					settingsPanel.add(new SettingsComponentDescription(SettingsCheckBox.class,
-							Constants.KEY_QUESTIONSWITCHING, "Vor- und Zurückblättern erlauben").build(selected));
+							Constants.KEY_QUESTIONSWITCHING, "Vor- und Zur\u00f6ckbl\u00e4ttern erlauben").build(selected));
 				}
 				SettingsComponentDescription desc =PluginList.getSettingsComponentDescription(selected);
 				if (desc != null) {

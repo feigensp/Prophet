@@ -26,15 +26,15 @@ import experimentGUI.util.questionTreeNode.QuestionTreeXMLHandler;
 
 /**
  * The menu bar of the ExperimentViewer. Separated to enhance readability.
- * 
+ *
  * @author Andreas Hasselberg
- * @author Markus Köppen
- * 
+ * @author Markus KÃ¶ppen
+ *
  */
 public class ExperimentEditorMenuBar extends JMenuBar {
-	
+
 	private static final long serialVersionUID = 1L;
-	
+
 	/**
 	 * String constants for the menu(items)
 	 */
@@ -44,7 +44,7 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 	public final static String MENU_FILE_SAVE = "Speichern";
 	public final static String MENU_FILE_SAVE_AS = "Speichern unter...";
 	public final static String MENU_FILE_QUIT = "Beenden";
-	
+
 	public final static String MENU_EDIT = "Bearbeiten";
 	public final static String MENU_EDIT_FIND = "Suchen";
 
@@ -54,8 +54,8 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 	public final static String MESSAGE_FILE_NOT_FOUND = "Datei nicht gefunden";
 	public final static String MESSAGE_FILE_NOT_FOUND_TITLE = "Fehler";
 	public final static String MESSAGE_REPLACE_FILE = " ist bereits vorhanden.\nWollen Sie sie ersetzen?";
-	public final static String MESSAGE_REPLACE_FILE_TITLE = "Speichern unter bestätigen";
-	
+	public final static String MESSAGE_REPLACE_FILE_TITLE = "Speichern unter best\u00e4tigen";
+
 	private ExperimentEditor experimentEditor;
 	private File currentFile;
 	private JMenuItem saveMenuItem;
@@ -66,16 +66,16 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 
 	/**
 	 * Constructor
-	 * 
+	 *
 	 * @param eE
 	 *            The ExperimentEditor object this menu bar is added to
 	 */
 	public ExperimentEditorMenuBar(final ExperimentEditor eE) {
 		experimentEditor = eE;
 		currentFile = null;
-		
+
 		//DATEI
-		
+
 		JMenu fileMenu = new JMenu(MENU_FILE);
 		add(fileMenu);
 
@@ -109,9 +109,9 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 
 							enableMenuItems();
 						} else {
-							JOptionPane.showMessageDialog(experimentEditor, "Keine gültige Experiment-Datei.");
+							JOptionPane.showMessageDialog(experimentEditor, "Keine gÃ¼ltige Experiment-Datei.");
 						}
-						
+
 					} catch (FileNotFoundException e) {
 						JOptionPane.showMessageDialog(experimentEditor, MESSAGE_FILE_NOT_FOUND,
 								MESSAGE_FILE_NOT_FOUND_TITLE, JOptionPane.ERROR_MESSAGE);
@@ -183,7 +183,7 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 				}
 			}
 		});
-		
+
 		exportCSVMenuItem = new JMenuItem("CSV-Datei der Antworten");
 		exportMenu.add(exportCSVMenuItem);
 		exportCSVMenuItem.addActionListener(new ActionListener() {
@@ -212,9 +212,9 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 
 		JMenuItem closeMenuItem = new JMenuItem(MENU_FILE_QUIT);
 		fileMenu.add(closeMenuItem);
-		
+
 		// BEARBEITEN
-		
+
 		JMenu editMenu = new JMenu(MENU_EDIT);
 		add(editMenu);
 
@@ -229,7 +229,7 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 				}
 			}
 		});
-		
+
 		// EXTRAS
 
 		JMenu extrasMenu = new JMenu("Extras");
@@ -296,7 +296,7 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 	 * Select directories after name (if the correct prob-code is used)
 	 * @param file file or directory in which is searched
 	 * @param answerNodes storage for the data from the answer.xml files
-	 * @param experimentCode used prob code 
+	 * @param experimentCode used prob code
 	 * @param search if false the answer.xml files of this directory are not used - but the files of the subdirectories are still used
 	 */
 	private void getAnswerFiles(File file, ArrayList<QuestionTreeNode> answerNodes, String experimentCode,
@@ -318,7 +318,7 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 					}
 				} catch (FileNotFoundException e) {
 					JOptionPane.showMessageDialog(null, "Datei " + currentFile.getAbsolutePath()
-							+ " nciht gefunden.");
+							+ " nicht gefunden.");
 				}
 			}
 		}

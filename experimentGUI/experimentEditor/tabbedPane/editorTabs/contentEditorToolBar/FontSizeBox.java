@@ -13,10 +13,10 @@ import experimentGUI.util.Pair;
 
 @SuppressWarnings("serial")
 public class FontSizeBox extends JComboBox implements ActionListener{
-	
+
 	private RSyntaxTextArea editArea;
 	private ArrayList<Pair<String, String>> fontSizes;
-	
+
 	public FontSizeBox(RSyntaxTextArea editArea) {
 		super();
 		this.editArea = editArea;
@@ -27,14 +27,14 @@ public class FontSizeBox extends JComboBox implements ActionListener{
 		fontSizes.add(new Pair<String, String>("+1", "+1"));
 		fontSizes.add(new Pair<String, String>("+2", "+2"));
 		fontSizes.add(new Pair<String, String>("+3", "+3"));
-		
-		this.addItem("Schriftgröße");
+
+		this.addItem("Schriftgr\u00f6\u00dfe");
 		for(int i=0; i<fontSizes.size(); i++) {
 			this.addItem(fontSizes.get(i).getKey());
 		}
 		this.addActionListener(this);
 	}
-	
+
 	public void actionPerformed(ActionEvent ae) {
 		if (this.getSelectedIndex() != 0) {
 			String size = fontSizes.get(this.getSelectedIndex()-1).getValue();
@@ -42,7 +42,7 @@ public class FontSizeBox extends JComboBox implements ActionListener{
 			text = text==null ? "" : text;
 			editArea.replaceSelection("<font size=\""+size+"\">"+text+"</font>");
 			this.setSelectedIndex(0);
-		}		
+		}
 	}
 
 }

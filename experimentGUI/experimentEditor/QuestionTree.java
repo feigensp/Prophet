@@ -7,8 +7,8 @@ package experimentGUI.experimentEditor;
  * The first Level is the root, the child of the root could have childs again, no more Levels are allowed.
  * All Childs of the second Level get a SettingDialog and EditorData will save the informations.
  * All nodes will have a unique name.
- * 
- * @author Markus Köppen, Andreas Hasselberg
+ *
+ * @author Markus Kï¿½ppen, Andreas Hasselberg
  */
 
 import java.awt.Point;
@@ -42,10 +42,10 @@ import experimentGUI.util.questionTreeNode.QuestionTreeNodeListener;
 /**
  * JTree within a JScrollPane component that displays the content of a tree
  * based on the QuestionTreeNode class.
- * 
+ *
  * @author Andreas Hasselberg
- * @author Markus Köppen
- * 
+ * @author Markus Kï¿½ppen
+ *
  */
 public class QuestionTree extends JScrollPane {
 	private static final long serialVersionUID = 1L;
@@ -87,9 +87,9 @@ public class QuestionTree extends JScrollPane {
 	public final static String POPUP_NEW_CATEGORY = "Neue Kategorie";
 	public final static String POPUP_NEW_QUESTION = "Neue Frage";
 	public final static String POPUP_RENAME = "Umbenennen";
-	public final static String POPUP_REMOVE = "Löschen";
+	public final static String POPUP_REMOVE = "L\u00f6schen";
 	public final static String POPUP_COPY = "Kopieren";
-	public final static String POPUP_PASTE = "Einfügen";
+	public final static String POPUP_PASTE = "Einf\u00fcgen";
 
 	/**
 	 * String constants for messages
@@ -121,7 +121,8 @@ public class QuestionTree extends JScrollPane {
 		tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 		setViewportView(tree);
 		tree.addMouseListener(new MouseAdapter() {
-			public void mouseReleased(MouseEvent e) {
+
+			private void maybeShowPopup(MouseEvent e) {
 				if (tree.getModel() != null && e.isPopupTrigger()) {
 					TreePath selPath = tree.getPathForLocation(e.getX(), e.getY());
 					if (selPath != null) {
@@ -136,6 +137,19 @@ public class QuestionTree extends JScrollPane {
 						}
 					}
 				}
+			}
+
+			// jl:
+			// note mousereleased and mouse pressed have to be checked to make
+			// popup appear under linux and windows as well
+			// http://stackoverflow.com/questions/5736872/java-popup-trigger-in-linux
+			// http://download.oracle.com/javase/tutorial/uiswing/examples/components/PopupMenuDemoProject/src/components/PopupMenuDemo.java
+			public void mouseReleased(MouseEvent e) {
+				maybeShowPopup(e);
+			}
+
+			public void mousePressed(MouseEvent e) {
+				maybeShowPopup(e);
 			}
 		});
 		tree.addTreeSelectionListener(new TreeSelectionListener() {
@@ -176,7 +190,7 @@ public class QuestionTree extends JScrollPane {
 				// copy
 				if (ae.getActionCommand().equals(ACTION_COPY)) {
 					clipboard = (QuestionTreeNode) selected.copy();
-					
+
 					enablePopupItems();
 				}
 				// insert
@@ -187,13 +201,13 @@ public class QuestionTree extends JScrollPane {
 //						if (selected.getType().equals(QuestionTreeNode.TYPE_EXPERIMENT)
 //								&& !clipboard.getType().equals(QuestionTreeNode.TYPE_CATEGORY)) {
 //							JOptionPane.showMessageDialog(null,
-//									"Dem Experimentknoten können nur Kategorien hinzugefügt werden.");
+//									"Dem Experimentknoten kï¿½nnen nur Kategorien hinzugefï¿½gt werden.");
 //						} else if (selected.getType().equals(QuestionTreeNode.TYPE_CATEGORY)
 //								&& !clipboard.getType().equals(QuestionTreeNode.TYPE_QUESTION)) {
 //							JOptionPane.showMessageDialog(null,
-//									"Einer Kategorie können nur Fragen hinzugefügt werden.");
+//									"Einer Kategorie kï¿½nnen nur Fragen hinzugefï¿½gt werden.");
 //						} else {
-							addNode(selected, (QuestionTreeNode) clipboard.copy());							
+							addNode(selected, (QuestionTreeNode) clipboard.copy());
 //						}
 //					}
 				}
@@ -279,11 +293,11 @@ public class QuestionTree extends JScrollPane {
 
 			public void drop(DropTargetDropEvent dtde) {
 				QuestionTreeNode source = (QuestionTreeNode) tree.getSelectionPath().getLastPathComponent();
-				
+
 				if (source.isExperiment()) {
 					return;
 				}
-				
+
 				Point p = dtde.getLocation();
 				TreePath selPath = tree.getPathForLocation(p.x, p.y);
 				if (selPath == null) {
@@ -313,10 +327,10 @@ public class QuestionTree extends JScrollPane {
 		});
 
 		tree.setEditable(true);
-		
+
 		enablePopupItems();
 	}
-	
+
 	/**
 	 * (de)activate the popup menu items matching to the current state and selected node
 	 */
@@ -327,10 +341,10 @@ public class QuestionTree extends JScrollPane {
 		} else {
 			if(clipboard.getType().equals(QuestionTreeNode.TYPE_CATEGORY)) {
 				categoryPasteMenuItem.setEnabled(false);
-				experimentPasteMenuItem.setEnabled(true);				
+				experimentPasteMenuItem.setEnabled(true);
 			} else if (clipboard.getType().equals(QuestionTreeNode.TYPE_QUESTION)){
 				experimentPasteMenuItem.setEnabled(false);
-				categoryPasteMenuItem.setEnabled(true);				
+				categoryPasteMenuItem.setEnabled(true);
 			}
 		}
 	}
@@ -338,7 +352,7 @@ public class QuestionTree extends JScrollPane {
 	/**
 	 * this method will rename a level 2 or level 3 node the node is selected by
 	 * the last mouse-button release
-	 * 
+	 *
 	 * @param nameProposal
 	 *            a proposal for the name of the node
 	 */
@@ -360,7 +374,7 @@ public class QuestionTree extends JScrollPane {
 	/**
 	 * this method will add a Child to the tree the position of the new child
 	 * will be selected after the last mouse-button release
-	 * 
+	 *
 	 * @param nameProposal
 	 *            a name proposal for the new Child
 	 */
