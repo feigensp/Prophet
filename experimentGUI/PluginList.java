@@ -16,7 +16,7 @@ import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 import experimentGUI.util.settingsComponents.SettingsComponentDescription;
 
 /**
- * Class to store active plugins
+ * Class to store active plugins, allows calls to all plugins within one line of code.
  * 
  * @author Andreas Hasselberg
  * @author Markus Köppen
@@ -49,6 +49,7 @@ public class PluginList {
 	public static Vector<PluginInterface> getPlugins() {
 		return plugins;
 	}
+	
 	/**
 	 * Adds and activates a plugin
 	 * @param plugin
@@ -57,6 +58,7 @@ public class PluginList {
 	public static void add(PluginInterface plugin) {
 		plugins.add(plugin);
 	}
+	
 	/**
 	 * Removes and deactives a plugin
 	 * @param plugin
@@ -69,6 +71,13 @@ public class PluginList {
 		return plugins.remove(plugin);
 	}
 
+	/**
+	 * Returns the settings shown in the settings tab of the experiment viewer for all plugins at once.
+	 * @param node
+	 *  Node to be get the settings for
+	 * @return
+	 *  settings shown in the settings tab of the experiment viewer for all plugins at once
+	 */
 	public static SettingsComponentDescription getSettingsComponentDescription(
 			QuestionTreeNode node) {
 		SettingsComponentDescription result = null;
@@ -89,6 +98,11 @@ public class PluginList {
 		return result;
 	}
 
+	/**
+	 * Calls the experimentViewerRun() function of all plugins at once
+	 * @param experimentViewer
+	 *  ExperimentViewer that has been started
+	 */
 	public static void experimentViewerRun(ExperimentViewer experimentViewer) {
 		for (PluginInterface plugin : plugins) {
 			try {
@@ -99,6 +113,14 @@ public class PluginList {
 		}		
 	}
 
+	/**
+	 * Calls the denyEnterNode() function for all plugins at once
+	 * @param node
+	 *  The node to be entered
+	 * @return
+	 * 	<b>true</b> if the node may be entered<br/>
+	 *  <b>false</b> if any plugin denies the entrance
+	 */
 	public static boolean denyEnterNode(QuestionTreeNode node) {
 		for (PluginInterface plugin : plugins) {
 			try {
@@ -112,6 +134,11 @@ public class PluginList {
 		return false;
 	}
 
+	/**
+	 * Calls the enterNode() function for all plugins at once
+	 * @param node
+	 *  the node to be entered
+	 */
 	public static void enterNode(QuestionTreeNode node) {
 		for (PluginInterface plugin : plugins) {
 			try {
@@ -122,6 +149,15 @@ public class PluginList {
 		}
 	}
 
+	/**
+	 * Calls the denyExitNode() for all plugins at once.
+	 * @param currentNode
+	 *  the node to be exited
+	 * @return
+	 *  The resulting String from the first plugin denying exiting the node,
+	 *  an empty String if a plugin returned an empty String and no real messages were returned,
+	 *  null if all plugins allow exiting the node
+	 */
 	public static String denyNextNode(QuestionTreeNode currentNode) {
 		String result = null;
 		for (PluginInterface plugin : plugins) {
@@ -140,6 +176,11 @@ public class PluginList {
 		return result;
 	}
 
+	/**
+	 * Calls the exitNode() function for all plugins at once
+	 * @param node
+	 *  the node to be exited
+	 */
 	public static void exitNode(QuestionTreeNode node) {
 		for (PluginInterface plugin : plugins) {
 			try {
@@ -150,6 +191,11 @@ public class PluginList {
 		}
 	}
 
+	/**
+	 * Calls the finishExperiment() function for all plugins at once
+	 * @return
+	 *  The finishing messages of all plugins in HTML coding, with an own p-tag for every plugin.
+	 */
 	public static String finishExperiment() {
 		String result = "";
 		for (PluginInterface plugin : plugins) {

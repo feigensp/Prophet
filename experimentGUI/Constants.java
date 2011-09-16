@@ -9,11 +9,11 @@ package experimentGUI;
  */
 public class Constants {
 	/**
-	 * name of the experiment file opened automatically when program starts
+	 * File name of the experiment file opened automatically when program starts
 	 */
 	public static final String DEFAULT_FILE = "default.xml";
 	/**
-	 * name of the file answers are saved in
+	 * File name of the file answers are saved in
 	 */
 	public static final String FILE_ANSWERS = "answers.xml";
 	/**

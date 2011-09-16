@@ -20,18 +20,42 @@ import experimentGUI.util.ModifiedRSyntaxTextArea;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 import experimentGUI.util.searchBar.SearchBar;
 
+/**
+ * The main tab for editing the content of a node within the ExperimentEditor
+ * @author Andreas Hasselberg
+ * @author Markus Köppen
+ *
+ */
 @SuppressWarnings("serial")
 public class ContentEditorPanel extends ExperimentEditorTab {
+	/**
+	 * Storage of all EditorPanels, let the user continue where he left the node/tab
+	 */
 	private HashMap<QuestionTreeNode, JPanel> editPanels = new HashMap<QuestionTreeNode,JPanel>();
+	/**
+	 * Storage of all text editor areas, used to save the current work
+	 */
 	private HashMap<QuestionTreeNode, RSyntaxTextArea> editAreas = new HashMap<QuestionTreeNode,RSyntaxTextArea>();
+	/**
+	 * Storage of all search bars, used to delegate the search operation to the correct bar
+	 */
 	private HashMap<QuestionTreeNode, SearchBar> searchBars = new HashMap<QuestionTreeNode,SearchBar>();
+	/**
+	 * the currently selected node
+	 */
 	private QuestionTreeNode selected;
 	
+	/**
+	 * Constructor
+	 */
 	public ContentEditorPanel() {
 		setLayout(new BorderLayout());
 		this.setOpaque(false);
 	}
 	
+	/**
+	 * Called by EditorTabbedPane to indicate a possible node change, (re)loads the panel
+	 */
 	public void activate(QuestionTreeNode s) {
 		selected=s;
 		this.removeAll();
@@ -77,6 +101,9 @@ public class ContentEditorPanel extends ExperimentEditorTab {
 		}
 	}
 
+	/**
+	 * saves the current changes to the tree, called by EditorTabbedPane
+	 */
 	@Override
 	public void save() {
 		if (selected!=null) {
@@ -86,6 +113,10 @@ public class ContentEditorPanel extends ExperimentEditorTab {
 			}
 		}
 	}
+	
+	/**
+	 * makes the current search bar visible.
+	 */
 	public void search() {
 		SearchBar searchBar = searchBars.get(selected);
 		if (searchBar!=null) {

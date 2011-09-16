@@ -1,12 +1,5 @@
 package experimentGUI.experimentEditor;
 
-/**
- * this class is contains the main for the editor to create and edit questions
- * furthermore it creates the view and some listeners
- * 
- * @author Markus Köppen, Andreas Hasselberg
- */
-
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -28,15 +21,20 @@ import experimentGUI.util.questionTreeNode.QuestionTreeNodeListener;
  * @author Markus Köppen
  */
 public class ExperimentEditor extends JFrame {
+	/**
+	 * The window title for the main frame
+	 */
 	public static final String TITLE = "ExperimentEditor";
 	
-	private static final long serialVersionUID = 1L;	
+	private static final long serialVersionUID = 1L;
+	
 	/**
-	 * JTree component to the left of the ExperimentEditor
+	 * JTree component on the left side of the ExperimentEditor
 	 */
 	private QuestionTree tree;
+	
 	/**
-	 * JTabbedPane component to the right of the ExperimentEditor
+	 * JTabbedPane component on the right side of the ExperimentEditor
 	 */
 	private ExperimentEditorTabbedPane questionEditorTabbedPane;
 
@@ -44,7 +42,7 @@ public class ExperimentEditor extends JFrame {
 	 * Main method to launch the ExperimentEditor
 	 * 
 	 * @param args
-	 *            not used
+	 *  not used
 	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -99,6 +97,7 @@ public class ExperimentEditor extends JFrame {
 		
 		add(splitPane, BorderLayout.CENTER);
 	}
+	
 	/**
 	 * 
 	 * @return
@@ -107,12 +106,14 @@ public class ExperimentEditor extends JFrame {
 	public QuestionTree getTreeComponent() {
 		return tree;
 	}
+	
 	/**
-	 * Tells the QuestionTree to create a new tree, called when "New" item is selected in menu
+	 * Tells the QuestionTree to create a new tree, called when the "New" item is selected in main menu
 	 */
 	public void newTree() {
 		tree.newRoot();
 	}
+	
 	/**
 	 * Loads a question tree into the JTree component
 	 * @param root
@@ -120,6 +121,7 @@ public class ExperimentEditor extends JFrame {
 	public void loadTree(QuestionTreeNode root) {
 		tree.setRoot(root);
 	}
+	
 	/**
 	 * return the ExperimentEditorTabbedPane-object from the ExperimentEditor
 	 * @return questionEditorTabbedPane

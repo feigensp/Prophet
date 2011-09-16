@@ -26,17 +26,28 @@ import experimentGUI.util.settingsComponents.SettingsComponentDescription;
 import experimentGUI.util.settingsComponents.components.SettingsCheckBox;
 import experimentGUI.util.settingsComponents.components.SettingsTextField;
 
+/**
+ * A tab for changing settings for nodes. Settings are defined by plugins, some are hard-coded.
+ * @author Administrator
+ *
+ */
 @SuppressWarnings("serial")
 public class SettingsEditorPanel extends ExperimentEditorTab {
 	private HashMap<QuestionTreeNode, JScrollPane> scrollPanes = new HashMap<QuestionTreeNode,JScrollPane>();
 	private HashMap<QuestionTreeNode, ArrayList<SettingsComponent>> settingsComponents = new HashMap<QuestionTreeNode, ArrayList<SettingsComponent>>();
 	private QuestionTreeNode selected;
 		
+	/**
+	 * Constructor
+	 */
 	public SettingsEditorPanel() {
 		setLayout(new BorderLayout());
 		this.setOpaque(false);
 	}
 
+	/**
+	 * Loads the settings and saved options for the specified node into the tab, called by EditorTabbedPane
+	 */
 	public void activate(QuestionTreeNode s) {
 		selected=s;
 		this.removeAll();
@@ -77,6 +88,9 @@ public class SettingsEditorPanel extends ExperimentEditorTab {
 		}
 	}
 
+	/**
+	 * saves all changes made, called by EditorTabbedPane
+	 */
 	@Override
 	public void save() {
 		if (selected!=null) {

@@ -10,7 +10,12 @@ import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
 import experimentGUI.util.Pair;
 
-
+/**
+ * Box for the ContentEditorToolBar, adding HTML tags to change font styles
+ * @author Andreas Hasselberg
+ * @author Markus Köppen
+ *
+ */
 @SuppressWarnings("serial")
 public class FontStyleBox extends JComboBox implements ActionListener{
 	
