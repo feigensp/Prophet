@@ -49,26 +49,32 @@ import experimentGUI.util.questionTreeNode.QuestionTreeNodeListener;
  */
 public class QuestionTree extends JScrollPane {
 	private static final long serialVersionUID = 1L;
+	
 	/**
 	 * the actual JTree component
 	 */
 	private JTree tree;
+	
 	/**
 	 * currently selected QuestionTreeNode
 	 */
 	private QuestionTreeNode selected;
+	
 	/**
 	 * QuestionTreeNode currently in the Clipboard
 	 */
 	private QuestionTreeNode clipboard;
+	
 	/**
 	 * popup menu shown when the experiment node is right clicked
 	 */
 	private JPopupMenu experimentPopup;
+	
 	/**
 	 * popup menu shown when a category node is right clicked
 	 */
 	private JPopupMenu categoryPopup;
+	
 	/**
 	 * popup menu shown when a question node is right clicked
 	 */
@@ -349,12 +355,17 @@ public class QuestionTree extends JScrollPane {
 		}
 	}
 
+	
+	
 	/**
-	 * this method will rename a level 2 or level 3 node the node is selected by
-	 * the last mouse-button release
+	 * renames a node
 	 *
-	 * @param nameProposal
-	 *            a proposal for the name of the node
+	 * @param node
+	 *  the node to be renamed
+	 * @param name
+	 *  a proposal for the name of the node
+	 * @return
+	 *  boolean value stating if the renaming was successful
 	 */
 	private boolean renameNode(QuestionTreeNode node, String name) {
 		boolean result = node.setName(name);
@@ -363,8 +374,9 @@ public class QuestionTree extends JScrollPane {
 	}
 
 	/**
-	 * this method will rename a child the renamed node will be selected after
-	 * the last mouse-button release
+	 * remove a node from the tree
+	 * @param node
+	 *  node to be removed
 	 */
 	private void removeNode(QuestionTreeNode node) {
 		node.removeFromParent();
@@ -372,27 +384,44 @@ public class QuestionTree extends JScrollPane {
 	}
 
 	/**
-	 * this method will add a Child to the tree the position of the new child
-	 * will be selected after the last mouse-button release
-	 *
-	 * @param nameProposal
-	 *            a name proposal for the new Child
+	 * Adds a new node to the tree
+	 * @param node
+	 *  node the new node will be added to
+	 * @param type
+	 *  type of the node
+	 * @param name
+	 *  name of the new node
 	 */
 	private void addNode(QuestionTreeNode node, String type, String name) {
-		QuestionTreeNode newCategory = new QuestionTreeNode(type, name);
-		node.insert(newCategory, node.getChildCount());
+		QuestionTreeNode newNode = new QuestionTreeNode(type, name);
+		node.insert(newNode, node.getChildCount());
 		tree.updateUI();
 	}
 
+	/**
+	 * Adds an existing node to the tree
+	 * @param node
+	 *  node the new node will be added to
+	 * @param insertion
+	 *   the node to be inserted
+	 */
 	private void addNode(QuestionTreeNode node, QuestionTreeNode insertion) {
 		node.insert(insertion, node.getChildCount());
 		tree.updateUI();
 	}
 
+	/**
+	 * resets the tree to an empty one
+	 */
 	public void newRoot() {
 		setRoot(new QuestionTreeNode(QuestionTreeNode.TYPE_EXPERIMENT, DEFAULT_EXPERIMENT_NODE_NAME));
 	}
 
+	/**
+	 * sets the root of the tree (replaces the tree)
+	 * @param n
+	 *  new experiment tree
+	 */
 	public void setRoot(QuestionTreeNode n) {
 		selected = null;
 		if (n != null) {
@@ -406,24 +435,41 @@ public class QuestionTree extends JScrollPane {
 		fireEvent(null);
 	}
 
+	/**
+	 * 
+	 * @return
+	 *  current experiment tree root node
+	 */
 	public QuestionTreeNode getRoot() {
 		return (QuestionTreeNode) tree.getModel().getRoot();
 	}
 
-	/*
-	 * Vorbereitungen zum Casten eines ActionEvents
+	/**
+	 * Adds a TreeNodeListener to the object
+	 * @param l
+	 *  the listener to be added
 	 */
 	public void addQuestionTreeNodeListener(QuestionTreeNodeListener l) {
 		if (questionTreeListeners == null)
 			questionTreeListeners = new Vector<QuestionTreeNodeListener>();
 		questionTreeListeners.addElement(l);
 	}
-
+	
+	/**
+	 * Removes a TreeNodeListener from the object
+	 * @param l
+	 *  the listener to be removed
+	 */
 	public void removeQuestionTreeNodeListener(QuestionTreeNodeListener l) {
 		if (questionTreeListeners != null)
 			questionTreeListeners.removeElement(l);
 	}
 
+	/**
+	 * notifies all listeners of a QuestionTreeEvent (selecting a node)
+	 * @param questionTreeNode
+	 *  the selected node
+	 */
 	private void fireEvent(QuestionTreeNode questionTreeNode) {
 		if (questionTreeListeners == null)
 			return;

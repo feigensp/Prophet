@@ -291,13 +291,17 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 	}
 
 	/**
-	 * Search after answer.xml files in the directory of file and its subdirectories.
+	 * Search for answer.xml files in the directory of file and its subdirectories.
 	 * Loads the Data from this files and saves it to the answerNodes-ArrayList.
-	 * Select directories after name (if the correct prob-code is used)
-	 * @param file file or directory in which is searched
-	 * @param answerNodes storage for the data from the answer.xml files
-	 * @param experimentCode used prob code
-	 * @param search if false the answer.xml files of this directory are not used - but the files of the subdirectories are still used
+	 * Select directories after name (if the correct experiment code is used)
+	 * @param file
+	 *  file or directory in which is searched
+	 * @param answerNodes
+	 *  storage for the data from the answer.xml files
+	 * @param experimentCode
+	 *  used experiment code 
+	 * @param search
+	 *  if false the answer.xml files of this directory are not used - but the files of the subdirectories are still used
 	 */
 	private void getAnswerFiles(File file, ArrayList<QuestionTreeNode> answerNodes, String experimentCode,
 			boolean search) {
