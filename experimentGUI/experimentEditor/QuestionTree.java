@@ -8,7 +8,7 @@ package experimentGUI.experimentEditor;
  * All Childs of the second Level get a SettingDialog and EditorData will save the informations.
  * All nodes will have a unique name.
  *
- * @author Markus Kï¿½ppen, Andreas Hasselberg
+ * @author Markus Köppen, Andreas Hasselberg
  */
 
 import java.awt.Point;
