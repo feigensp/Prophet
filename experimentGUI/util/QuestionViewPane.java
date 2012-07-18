@@ -41,7 +41,7 @@ public class QuestionViewPane extends JScrollPane {
 	public static final String FOOTER_BACKWARD_CAPTION = "Zurück";
 	public static final String FOOTER_END_CATEGORY_CAPTION = "Kategorie Abschließen";
 	public static final String FOOTER_START_EXPERIMENT_CAPTION = "Experiment starten";
-	public static final String FOOTER_SUBJECT_CODE_CAPTION = "Probandencode:";
+	public static final String FOOTER_SUBJECT_CODE_CAPTION = "Studienort:";
 
 	// constants for the html navigation
 	public static final String HTML_START = "<html><body><form>";
