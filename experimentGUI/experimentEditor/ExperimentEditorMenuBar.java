@@ -36,13 +36,10 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * String constants for (error) messages
-	 */
-	public final static String MESSAGE_FILE_NOT_FOUND = "Datei nicht gefunden";
-	public final static String MESSAGE_FILE_NOT_FOUND_TITLE = "Fehler";
-	public final static String MESSAGE_REPLACE_FILE = " ist bereits vorhanden.\nWollen Sie sie ersetzen?";
-	public final static String MESSAGE_REPLACE_FILE_TITLE = "Speichern unter best\u00e4tigen";
+//	public final static String MESSAGE_FILE_NOT_FOUND = "Datei nicht gefunden";
+//	public final static String MESSAGE_FILE_NOT_FOUND_TITLE = "Fehler";
+//	public final static String MESSAGE_REPLACE_FILE = " ist bereits vorhanden.\nWollen Sie sie ersetzen?";
+//	public final static String MESSAGE_REPLACE_FILE_TITLE = "Speichern unter best\u00e4tigen";
 
 	private ExperimentEditor experimentEditor;
 	private File currentFile;
@@ -97,12 +94,12 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 
 							enableMenuItems();
 						} else {
-							JOptionPane.showMessageDialog(experimentEditor, "Keine gültige Experiment-Datei.");
+							JOptionPane.showMessageDialog(experimentEditor, UIElementNames.MESSAGE_NO_VALID_EXPERIMENT_FILE);
 						}
 
 					} catch (FileNotFoundException e) {
-						JOptionPane.showMessageDialog(experimentEditor, MESSAGE_FILE_NOT_FOUND,
-								MESSAGE_FILE_NOT_FOUND_TITLE, JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(experimentEditor, UIElementNames.MESSAGE_FILE_NOT_FOUND,
+								UIElementNames.MESSAGE_FILE_NOT_FOUND_TITLE, JOptionPane.ERROR_MESSAGE);
 						return;
 					}
 				}
@@ -133,8 +130,8 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 				if (fc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
 					File file = fc.getSelectedFile();
 					if (file.exists()) {
-						int n = JOptionPane.showConfirmDialog(null, file.getName() + MESSAGE_REPLACE_FILE,
-								MESSAGE_REPLACE_FILE_TITLE, JOptionPane.YES_NO_OPTION);
+						int n = JOptionPane.showConfirmDialog(null, file.getName() + UIElementNames.MESSAGE_REPLACE_FILE,
+								UIElementNames.MESSAGE_REPLACE_FILE_TITLE, JOptionPane.YES_NO_OPTION);
 						if (n == JOptionPane.NO_OPTION) {
 							return;
 						}
@@ -150,10 +147,10 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 
 		fileMenu.addSeparator();
 
-		exportMenu = new JMenu("Exportieren");
+		exportMenu = new JMenu(UIElementNames.MENU_EXPORT);
 		fileMenu.add(exportMenu);
 
-		JMenuItem exportHTMLFileMenuItem = new JMenuItem("HTML-Datei der Fragen");
+		JMenuItem exportHTMLFileMenuItem = new JMenuItem(UIElementNames.MENU_ITEM_HTML_OF_QUESTIONS);
 		exportMenu.add(exportHTMLFileMenuItem);
 		exportHTMLFileMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -161,8 +158,8 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 				if (fc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
 					File file = fc.getSelectedFile();
 					if (file.exists()) {
-						int n = JOptionPane.showConfirmDialog(null, file.getName() + MESSAGE_REPLACE_FILE,
-								MESSAGE_REPLACE_FILE_TITLE, JOptionPane.YES_NO_OPTION);
+						int n = JOptionPane.showConfirmDialog(null, file.getName() + UIElementNames.MESSAGE_REPLACE_FILE,
+								UIElementNames.MESSAGE_REPLACE_FILE_TITLE, JOptionPane.YES_NO_OPTION);
 						if (n == JOptionPane.NO_OPTION) {
 							return;
 						}
@@ -171,8 +168,7 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 				}
 			}
 		});
-
-		exportCSVMenuItem = new JMenuItem("CSV-Datei der Antworten");
+		exportCSVMenuItem = new JMenuItem(UIElementNames.MENU_ITEM_CSV_OF_ANSWERS);
 		exportMenu.add(exportCSVMenuItem);
 		exportCSVMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
