@@ -20,6 +20,7 @@ import javax.swing.KeyStroke;
 import experimentGUI.Constants;
 import experimentGUI.experimentEditor.tabbedPane.editorTabs.ContentEditorPanel;
 import experimentGUI.util.Pair;
+import experimentGUI.util.language.UIElementNames;
 import experimentGUI.util.questionTreeNode.QuestionTreeHTMLHandler;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 import experimentGUI.util.questionTreeNode.QuestionTreeXMLHandler;
@@ -34,19 +35,6 @@ import experimentGUI.util.questionTreeNode.QuestionTreeXMLHandler;
 public class ExperimentEditorMenuBar extends JMenuBar {
 
 	private static final long serialVersionUID = 1L;
-
-	/**
-	 * String constants for the menu(items)
-	 */
-	public final static String MENU_FILE = "Datei";
-	public final static String MENU_FILE_NEW = "Neu";
-	public final static String MENU_FILE_OPEN = "Laden";
-	public final static String MENU_FILE_SAVE = "Speichern";
-	public final static String MENU_FILE_SAVE_AS = "Speichern unter...";
-	public final static String MENU_FILE_QUIT = "Beenden";
-
-	public final static String MENU_EDIT = "Bearbeiten";
-	public final static String MENU_EDIT_FIND = "Suchen";
 
 	/**
 	 * String constants for (error) messages
@@ -76,10 +64,10 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 
 		//DATEI
 
-		JMenu fileMenu = new JMenu(MENU_FILE);
+		JMenu fileMenu = new JMenu(UIElementNames.MENU_FILE);
 		add(fileMenu);
 
-		JMenuItem newMenuItem = new JMenuItem(MENU_FILE_NEW);
+		JMenuItem newMenuItem = new JMenuItem(UIElementNames.MENU_FILE_NEW);
 		newMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_MASK));
 		fileMenu.add(newMenuItem);
 		newMenuItem.addActionListener(new ActionListener() {
@@ -92,7 +80,7 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 			}
 		});
 
-		JMenuItem loadMenuItem = new JMenuItem(MENU_FILE_OPEN);
+		JMenuItem loadMenuItem = new JMenuItem(UIElementNames.MENU_FILE_OPEN);
 		loadMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_L, InputEvent.CTRL_MASK));
 		fileMenu.add(loadMenuItem);
 		loadMenuItem.addActionListener(new ActionListener() {
@@ -121,7 +109,7 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 			}
 		});
 
-		saveMenuItem = new JMenuItem(MENU_FILE_SAVE);
+		saveMenuItem = new JMenuItem(UIElementNames.MENU_FILE_SAVE);
 		saveMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_MASK));
 		fileMenu.add(saveMenuItem);
 		saveMenuItem.addActionListener(new ActionListener() {
@@ -136,7 +124,7 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 			}
 		});
 
-		saveAsMenuItem = new JMenuItem(MENU_FILE_SAVE_AS);
+		saveAsMenuItem = new JMenuItem(UIElementNames.MENU_FILE_SAVE_AS);
 		saveAsMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F12, 0));
 		fileMenu.add(saveAsMenuItem);
 		saveAsMenuItem.addActionListener(new ActionListener() {
@@ -210,15 +198,15 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 
 		fileMenu.addSeparator();
 
-		JMenuItem closeMenuItem = new JMenuItem(MENU_FILE_QUIT);
+		JMenuItem closeMenuItem = new JMenuItem(UIElementNames.MENU_FILE_QUIT);
 		fileMenu.add(closeMenuItem);
 
 		// BEARBEITEN
 
-		JMenu editMenu = new JMenu(MENU_EDIT);
+		JMenu editMenu = new JMenu(UIElementNames.MENU_EDIT);
 		add(editMenu);
 
-		newMenuItem = new JMenuItem(MENU_EDIT_FIND);
+		newMenuItem = new JMenuItem(UIElementNames.MENU_EDIT_FIND);
 		newMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F, InputEvent.CTRL_MASK));
 		editMenu.add(newMenuItem);
 		newMenuItem.addActionListener(new ActionListener() {
