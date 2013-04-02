@@ -12,6 +12,7 @@ import experimentGUI.experimentEditor.tabbedPane.editorTabs.ContentEditorPanel;
 import experimentGUI.experimentEditor.tabbedPane.editorTabs.ContentViewerPanel;
 import experimentGUI.experimentEditor.tabbedPane.editorTabs.NoteEditorPanel;
 import experimentGUI.experimentEditor.tabbedPane.editorTabs.SettingsEditorPanel;
+import experimentGUI.util.language.UIElementNames;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 
 /**
@@ -44,10 +45,10 @@ public class ExperimentEditorTabbedPane extends JTabbedPane {
 			}
 		});
 		
-		addEditorPanel("Editor", new ContentEditorPanel());
-		addEditorPanel("Vorschau", new ContentViewerPanel());
-		addEditorPanel("Einstellungen", new SettingsEditorPanel());
-		addEditorPanel("Notizen", new NoteEditorPanel());
+		addEditorPanel(UIElementNames.MENU_TAB_EDITOR, new ContentEditorPanel());
+		addEditorPanel(UIElementNames.MENU_TAB_PREVIEW, new ContentViewerPanel());
+		addEditorPanel(UIElementNames.MENU_TAB_SETTINGS, new SettingsEditorPanel());
+		addEditorPanel(UIElementNames.MENU_TAB_NOTES, new NoteEditorPanel());
 	}
 
 	/**

@@ -116,6 +116,7 @@ public class ExperimentEditor extends JFrame {
 	}
 
 	private String getPreferredLanguage() {
+		//TODO better modularization
 		Object[] possibleValues = { "German", "English" };
 		Object selectedLanguage = JOptionPane.showInputDialog(null,
 				"Select a language for PROPHET", "Input",

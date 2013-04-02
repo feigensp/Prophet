@@ -187,7 +187,7 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 					// csv Datei erstellen
 					QuestionTreeXMLHandler.saveAsCSVFile(formInfos, answerNodes, experimentCode, path);
 				} catch (IOException e) {
-					JOptionPane.showMessageDialog(null, "Fehler bei der Ermittlung des Pfades der geladenen Datei.");
+					JOptionPane.showMessageDialog(null, UIElementNames.MESSAGE_PATH_NOT_FOUND);
 				}
 			}
 		});
@@ -216,10 +216,10 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 
 		// EXTRAS
 
-		JMenu extrasMenu = new JMenu("Extras");
+		JMenu extrasMenu = new JMenu(UIElementNames.MENU_PLAUSIBILITY_FEATURES);
 		add(extrasMenu);
 
-		nameCheckMenuItem = new JMenuItem("\u00DCberpr\u00FCfung Formularnamen");
+		nameCheckMenuItem = new JMenuItem(UIElementNames.MENU_ITEM_CHECK_FORM_NAMES);
 		extrasMenu.add(nameCheckMenuItem);
 		nameCheckMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -252,7 +252,7 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 						}
 						if (appearances > 1) {
 							output += "Name = " + currentForm.getKey() + (currentForm.getValue() != null ? "; Value = "
-									+ currentForm.getValue() : "; kein Value") + "; Vorkommen = " + appearances + "<br>";
+									+ currentForm.getValue() : "; " + UIElementNames.MESSAGE_DUPLICATE_NO_VALUE) + "; " + UIElementNames.MESSAGE_DUPLICATE_APPEARANCE + " = " + appearances + "<br>";
 							add=true;
 						}
 					}
@@ -260,8 +260,8 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 				}
 
 				JOptionPane.showMessageDialog(null,
-						globalOutput.length()>0 ? "<html>Auflistung der Formularkomponenten mit gleichem name- und value-Attribut in einem Knoten:<br><br>"
-								+ globalOutput + "</html>" : "Keine Duplikate gefunden.");
+						globalOutput.length()>0 ? "<html>" + UIElementNames.MESSAGE_DUPLICATE_TITLE_DUPLICATES_EXIST + "<br><br>"
+								+ globalOutput + "</html>" : UIElementNames.MESSAGE_DUPLICATE_TITLE_NO_DUPLICATES_EXIST);
 			}
 		});
 
@@ -305,8 +305,7 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 						answerNodes.add(node);
 					}
 				} catch (FileNotFoundException e) {
-					JOptionPane.showMessageDialog(null, "Datei " + currentFile.getAbsolutePath()
-							+ " nicht gefunden.");
+					JOptionPane.showMessageDialog(null, UIElementNames.MESSAGE_FILE_NOT_FOUND + ": " + currentFile.getAbsolutePath());
 				}
 			}
 		}
