@@ -18,6 +18,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import experimentGUI.util.language.UIElementNames;
+
 
 @SuppressWarnings("serial")
 public class MacroBox extends JComboBox {
@@ -29,7 +31,7 @@ public class MacroBox extends JComboBox {
 	public MacroBox(RSyntaxTextArea textP) {
 		macros = new ArrayList<String>();
 		textPane = textP;
-		addItem("Makroauswahl");
+		addItem(UIElementNames.MENU_TAB_EDITOR_MACROS);
 		addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (getSelectedIndex() != 0) {
@@ -98,7 +100,7 @@ public class MacroBox extends JComboBox {
 						.getNamedItem("name").getNodeValue();
 				String macroContent = xmlMacros.item(i).getTextContent();
 				if (i <= 9) {
-					macroName += "\t [Strg + " + (i + 1) % 10 + "]";
+					macroName += "\t [" + UIElementNames.KEYBOARD_CTRL + " + " + (i + 1) % 10 + "]";
 				}
 				this.addItem(macroName);
 				macros.add(macroContent);

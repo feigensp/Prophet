@@ -10,6 +10,7 @@ import javax.swing.JOptionPane;
 
 import experimentGUI.PluginInterface;
 import experimentGUI.experimentViewer.ExperimentViewer;
+import experimentGUI.util.language.UIElementNames;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 import experimentGUI.util.settingsComponents.SettingsComponentDescription;
 import experimentGUI.util.settingsComponents.SettingsPluginComponentDescription;
@@ -134,34 +135,34 @@ public class MaxTimePlugin implements PluginInterface {
 	@Override
 	public SettingsComponentDescription getSettingsComponentDescription(QuestionTreeNode node) {
 		SettingsPluginComponentDescription result = new SettingsPluginComponentDescription(KEY,
-				"Timeout", true);
+				UIElementNames.MENU_TAB_SETTINGS_TIME_OUT, true);
 		if (node.isExperiment()) {
 			result.addSubComponent(new SettingsComponentDescription(SettingsTextField.class, KEY_MAX_TIME,
-					"Maximale Laufzeit (gesamtes Experiment, in Minuten):"));
+					UIElementNames.MENU_TAB_SETTINGS_MAX_TIME_EXPERIMENT + ":"));
 		}
 		if (node.isCategory()) {
 			result.addSubComponent(new SettingsComponentDescription(SettingsTextField.class, KEY_MAX_TIME,
-					"Maximale Laufzeit (gesamte Kategorie, in Sekunden):"));
+					UIElementNames.MENU_TAB_SETTINGS_MAX_TIME_CATEGORY + ":"));
 		}
 		if (node.isQuestion()) {
 			result.addSubComponent(new SettingsComponentDescription(SettingsTextField.class, KEY_MAX_TIME,
-					"Maximale Laufzeit (diese Frage, in Sekunden):"));
+					UIElementNames.MENU_TAB_SETTINGS_MAX_TIME_QUESTION + ":"));
 		}
 		SettingsPluginComponentDescription hardExit = new SettingsPluginComponentDescription(KEY_HARD_EXIT,
-				"Angezeigte Frage bei Zeitüberschreitung beenden (harter Timeout)", true);
+				UIElementNames.MENU_TAB_SETTINGS_HARD_TIME_OUT, true);
 		SettingsPluginComponentDescription warning = new SettingsPluginComponentDescription(KEY_HARD_EXIT_WARNING,
-				"Probanden vorwarnen", true);
+				UIElementNames.MENU_TAB_SETTINGS_TIME_OUT_WARN_SUBJECTS, true);
 		warning.addSubComponent(new SettingsComponentDescription(SettingsTextField.class,KEY_HARD_EXIT_WARNING_TIME,
-				"Vorwarnzeit (Sekunden):"));
+				UIElementNames.MENU_TAB_SETTINGS_TIME_OUT_WARNING_TIME + ":"));
 		warning.addSubComponent(new SettingsComponentDescription(SettingsTextField.class,KEY_HARD_EXIT_WARNING_MESSAGE,
-				"Nachricht:"));
+				UIElementNames.MENU_TAB_SETTINGS_TIME_OUT_WARNING_MESSAGE + ":"));
 		hardExit.addSubComponent(warning);
 		result.addSubComponent(hardExit);
 		result.addSubComponent(new SettingsComponentDescription(SettingsTextField.class,KEY_MESSAGE,
-				"Nachricht bei TimeOut (optional):"));
+				UIElementNames.MENU_TAB_SETTINGS_TIME_OUT_MESSAGE + ":"));
 		if (node.isCategory()) {
 			result.addNextComponent(new SettingsComponentDescription(SettingsCheckBox.class,KEY_IGNORE_TIMEOUT,
-					"Experiment-TimeOut ignorieren; gilt auch für alle Unterknoten"));
+					UIElementNames.MENU_TAB_SETTINGS_IGNORE_TIME_OUT));
 		}
 		return result;
 	}

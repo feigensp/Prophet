@@ -5,6 +5,7 @@ import java.util.TreeMap;
 
 import experimentGUI.PluginInterface;
 import experimentGUI.experimentViewer.ExperimentViewer;
+import experimentGUI.util.language.UIElementNames;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 import experimentGUI.util.settingsComponents.SettingsComponentDescription;
 import experimentGUI.util.settingsComponents.SettingsPluginComponentDescription;
@@ -17,9 +18,9 @@ public class AnswerRequiredPlugin implements PluginInterface {
 	@Override
 	public SettingsComponentDescription getSettingsComponentDescription(QuestionTreeNode node) {
 		SettingsPluginComponentDescription result = new SettingsPluginComponentDescription(KEY,
-			"Benötigte Antworten", true);
+			UIElementNames.MENU_TAB_SETTINGS_REQUIRED_ANSWERS, true);
 		result.addSubComponent(new SettingsComponentDescription(SettingsTextArea.class, KEY_NAMES,
-			"Komponenten, die Antworten enthalten müssen (zeilenweise eingeben):"));
+				UIElementNames.MENU_TAB_SETTINGS_REQUIRED_ANSWER_COMPONENTS + ":"));
 		return result;
 	}
 
@@ -48,7 +49,7 @@ public class AnswerRequiredPlugin implements PluginInterface {
 				while(sc.hasNext()) {
 					String requiredAnswerKey = sc.next();
 					if(!answers.containsKey(requiredAnswerKey) || answers.get(requiredAnswerKey).equals("")) {
-						return "Bitte alle benötigten Felder ausfüllen";
+						return UIElementNames.MENU_TAB_SETTINGS_MESSAGE_FILL_ALL_FIELDS;
 					}
 				}
 		}

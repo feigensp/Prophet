@@ -12,6 +12,7 @@ import experimentGUI.experimentViewer.ExperimentViewer;
 import experimentGUI.plugins.codeViewerPlugin.CodeViewer;
 import experimentGUI.plugins.codeViewerPlugin.CodeViewerPluginList;
 import experimentGUI.plugins.codeViewerPlugin.Recorder;
+import experimentGUI.util.language.UIElementNames;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 import experimentGUI.util.settingsComponents.SettingsComponentDescription;
 import experimentGUI.util.settingsComponents.SettingsPluginComponentDescription;
@@ -31,8 +32,8 @@ public class CodeViewerPlugin implements PluginInterface {
 	public SettingsComponentDescription getSettingsComponentDescription(
 			QuestionTreeNode node) {
 		if (node.getType().equals(QuestionTreeNode.TYPE_CATEGORY)) {
-			SettingsPluginComponentDescription result = new SettingsPluginComponentDescription(KEY, "Codeviewer aktivieren", true);
-			result.addSubComponent(new SettingsComponentDescription(SettingsDirectoryPathChooser.class, CodeViewer.KEY_PATH, "Pfad der Quelltexte:"));
+			SettingsPluginComponentDescription result = new SettingsPluginComponentDescription(KEY, UIElementNames.MENU_TAB_SETTINGS_ACTIVATE_CODE_VIEWER, true);
+			result.addSubComponent(new SettingsComponentDescription(SettingsDirectoryPathChooser.class, CodeViewer.KEY_PATH, UIElementNames.MENU_TAB_SETTINGS_SOURCE_CODE_PATH + ":"));
 			result.addSubComponent(Recorder.getSettingsComponentDescription());
 			SettingsComponentDescription desc = CodeViewerPluginList.getSettingsComponentDescription();
 			if (desc!=null) {

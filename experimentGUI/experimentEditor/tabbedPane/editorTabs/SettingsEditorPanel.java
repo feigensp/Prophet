@@ -20,6 +20,7 @@ import experimentGUI.PluginList;
 import experimentGUI.experimentEditor.tabbedPane.ExperimentEditorTab;
 import experimentGUI.experimentEditor.tabbedPane.ExperimentEditorTabbedPane;
 import experimentGUI.util.VerticalLayout;
+import experimentGUI.util.language.UIElementNames;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 import experimentGUI.util.settingsComponents.SettingsComponent;
 import experimentGUI.util.settingsComponents.SettingsComponentDescription;
@@ -61,13 +62,13 @@ public class SettingsEditorPanel extends ExperimentEditorTab {
 				
 				if (selected.isExperiment()) {
 					settingsPanel.add(new SettingsComponentDescription(SettingsTextField.class, Constants.KEY_EXPERIMENT_CODE,
-							"Experiment-Code: ").build(selected));
+							UIElementNames.EXPERIMENT_CODE + ": ").build(selected));
 				}
 				if (selected.isCategory()) {
 					settingsPanel.add(new SettingsComponentDescription(SettingsCheckBox.class,
-							Constants.KEY_DONOTSHOWCONTENT, "Inhalt nicht anzeigen").build(selected));
+							Constants.KEY_DONOTSHOWCONTENT, UIElementNames.MENU_TAB_SETTINGS_DONT_SHOW_CONTENT).build(selected));
 					settingsPanel.add(new SettingsComponentDescription(SettingsCheckBox.class,
-							Constants.KEY_QUESTIONSWITCHING, "Vor- und Zur\u00f6ckbl\u00e4ttern erlauben").build(selected));
+							Constants.KEY_QUESTIONSWITCHING, UIElementNames.MENU_TAB_SETTINGS_ALLOW_BACK_AND_FORTH).build(selected));
 				}
 				SettingsComponentDescription desc =PluginList.getSettingsComponentDescription(selected);
 				if (desc != null) {

@@ -9,6 +9,7 @@ import javax.swing.JComboBox;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
 import experimentGUI.util.Pair;
+import experimentGUI.util.language.UIElementNames;
 
 /**
  * Box for the ContentEditorToolBar, adding HTML tags to change font styles
@@ -20,26 +21,26 @@ import experimentGUI.util.Pair;
 public class FontStyleBox extends JComboBox implements ActionListener{
 	
 	private RSyntaxTextArea editArea;
-	private ArrayList<Pair<String, String>> fontStyles;
+	private ArrayList<Pair<String, String>> fontFace;
 	
 	public FontStyleBox(RSyntaxTextArea editArea) {
 		super();
 		this.editArea = editArea;
-		fontStyles = new ArrayList<Pair<String, String>>();
-		fontStyles.add(new Pair<String, String>("Fett", "b"));
-		fontStyles.add(new Pair<String, String>("Kursiv", "i"));
-		fontStyles.add(new Pair<String, String>("Unterstrichen", "u"));
+		fontFace = new ArrayList<Pair<String, String>>();
+		fontFace.add(new Pair<String, String>(UIElementNames.FONT_FACE_BOLD, "b"));
+		fontFace.add(new Pair<String, String>(UIElementNames.FONT_FACE_ITALIC, "i"));
+		fontFace.add(new Pair<String, String>(UIElementNames.FONT_FACE_UNDERLINE, "u"));
 		
-		this.addItem("Schrifttyp");
-		for(int i=0; i<fontStyles.size(); i++) {
-			this.addItem(fontStyles.get(i).getKey());
+		this.addItem(UIElementNames.MENU_TAB_EDITOR_FONT_FACE);
+		for(int i=0; i<fontFace.size(); i++) {
+			this.addItem(fontFace.get(i).getKey());
 		}
 		this.addActionListener(this);
 	}
 	
 	public void actionPerformed(ActionEvent ae) {
 		if (this.getSelectedIndex() != 0) {
-			String tag = fontStyles.get(this.getSelectedIndex()-1).getValue();
+			String tag = fontFace.get(this.getSelectedIndex()-1).getValue();
 			String text = editArea.getSelectedText();
 			text = text==null ? "" : text;
 			editArea.replaceSelection("<"+tag+">"+text+"</"+tag+">");

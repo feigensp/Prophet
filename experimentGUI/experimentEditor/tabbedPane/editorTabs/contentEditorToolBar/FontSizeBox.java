@@ -9,6 +9,7 @@ import javax.swing.JComboBox;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
 import experimentGUI.util.Pair;
+import experimentGUI.util.language.UIElementNames;
 
 /**
  * Box for the ContentEditorToolBar, adding HTML tags to change font sizes
@@ -37,7 +38,7 @@ public class FontSizeBox extends JComboBox implements ActionListener{
 		fontSizes.add(new Pair<String, String>("+2", "+2"));
 		fontSizes.add(new Pair<String, String>("+3", "+3"));
 
-		this.addItem("Schriftgr\u00f6\u00dfe");
+		this.addItem(UIElementNames.MENU_TAB_EDITOR_FONT_SIZE);
 		for(int i=0; i<fontSizes.size(); i++) {
 			this.addItem(fontSizes.get(i).getKey());
 		}

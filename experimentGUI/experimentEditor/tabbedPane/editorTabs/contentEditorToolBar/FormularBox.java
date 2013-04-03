@@ -10,6 +10,7 @@ import javax.swing.JOptionPane;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
 import experimentGUI.util.Pair;
+import experimentGUI.util.language.UIElementNames;
 
 @SuppressWarnings("serial")
 public class FormularBox extends JComboBox implements ActionListener {
@@ -21,14 +22,14 @@ public class FormularBox extends JComboBox implements ActionListener {
 		super();
 		this.editArea = editArea;
 		forms = new ArrayList<String>();
-		forms.add("Textfeld"); // index 1
-		forms.add("TextArea"); // index 2
-		forms.add("Liste"); // index 3
-		forms.add("Combobox"); // index 4
-		forms.add("Radiobutton"); // index 5
-		forms.add("Checkboxen"); // index 6
+		forms.add(UIElementNames.HTML_TEXT_FIELD); // index 1
+		forms.add(UIElementNames.HTML_TEXT_AREA); // index 2
+		forms.add(UIElementNames.HTML_LIST); // index 3
+		forms.add(UIElementNames.HTML_COMBO_BOX); // index 4
+		forms.add(UIElementNames.HTML_RADIO_BUTTON); // index 5
+		forms.add(UIElementNames.HTML_CHECK_BOX); // index 6
 
-		this.addItem("Formulare");
+		this.addItem(UIElementNames.MENU_TAB_EDITOR_FORMS);
 		for (int i = 0; i < forms.size(); i++) {
 			this.addItem(forms.get(i));
 		}
@@ -41,7 +42,7 @@ public class FormularBox extends JComboBox implements ActionListener {
 			return;
 		case 1: // texfield
 			String textFieldName = JOptionPane.showInputDialog(null,
-					"Name des Textfeldes:", "Textfeld", 1);
+					UIElementNames.DIALOG_DEFINE_TEXT_FIELD + ":", UIElementNames.HTML_TEXT_FIELD, 1);
 			if (textFieldName != null) {
 				editArea.replaceSelection("<input type=\"text\" name=\""
 						+ textFieldName + "\" id=\"" + textFieldName + "\">");
@@ -49,7 +50,7 @@ public class FormularBox extends JComboBox implements ActionListener {
 			break;
 		case 2: // textarea
 			String textAreaName = JOptionPane.showInputDialog(this,
-					"Name des Textareas:", "Textarea", 1);
+					UIElementNames.DIALOG_DEFINE_TEXT_AREA + ":", UIElementNames.HTML_TEXT_AREA, 1);
 			if (textAreaName != null) {
 				editArea.replaceSelection("<textarea name=\"" + textAreaName
 						+ "\" id=\"" + textAreaName
@@ -58,7 +59,7 @@ public class FormularBox extends JComboBox implements ActionListener {
 			break;
 		case 3: // liste
 			Pair<String, String> listInfos = MultilineDialogs
-					.showMultilineInputDialog("Listeninformationen");
+					.showMultilineInputDialog(UIElementNames.DIALOG_DEFINE_LIST_INFORMATION);
 			if (listInfos != null) {
 				String[] listEntrys = listInfos.getValue().split(
 						System.getProperty("line.separator"));
@@ -76,7 +77,7 @@ public class FormularBox extends JComboBox implements ActionListener {
 			break;
 		case 4: // Combobox
 			Pair<String, String> comboInfos = MultilineDialogs
-					.showMultilineInputDialog("Listeninformationen");
+					.showMultilineInputDialog(UIElementNames.DIALOG_DEFINE_LIST_INFORMATION);
 			if (comboInfos != null) {
 				String[] comboEntrys = comboInfos.getValue().split(
 						System.getProperty("line.separator"));
@@ -94,7 +95,7 @@ public class FormularBox extends JComboBox implements ActionListener {
 			break;
 		case 5: // RadioButton
 			Pair<String, String> radioInfos = MultilineDialogs
-					.showMultilineInputDialog("Listeninformationen");
+					.showMultilineInputDialog(UIElementNames.DIALOG_DEFINE_LIST_INFORMATION);
 			if (radioInfos != null) {
 				String[] radioEntrys = radioInfos.getValue().split(
 						System.getProperty("line.separator"));
@@ -111,7 +112,7 @@ public class FormularBox extends JComboBox implements ActionListener {
 			break;
 		case 6: // CheckBox
 			Pair<String, String> checkInfos = MultilineDialogs
-					.showMultilineInputDialog("Listeninformationen");
+					.showMultilineInputDialog(UIElementNames.DIALOG_DEFINE_LIST_INFORMATION);
 			if (checkInfos != null) {
 				String[] checkEntrys = checkInfos.getValue().split(
 						System.getProperty("line.separator"));

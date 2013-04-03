@@ -16,6 +16,7 @@ import javax.swing.JScrollPane;
 import experimentGUI.PluginInterface;
 import experimentGUI.experimentViewer.ExperimentViewer;
 import experimentGUI.util.VerticalLayout;
+import experimentGUI.util.language.UIElementNames;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 import experimentGUI.util.settingsComponents.SettingsComponentDescription;
 import experimentGUI.util.settingsComponents.SettingsPluginComponentDescription;
@@ -37,9 +38,9 @@ public class ExternalProgramsPlugin extends Thread implements PluginInterface {
 	public SettingsComponentDescription getSettingsComponentDescription(QuestionTreeNode node) {
 		if (node.isCategory()) {
 			SettingsPluginComponentDescription result = new SettingsPluginComponentDescription(KEY,
-					"Externe Programme starten", true);
+					UIElementNames.MENU_TAB_SETTINGS_EXTERNAL_PROGRAMS, true);
 			result.addSubComponent(new SettingsComponentDescription(SettingsTextArea.class, KEY_COMMANDS,
-					"Programmpfade (durch Zeilenumbruch getrennt)"));
+					UIElementNames.MENU_TAB_SETTINGS_PATH_OF_EXTERNAL_PROGRAMS));
 			return result;
 		}
 		return null;
@@ -84,7 +85,7 @@ public class ExternalProgramsPlugin extends Thread implements PluginInterface {
 	}
 
 	private void createWindow() {
-		frame = new JFrame("Programme");
+		frame = new JFrame(UIElementNames.MENU_TAB_SETTINGS_EXTERNAL_PROGRAMS_TITLE);
 		frame.setLayout(new BorderLayout());
 		panel = new JPanel();
 		panel.setLayout(new VerticalLayout(0, 0));
@@ -111,12 +112,12 @@ public class ExternalProgramsPlugin extends Thread implements PluginInterface {
 						} catch (Exception e1) {
 							JOptionPane
 									.showMessageDialog(null,
-											"Diese Funktion kann erst wieder aufgerufen werden, wenn die bestehende Programminstanz beendet wurde.");
+											UIElementNames.MESSAGE_ONLY_ONE_INSTANCE);
 						}
 					}
 				} catch (IOException e1) {
 					JOptionPane.showMessageDialog(null,
-							"Programm konnte nicht korrekt gestartet werden: " + e1.getMessage());
+							UIElementNames.MESSAGE_COULD_NOT_START_PROGRAM + ": " + e1.getMessage());
 				}
 			}
 		});

@@ -16,6 +16,7 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
 import experimentGUI.util.Pair;
+import experimentGUI.util.language.UIElementNames;
 
 
 @SuppressWarnings("serial")
@@ -58,12 +59,12 @@ public class MultilineDialogs extends JDialog implements ActionListener {
 		JPanel buttonPane = new JPanel();
 		buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		getContentPane().add(buttonPane, BorderLayout.SOUTH);
-		JButton okButton = new JButton("OK");
+		JButton okButton = new JButton(UIElementNames.BUTTON_LABEL_OK);
 		okButton.setActionCommand("ok");
 		okButton.addActionListener(this);
 		buttonPane.add(okButton);
 		getRootPane().setDefaultButton(okButton);
-		JButton cancelButton = new JButton("Cancel");
+		JButton cancelButton = new JButton(UIElementNames.BUTTON_LABEL_CANCEL);
 		cancelButton.setActionCommand("cancel");
 		cancelButton.addActionListener(this);
 		buttonPane.add(cancelButton);	

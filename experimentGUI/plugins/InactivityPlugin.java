@@ -2,6 +2,7 @@ package experimentGUI.plugins;
 
 import experimentGUI.PluginInterface;
 import experimentGUI.experimentViewer.ExperimentViewer;
+import experimentGUI.util.language.UIElementNames;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 import experimentGUI.util.settingsComponents.SettingsComponentDescription;
 import experimentGUI.util.settingsComponents.components.SettingsCheckBox;
@@ -14,10 +15,10 @@ public class InactivityPlugin implements PluginInterface {
 			QuestionTreeNode node) {
 		if (node.isCategory()) {
 			return new SettingsComponentDescription(SettingsCheckBox.class, KEY,
-					"Diesen und alle Unterknoten deaktivieren");
+					UIElementNames.MENU_TAB_SETTINGS_DEACTIVATE_NODES);
 		} else if (node.isQuestion()) {
 			return new SettingsComponentDescription(SettingsCheckBox.class, KEY,
-					"Diesen Knoten deaktivieren");
+					UIElementNames.MENU_TAB_SETTINGS_DEACTIVATE_THIS_NODE);
 		} else {
 			return null;
 		}
