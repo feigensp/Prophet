@@ -24,6 +24,7 @@ import experimentGUI.plugins.codeViewerPlugin.CodeViewer;
 import experimentGUI.plugins.codeViewerPlugin.CodeViewerPluginInterface;
 import experimentGUI.plugins.codeViewerPlugin.tabbedPane.EditorPanel;
 import experimentGUI.plugins.codeViewerPlugin.tabbedPane.EditorTabbedPane;
+import experimentGUI.util.language.UIElementNames;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 import experimentGUI.util.settingsComponents.SettingsComponentDescription;
 import experimentGUI.util.settingsComponents.components.SettingsCheckBox;
@@ -37,7 +38,7 @@ public class EditAndSavePlugin implements CodeViewerPluginInterface {
 
 	@Override
 	public SettingsComponentDescription getSettingsComponentDescription() {
-		return new SettingsComponentDescription(SettingsCheckBox.class, KEY, "Quelltext editierbar");
+		return new SettingsComponentDescription(SettingsCheckBox.class, KEY, UIElementNames.EDIT_AND_SAVE_EDITABLE_CODE);
 	}
 
 	@Override
@@ -51,7 +52,7 @@ public class EditAndSavePlugin implements CodeViewerPluginInterface {
 			tabbedPane=viewer.getTabbedPane();
 			saveDir = new File(viewer.getSaveDir().getPath()+System.getProperty("file.separator")+"savedFiles");
 			isChanged = new HashMap<EditorPanel,Boolean>();
-			JMenuItem saveMenuItem = new JMenuItem("Speichern");
+			JMenuItem saveMenuItem = new JMenuItem(UIElementNames.EDIT_AND_SAVE_SAVE);
 			saveMenuItem.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.Event.CTRL_MASK));
 			viewer.addMenuItemToFileMenu(saveMenuItem);
 			saveMenuItem.addActionListener(new ActionListener() {
@@ -59,7 +60,7 @@ public class EditAndSavePlugin implements CodeViewerPluginInterface {
 					saveActiveFile();
 				}
 			});
-			JMenuItem saveAllMenuItem = new JMenuItem("Alle Speichern");
+			JMenuItem saveAllMenuItem = new JMenuItem(UIElementNames.EDIT_AND_SAVE_SAVE_ALL);
 			saveAllMenuItem.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.Event.CTRL_MASK | java.awt.Event.SHIFT_MASK));
 			viewer.addMenuItemToFileMenu(saveAllMenuItem);
 			saveAllMenuItem.addActionListener(new ActionListener() {
@@ -166,7 +167,7 @@ public class EditAndSavePlugin implements CodeViewerPluginInterface {
 		if (editable) {
 			Boolean changed = isChanged.get(editorPanel);
 			if (changed != null && changed.booleanValue()) {
-				int n = JOptionPane.showConfirmDialog(null, "Änderungen speichern?", "Speichern?",
+				int n = JOptionPane.showConfirmDialog(null, UIElementNames.EDIT_AND_SAVE_DIALOG_SAVE_CHANGES + "?", UIElementNames.EDIT_AND_SAVE_SAVE + "?",
 						JOptionPane.YES_NO_OPTION);
 				if (n == JOptionPane.YES_OPTION) {
 					saveEditorPanel(editorPanel);
@@ -192,7 +193,7 @@ public class EditAndSavePlugin implements CodeViewerPluginInterface {
 				}
 			}
 			if (ask) {
-				int n = JOptionPane.showConfirmDialog(null, "Änderungen speichern?", "Speichern?",
+				int n = JOptionPane.showConfirmDialog(null, UIElementNames.EDIT_AND_SAVE_DIALOG_SAVE_CHANGES + "?", UIElementNames.EDIT_AND_SAVE_SAVE + "?",
 						JOptionPane.YES_NO_OPTION);
 				if (n == JOptionPane.YES_OPTION) {
 					saveAllFiles();

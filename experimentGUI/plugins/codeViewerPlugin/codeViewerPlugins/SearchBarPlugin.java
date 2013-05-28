@@ -14,6 +14,7 @@ import experimentGUI.plugins.codeViewerPlugin.CodeViewer;
 import experimentGUI.plugins.codeViewerPlugin.CodeViewerPluginInterface;
 import experimentGUI.plugins.codeViewerPlugin.recorder.loggingTreeNode.LoggingTreeNode;
 import experimentGUI.plugins.codeViewerPlugin.tabbedPane.EditorPanel;
+import experimentGUI.util.language.UIElementNames;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 import experimentGUI.util.searchBar.GlobalSearchBar;
 import experimentGUI.util.searchBar.SearchBar;
@@ -41,9 +42,9 @@ public class SearchBarPlugin implements CodeViewerPluginInterface {
 	
 	@Override
 	public SettingsComponentDescription getSettingsComponentDescription() {
-		SettingsPluginComponentDescription result = new SettingsPluginComponentDescription(KEY, "Suchfunktion einschalten", true);
-		result.addSubComponent(new SettingsComponentDescription(SettingsCheckBox.class,KEY_DISABLE_REGEX, "Regex deaktivieren"));
-		result.addSubComponent(new SettingsComponentDescription(SettingsCheckBox.class,KEY_ENABLE_GLOBAL, "Globale Suche aktivieren"));
+		SettingsPluginComponentDescription result = new SettingsPluginComponentDescription(KEY, UIElementNames.SEARCH_BAR_ENABLE_SEARCH, true);
+		result.addSubComponent(new SettingsComponentDescription(SettingsCheckBox.class,KEY_DISABLE_REGEX, UIElementNames.SEARCH_BAR_DEACTIVATE_REGULAR_EXPRESSIONS));
+		result.addSubComponent(new SettingsComponentDescription(SettingsCheckBox.class,KEY_ENABLE_GLOBAL, UIElementNames.SEARCH_BAR_ACTIVATE_GLOBAL_SEARCH ));
 		return result;
 	}
 	@Override
@@ -56,7 +57,7 @@ public class SearchBarPlugin implements CodeViewerPluginInterface {
 		viewer=v;
 		if (enabled) {
 			map = new HashMap<EditorPanel,SearchBar>();
-			JMenuItem findMenuItem = new JMenuItem("Suchen");
+			JMenuItem findMenuItem = new JMenuItem(UIElementNames.SEARCH_BAR_MENU_SEARCH);
 			findMenuItem.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F, java.awt.Event.CTRL_MASK));
 			findMenuItem.addActionListener(new ActionListener() {
 
@@ -97,7 +98,7 @@ public class SearchBarPlugin implements CodeViewerPluginInterface {
 
 				viewer.add(globalSearchBar, BorderLayout.SOUTH);
 				
-				JMenuItem findGlobalMenuItem = new JMenuItem("Global suchen");
+				JMenuItem findGlobalMenuItem = new JMenuItem(UIElementNames.SEARCH_BAR_MENU_GLOBAL_SEARCH);
 				findGlobalMenuItem.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_H, java.awt.Event.CTRL_MASK));
 				findGlobalMenuItem.addActionListener(new ActionListener() {
 

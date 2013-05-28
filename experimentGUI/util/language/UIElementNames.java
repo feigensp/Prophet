@@ -28,7 +28,7 @@ public class UIElementNames {
 	 * String constants for (error) messages
 	 */
 	public static String MESSAGE_FILE_NOT_FOUND = "File not found";
-	public static String MESSAGE_FILE_NOT_FOUND_TITLE = "Error";
+	public static String MESSAGE_ERROR = "Error";
 	public static String MESSAGE_REPLACE_FILE = " already exists.\nReplace it?";
 	public static String MESSAGE_REPLACE_FILE_TITLE = "Confirm save as";
 	public static String MESSAGE_NO_VALID_EXPERIMENT_FILE = "No valid experiment file";
@@ -108,7 +108,103 @@ public class UIElementNames {
 	public static String MENU_TAB_SETTINGS_EXTERNAL_PROGRAMS_TITLE = "Programs";
 	public static String MESSAGE_ONLY_ONE_INSTANCE = "This feature can only be used after the existing instance is closed";
 	public static String MESSAGE_COULD_NOT_START_PROGRAM = "Could not start program";
+	public static String MESSAGE_RELATIVE_PATH_NOTIFICATION = "Please note:\nYour action created a path relative to the current working directory.\nIf your XML file is not in the current working directory, you have to adjust the created path.";
+	public static String MESSAGE_PATH_DOES_NOT_EXIST = "Path defined in the experiment does not exist";
+	public static String TITLE_CODE_VIEWER = "Source code";
 	
+	//Mail-Plugin
+	public static String MAIL_SEND_MAIL = "Send Mail";
+	public static String MAIL_SMTP_SERVER = "SMTP server";
+	public static String MAIL_SMTP_USER = "SMPT user";
+	public static String MAIL_SMTP_PASSWORD = "SMPT password";
+	public static String MAIL_SMTP_SENDER = "Sender address";
+	public static String MAIL_SMTP_RECIPIENT = "Recipient address";
+	public static String MAIL_MESSAGE_COULD_NOT_SEND_MAIL = "Could not send mail. Please notify experimenter.";
+	
+	//QuestionListPlugin
+	public static String QUESTION_LIST_SHOW_LIST = "Show list of questions.";
+	
+	//ValidSubjectCodePlugin
+	public static String SUBJECT_CODE_CHECK_SUBJECT_CODE = "Check subject code.";
+	public static String SUBJECT_CODE_VALID_CODES = "valid codes (optional)";
+	public static String SUBJECT_CODE_CODE_FILE = "File with subject codes (optional)";
+	public static String SUBJECT_CODE_IGNORE_CASE = "Ignore upper and lower case";
+	public static String SUBJECT_CODE_MESSAGE_FILE_NOT_FOUND = "Could not find file with subject codes";
+	public static String SUBJECT_CODE_MESSAGE_CODE_NOT_FOUND = "Could not find subject code";
+	
+	//EditAndSavePlugin
+	public static String EDIT_AND_SAVE_EDITABLE_CODE = "Allow edits to source code";
+	public static String EDIT_AND_SAVE_SAVE = "Save";
+	public static String EDIT_AND_SAVE_SAVE_ALL = "Save all";
+	public static String EDIT_AND_SAVE_DIALOG_SAVE_CHANGES = "Save changes";
+	
+	//LineNumbersPlugin
+	public static String LINE_NUMBER_SHOW_LINE_NUMBERS = "Show line numbers";
+	
+	//OpenedFromStartPlugin
+	public static String OPENED_FROM_START_OPEN_FILE_ON_START = "Open file on start";
+	public static String OPENED_FROM_START_FILE_TO_OPEN = "File to be opened (relative to path of source code)";
+	
+	//SearchBarPlugin
+	public static String SEARCH_BAR_ENABLE_SEARCH = "Enable search";
+	public static String SEARCH_BAR_DEACTIVATE_REGULAR_EXPRESSIONS = "Deactivate regular expressions";
+	public static String SEARCH_BAR_ACTIVATE_GLOBAL_SEARCH = "Activate global search";
+	public static String SEARCH_BAR_MENU_SEARCH = "Search";
+	public static String SEARCH_BAR_MENU_GLOBAL_SEARCH = "Search globally";
+	
+	//ShowCIDECodePlugin
+	public static String CIDE_HIGHLIGHT_SOURCE_CODE = "Highlight annotated source code with background colors (only avaible if source code is not editable)";
+	public static String CIDE_COLOR_SELECTION = "Color selection";
+	
+	//SyntaxHighlightingPluign
+	public static String SYNTAX_HIGHLIGHTING_ENABLE = "Enable syntax highlighting";
+	
+	//Recorder
+	public static String RECORDER_TIME_INTERVAL_FOR_SUMMARY = "Time limit (in ms, e.g. 1000)";
+	
+	//Recorder.ChangePlugin
+	public static String RECORDER_CHANGE_SOURCE_CODE_EDITS = "Edits to source code";
+	public static String RECORDER_CHANGE_SUMMARIZE_CHANGES = "Summarize changes";
+
+	//Recorder.ScrollingPlugin
+	public static String RECORDER_SCROLL_SCROLLING_BEHAVIOR = "Scrolling behavior";
+	public static String RECORDER_SCROLL_SUMMARIZE_SCROLLING = "Summarize scrolling";
+	
+	//EditorTabbedPane
+	public static String EDITOR_TABBED_PANE_MESSAGE_TITLE_ERROR = "Error";
+	public static String EDITOR_TABBED_PANE_MESSAGE_ERROR_COULD_NOT_OPEN_FILE = "Could not automatically open file";
+	
+	//PHPExportComponent
+	public static String PHP_PHP_EXPORT = "PHP export";
+	public static String PHP_HOST = "Host";
+	public static String PHP_NAME_OF_DATABASE = "Name of database";
+	public static String PHP_USER_NAME = "User name";
+	public static String PHP_PASSWORD = "Password";
+	public static String PHP_EXPORT_SCRIPT = "Export PHP script";
+	public static String PHP_DIALOG_UNENCRYPTED_PASSWORD_CONTINUE = "Password will be stored unencrypted. Continue?";
+	public static String PHP_DIALOG_TITLE_CONFIRM = "Confirmation";
+	public static String PHP_MESSAGE_EXPORT_FINISHED = "Finished";
+	
+	//MacroEditor
+	public static String MACRO_EDITOR_NEW_MACRO = "New macro";
+	public static String MACRO_EDITOR_DELETE_MACRO = "Delete macro";
+	public static String MACRO_EDITOR_ENTER_MACRO_NAME = "Enter macro name";
+	
+	//QuestionTreeHTMLHandler
+	public static String QUESTION_TREE_HTML_HANDLER_MESSAGE_ERROR_WHILE_READING = "Error while reading form names from XML file";
+	public static String QUESTION_TREE_XML_MESSAGE_ERROR_WHILE_WRITING_CSV = "Error while writing CSV file";
+	
+	//GlobalSearchBar
+	public static String GLOBAL_SEARCH_BAR_CASE_SENSITIVE = "Case sensitive"; 
+	public static String GLOBAL_SEARCH_BAR_SEARCH = "Find";
+	public static String GLOBAL_SEARCH_BAR_REGULAR_EXPRESSION = "Regular expression";
+	
+	//Searchbar
+	public static String SEARCH_BAR_CASE_SENSITIVE = "Case sensitive";
+	public static String SEARCH_BAR_SEARCH_FORWARD = "Forward";
+	public static String SEARCH_BAR_SEARCH_BACKWARD = "Backward";
+	public static String SEARCH_BAR_REGULAR_EXPRESSION = "Regular expression";
+	public static String SEARCH_BAR_MESSAGE_TEXT_NOT_FOUND = "Text not found";
 	
 	
 	
@@ -127,7 +223,7 @@ public class UIElementNames {
 		MENU_EDIT_FIND = labels.getString("MENU_EDIT_FIND");
 
 		MESSAGE_FILE_NOT_FOUND = labels.getString("MESSAGE_FILE_NOT_FOUND");
-		MESSAGE_FILE_NOT_FOUND_TITLE = labels.getString("MESSAGE_FILE_NOT_FOUND_TITLE");
+		MESSAGE_ERROR = labels.getString("MESSAGE_FILE_NOT_FOUND_TITLE");
 		MESSAGE_REPLACE_FILE = labels.getString("MESSAGE_REPLACE_FILE");
 		MESSAGE_REPLACE_FILE_TITLE = labels.getString("MESSAGE_REPLACE_FILE_TITLE");
 		MESSAGE_NO_VALID_EXPERIMENT_FILE = labels.getString("MESSAGE_NO_VALID_EXPERIMENT_FILE");
@@ -208,7 +304,100 @@ public class UIElementNames {
 		MENU_TAB_SETTINGS_EXTERNAL_PROGRAMS_TITLE = labels.getString("MENU_TAB_SETTINGS_EXTERNAL_PROGRAMS_TITLE");
 		MESSAGE_ONLY_ONE_INSTANCE = labels.getString("MESSAGE_ONLY_ONE_INSTANCE");
 		MESSAGE_COULD_NOT_START_PROGRAM = labels.getString("MESSAGE_COULD_NOT_START_PROGRAM");
+		MESSAGE_RELATIVE_PATH_NOTIFICATION = labels.getString("MESSAGE_RELATIVE_PATH_NOTIFICATION");
+		MESSAGE_PATH_DOES_NOT_EXIST = labels.getString("MESSAGE_PATH_DOES_NOT_EXIST");
+		TITLE_CODE_VIEWER = labels.getString("TITLE_CODE_VIEWER");
 		
+		//Mail-Plugin
+		MAIL_SEND_MAIL  = labels.getString("MAIL_SEND_MAIL");
+		MAIL_SMTP_SERVER = labels.getString("MAIL_SMTP_SERVER");
+		MAIL_SMTP_USER = labels.getString("MAIL_SMTP_USER");
+		MAIL_SMTP_PASSWORD = labels.getString("MAIL_SMTP_PASSWORD");
+		MAIL_SMTP_SENDER = labels.getString("MAIL_SMTP_SENDER");
+		MAIL_SMTP_RECIPIENT	= labels.getString("MAIL_SMTP_RECIPIENT");
+		MAIL_MESSAGE_COULD_NOT_SEND_MAIL = labels.getString("MAIL_MESSAGE_COULD_NOT_SEND_MAIL");
 		
+		//QuestionListPlugin
+		QUESTION_LIST_SHOW_LIST = labels.getString("QUESTION_LIST_SHOW_LIST");
+		
+		//ValidSubjectCodePlugin
+		SUBJECT_CODE_CHECK_SUBJECT_CODE = labels.getString("SUBJECT_CODE_CHECK_SUBJECT_CODE");
+		SUBJECT_CODE_VALID_CODES = labels.getString("SUBJECT_CODE_VALID_CODES");
+		SUBJECT_CODE_CODE_FILE = labels.getString("SUBJECT_CODE_CODE_FILE");
+		SUBJECT_CODE_IGNORE_CASE = labels.getString("SUBJECT_CODE_IGNORE_CASE");
+		SUBJECT_CODE_MESSAGE_FILE_NOT_FOUND = labels.getString("SUBJECT_CODE_MESSAGE_FILE_NOT_FOUND");
+		SUBJECT_CODE_MESSAGE_CODE_NOT_FOUND = labels.getString("SUBJECT_CODE_MESSAGE_CODE_NOT_FOUND");
+		
+		//EditAndSavePlugin
+		EDIT_AND_SAVE_EDITABLE_CODE = labels.getString("EDIT_AND_SAVE_EDITABLE_CODE");
+		EDIT_AND_SAVE_SAVE = labels.getString("EDIT_AND_SAVE_SAVE");
+		EDIT_AND_SAVE_SAVE_ALL = labels.getString("EDIT_AND_SAVE_SAVE_ALL");
+		EDIT_AND_SAVE_DIALOG_SAVE_CHANGES = labels.getString("EDIT_AND_SAVE_DIALOG_SAVE_CHANGES");
+
+		//LineNumbersPlugin
+		LINE_NUMBER_SHOW_LINE_NUMBERS = labels.getString("LINE_NUMBER_SHOW_LINE_NUMBERS");
+		
+		//OpenedFromStartPlugin
+		OPENED_FROM_START_OPEN_FILE_ON_START = labels.getString("OPENED_FROM_START_OPEN_FILE_ON_START");
+		OPENED_FROM_START_FILE_TO_OPEN = labels.getString("OPENED_FROM_START_FILE_TO_OPEN");
+		
+		//SearchBarPlugin
+		SEARCH_BAR_ENABLE_SEARCH = labels.getString("SEARCH_BAR_ENABLE_SEARCH");
+		SEARCH_BAR_DEACTIVATE_REGULAR_EXPRESSIONS = labels.getString("SEARCH_BAR_DEACTIVATE_REGULAR_EXPRESSIONS");
+		SEARCH_BAR_ACTIVATE_GLOBAL_SEARCH = labels.getString("SEARCH_BAR_ACTIVATE_GLOBAL_SEARCH");
+		SEARCH_BAR_MENU_SEARCH = labels.getString("SEARCH_BAR_MENU_SEARCH");
+		SEARCH_BAR_MENU_GLOBAL_SEARCH = labels.getString("SEARCH_BAR_MENU_SEARCH");
+		
+		//ShowCIDECodePlugin
+		CIDE_HIGHLIGHT_SOURCE_CODE = labels.getString("CIDE_HIGHLIGHT_SOURCE_CODE");
+		CIDE_COLOR_SELECTION = labels.getString("CIDE_COLOR_SELECTION");
+		
+		//SyntaxHighlightingPlugin
+		SYNTAX_HIGHLIGHTING_ENABLE = labels.getString("SYNTAX_HIGHLIGHTING_ENABLE");
+		
+		//Recorder.ChangePlugin
+		RECORDER_CHANGE_SOURCE_CODE_EDITS = labels.getString("RECORDER_CHANGE_SOURCE_CODE_EDITS");
+		RECORDER_CHANGE_SUMMARIZE_CHANGES = labels.getString("RECORDER_CHANGE_SUMMARIZE_CHANGES");
+		RECORDER_TIME_INTERVAL_FOR_SUMMARY = labels.getString("RECORDER_TIME_INTERVAL_FOR_SUMMARY");
+		
+		//Recorder.ScrollingPlugin
+		RECORDER_SCROLL_SCROLLING_BEHAVIOR = labels.getString("RECORDER_SCROLL_SCROLLING_BEHAVIOR");
+		RECORDER_SCROLL_SUMMARIZE_SCROLLING = labels.getString("RECORDER_SCROLL_SUMMARIZE_SCROLLING");
+		
+		//EditorTabbedPane
+		EDITOR_TABBED_PANE_MESSAGE_TITLE_ERROR = labels.getString("EDITOR_TABBED_PANE_MESSAGE_TITLE_ERROR");
+		EDITOR_TABBED_PANE_MESSAGE_ERROR_COULD_NOT_OPEN_FILE = labels.getString("EDITOR_TABBED_PANE_MESSAGE_ERROR_COULD_NOT_OPEN_FILE");
+		
+		//PHPExportComponent
+		PHP_PHP_EXPORT = labels.getString("PHP_PHP_EXPORT");
+		PHP_HOST = labels.getString("PHP_HOST");
+		PHP_NAME_OF_DATABASE = labels.getString("PHP_NAME_OF_DATABASE");
+		PHP_USER_NAME = labels.getString("PHP_USER_NAME");
+		PHP_PASSWORD = labels.getString("PHP_PASSWORD");
+		PHP_EXPORT_SCRIPT = labels.getString("PHP_EXPORT_SCRIPT");
+		PHP_DIALOG_UNENCRYPTED_PASSWORD_CONTINUE = labels.getString("PHP_DIALOG_UNENCRYPTED_PASSWORD_CONTINUE");
+		PHP_DIALOG_TITLE_CONFIRM = labels.getString("PHP_DIALOG_TITLE_CONFIRM");
+		PHP_MESSAGE_EXPORT_FINISHED = labels.getString("PHP_MESSAGE_EXPORT_FINISHED");
+		
+		//MacroEditor
+		MACRO_EDITOR_NEW_MACRO = labels.getString("MACRO_EDITOR_NEW_MACRO");
+		MACRO_EDITOR_DELETE_MACRO = labels.getString("MACRO_EDITOR_DELETE_MACRO");
+		MACRO_EDITOR_ENTER_MACRO_NAME = labels.getString("MACRO_EDITOR_ENTER_MACRO_NAME");
+		
+		//QuestionTreeHTMLHandler
+		QUESTION_TREE_HTML_HANDLER_MESSAGE_ERROR_WHILE_READING = labels.getString("QUESTION_TREE_HTML_HANDLER_MESSAGE_ERROR_WHILE_READING");
+		QUESTION_TREE_XML_MESSAGE_ERROR_WHILE_WRITING_CSV = labels.getString("QUESTION_TREE_XML_MESSAGE_ERROR_WHILE_WRITING_CSV");
+		
+		//GlobalSearchBar
+		GLOBAL_SEARCH_BAR_CASE_SENSITIVE = labels.getString("GLOBAL_SEARCH_BAR_CASE_SENSITIVE");
+		GLOBAL_SEARCH_BAR_SEARCH = labels.getString("GLOBAL_SEARCH_BAR_SEARCH");
+		GLOBAL_SEARCH_BAR_REGULAR_EXPRESSION = labels.getString("GLOBAL_SEARCH_BAR_REGULAR_EXPRESSION");
+		
+		//SearchBar
+		SEARCH_BAR_CASE_SENSITIVE = labels.getString("SEARCH_BAR_CASE_SENSITIVE");
+		SEARCH_BAR_SEARCH_FORWARD = labels.getString("SEARCH_BAR_SEARCH_FORWARD");
+		SEARCH_BAR_SEARCH_BACKWARD = labels.getString("SEARCH_BAR_SEARCH_BACKWARD");
+		SEARCH_BAR_REGULAR_EXPRESSION = labels.getString("SEARCH_BAR_REGULAR_EXPRESSION");
+		SEARCH_BAR_MESSAGE_TEXT_NOT_FOUND = labels.getString("SEARCH_BAR_MESSAGE_TEXT_NOT_FOUND");
 	}
 }

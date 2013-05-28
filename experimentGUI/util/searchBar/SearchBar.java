@@ -15,6 +15,8 @@ import javax.swing.JToolBar;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rtextarea.SearchEngine;
 
+import experimentGUI.util.language.UIElementNames;
+
 /**
  * This class adds a JTextPane to a searchbar which is created. With this
  * searchBar the user can search through the text in the JTextPane User
@@ -26,16 +28,16 @@ public class SearchBar extends JToolBar implements ActionListener {
 	private static final long serialVersionUID = 1L;
 	
 	public static final String CAPTION_HIDE = "X";
-	public static final String CAPTION_NEXT = "Abw\u00E4rts";
-	public static final String CAPTION_PREVIOUS = "Aufw\u00E4rts";
-	public static final String CAPTION_REGEX = "Regex";
-	public static final String CAPTION_MATCH_CASE = "Gro\u00DF-/Kleinschreibung";
+	public static final String CAPTION_NEXT = UIElementNames.SEARCH_BAR_SEARCH_FORWARD;
+	public static final String CAPTION_PREVIOUS = UIElementNames.SEARCH_BAR_SEARCH_BACKWARD;
+	public static final String CAPTION_REGEX = UIElementNames.SEARCH_BAR_REGULAR_EXPRESSION;
+	public static final String CAPTION_MATCH_CASE = UIElementNames.SEARCH_BAR_CASE_SENSITIVE;
 	
 	public static final String ACTION_HIDE = "Hide";
 	public static final String ACTION_NEXT = "FindNext";
 	public static final String ACTION_PREVIOUS = "FindPrevious";
 	
-	public static final String MESSAGE_NOT_FOUND = "Text nicht gefunden.";
+	public static final String MESSAGE_NOT_FOUND = UIElementNames.SEARCH_BAR_MESSAGE_TEXT_NOT_FOUND;
 	
 	private RSyntaxTextArea textArea;
 	

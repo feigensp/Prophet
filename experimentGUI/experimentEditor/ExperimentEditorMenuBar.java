@@ -99,7 +99,7 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 
 					} catch (FileNotFoundException e) {
 						JOptionPane.showMessageDialog(experimentEditor, UIElementNames.MESSAGE_FILE_NOT_FOUND,
-								UIElementNames.MESSAGE_FILE_NOT_FOUND_TITLE, JOptionPane.ERROR_MESSAGE);
+								UIElementNames.MESSAGE_ERROR, JOptionPane.ERROR_MESSAGE);
 						return;
 					}
 				}

@@ -9,6 +9,7 @@ import experimentGUI.plugins.codeViewerPlugin.CodeViewer;
 import experimentGUI.plugins.codeViewerPlugin.recorder.RecorderPluginInterface;
 import experimentGUI.plugins.codeViewerPlugin.recorder.loggingTreeNode.LoggingTreeNode;
 import experimentGUI.plugins.codeViewerPlugin.tabbedPane.EditorPanel;
+import experimentGUI.util.language.UIElementNames;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 import experimentGUI.util.settingsComponents.SettingsComponentDescription;
 import experimentGUI.util.settingsComponents.SettingsPluginComponentDescription;
@@ -35,9 +36,9 @@ public class ChangePlugin implements RecorderPluginInterface {
 
 	@Override
 	public SettingsComponentDescription getSettingsComponentDescription() {
-		SettingsPluginComponentDescription resultDesc = new SettingsPluginComponentDescription(KEY, "Quelltextänderungen", true);
-		SettingsPluginComponentDescription joinDesc = new SettingsPluginComponentDescription(KEY_JOIN, "Änderungen zusammenfassen", true);
-		SettingsComponentDescription joinTimeDesc = new SettingsComponentDescription(SettingsTextField.class,KEY_JOIN_TIME, "Grenzzeit (ms, z.B. 1000)");
+		SettingsPluginComponentDescription resultDesc = new SettingsPluginComponentDescription(KEY, UIElementNames.RECORDER_CHANGE_SOURCE_CODE_EDITS, true);
+		SettingsPluginComponentDescription joinDesc = new SettingsPluginComponentDescription(KEY_JOIN, UIElementNames.RECORDER_CHANGE_SUMMARIZE_CHANGES, true);
+		SettingsComponentDescription joinTimeDesc = new SettingsComponentDescription(SettingsTextField.class,KEY_JOIN_TIME, UIElementNames.RECORDER_TIME_INTERVAL_FOR_SUMMARY);
 		joinDesc.addSubComponent(joinTimeDesc);
 		resultDesc.addSubComponent(joinDesc);
 		return resultDesc;

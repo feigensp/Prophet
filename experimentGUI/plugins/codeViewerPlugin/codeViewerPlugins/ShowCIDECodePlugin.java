@@ -28,9 +28,9 @@ import org.xml.sax.SAXException;
 
 import experimentGUI.plugins.codeViewerPlugin.CodeViewer;
 import experimentGUI.plugins.codeViewerPlugin.CodeViewerPluginInterface;
-import experimentGUI.plugins.codeViewerPlugin.Recorder;
 import experimentGUI.plugins.codeViewerPlugin.codeViewerPlugins.showCIDECodePlugin.Triple;
 import experimentGUI.plugins.codeViewerPlugin.tabbedPane.EditorPanel;
+import experimentGUI.util.language.UIElementNames;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 import experimentGUI.util.settingsComponents.SettingsComponentDescription;
 import experimentGUI.util.settingsComponents.SettingsPluginComponentDescription;
@@ -63,7 +63,7 @@ public class ShowCIDECodePlugin implements CodeViewerPluginInterface{
 
 	@Override
 	public SettingsComponentDescription getSettingsComponentDescription() {
-		SettingsPluginComponentDescription result = new SettingsPluginComponentDescription(KEY, "CIDE Highlights anzeigen (funktioniert nur wenn Text nicht editierbar)", true);
+		SettingsPluginComponentDescription result = new SettingsPluginComponentDescription(KEY, UIElementNames.CIDE_HIGHLIGHT_SOURCE_CODE, true);
 		result.addSubComponent(new SettingsComponentDescription(SettingsTextField.class, CIDE_INFO_PATH, "annotations.xml"));
 		return result;
 	}
@@ -154,7 +154,7 @@ public class ShowCIDECodePlugin implements CodeViewerPluginInterface{
 		}
 		
 		
-		JFrame colorFrame = new JFrame("Farbauswahl");
+		JFrame colorFrame = new JFrame(UIElementNames.CIDE_COLOR_SELECTION);
 		JPanel contentPane = new JPanel();
 		colorFrame.getContentPane().add(contentPane);
 		colorFrame.setLocation(x, y);		

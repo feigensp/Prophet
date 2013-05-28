@@ -4,6 +4,7 @@ import experimentGUI.plugins.codeViewerPlugin.CodeViewer;
 import experimentGUI.plugins.codeViewerPlugin.CodeViewerPluginInterface;
 import experimentGUI.plugins.codeViewerPlugin.Recorder;
 import experimentGUI.plugins.codeViewerPlugin.tabbedPane.EditorPanel;
+import experimentGUI.util.language.UIElementNames;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 import experimentGUI.util.settingsComponents.SettingsComponentDescription;
 import experimentGUI.util.settingsComponents.SettingsPluginComponentDescription;
@@ -18,8 +19,8 @@ public class OpenedFromStartPlugin implements CodeViewerPluginInterface{
 
 	@Override
 	public SettingsComponentDescription getSettingsComponentDescription() {
-		SettingsPluginComponentDescription result = new SettingsPluginComponentDescription(KEY, "Datei standardmäßig öffnen", true);
-		result.addSubComponent(new SettingsComponentDescription(SettingsTextField.class,KEY_PATH, "Zu öffnende Datei (relativ zum Pfad der Quelltexte):"));
+		SettingsPluginComponentDescription result = new SettingsPluginComponentDescription(KEY, UIElementNames.OPENED_FROM_START_OPEN_FILE_ON_START, true);
+		result.addSubComponent(new SettingsComponentDescription(SettingsTextField.class,KEY_PATH, UIElementNames.OPENED_FROM_START_FILE_TO_OPEN + ":"));
 		return result;
 	}
 

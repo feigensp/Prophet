@@ -16,6 +16,7 @@ import javax.swing.text.html.HTMLEditorKit;
 
 import experimentGUI.util.Pair;
 import experimentGUI.util.QuestionViewPane;
+import experimentGUI.util.language.UIElementNames;
 
 public class QuestionTreeHTMLHandler {
 
@@ -54,10 +55,10 @@ public class QuestionTreeHTMLHandler {
 				node = (QuestionTreeNode) node.getNextNode();
 			}
 		} catch (IOException e) {
-			JOptionPane.showMessageDialog(null, "Fehler beim auslesen Der Formulardaten aus der XML-Datei");
+			JOptionPane.showMessageDialog(null, UIElementNames.QUESTION_TREE_HTML_HANDLER_MESSAGE_ERROR_WHILE_READING);
 			return null;
 		} catch (BadLocationException e) {
-			JOptionPane.showMessageDialog(null, "Fehler beim auslesen Der Formulardaten aus der XML-Datei");
+			JOptionPane.showMessageDialog(null, UIElementNames.QUESTION_TREE_HTML_HANDLER_MESSAGE_ERROR_WHILE_READING);
 			return null;
 		}
 

@@ -9,6 +9,7 @@ import javax.swing.JTabbedPane;
 
 import experimentGUI.plugins.codeViewerPlugin.CodeViewerPluginList;
 import experimentGUI.plugins.codeViewerPlugin.Recorder;
+import experimentGUI.util.language.UIElementNames;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 
 @SuppressWarnings("serial")
@@ -18,13 +19,14 @@ public class EditorTabbedPane extends JTabbedPane {
 	private Recorder recorder;
 	HashSet<EditorPanel> editorPanels;
 
-	public EditorTabbedPane(QuestionTreeNode selected, File showDir, Recorder recorder) {
+	public EditorTabbedPane(QuestionTreeNode selected, File showDir,
+			Recorder recorder) {
 		super(JTabbedPane.TOP);
 		this.selected = selected;
 		this.showDir = showDir;
 		this.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 		editorPanels = new HashSet<EditorPanel>();
-		this.recorder=recorder;
+		this.recorder = recorder;
 	}
 
 	public void openFile(String path) {
@@ -43,12 +45,18 @@ public class EditorTabbedPane extends JTabbedPane {
 			recorder.onEditorPanelCreate(myPanel);
 			CodeViewerPluginList.onEditorPanelCreate(myPanel);
 			add(file.getName(), myPanel);
-			this.setTabComponentAt(this.getTabCount() - 1, new ButtonTabComponent(this, myPanel));
+			this.setTabComponentAt(this.getTabCount() - 1,
+					new ButtonTabComponent(this, myPanel));
 			this.setSelectedComponent(myPanel);
 			myPanel.grabFocus();
 		} else {
-			JOptionPane.showMessageDialog(this, "Datei " + path
-					+ " konnte nicht automatisch geöffnet werden.", "Fehler", JOptionPane.ERROR_MESSAGE);
+			JOptionPane
+					.showMessageDialog(
+							this,
+							UIElementNames.EDITOR_TABBED_PANE_MESSAGE_ERROR_COULD_NOT_OPEN_FILE
+									+ ": " + path,
+							UIElementNames.EDITOR_TABBED_PANE_MESSAGE_TITLE_ERROR,
+							JOptionPane.ERROR_MESSAGE);
 		}
 	}
 
@@ -57,7 +65,7 @@ public class EditorTabbedPane extends JTabbedPane {
 	}
 
 	public void closeEditorPanel(EditorPanel editorPanel) {
-		if (editorPanel!=null) {
+		if (editorPanel != null) {
 			CodeViewerPluginList.onEditorPanelClose(editorPanel);
 			recorder.onEditorPanelClose(editorPanel);
 			this.remove(editorPanel);
@@ -67,7 +75,8 @@ public class EditorTabbedPane extends JTabbedPane {
 	public EditorPanel getEditorPanel(String path) {
 		for (int i = 0; i < getTabCount(); i++) {
 			Component myComp = getComponentAt(i);
-			if ((myComp instanceof EditorPanel) && ((EditorPanel) myComp).getFilePath().equals(path)) {
+			if ((myComp instanceof EditorPanel)
+					&& ((EditorPanel) myComp).getFilePath().equals(path)) {
 				return (EditorPanel) myComp;
 			}
 		}

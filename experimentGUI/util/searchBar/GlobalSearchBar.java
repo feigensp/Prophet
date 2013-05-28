@@ -26,6 +26,7 @@ import experimentGUI.plugins.codeViewerPlugin.fileTree.FileListener;
 import experimentGUI.plugins.codeViewerPlugin.fileTree.FileTree;
 import experimentGUI.plugins.codeViewerPlugin.fileTree.FileTreeModel;
 import experimentGUI.plugins.codeViewerPlugin.fileTree.FileTreeNode;
+import experimentGUI.util.language.UIElementNames;
 
 /**
  * This class adds a JTextPane to a searchbar which is created. With this
@@ -38,9 +39,9 @@ public class GlobalSearchBar extends JToolBar implements ActionListener {
 	private static final long serialVersionUID = 1L;
 	
 	public static final String CAPTION_HIDE = "X";
-	public static final String CAPTION_FIND = "Find";
-	public static final String CAPTION_REGEX = "Regex";
-	public static final String CAPTION_MATCH_CASE = "Gro\u00DF-/Kleinschreibung";
+	public static final String CAPTION_FIND = UIElementNames.GLOBAL_SEARCH_BAR_SEARCH;
+	public static final String CAPTION_REGEX = UIElementNames.GLOBAL_SEARCH_BAR_REGULAR_EXPRESSION;
+	public static final String CAPTION_MATCH_CASE = UIElementNames.GLOBAL_SEARCH_BAR_CASE_SENSITIVE;
 	
 	public static final String ACTION_HIDE = "Hide";
 	public static final String ACTION_NEXT = "Global";

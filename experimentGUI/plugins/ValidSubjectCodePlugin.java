@@ -7,6 +7,7 @@ import java.util.Scanner;
 import experimentGUI.Constants;
 import experimentGUI.PluginInterface;
 import experimentGUI.experimentViewer.ExperimentViewer;
+import experimentGUI.util.language.UIElementNames;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 import experimentGUI.util.settingsComponents.SettingsComponentDescription;
 import experimentGUI.util.settingsComponents.SettingsPluginComponentDescription;
@@ -25,13 +26,13 @@ public class ValidSubjectCodePlugin implements PluginInterface {
 	public SettingsComponentDescription getSettingsComponentDescription(QuestionTreeNode node) {
 		if (node.isExperiment()) {
 			SettingsPluginComponentDescription result = new SettingsPluginComponentDescription(KEY,
-					"Auf Probandencode überprüfen", true);
+					UIElementNames.SUBJECT_CODE_CHECK_SUBJECT_CODE, true);
 			result.addSubComponent(new SettingsComponentDescription(SettingsTextArea.class, KEY_CODES,
-			"gültige Codes (optional)"));
+			UIElementNames.SUBJECT_CODE_VALID_CODES));
 			result.addSubComponent(new SettingsComponentDescription(SettingsFilePathChooser.class, KEY_PATH,
-			"Probandencodedatei (optional)"));
+			UIElementNames.SUBJECT_CODE_CODE_FILE));
 			result.addSubComponent(new SettingsComponentDescription(SettingsCheckBox.class, KEY_IGNORE_CASE,
-			"Groß- und Kleinschreibung ignorieren"));
+			UIElementNames.SUBJECT_CODE_IGNORE_CASE));
 			return result;
 		}
 		return null;
@@ -89,10 +90,10 @@ public class ValidSubjectCodePlugin implements PluginInterface {
 						}
 					}
 				} catch (FileNotFoundException e) {
-					return "Datei mit gültigen Probandencodes nicht gefunden.";
+					return UIElementNames.SUBJECT_CODE_MESSAGE_FILE_NOT_FOUND;
 				}				
 			}
-			return "Probandencode nicht gefunden.";
+			return UIElementNames.SUBJECT_CODE_MESSAGE_CODE_NOT_FOUND;
 		} else {
 			return null;
 		}

@@ -18,6 +18,7 @@ import experimentGUI.plugins.codeViewerPlugin.fileTree.FileEvent;
 import experimentGUI.plugins.codeViewerPlugin.fileTree.FileListener;
 import experimentGUI.plugins.codeViewerPlugin.fileTree.FileTree;
 import experimentGUI.plugins.codeViewerPlugin.tabbedPane.EditorTabbedPane;
+import experimentGUI.util.language.UIElementNames;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 
 @SuppressWarnings("serial")
@@ -55,7 +56,7 @@ public class CodeViewer extends JFrame implements FileListener {
 	}
 	
 	public CodeViewer(QuestionTreeNode selected, File saveDir) {
-		setTitle("Quelltext");
+		setTitle(UIElementNames.TITLE_CODE_VIEWER);
 		setSize(800, 600);
 		setLayout(new BorderLayout());
 		
@@ -72,18 +73,18 @@ public class CodeViewer extends JFrame implements FileListener {
 		String showPath = selected.getAttributeValue(KEY_PATH).replace('/', System.getProperty("file.separator").charAt(0));
 		showDir = new File(showPath==null || showPath.length()==0 ? "." : showPath);
 		if (!showDir.exists()) {
-			JOptionPane.showMessageDialog(this, "Der im Experiment angegebene Pfad ist nicht vorhanden.", "Fehler", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(this, UIElementNames.MESSAGE_PATH_DOES_NOT_EXIST, UIElementNames.MESSAGE_ERROR, JOptionPane.ERROR_MESSAGE);
 		}
 		
 		menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
 		menuBar.setVisible(false);	
 		
-		fileMenu = new JMenu("Datei");
+		fileMenu = new JMenu(UIElementNames.MENU_FILE);
 		menuBar.add(fileMenu);
 		fileMenu.setVisible(false);
 		
-		editMenu = new JMenu("Bearbeiten");
+		editMenu = new JMenu(UIElementNames.MENU_EDIT);
 		menuBar.add(editMenu);
 		editMenu.setVisible(false);
 		

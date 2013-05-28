@@ -26,6 +26,7 @@ import javax.swing.text.html.HTMLEditorKit;
 
 import experimentGUI.Constants;
 import experimentGUI.experimentViewer.ExperimentViewer;
+import experimentGUI.util.language.UIElementNames;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 
 /**
@@ -37,27 +38,22 @@ import experimentGUI.util.questionTreeNode.QuestionTreeNode;
  */
 @SuppressWarnings("serial")
 public class QuestionViewPane extends JScrollPane {
-	public static final String FOOTER_FORWARD_CAPTION = "Weiter";
-	public static final String FOOTER_BACKWARD_CAPTION = "Zurück";
-	public static final String FOOTER_END_CATEGORY_CAPTION = "Kategorie Abschließen";
-	public static final String FOOTER_START_EXPERIMENT_CAPTION = "Experiment starten";
-	public static final String FOOTER_SUBJECT_CODE_CAPTION = "Probandencode:";
 
 	// constants for the html navigation
 	public static final String HTML_START = "<html><body><form>";
 	public static final String HTML_DIVIDER = "<br /><br /><hr /><br /><br />";
 	public static final String HTML_TYPE_SUBMIT = "submit";
 	public static final String FOOTER_FORWARD = "<input name =\"" + Constants.KEY_FORWARD + "\" type=\""
-			+ HTML_TYPE_SUBMIT + "\" value=\"" + FOOTER_FORWARD_CAPTION + "\" />";
+			+ HTML_TYPE_SUBMIT + "\" value=\"" + UIElementNames.FOOTER_FORWARD_CAPTION + "\" />";
 	public static final String FOOTER_BACKWARD = "<input name =\"" + Constants.KEY_BACKWARD + "\" type=\""
-			+ HTML_TYPE_SUBMIT + "\" value=\"" + FOOTER_BACKWARD_CAPTION + "\" />";
+			+ HTML_TYPE_SUBMIT + "\" value=\"" + UIElementNames.FOOTER_BACKWARD_CAPTION + "\" />";
 	public static final String FOOTER_END_CATEGORY = "<input name =\"" + Constants.KEY_FORWARD + "\" type=\""
-			+ HTML_TYPE_SUBMIT + "\" value=\"" + FOOTER_END_CATEGORY_CAPTION + "\" />";
-	public static final String FOOTER_EXPERIMENT_CODE = "<table><tr><td>" + FOOTER_SUBJECT_CODE_CAPTION
+			+ HTML_TYPE_SUBMIT + "\" value=\"" + UIElementNames.FOOTER_END_CATEGORY_CAPTION + "\" />";
+	public static final String FOOTER_EXPERIMENT_CODE = "<table><tr><td>" + UIElementNames.FOOTER_SUBJECT_CODE_CAPTION
 			+ "</td><td><input name=\"" + Constants.KEY_SUBJECT + "\" /></td></tr></table>";
 	public static final String FOOTER_START_EXPERIMENT = FOOTER_EXPERIMENT_CODE + HTML_DIVIDER
 			+ "<input name =\"" + Constants.KEY_FORWARD + "\" type=\"" + HTML_TYPE_SUBMIT + "\" value=\""
-			+ FOOTER_START_EXPERIMENT_CAPTION + "\" />";
+			+ UIElementNames.FOOTER_START_EXPERIMENT_CAPTION + "\" />";
 	public static final String HTML_END = "</form></body></html>";
 
 	public static final String HEADER_ATTRIBUTE = "header";
@@ -130,15 +126,15 @@ public class QuestionViewPane extends JScrollPane {
 				        	try {
 								desktop.browse(event.getURL().toURI());
 							} catch (IOException e) {
-					        	JOptionPane.showMessageDialog(textPane, "Fehler beim Starten des Browsers.");
+					        	JOptionPane.showMessageDialog(textPane, UIElementNames.MESSAGE_COULD_NOT_START_BROWSER);
 							} catch (URISyntaxException e) {
-					        	JOptionPane.showMessageDialog(textPane, "Fehlerhafte URL.");
+					        	JOptionPane.showMessageDialog(textPane, UIElementNames.MESSAGE_INVALID_URL);
 							}
 				        } else {
-				        	JOptionPane.showMessageDialog(textPane, "Konnte keinen Standardbrowser öffnen.");
+				        	JOptionPane.showMessageDialog(textPane, UIElementNames.MESSAGE_COULD_NOT_OPEN_STANDARD_BROWSER);
 				        }
 				    }  else {
-			        	JOptionPane.showMessageDialog(textPane, "Konnte keinen Standardbrowser öffnen.");
+			        	JOptionPane.showMessageDialog(textPane, UIElementNames.MESSAGE_COULD_NOT_OPEN_STANDARD_BROWSER);
 				    }
 				}
 			}

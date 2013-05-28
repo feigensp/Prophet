@@ -14,6 +14,7 @@ import experimentGUI.plugins.codeViewerPlugin.CodeViewer;
 import experimentGUI.plugins.codeViewerPlugin.recorder.RecorderPluginInterface;
 import experimentGUI.plugins.codeViewerPlugin.recorder.loggingTreeNode.LoggingTreeNode;
 import experimentGUI.plugins.codeViewerPlugin.tabbedPane.EditorPanel;
+import experimentGUI.util.language.UIElementNames;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 import experimentGUI.util.settingsComponents.SettingsComponentDescription;
 import experimentGUI.util.settingsComponents.SettingsPluginComponentDescription;
@@ -40,9 +41,9 @@ public class ScrollingPlugin implements RecorderPluginInterface {
 
 	@Override
 	public SettingsComponentDescription getSettingsComponentDescription() {
-		SettingsPluginComponentDescription resultDesc = new SettingsPluginComponentDescription(KEY, "Scrollverhalten", true);
-		SettingsPluginComponentDescription joinDesc = new SettingsPluginComponentDescription(KEY_JOIN, "Scrollvorgänge zusammenfassen", true);
-		SettingsComponentDescription joinTimeDesc = new SettingsComponentDescription(SettingsTextField.class,KEY_JOIN_TIME, "Grenzzeit (ms, z.B. 1000)");
+		SettingsPluginComponentDescription resultDesc = new SettingsPluginComponentDescription(KEY, UIElementNames.RECORDER_SCROLL_SCROLLING_BEHAVIOR, true);
+		SettingsPluginComponentDescription joinDesc = new SettingsPluginComponentDescription(KEY_JOIN, UIElementNames.RECORDER_SCROLL_SUMMARIZE_SCROLLING, true);
+		SettingsComponentDescription joinTimeDesc = new SettingsComponentDescription(SettingsTextField.class,KEY_JOIN_TIME, UIElementNames.RECORDER_TIME_INTERVAL_FOR_SUMMARY);
 		joinDesc.addSubComponent(joinTimeDesc);
 		resultDesc.addSubComponent(joinDesc);
 		return resultDesc;

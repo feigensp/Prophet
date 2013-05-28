@@ -16,6 +16,7 @@ import javax.swing.JTextField;
 import sun.misc.BASE64Decoder;
 
 import experimentGUI.util.VerticalLayout;
+import experimentGUI.util.language.UIElementNames;
 import experimentGUI.util.settingsComponents.SettingsComponent;
 
 public class PHPExportComponent extends SettingsComponent {
@@ -27,21 +28,21 @@ public class PHPExportComponent extends SettingsComponent {
 	private static final String sql = "LS0gcGhwTXlBZG1pbiBTUUwgRHVtcAotLSB2ZXJzaW9uIDIuMTEuOC4xZGViNStsZW5ueTYKLS0gaHR0cDovL3d3dy5waHBteWFkbWluLm5ldAotLQotLSBIb3N0OiBsb2NhbGhvc3QKLS0gRXJzdGVsbHVuZ3N6ZWl0OiAxNC4gRGV6ZW1iZXIgMjAxMCB1bSAyMzo0NgotLSBTZXJ2ZXIgVmVyc2lvbjogNS4wLjUxCi0tIFBIUC1WZXJzaW9uOiA1LjIuNi0xK2xlbm55OQoKU0VUIFNRTF9NT0RFPSJOT19BVVRPX1ZBTFVFX09OX1pFUk8iOwoKCi8qITQwMTAxIFNFVCBAT0xEX0NIQVJBQ1RFUl9TRVRfQ0xJRU5UPUBAQ0hBUkFDVEVSX1NFVF9DTElFTlQgKi87Ci8qITQwMTAxIFNFVCBAT0xEX0NIQVJBQ1RFUl9TRVRfUkVTVUxUUz1AQENIQVJBQ1RFUl9TRVRfUkVTVUxUUyAqLzsKLyohNDAxMDEgU0VUIEBPTERfQ09MTEFUSU9OX0NPTk5FQ1RJT049QEBDT0xMQVRJT05fQ09OTkVDVElPTiAqLzsKLyohNDAxMDEgU0VUIE5BTUVTIHV0ZjggKi87CgotLQotLSBEYXRlbmJhbms6IGBtYXJrdXNfcXVlbGx0ZXh0cHJvamAKLS0KCi0tIC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCgotLQotLSBUYWJlbGxlbnN0cnVrdHVyIGbDvHIgVGFiZWxsZSBgYW5zd2Vyc2AKLS0KCkNSRUFURSBUQUJMRSBJRiBOT1QgRVhJU1RTIGBhbnN3ZXJzYCAoCiAgYHN1YmplY3RgIGludCgxMSkgTk9UIE5VTEwsCiAgYG5vZGVgIGludCgxMSkgTk9UIE5VTEwsCiAgYGtleWAgdGV4dCBOT1QgTlVMTCwKICBgdmFsdWVgIHRleHQgTk9UIE5VTEwsCiAgUFJJTUFSWSBLRVkgIChgc3ViamVjdGAsYG5vZGVgKQopIEVOR0lORT1NeUlTQU0gREVGQVVMVCBDSEFSU0VUPXV0Zjg7CgotLSAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQoKLS0KLS0gVGFiZWxsZW5zdHJ1a3R1ciBmw7xyIFRhYmVsbGUgYGFuc3dlcnNfbWV0YWAKLS0KCkNSRUFURSBUQUJMRSBJRiBOT1QgRVhJU1RTIGBhbnN3ZXJzX21ldGFgICgKICBgc3ViamVjdGAgaW50KDExKSBOT1QgTlVMTCwKICBgbm9kZWAgaW50KDExKSBOT1QgTlVMTCwKICBgdGltZWAgaW50KDExKSBOT1QgTlVMTCwKICBQUklNQVJZIEtFWSAgKGBzdWJqZWN0YCxgbm9kZWApCikgRU5HSU5FPU15SVNBTSBERUZBVUxUIENIQVJTRVQ9dXRmODsKCi0tIC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCgotLQotLSBUYWJlbGxlbnN0cnVrdHVyIGbDvHIgVGFiZWxsZSBgZXhwZXJpbWVudHNgCi0tCgpDUkVBVEUgVEFCTEUgSUYgTk9UIEVYSVNUUyBgZXhwZXJpbWVudHNgICgKICBgaWRgIGludCgxMSkgTk9UIE5VTEwgYXV0b19pbmNyZW1lbnQsCiAgYGNvZGVgIHZhcmNoYXIoMjApIE5PVCBOVUxMLAogIGByb290X25vZGVgIGludCgxMSkgTk9UIE5VTEwsCiAgUFJJTUFSWSBLRVkgIChgaWRgKSwKICBLRVkgYGNvZGVgIChgY29kZWApCikgRU5HSU5FPU15SVNBTSBERUZBVUxUIENIQVJTRVQ9dXRmOCBBVVRPX0lOQ1JFTUVOVD0xIDsKCi0tIC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCgotLQotLSBUYWJlbGxlbnN0cnVrdHVyIGbDvHIgVGFiZWxsZSBgbm9kZXNgCi0tCgpDUkVBVEUgVEFCTEUgSUYgTk9UIEVYSVNUUyBgbm9kZXNgICgKICBgaWRgIGludCgxMSkgTk9UIE5VTEwsCiAgYGV4cGVyaW1lbnRgIGludCgxMSkgTk9UIE5VTEwsCiAgYG5hbWVgIHZhcmNoYXIoMjApIE5PVCBOVUxMLAogIGBjb250ZW50YCB0ZXh0IE5PVCBOVUxMLAogIGBub3Rlc2AgdGV4dCBOT1QgTlVMTCwKICBgcHJldmlvdXNgIGludCgxMSkgTk9UIE5VTEwgZGVmYXVsdCAnLTEnLAogIGBuZXh0YCBpbnQoMTEpIE5PVCBOVUxMIGRlZmF1bHQgJy0xJywKICBQUklNQVJZIEtFWSAgKGBpZGApLAogIEtFWSBgZXhwZXJpbWVudGAgKGBleHBlcmltZW50YCkKKSBFTkdJTkU9TXlJU0FNIERFRkFVTFQgQ0hBUlNFVD11dGY4OwoKLS0gLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KCi0tCi0tIFRhYmVsbGVuc3RydWt0dXIgZsO8ciBUYWJlbGxlIGBzdWJqZWN0YAotLQoKQ1JFQVRFIFRBQkxFIElGIE5PVCBFWElTVFMgYHN1YmplY3RgICgKICBgaWRgIGludCgxMSkgTk9UIE5VTEwgYXV0b19pbmNyZW1lbnQsCiAgYGV4cGVyaW1lbnRgIGludCgyMCkgTk9UIE5VTEwsCiAgYGNvZGVgIHZhcmNoYXIoMjApIE5PVCBOVUxMLAogIFBSSU1BUlkgS0VZICAoYGlkYCksCiAgS0VZIGBleHBlcmltZW50YCAoYGV4cGVyaW1lbnRgLGBjb2RlYCkKKSBFTkdJTkU9TXlJU0FNIERFRkFVTFQgQ0hBUlNFVD11dGY4IEFVVE9fSU5DUkVNRU5UPTEgOwo=";
 
 	public PHPExportComponent() {
-		setBorder(BorderFactory.createTitledBorder("PHP-Export"));
+		setBorder(BorderFactory.createTitledBorder(UIElementNames.PHP_PHP_EXPORT));
 		setLayout(new VerticalLayout(5, VerticalLayout.LEFT, VerticalLayout.TOP));
-		add(new JLabel("Host:"));
+		add(new JLabel(UIElementNames.PHP_HOST + ":"));
 		final JTextField serverField = new JTextField("localhost", 20);
 		add(serverField);
-		add(new JLabel("Datenbankname:"));
+		add(new JLabel(UIElementNames.PHP_NAME_OF_DATABASE + ":"));
 		final JTextField baseField = new JTextField(20);
 		add(baseField);
-		add(new JLabel("Benutzername:"));
+		add(new JLabel(UIElementNames.PHP_USER_NAME + ":"));
 		final JTextField userField = new JTextField(20);
 		add(userField);
-		add(new JLabel("Passwort:"));
+		add(new JLabel(UIElementNames.PHP_PASSWORD + ":"));
 		final JPasswordField passField = new JPasswordField(20);
 		add(passField);
-		JButton exportButton = new JButton("PHP-Skript Exportieren");
+		JButton exportButton = new JButton(UIElementNames.PHP_EXPORT_SCRIPT);
 		add(exportButton);
 
 		exportButton.addActionListener(new ActionListener() {
@@ -60,8 +61,8 @@ public class PHPExportComponent extends SettingsComponent {
 				int confirm = JOptionPane
 						.showConfirmDialog(
 								null,
-								"Das Passwort wird in Klartext gespeichert. Fortsetzen?",
-								"Bestätigung", JOptionPane.YES_NO_OPTION);
+								UIElementNames.PHP_DIALOG_UNENCRYPTED_PASSWORD_CONTINUE,
+								UIElementNames.PHP_DIALOG_TITLE_CONFIRM, JOptionPane.YES_NO_OPTION);
 				if (confirm == JOptionPane.NO_OPTION) {
 					return;
 				}
@@ -101,7 +102,7 @@ public class PHPExportComponent extends SettingsComponent {
 					config += "		or die('Selecting database failed: ' . mysql_error());\n";
 					config += "	?>";
 					writeToFile(dirName + "config.php", config.getBytes());
-					JOptionPane.showMessageDialog(null, "Fertig.");
+					JOptionPane.showMessageDialog(null, UIElementNames.PHP_MESSAGE_EXPORT_FINISHED);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}

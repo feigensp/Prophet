@@ -5,6 +5,7 @@ import java.awt.BorderLayout;
 import experimentGUI.PluginInterface;
 import experimentGUI.experimentViewer.ExperimentViewer;
 import experimentGUI.plugins.questionListPlugin.QuestionList;
+import experimentGUI.util.language.UIElementNames;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 import experimentGUI.util.settingsComponents.SettingsComponentDescription;
 import experimentGUI.util.settingsComponents.components.SettingsCheckBox;
@@ -20,7 +21,7 @@ public class QuestionListPlugin implements PluginInterface {
 	public SettingsComponentDescription getSettingsComponentDescription(
 			QuestionTreeNode node) {
 		if (node.isExperiment()) {
-			return new SettingsComponentDescription(SettingsCheckBox.class, KEY, "Fragenkatalog anzeigen");
+			return new SettingsComponentDescription(SettingsCheckBox.class, KEY, UIElementNames.QUESTION_LIST_SHOW_LIST);
 		}
 		return null;
 	}

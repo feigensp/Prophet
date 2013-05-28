@@ -21,6 +21,7 @@ import javax.mail.internet.MimeMultipart;
 import experimentGUI.PluginInterface;
 import experimentGUI.experimentViewer.ExperimentViewer;
 import experimentGUI.plugins.mailPlugin.ZipFile;
+import experimentGUI.util.language.UIElementNames;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 import experimentGUI.util.settingsComponents.SettingsComponentDescription;
 import experimentGUI.util.settingsComponents.SettingsPluginComponentDescription;
@@ -84,17 +85,17 @@ public class MailPlugin implements PluginInterface {
 	public SettingsComponentDescription getSettingsComponentDescription(QuestionTreeNode node) {
 		if (node.isExperiment()) {
 			SettingsPluginComponentDescription result = new SettingsPluginComponentDescription(KEY,
-					"E-Mail versenden", true);
+					UIElementNames.MAIL_SEND_MAIL, true);
 			result.addSubComponent(new SettingsComponentDescription(SettingsTextField.class, SMTP_SERVER,
-					"SMTP-Server:"));
+					UIElementNames.MAIL_SMTP_SERVER + ":"));
 			result.addSubComponent(new SettingsComponentDescription(SettingsTextField.class, SMTP_USER,
-					"SMTP-Benutzer:"));
+					UIElementNames.MAIL_SMTP_USER + ":"));
 			result.addSubComponent(new SettingsComponentDescription(SettingsPasswordField.class, SMTP_PASS,
-					"SMTP-Passwort:"));
+					UIElementNames.MAIL_SMTP_PASSWORD + ":"));
 			result.addSubComponent(new SettingsComponentDescription(SettingsTextField.class, SMTP_SENDER,
-					"Absender:"));
+					UIElementNames.MAIL_SMTP_SENDER + ":"));
 			result.addSubComponent(new SettingsComponentDescription(SettingsTextField.class, SMTP_RECEIVER,
-					"Empfänger:"));
+					UIElementNames.MAIL_SMTP_RECIPIENT + ":"));
 			return result;
 		}
 		return null;
@@ -145,11 +146,11 @@ public class MailPlugin implements PluginInterface {
 				File attachmentFile = new File(experimentViewer.getSaveDir().getName() + ".zip");
 				ZipFile.zipFiles(experimentViewer.getSaveDir(), attachmentFile);
 				if (!this.sendMail(experimentViewer.getSaveDir().getName(), "", attachmentFile)) {
-					return "E-Mail-Versand gescheitert. Bitte beim Versuchsleiter melden.";
+					return UIElementNames.MAIL_MESSAGE_COULD_NOT_SEND_MAIL;
 				}
 			}
 		} catch (Exception e) {
-			return "E-Mail-Versand gescheitert. Bitte beim Versuchsleiter melden.";
+			return UIElementNames.MAIL_MESSAGE_COULD_NOT_SEND_MAIL;
 		}
 		return null;
 	}

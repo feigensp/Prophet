@@ -14,6 +14,7 @@ import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import experimentGUI.util.language.UIElementNames;
 import experimentGUI.util.settingsComponents.SettingsComponent;
 
 public class SettingsFilePathChooser  extends SettingsComponent {
@@ -47,7 +48,7 @@ public class SettingsFilePathChooser  extends SettingsComponent {
 //		});
 		add(textField,BorderLayout.CENTER);
 		textField.setColumns(20);
-		pathButton = new JButton("Durchsuchen");
+		pathButton = new JButton(UIElementNames.BUTTON_LABEL_FIND);
 		add(pathButton,BorderLayout.EAST);
 		pathButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -74,7 +75,7 @@ public class SettingsFilePathChooser  extends SettingsComponent {
 					if (selectedPath.startsWith(currentPath)) {
 						selectedPath = selectedPath.substring(currentPath
 								.length() + 1);
-						JOptionPane.showMessageDialog(null, "Bitte beachten Sie:\nDie eben durchgeführte Aktion hat einen Pfad erzeugt, der relativ zum aktuellen Arbeitsverzeichnis steht. Sollte Ihre XML-Datei nicht unmittelbar im aktuellen Arbeitsverzeichnis liegen, müssen Sie den erzeugten Pfad anpassen.");
+						JOptionPane.showMessageDialog(null, UIElementNames.MESSAGE_RELATIVE_PATH_NOTIFICATION);
 					}
 					textField.setText(selectedPath.replace('\\','/'));					
 				}

@@ -12,6 +12,7 @@ import experimentGUI.plugins.codeViewerPlugin.CodeViewer;
 import experimentGUI.plugins.codeViewerPlugin.CodeViewerPluginInterface;
 import experimentGUI.plugins.codeViewerPlugin.Recorder;
 import experimentGUI.plugins.codeViewerPlugin.tabbedPane.EditorPanel;
+import experimentGUI.util.language.UIElementNames;
 import experimentGUI.util.questionTreeNode.QuestionTreeNode;
 import experimentGUI.util.settingsComponents.SettingsComponentDescription;
 import experimentGUI.util.settingsComponents.components.SettingsCheckBox;
@@ -23,7 +24,7 @@ public class SyntaxHighlightingPlugin implements CodeViewerPluginInterface {
 	
 	@Override
 	public SettingsComponentDescription getSettingsComponentDescription() {
-		return new SettingsComponentDescription(SettingsCheckBox.class,KEY, "Syntaxhighlighting einschalten");
+		return new SettingsComponentDescription(SettingsCheckBox.class,KEY, UIElementNames.SYNTAX_HIGHLIGHTING_ENABLE);
 	}
 
 	@Override

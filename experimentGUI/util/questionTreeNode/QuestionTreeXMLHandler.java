@@ -31,6 +31,7 @@ import org.xml.sax.SAXException;
 
 import experimentGUI.Constants;
 import experimentGUI.util.Pair;
+import experimentGUI.util.language.UIElementNames;
 
 public class QuestionTreeXMLHandler {
 	public final static String ATTRIBUTE_NAME = "name";
@@ -379,7 +380,7 @@ public class QuestionTreeXMLHandler {
 			}
 			bw.close();
 		} catch (IOException ioe) {
-			JOptionPane.showMessageDialog(null, "Fehler beim Speichern der CSV-Datei.");
+			JOptionPane.showMessageDialog(null, UIElementNames.QUESTION_TREE_XML_MESSAGE_ERROR_WHILE_WRITING_CSV);
 		}
 	}
 }
