@@ -2,10 +2,10 @@
 <project>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>de.uni_passau.infosun</groupId>
+    <groupId>de.uni_passau.fim.infosun</groupId>
     <artifactId>Prophet</artifactId>
-	<packaging>jar</packaging>
-	<name>Prophet</name>
+    <packaging>jar</packaging>
+    <name>Prophet</name>
     <version>1.0</version>
 
     <dependencies>
