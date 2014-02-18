@@ -1,4 +1,4 @@
-package test.experimentEditorDataVisualizer;
+package de.uni_passau.fim.infosun.prophet.experimentEditorDataVisualizer;
 
 public class VideoRecordController {
 //

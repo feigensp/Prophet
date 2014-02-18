@@ -31,8 +31,8 @@ public class FileTreeNode extends DefaultMutableTreeNode {
         if (!isFile) {
             File[] content = file.listFiles();
             Arrays.sort(content);
-            Vector<FileTreeNode> dirs = new Vector<FileTreeNode>();
-            Vector<FileTreeNode> files = new Vector<FileTreeNode>();
+            Vector<FileTreeNode> dirs = new Vector<>();
+            Vector<FileTreeNode> files = new Vector<>();
             for (File f : content) {
                 if (f.isDirectory()) {
                     dirs.add(new FileTreeNode(f, this.path, false));

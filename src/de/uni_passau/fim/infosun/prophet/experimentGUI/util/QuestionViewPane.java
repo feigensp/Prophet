@@ -209,20 +209,11 @@ public class QuestionViewPane extends JScrollPane {
                 return false;
             } else {
                 node = (QuestionTreeNode) node.getFirstChild();
-                if (!ExperimentViewer.denyEnterNode(node)) {
-                    return true;
-                }
-                return hasActiveNextNode(node);
+                return !ExperimentViewer.denyEnterNode(node) || hasActiveNextNode(node);
             }
         } else if (node.isQuestion()) {
             node = (QuestionTreeNode) node.getNextSibling();
-            if (node == null) {
-                return false;
-            }
-            if (!ExperimentViewer.denyEnterNode(node)) {
-                return true;
-            }
-            return hasActiveNextNode(node);
+            return node != null && (!ExperimentViewer.denyEnterNode(node) || hasActiveNextNode(node));
         } else {
             return false;
         }
@@ -231,13 +222,7 @@ public class QuestionViewPane extends JScrollPane {
     private boolean hasActivePreviousNode(QuestionTreeNode node) {
         if (node.isQuestion()) {
             node = (QuestionTreeNode) node.getPreviousSibling();
-            if (node == null) {
-                return false;
-            }
-            if (!ExperimentViewer.denyEnterNode(node)) {
-                return true;
-            }
-            return hasActivePreviousNode(node);
+            return node != null && (!ExperimentViewer.denyEnterNode(node) || hasActivePreviousNode(node));
         } else {
             return false;
         }

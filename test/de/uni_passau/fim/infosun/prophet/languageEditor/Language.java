@@ -1,4 +1,4 @@
-package test.languageEditor;
+package de.uni_passau.fim.infosun.prophet.languageEditor;
 
 import java.util.TreeMap;
 
@@ -35,14 +35,14 @@ public class Language {
     public static final String ATTRIBUTE_INTERPRETATION = "interpretation";
 
     public Language() {
-        localKeywords = new TreeMap<String, TreeMap<String, String>>();
+        localKeywords = new TreeMap<>();
     }
 
     public String put(String language, String key, String value) {
         if (localKeywords.containsKey(language)) {
             return localKeywords.get(language).put(key, value);
         } else {
-            TreeMap<String, String> treeMap = new TreeMap<String, String>();
+            TreeMap<String, String> treeMap = new TreeMap<>();
             treeMap.put(key, value);
             localKeywords.put(language, treeMap);
             return value;

@@ -61,7 +61,7 @@ public class SearchBarPlugin implements CodeViewerPluginInterface {
     public void onFrameCreate(CodeViewer v) {
         viewer = v;
         if (enabled) {
-            map = new HashMap<EditorPanel, SearchBar>();
+            map = new HashMap<>();
             JMenuItem findMenuItem = new JMenuItem(UIElementNames.SEARCH_BAR_MENU_SEARCH);
             findMenuItem.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F, java.awt.Event.CTRL_MASK));
             findMenuItem.addActionListener(new ActionListener() {

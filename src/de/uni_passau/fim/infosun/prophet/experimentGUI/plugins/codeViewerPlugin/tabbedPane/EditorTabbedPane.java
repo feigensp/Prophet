@@ -24,7 +24,7 @@ public class EditorTabbedPane extends JTabbedPane {
         this.selected = selected;
         this.showDir = showDir;
         this.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
-        editorPanels = new HashSet<EditorPanel>();
+        editorPanels = new HashSet<>();
         this.recorder = recorder;
     }
 

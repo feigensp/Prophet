@@ -53,7 +53,7 @@ public class CodeViewerPlugin implements PluginInterface {
     @Override
     public void experimentViewerRun(ExperimentViewer experimentViewer) {
         this.experimentViewer = experimentViewer;
-        codeViewers = new HashMap<QuestionTreeNode, CodeViewer>();
+        codeViewers = new HashMap<>();
     }
 
     @Override

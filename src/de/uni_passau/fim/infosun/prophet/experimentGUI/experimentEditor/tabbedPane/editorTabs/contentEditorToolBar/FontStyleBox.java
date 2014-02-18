@@ -24,14 +24,14 @@ public class FontStyleBox extends JComboBox implements ActionListener {
     public FontStyleBox(RSyntaxTextArea editArea) {
         super();
         this.editArea = editArea;
-        fontFace = new ArrayList<Pair<String, String>>();
-        fontFace.add(new Pair<String, String>(UIElementNames.FONT_FACE_BOLD, "b"));
-        fontFace.add(new Pair<String, String>(UIElementNames.FONT_FACE_ITALIC, "i"));
-        fontFace.add(new Pair<String, String>(UIElementNames.FONT_FACE_UNDERLINE, "u"));
+        fontFace = new ArrayList<>();
+        fontFace.add(new Pair<>(UIElementNames.FONT_FACE_BOLD, "b"));
+        fontFace.add(new Pair<>(UIElementNames.FONT_FACE_ITALIC, "i"));
+        fontFace.add(new Pair<>(UIElementNames.FONT_FACE_UNDERLINE, "u"));
 
         this.addItem(UIElementNames.MENU_TAB_EDITOR_FONT_FACE);
-        for (int i = 0; i < fontFace.size(); i++) {
-            this.addItem(fontFace.get(i).getKey());
+        for (Pair<String, String> aFontFace : fontFace) {
+            this.addItem(aFontFace.getKey());
         }
         this.addActionListener(this);
     }

@@ -34,9 +34,9 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settingsComponents.c
 @SuppressWarnings("serial")
 public class SettingsEditorPanel extends ExperimentEditorTab {
 
-    private HashMap<QuestionTreeNode, JScrollPane> scrollPanes = new HashMap<QuestionTreeNode, JScrollPane>();
+    private HashMap<QuestionTreeNode, JScrollPane> scrollPanes = new HashMap<>();
     private HashMap<QuestionTreeNode, ArrayList<SettingsComponent>> settingsComponents =
-            new HashMap<QuestionTreeNode, ArrayList<SettingsComponent>>();
+            new HashMap<>();
     private QuestionTreeNode selected;
 
     /**

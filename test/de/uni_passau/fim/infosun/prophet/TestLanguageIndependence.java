@@ -61,8 +61,8 @@ public class TestLanguageIndependence {
 
         Locale[] supportedLocales = {Locale.FRENCH, Locale.GERMAN, Locale.ENGLISH};
 
-        for (int i = 0; i < supportedLocales.length; i++) {
-            displayValue(supportedLocales[i], "s2");
+        for (Locale supportedLocale : supportedLocales) {
+            displayValue(supportedLocale, "s2");
         }
 
         System.out.println();

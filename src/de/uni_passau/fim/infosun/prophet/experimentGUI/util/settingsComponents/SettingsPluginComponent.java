@@ -13,7 +13,7 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.util.VerticalLayout;
 @SuppressWarnings("serial")
 public class SettingsPluginComponent extends SettingsComponent {
 
-    private Vector<SettingsComponent> subSettingsComponents = new Vector<SettingsComponent>();
+    private Vector<SettingsComponent> subSettingsComponents = new Vector<>();
     private JPanel optionPanel;
     private JCheckBox activatedCheckBox;
 

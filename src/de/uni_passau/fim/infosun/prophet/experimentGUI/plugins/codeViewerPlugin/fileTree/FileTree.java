@@ -59,7 +59,7 @@ public class FileTree extends JScrollPane {
      */
     public void addFileListener(FileListener l) {
         if (fileListeners == null) {
-            fileListeners = new Vector<FileListener>();
+            fileListeners = new Vector<>();
         }
         fileListeners.addElement(l);
     }
@@ -76,7 +76,7 @@ public class FileTree extends JScrollPane {
         }
         FileEvent event = new FileEvent(this, FileEvent.FILE_OPENED, filePath);
         for (Enumeration<FileListener> e = fileListeners.elements(); e.hasMoreElements(); ) {
-            ((FileListener) e.nextElement()).fileEventOccured(event);
+            e.nextElement().fileEventOccured(event);
         }
     }
 
@@ -84,7 +84,7 @@ public class FileTree extends JScrollPane {
         if (path.startsWith(System.getProperty("file.separator"))) {
             path = path.substring(System.getProperty("file.separator").length());
         }
-        ArrayList<String> pathElements = new ArrayList<String>();
+        ArrayList<String> pathElements = new ArrayList<>();
         if (root != null) {
             pathElements.add(root.toString());
             int pos = path.indexOf(System.getProperty("file.separator"));
@@ -94,12 +94,12 @@ public class FileTree extends JScrollPane {
                 pos = path.indexOf(System.getProperty("file.separator"));
             }
             pathElements.add(path);
-            ArrayList<Object> treePathList = new ArrayList<Object>();
+            ArrayList<Object> treePathList = new ArrayList<>();
             treePathList.add(root);
             FileTreeNode currentNode = root;
-            for (int i = 0; i < pathElements.size(); i++) {
+            for (String pathElement : pathElements) {
                 for (int j = 0; j < currentNode.getChildCount(); j++) {
-                    if (currentNode.getChildAt(j).toString().equals(pathElements.get(i))) {
+                    if (currentNode.getChildAt(j).toString().equals(pathElement)) {
                         currentNode = (FileTreeNode) currentNode.getChildAt(j);
                         treePathList.add(currentNode);
                         break;

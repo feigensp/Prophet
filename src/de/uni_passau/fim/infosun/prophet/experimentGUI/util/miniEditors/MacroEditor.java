@@ -22,7 +22,6 @@ import javax.swing.event.MouseInputAdapter;
 import javax.swing.event.MouseInputListener;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.TransformerFactoryConfigurationError;
@@ -229,11 +228,7 @@ public class MacroEditor extends JFrame {
                         TransformerFactory.newInstance().newTransformer()
                                 .transform(new DOMSource(xmlTree), new StreamResult("macro.xml"));
                     }
-                } catch (TransformerConfigurationException e1) {
-                    e1.printStackTrace();
-                } catch (TransformerException e1) {
-                    e1.printStackTrace();
-                } catch (TransformerFactoryConfigurationError e1) {
+                } catch (TransformerFactoryConfigurationError | TransformerException e1) {
                     e1.printStackTrace();
                 }
             }
@@ -273,7 +268,7 @@ public class MacroEditor extends JFrame {
      * load the data from macro.xml
      */
     private void loadMacros() {
-        macros = new ArrayList<Pair<String, String>>();
+        macros = new ArrayList<>();
         try {
             Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse("macro.xml");
             Node xmlRoot = doc.getFirstChild();
@@ -287,11 +282,7 @@ public class MacroEditor extends JFrame {
                 makroContent = child.getTextContent();
                 addMacro(makroName, makroContent);
             }
-        } catch (SAXException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParserConfigurationException e) {
+        } catch (SAXException | ParserConfigurationException | IOException e) {
             e.printStackTrace();
         }
     }
@@ -305,7 +296,7 @@ public class MacroEditor extends JFrame {
      *         content of the macro
      */
     private void addMacro(String macroName, String makroContent) {
-        macros.add(new Pair<String, String>(macroName, makroContent));
+        macros.add(new Pair<>(macroName, makroContent));
         listModel.addElement(macroName);
     }
 
@@ -331,7 +322,7 @@ public class MacroEditor extends JFrame {
      *         content of the macro
      */
     private void insertMacro(int index, String macroName, String macroContent) {
-        macros.add(index, new Pair<String, String>(macroName, macroContent));
+        macros.add(index, new Pair<>(macroName, macroContent));
         listModel.add(index, macroName);
     }
 

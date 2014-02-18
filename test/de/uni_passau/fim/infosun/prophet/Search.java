@@ -56,7 +56,7 @@ public class Search extends JPanel implements KeyListener, ActionListener, Mouse
         this.textarea = textarea;
         this.word = "";
         lastPos = -1;
-        v = new Vector<Integer>();
+        v = new Vector<>();
 
         search_lbl_close = new JLabel("x");
         JLabel search_lbl_suchen = new JLabel("Suchen:");
@@ -247,7 +247,7 @@ public class Search extends JPanel implements KeyListener, ActionListener, Mouse
      */
     public boolean setWord(String word) {
         this.word = word;
-        return word.equals("") ? false : true;
+        return !word.equals("");
     }
 
     /*

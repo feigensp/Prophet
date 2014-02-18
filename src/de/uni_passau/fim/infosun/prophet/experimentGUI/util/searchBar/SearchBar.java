@@ -48,7 +48,7 @@ public class SearchBar extends JToolBar implements ActionListener {
     private JCheckBox regexCB = new JCheckBox(CAPTION_REGEX);
     private JCheckBox matchCaseCB = new JCheckBox(CAPTION_MATCH_CASE);
 
-    private Vector<SearchBarListener> listeners = new Vector<SearchBarListener>();
+    private Vector<SearchBarListener> listeners = new Vector<>();
 
     public void addSearchBarListener(SearchBarListener l) {
         listeners.add(l);
@@ -111,12 +111,15 @@ public class SearchBar extends JToolBar implements ActionListener {
 
         boolean forward = false;
 
-        if (command.equals(ACTION_NEXT)) {
-            forward = true;
-        } else if (command.equals(ACTION_PREVIOUS)) {
-            forward = false;
-        } else {
-            return;
+        switch (command) {
+            case ACTION_NEXT:
+                forward = true;
+                break;
+            case ACTION_PREVIOUS:
+                forward = false;
+                break;
+            default:
+                return;
         }
 
         SearchContext searchContext = new SearchContext();

@@ -79,12 +79,7 @@ public class MaxTimePlugin implements PluginInterface {
         }
 
         private void action() {
-            boolean affected;
-            if (node != null) {
-                affected = isTimeOutAffectedBy(currentNode, node);
-            } else {
-                affected = true;
-            }
+            boolean affected = node == null || isTimeOutAffectedBy(currentNode, node);
 
             if (message != null && message.length() > 0) {
                 if (affected) {
@@ -124,9 +119,9 @@ public class MaxTimePlugin implements PluginInterface {
 
     private ExperimentViewer experimentViewer;
 
-    private HashMap<QuestionTreeNode, String> allMessages = new HashMap<QuestionTreeNode, String>();
-    private HashMap<QuestionTreeNode, Vector<TimeOut>> allClocks = new HashMap<QuestionTreeNode, Vector<TimeOut>>();
-    private HashSet<QuestionTreeNode> timeOuts = new HashSet<QuestionTreeNode>();
+    private HashMap<QuestionTreeNode, String> allMessages = new HashMap<>();
+    private HashMap<QuestionTreeNode, Vector<TimeOut>> allClocks = new HashMap<>();
+    private HashSet<QuestionTreeNode> timeOuts = new HashSet<>();
 
     private QuestionTreeNode experimentNode;
     private QuestionTreeNode currentNode;
@@ -224,7 +219,7 @@ public class MaxTimePlugin implements PluginInterface {
             }
             QuestionTreeNode pluginNode = node.getAttribute(KEY);
 
-            nodeClocks = new Vector<TimeOut>();
+            nodeClocks = new Vector<>();
             allClocks.put(node, nodeClocks);
 
             long maxTime = Long.parseLong(pluginNode.getAttributeValue(KEY_MAX_TIME));

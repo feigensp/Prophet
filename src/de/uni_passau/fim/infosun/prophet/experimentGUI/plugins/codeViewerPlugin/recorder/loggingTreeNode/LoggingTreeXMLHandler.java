@@ -80,9 +80,7 @@ public class LoggingTreeXMLHandler {
                 TransformerFactory.newInstance().newTransformer()
                         .transform(new DOMSource(xmlTree), new StreamResult(path));
             }
-        } catch (Exception e1) {
-            e1.printStackTrace();
-        } catch (Error e1) {
+        } catch (Exception | Error e1) {
             e1.printStackTrace();
         }
     }
@@ -127,11 +125,7 @@ public class LoggingTreeXMLHandler {
             // Wurzel holen
             Node xmlRoot = doc.getFirstChild();
             return loadXMLNode(xmlRoot);
-        } catch (SAXException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParserConfigurationException e) {
+        } catch (SAXException | ParserConfigurationException | IOException e) {
             e.printStackTrace();
         }
         return null;

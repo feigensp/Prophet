@@ -22,7 +22,7 @@ import org.fife.ui.rtextarea.RTextScrollPane;
 public class NoteEditorPanel extends ExperimentEditorTab {
 
     private HashMap<QuestionTreeNode, RTextScrollPane> scrollPanes;
-    private HashMap<QuestionTreeNode, RSyntaxTextArea> editAreas = new HashMap<QuestionTreeNode, RSyntaxTextArea>();
+    private HashMap<QuestionTreeNode, RSyntaxTextArea> editAreas = new HashMap<>();
     private QuestionTreeNode selected;
     public final static String KEY_NOTES = "notes";
 
@@ -32,7 +32,7 @@ public class NoteEditorPanel extends ExperimentEditorTab {
     public NoteEditorPanel() {
         setLayout(new BorderLayout());
         this.setOpaque(false);
-        scrollPanes = new HashMap<QuestionTreeNode, RTextScrollPane>();
+        scrollPanes = new HashMap<>();
     }
 
     /**

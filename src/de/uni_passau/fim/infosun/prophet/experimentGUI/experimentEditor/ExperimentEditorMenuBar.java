@@ -99,7 +99,6 @@ public class ExperimentEditorMenuBar extends JMenuBar {
                     } catch (FileNotFoundException e) {
                         JOptionPane.showMessageDialog(experimentEditor, UIElementNames.MESSAGE_FILE_NOT_FOUND,
                                 UIElementNames.MESSAGE_ERROR, JOptionPane.ERROR_MESSAGE);
-                        return;
                     }
                 }
             }
@@ -181,7 +180,7 @@ public class ExperimentEditorMenuBar extends JMenuBar {
                     QuestionTreeNode experimentNode = experimentEditor.getTreeComponent().getRoot();
                     ArrayList<Pair<QuestionTreeNode, ArrayList<Pair<String, String>>>> formInfos =
                             QuestionTreeHTMLHandler.getForms(experimentNode);
-                    ArrayList<QuestionTreeNode> answerNodes = new ArrayList<QuestionTreeNode>();
+                    ArrayList<QuestionTreeNode> answerNodes = new ArrayList<>();
                     String experimentCode = experimentNode.getAttributeValue(Constants.KEY_EXPERIMENT_CODE);
                     // Antwortdateien ermitteln
                     String path = currentFile.getCanonicalPath();
@@ -301,8 +300,7 @@ public class ExperimentEditorMenuBar extends JMenuBar {
     private void getAnswerFiles(File file, ArrayList<QuestionTreeNode> answerNodes, String experimentCode,
             boolean search) {
         File[] directoryFiles = file.listFiles();
-        for (int i = 0; i < directoryFiles.length; i++) {
-            File currentFile = directoryFiles[i];
+        for (File currentFile : directoryFiles) {
             if (currentFile.isDirectory()) {
                 if (currentFile.getName().startsWith(experimentCode + "_")) {
                     getAnswerFiles(currentFile, answerNodes, experimentCode, true);

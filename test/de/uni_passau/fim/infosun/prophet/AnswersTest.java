@@ -27,7 +27,7 @@ public class AnswersTest extends JFrame implements ActionListener {
     public static final String[] ATTRIBUTES = {"id", "type", "weight", "answer"};
     public static final int[] PRIMARY_ATTRIBUTES = {0, 2, 3};
 
-    private ArrayList<HashMap<String, String>> elements = new ArrayList<HashMap<String, String>>();
+    private ArrayList<HashMap<String, String>> elements = new ArrayList<>();
 
     /**
      * Launch the application.
@@ -73,8 +73,8 @@ public class AnswersTest extends JFrame implements ActionListener {
     public void printAnswerSpecifications() {
         System.out.println("Antworten: ");
         for (HashMap<String, String> hm : elements) {
-            for (int i = 0; i < ATTRIBUTES.length; i++) {
-                System.out.print(ATTRIBUTES[i] + ":" + hm.get(ATTRIBUTES[i]));
+            for (String ATTRIBUTE : ATTRIBUTES) {
+                System.out.print(ATTRIBUTE + ":" + hm.get(ATTRIBUTE));
                 System.out.print(" - ");
             }
             System.out.println();
@@ -107,15 +107,15 @@ public class AnswersTest extends JFrame implements ActionListener {
 //				System.out.println();
                 //check if primary attributes are available
                 boolean store = true;
-                for (int i = 0; i < PRIMARY_ATTRIBUTES.length; i++) {
-                    if (attributesContent[PRIMARY_ATTRIBUTES[i]] == null) {
+                for (int PRIMARY_ATTRIBUTE : PRIMARY_ATTRIBUTES) {
+                    if (attributesContent[PRIMARY_ATTRIBUTE] == null) {
                         store = false;
                         break;
                     }
                 }
                 //if primary attributes are present store the important attributes
                 if (store) {
-                    HashMap<String, String> hm = new HashMap<String, String>();
+                    HashMap<String, String> hm = new HashMap<>();
                     for (int i = 0; i < ATTRIBUTES.length; i++) {
                         hm.put(ATTRIBUTES[i], attributesContent[i]);
                     }

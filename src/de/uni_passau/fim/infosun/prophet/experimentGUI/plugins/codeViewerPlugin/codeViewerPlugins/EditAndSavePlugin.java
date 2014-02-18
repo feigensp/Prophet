@@ -51,7 +51,7 @@ public class EditAndSavePlugin implements CodeViewerPluginInterface {
         if (editable) {
             tabbedPane = viewer.getTabbedPane();
             saveDir = new File(viewer.getSaveDir().getPath() + System.getProperty("file.separator") + "savedFiles");
-            isChanged = new HashMap<EditorPanel, Boolean>();
+            isChanged = new HashMap<>();
             JMenuItem saveMenuItem = new JMenuItem(UIElementNames.EDIT_AND_SAVE_SAVE);
             saveMenuItem.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.Event.CTRL_MASK));
             viewer.addMenuItemToFileMenu(saveMenuItem);
@@ -172,7 +172,7 @@ public class EditAndSavePlugin implements CodeViewerPluginInterface {
     public void onEditorPanelClose(EditorPanel editorPanel) {
         if (editable) {
             Boolean changed = isChanged.get(editorPanel);
-            if (changed != null && changed.booleanValue()) {
+            if (changed != null && changed) {
                 int n = JOptionPane.showConfirmDialog(null, UIElementNames.EDIT_AND_SAVE_DIALOG_SAVE_CHANGES + "?",
                         UIElementNames.EDIT_AND_SAVE_SAVE + "?", JOptionPane.YES_NO_OPTION);
                 if (n == JOptionPane.YES_OPTION) {
@@ -192,7 +192,7 @@ public class EditAndSavePlugin implements CodeViewerPluginInterface {
                 if (myComp instanceof EditorPanel) {
                     Boolean changed = isChanged.get(myComp);
                     System.out.println(changed);
-                    if (changed != null && changed.booleanValue()) {
+                    if (changed != null && changed) {
                         ask = true;
                         break;
                     }

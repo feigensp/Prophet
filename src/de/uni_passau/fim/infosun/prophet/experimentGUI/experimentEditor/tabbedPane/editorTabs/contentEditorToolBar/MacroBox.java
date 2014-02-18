@@ -26,7 +26,7 @@ public class MacroBox extends JComboBox {
     private RSyntaxTextArea textPane;
 
     public MacroBox(RSyntaxTextArea textP) {
-        macros = new ArrayList<String>();
+        macros = new ArrayList<>();
         textPane = textP;
         addItem(UIElementNames.MENU_TAB_EDITOR_MACROS);
         addActionListener(new ActionListener() {
@@ -102,11 +102,7 @@ public class MacroBox extends JComboBox {
                 this.addItem(macroName);
                 macros.add(macroContent);
             }
-        } catch (SAXException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParserConfigurationException e) {
+        } catch (SAXException | ParserConfigurationException | IOException e) {
             e.printStackTrace();
         }
     }

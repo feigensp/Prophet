@@ -111,8 +111,7 @@ public class ShowCIDECodePlugin implements CodeViewerPluginInterface {
                 whitespaces = createWhitespaceString(maxParallelFeatures);
                 fileColoringInfos = correctXMLOffset(fileColoringInfos, editorPanel.getTextArea(), whitespaces);
                 addWhitespaces(whitespaces, editorPanel.getTextArea());
-                for (int i = 0; i < fileColoringInfos.size(); i++) {
-                    Triple<Integer, Integer, ArrayList<String>> infos = fileColoringInfos.get(i);
+                for (Triple<Integer, Integer, ArrayList<String>> infos : fileColoringInfos) {
                     int offset = infos.getKey();
                     int length = infos.getValue1();
                     ArrayList<String> features = infos.getValue2();
@@ -146,7 +145,7 @@ public class ShowCIDECodePlugin implements CodeViewerPluginInterface {
         //Get Features
         Iterator<ArrayList<Triple<Integer, Integer, ArrayList<String>>>> colorInfosIterator =
                 coloringInfos.values().iterator();
-        HashSet<String> features = new HashSet<String>();
+        HashSet<String> features = new HashSet<>();
         while (colorInfosIterator.hasNext()) {
             for (Triple<Integer, Integer, ArrayList<String>> fragmentInfos : colorInfosIterator.next()) {
                 for (String featureName : fragmentInfos.getValue2()) {
@@ -189,7 +188,7 @@ public class ShowCIDECodePlugin implements CodeViewerPluginInterface {
 //				System.out.println("old Data: offset="+triple.getKey() + " : length="+triple.getValue1());
 //				System.out.println("new Data: offset="+newOffset+" : length="+newLength);
 //				System.out.println();
-                infos.set(i, new Triple<Integer, Integer, ArrayList<String>>(newOffset, newLength, triple.getValue2()));
+                infos.set(i, new Triple<>(newOffset, newLength, triple.getValue2()));
             } catch (BadLocationException e) {
                 e.printStackTrace();
             }
@@ -221,7 +220,7 @@ public class ShowCIDECodePlugin implements CodeViewerPluginInterface {
     private HashMap<String, ArrayList<Triple<Integer, Integer, ArrayList<String>>>> loadXMLTree(String path)
             throws FileNotFoundException {
         HashMap<String, ArrayList<Triple<Integer, Integer, ArrayList<String>>>> infos =
-                new HashMap<String, ArrayList<Triple<Integer, Integer, ArrayList<String>>>>();
+                new HashMap<>();
         File file = new File(path);
         if (!file.exists()) {
             throw new FileNotFoundException();
@@ -236,11 +235,7 @@ public class ShowCIDECodePlugin implements CodeViewerPluginInterface {
                     filesAndDirs(projectList.item(i).getChildNodes(), "", infos);
                 }
             }
-        } catch (SAXException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParserConfigurationException e) {
+        } catch (SAXException | ParserConfigurationException | IOException e) {
             e.printStackTrace();
         }
         return infos;
@@ -275,7 +270,7 @@ public class ShowCIDECodePlugin implements CodeViewerPluginInterface {
                         System.err.print("corrupt xml file");
                     }
                     // Features
-                    ArrayList<String> features = new ArrayList<String>();
+                    ArrayList<String> features = new ArrayList<>();
                     NodeList featureList = fragment.getChildNodes();
                     for (int j = 0; j < featureList.getLength(); j++) {
                         if (!featureList.item(j).getNodeName().equals("#text")) {
@@ -285,7 +280,7 @@ public class ShowCIDECodePlugin implements CodeViewerPluginInterface {
                     if (infos.get(path) == null) {
                         infos.put(path, new ArrayList<Triple<Integer, Integer, ArrayList<String>>>());
                     }
-                    infos.get(path).add(new Triple<Integer, Integer, ArrayList<String>>(offset, length, features));
+                    infos.get(path).add(new Triple<>(offset, length, features));
                 }
             }
         }

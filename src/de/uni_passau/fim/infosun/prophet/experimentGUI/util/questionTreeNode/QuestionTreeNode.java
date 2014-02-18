@@ -30,8 +30,8 @@ public class QuestionTreeNode extends DefaultMutableTreeNode {
 
     public QuestionTreeNode(String t, String n) {
         value = "";
-        attributes = new TreeMap<String, QuestionTreeNode>();
-        answers = new TreeMap<String, String>();
+        attributes = new TreeMap<>();
+        answers = new TreeMap<>();
 
         type = "(default)";
         setType(t);

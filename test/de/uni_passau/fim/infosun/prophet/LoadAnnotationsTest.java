@@ -37,7 +37,7 @@ public class LoadAnnotationsTest {
     public static HashMap<String, ArrayList<Triple<Integer, Integer, ArrayList<String>>>> loadXMLTree(String path)
             throws FileNotFoundException {
         HashMap<String, ArrayList<Triple<Integer, Integer, ArrayList<String>>>> infos =
-                new HashMap<String, ArrayList<Triple<Integer, Integer, ArrayList<String>>>>();
+                new HashMap<>();
         File file = new File(path);
         if (!file.exists()) {
             throw new FileNotFoundException();
@@ -52,11 +52,7 @@ public class LoadAnnotationsTest {
                     filesAndDirs(projectList.item(i).getChildNodes(), "", infos);
                 }
             }
-        } catch (SAXException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParserConfigurationException e) {
+        } catch (SAXException | ParserConfigurationException | IOException e) {
             e.printStackTrace();
         }
         Iterator<String> paths = infos.keySet().iterator();
@@ -106,7 +102,7 @@ public class LoadAnnotationsTest {
                         System.err.print("corrupt xml file");
                     }
                     // Features
-                    ArrayList<String> features = new ArrayList<String>();
+                    ArrayList<String> features = new ArrayList<>();
                     NodeList featureList = fragment.getChildNodes();
                     for (int j = 0; j < featureList.getLength(); j++) {
                         if (!featureList.item(j).getNodeName().equals("#text")) {
@@ -116,7 +112,7 @@ public class LoadAnnotationsTest {
                     if (infos.get(path) == null) {
                         infos.put(path, new ArrayList<Triple<Integer, Integer, ArrayList<String>>>());
                     }
-                    infos.get(path).add(new Triple<Integer, Integer, ArrayList<String>>(offset, length, features));
+                    infos.get(path).add(new Triple<>(offset, length, features));
                 }
             }
         }

@@ -1,4 +1,4 @@
-package test.languageEditor;
+package de.uni_passau.fim.infosun.prophet.languageEditor;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -12,7 +12,6 @@ import java.awt.event.ItemListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.File;
-import java.util.Iterator;
 import java.util.TreeMap;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -90,7 +89,7 @@ public class LanguageEditor extends JFrame {
      */
     public LanguageEditor() {
         // initialise the data structures
-        keywords = new TreeMap<String, TreeMap<String, String>>();
+        keywords = new TreeMap<>();
         path = null;
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -372,9 +371,8 @@ public class LanguageEditor extends JFrame {
                 String lanName = (String) comboBox.getSelectedItem();
                 if (lanName != null) {
                     listModel.clear();
-                    Iterator<String> keywordIterator = keywords.get(lanName).keySet().iterator();
-                    while (keywordIterator.hasNext()) {
-                        listModel.addElement(keywordIterator.next());
+                    for (String s : keywords.get(lanName).keySet()) {
+                        listModel.addElement(s);
                     }
                     testEnabling();
                 }
@@ -422,17 +420,14 @@ public class LanguageEditor extends JFrame {
     private void showInfos() {
         boxModel.removeAllElements();
 
-        Iterator<String> languageIterator = keywords.keySet().iterator();
-        while (languageIterator.hasNext()) {
-            boxModel.addElement(languageIterator.next());
+        for (String s : keywords.keySet()) {
+            boxModel.addElement(s);
         }
         comboBox.setSelectedIndex(0);
         String lanName = comboBox.getSelectedItem().toString();
         list.clearSelection();
         listModel.removeAllElements();
-        Iterator<String> keywordIterator = keywords.get(lanName).keySet().iterator();
-        while (keywordIterator.hasNext()) {
-            String keyword = keywordIterator.next();
+        for (String keyword : keywords.get(lanName).keySet()) {
             listModel.addElement(keyword);
         }
         testEnabling();

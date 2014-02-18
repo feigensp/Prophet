@@ -56,7 +56,7 @@ public class GlobalSearchBar extends JToolBar implements ActionListener {
     private FileTree tree;
     private CodeViewer viewer;
 
-    private Vector<SearchBarListener> listeners = new Vector<SearchBarListener>();
+    private Vector<SearchBarListener> listeners = new Vector<>();
 
     public void addSearchBarListener(SearchBarListener l) {
         listeners.add(l);

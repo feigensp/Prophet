@@ -13,7 +13,7 @@ public class LoggingTreeNode extends DefaultMutableTreeNode {
 
     private String type = "(default)";
 
-    private TreeMap<String, String> attributes = new TreeMap<String, String>();
+    private TreeMap<String, String> attributes = new TreeMap<>();
 
     long answerTime = 0;
 

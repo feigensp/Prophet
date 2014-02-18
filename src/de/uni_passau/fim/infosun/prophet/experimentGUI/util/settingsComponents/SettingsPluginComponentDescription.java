@@ -6,7 +6,7 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTreeNode.Que
 
 public class SettingsPluginComponentDescription extends SettingsComponentDescription {
 
-    private Vector<SettingsComponentDescription> subComponents = new Vector<SettingsComponentDescription>();
+    private Vector<SettingsComponentDescription> subComponents = new Vector<>();
 
     private boolean enableable;
 

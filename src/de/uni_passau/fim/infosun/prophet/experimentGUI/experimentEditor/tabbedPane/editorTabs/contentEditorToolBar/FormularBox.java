@@ -19,7 +19,7 @@ public class FormularBox extends JComboBox implements ActionListener {
     public FormularBox(RSyntaxTextArea editArea) {
         super();
         this.editArea = editArea;
-        forms = new ArrayList<String>();
+        forms = new ArrayList<>();
         forms.add(UIElementNames.HTML_TEXT_FIELD); // index 1
         forms.add(UIElementNames.HTML_TEXT_AREA); // index 2
         forms.add(UIElementNames.HTML_LIST); // index 3
@@ -28,8 +28,8 @@ public class FormularBox extends JComboBox implements ActionListener {
         forms.add(UIElementNames.HTML_CHECK_BOX); // index 6
 
         this.addItem(UIElementNames.MENU_TAB_EDITOR_FORMS);
-        for (int i = 0; i < forms.size(); i++) {
-            this.addItem(forms.get(i));
+        for (String form : forms) {
+            this.addItem(form);
         }
         this.addActionListener(this);
     }
@@ -60,9 +60,9 @@ public class FormularBox extends JComboBox implements ActionListener {
                 if (listInfos != null) {
                     String[] listEntrys = listInfos.getValue().split(System.getProperty("line.separator"));
                     String list = "";
-                    for (int i = 0; i < listEntrys.length; i++) {
-                        list += System.getProperty("line.separator") + "<option value=\"" + listEntrys[i] + "\">"
-                                + listEntrys[i] + "</option>";
+                    for (String listEntry : listEntrys) {
+                        list += System.getProperty("line.separator") + "<option value=\"" + listEntry + "\">"
+                                + listEntry + "</option>";
                     }
                     editArea.replaceSelection("<select name=\"" + listInfos.getKey() + "\" id=\"" + listInfos.getKey()
                             + "\" size=\"3\" multiple>" + list + System.getProperty("line.separator") + "</select>");
@@ -74,9 +74,9 @@ public class FormularBox extends JComboBox implements ActionListener {
                 if (comboInfos != null) {
                     String[] comboEntrys = comboInfos.getValue().split(System.getProperty("line.separator"));
                     String combos = "";
-                    for (int i = 0; i < comboEntrys.length; i++) {
-                        combos += System.getProperty("line.separator") + "<option value=\"" + comboEntrys[i] + "\">"
-                                + comboEntrys[i] + "</option>";
+                    for (String comboEntry : comboEntrys) {
+                        combos += System.getProperty("line.separator") + "<option value=\"" + comboEntry + "\">"
+                                + comboEntry + "</option>";
                     }
                     editArea.replaceSelection(
                             "<select name=\"" + comboInfos.getKey() + "\" id=\"" + comboInfos.getKey() + "\">" + combos
@@ -89,10 +89,10 @@ public class FormularBox extends JComboBox implements ActionListener {
                 if (radioInfos != null) {
                     String[] radioEntrys = radioInfos.getValue().split(System.getProperty("line.separator"));
                     String radios = "";
-                    for (int i = 0; i < radioEntrys.length; i++) {
+                    for (String radioEntry : radioEntrys) {
                         radios +=
                                 "<input type=\"radio\" name=\"" + radioInfos.getKey() + "\" id=\"" + radioInfos.getKey()
-                                        + "\" value=\"" + radioEntrys[i] + "\">" + radioEntrys[i] + "<br>" + System
+                                        + "\" value=\"" + radioEntry + "\">" + radioEntry + "<br>" + System
                                         .getProperty("line.separator");
                     }
                     editArea.replaceSelection(radios);
@@ -104,9 +104,9 @@ public class FormularBox extends JComboBox implements ActionListener {
                 if (checkInfos != null) {
                     String[] checkEntrys = checkInfos.getValue().split(System.getProperty("line.separator"));
                     String checks = "";
-                    for (int i = 0; i < checkEntrys.length; i++) {
+                    for (String checkEntry : checkEntrys) {
                         checks += "<input type=\"checkbox\" name=\"" + checkInfos.getKey() + "\" id=\"" + checkInfos
-                                .getKey() + "\" value=\"" + checkEntrys[i] + "\">" + checkEntrys[i] + "<br>" + System
+                                .getKey() + "\" value=\"" + checkEntry + "\">" + checkEntry + "<br>" + System
                                 .getProperty("line.separator");
                     }
                     editArea.replaceSelection(checks);

@@ -31,15 +31,15 @@ public class ContentEditorPanel extends ExperimentEditorTab {
     /**
      * Storage of all EditorPanels, let the user continue where he left the node/tab
      */
-    private HashMap<QuestionTreeNode, JPanel> editPanels = new HashMap<QuestionTreeNode, JPanel>();
+    private HashMap<QuestionTreeNode, JPanel> editPanels = new HashMap<>();
     /**
      * Storage of all text editor areas, used to save the current work
      */
-    private HashMap<QuestionTreeNode, RSyntaxTextArea> editAreas = new HashMap<QuestionTreeNode, RSyntaxTextArea>();
+    private HashMap<QuestionTreeNode, RSyntaxTextArea> editAreas = new HashMap<>();
     /**
      * Storage of all search bars, used to delegate the search operation to the correct bar
      */
-    private HashMap<QuestionTreeNode, SearchBar> searchBars = new HashMap<QuestionTreeNode, SearchBar>();
+    private HashMap<QuestionTreeNode, SearchBar> searchBars = new HashMap<>();
     /**
      * the currently selected node
      */

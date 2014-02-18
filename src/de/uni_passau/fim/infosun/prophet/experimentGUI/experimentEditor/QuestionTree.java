@@ -198,7 +198,7 @@ public class QuestionTree extends JScrollPane {
                             }
                 // copy
                 if (ae.getActionCommand().equals(ACTION_COPY)) {
-                    clipboard = (QuestionTreeNode) selected.copy();
+                    clipboard = selected.copy();
 
                     enablePopupItems();
                 }
@@ -216,7 +216,7 @@ public class QuestionTree extends JScrollPane {
 //							JOptionPane.showMessageDialog(null,
 //									"Einer Kategorie k�nnen nur Fragen hinzugef�gt werden.");
 //						} else {
-                    addNode(selected, (QuestionTreeNode) clipboard.copy());
+                    addNode(selected, clipboard.copy());
 //						}
 //					}
                 }
@@ -456,7 +456,7 @@ public class QuestionTree extends JScrollPane {
      */
     public void addQuestionTreeNodeListener(QuestionTreeNodeListener l) {
         if (questionTreeListeners == null) {
-            questionTreeListeners = new Vector<QuestionTreeNodeListener>();
+            questionTreeListeners = new Vector<>();
         }
         questionTreeListeners.addElement(l);
     }
@@ -485,7 +485,7 @@ public class QuestionTree extends JScrollPane {
         }
         QuestionTreeNodeEvent event = new QuestionTreeNodeEvent(this, questionTreeNode);
         for (Enumeration<QuestionTreeNodeListener> e = questionTreeListeners.elements(); e.hasMoreElements(); ) {
-            ((QuestionTreeNodeListener) e.nextElement()).questionTreeEventOccured(event);
+            e.nextElement().questionTreeEventOccured(event);
         }
     }
 }

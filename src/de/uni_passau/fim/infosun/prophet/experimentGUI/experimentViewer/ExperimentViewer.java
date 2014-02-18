@@ -150,11 +150,11 @@ public class ExperimentViewer extends JFrame {
         superRoot.add(tree);
         tree.setParent(null);
         currentNode = superRoot;
-        textPanes = new HashMap<QuestionTreeNode, QuestionViewPane>();
-        times = new HashMap<QuestionTreeNode, ClockLabel>();
+        textPanes = new HashMap<>();
+        times = new HashMap<>();
         totalTime = new ClockLabel("Gesamtzeit");
         timePanel = new JPanel();
-        enteredNodes = new HashSet<QuestionTreeNode>();
+        enteredNodes = new HashSet<>();
         nextNode();
     }
 
@@ -225,7 +225,7 @@ public class ExperimentViewer extends JFrame {
         pauseClock();
         if (currentNode.isQuestion()) {
             QuestionTreeNode tempNode = currentNode;
-            while ((QuestionTreeNode) tempNode.getPreviousSibling() != null) {
+            while (tempNode.getPreviousSibling() != null) {
                 tempNode = (QuestionTreeNode) tempNode.getPreviousSibling();
                 if (!denyEnterNode()) {
                     exitNode();

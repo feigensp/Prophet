@@ -29,7 +29,7 @@ public class SyntaxHighlightingPlugin implements CodeViewerPluginInterface {
     public void init(QuestionTreeNode selected) {
         enabled = Boolean.parseBoolean(selected.getAttributeValue(KEY));
         if (enabled) {
-            extensionMap = new HashMap<String, String>();
+            extensionMap = new HashMap<>();
 
             extensionMap.put("makefile", SyntaxConstants.SYNTAX_STYLE_MAKEFILE);
             extensionMap.put(".asm", SyntaxConstants.SYNTAX_STYLE_ASSEMBLER_X86);

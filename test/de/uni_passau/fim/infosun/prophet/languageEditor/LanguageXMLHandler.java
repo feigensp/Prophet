@@ -1,11 +1,10 @@
-package test.languageEditor;
+package de.uni_passau.fim.infosun.prophet.languageEditor;
 
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.TreeMap;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.TransformerFactoryConfigurationError;
@@ -82,11 +81,7 @@ public class LanguageXMLHandler {
                 TransformerFactory.newInstance().newTransformer()
                         .transform(new DOMSource(xmlTree), new StreamResult(path));
             }
-        } catch (TransformerConfigurationException e1) {
-            e1.printStackTrace();
-        } catch (TransformerException e1) {
-            e1.printStackTrace();
-        } catch (TransformerFactoryConfigurationError e1) {
+        } catch (TransformerFactoryConfigurationError | TransformerException e1) {
             e1.printStackTrace();
         }
     }
@@ -98,7 +93,7 @@ public class LanguageXMLHandler {
      *         location and name of the file
      */
     public static Pair<TreeMap<String, TreeMap<String, String>>, String> load(String path) {
-        TreeMap<String, TreeMap<String, String>> keywords = new TreeMap<String, TreeMap<String, String>>();
+        TreeMap<String, TreeMap<String, String>> keywords = new TreeMap<>();
         try {
             Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(path);
             Node xmlRoot = doc.getFirstChild();
@@ -112,7 +107,7 @@ public class LanguageXMLHandler {
                     fallbackLanguage = lanNode.getAttributes().getNamedItem(ATTRIBUTE_LANGUAGE).getNodeValue();
                 } else {
                     String language = lanNode.getAttributes().getNamedItem(ATTRIBUTE_LANGUAGE).getNodeValue();
-                    TreeMap<String, String> xmlKeywords = new TreeMap<String, String>();
+                    TreeMap<String, String> xmlKeywords = new TreeMap<>();
                     NodeList keyList = lanNode.getChildNodes();
                     for (int j = 0; j < keyList.getLength(); j++) {
                         Node keyNode = keyList.item(j);
@@ -124,12 +119,8 @@ public class LanguageXMLHandler {
                     keywords.put(language, xmlKeywords);
                 }
             }
-            return new Pair<TreeMap<String, TreeMap<String, String>>, String>(keywords, fallbackLanguage);
-        } catch (SAXException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParserConfigurationException e) {
+            return new Pair<>(keywords, fallbackLanguage);
+        } catch (SAXException | ParserConfigurationException | IOException e) {
             e.printStackTrace();
         }
         return null;

@@ -70,7 +70,7 @@ public class MultilineDialogs extends JDialog implements ActionListener {
 
     public void actionPerformed(ActionEvent ae) {
         if (ae.getActionCommand().equals("ok")) {
-            dialogInfos = new Pair<String, String>(nameTextField.getText(), contentTextPane.getText());
+            dialogInfos = new Pair<>(nameTextField.getText(), contentTextPane.getText());
             this.setVisible(false);
         } else {
             dialogInfos = null;

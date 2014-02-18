@@ -2,7 +2,6 @@ package de.uni_passau.fim.infosun.prophet.experimentGUI.plugins.mailPlugin;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.zip.ZipEntry;
@@ -42,8 +41,6 @@ public class ZipFile {
             zipOut = new ZipOutputStream(new FileOutputStream(outputFile));
             zipDir(zipPath);
             zipOut.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -73,11 +70,11 @@ public class ZipFile {
      */
     private static void zipDir(File zipDir, String path) {
         File[] fileArray = zipDir.listFiles();
-        for (int i = 0; i < fileArray.length; i++) {
-            if (fileArray[i].isDirectory()) {
-                zipDir(fileArray[i], path + System.getProperty("file.separator") + fileArray[i].getName());
+        for (File aFileArray : fileArray) {
+            if (aFileArray.isDirectory()) {
+                zipDir(aFileArray, path + System.getProperty("file.separator") + aFileArray.getName());
             } else {
-                zipFile(fileArray[i], path + System.getProperty("file.separator") + fileArray[i].getName());
+                zipFile(aFileArray, path + System.getProperty("file.separator") + aFileArray.getName());
             }
         }
     }

@@ -25,7 +25,7 @@ public class ExternalProgramsPlugin extends Thread implements PluginInterface {
 
     private static final String KEY = "start_external_progs";
     private static final String KEY_COMMANDS = "commands";
-    private ArrayList<Process> processes = new ArrayList<Process>();
+    private ArrayList<Process> processes = new ArrayList<>();
     private JFrame frame;
     private JPanel panel;
 
@@ -135,9 +135,9 @@ public class ExternalProgramsPlugin extends Thread implements PluginInterface {
             frame.setVisible(false);
             frame.dispose();
             if (node.isCategory()) {
-                for (int i = 0; i < processes.size(); i++) {
-                    if (processes.get(i) != null) {
-                        processes.get(i).destroy();
+                for (Process process : processes) {
+                    if (process != null) {
+                        process.destroy();
                     }
                 }
                 processes.clear();

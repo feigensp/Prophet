@@ -1,4 +1,4 @@
-package test.languageEditor;
+package de.uni_passau.fim.infosun.prophet.languageEditor;
 
 /**
  * This class represents a generic data structure version of a pair

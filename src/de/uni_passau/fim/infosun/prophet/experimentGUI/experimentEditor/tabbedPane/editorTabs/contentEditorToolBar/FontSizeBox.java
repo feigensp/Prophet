@@ -39,8 +39,8 @@ public class FontSizeBox extends JComboBox implements ActionListener {
         fontSizes.add(new Pair<>("+3", "+3"));
 
         this.addItem(UIElementNames.MENU_TAB_EDITOR_FONT_SIZE);
-        for (int i = 0; i < fontSizes.size(); i++) {
-            this.addItem(fontSizes.get(i).getKey());
+        for (Pair<String, String> fontSize : fontSizes) {
+            this.addItem(fontSize.getKey());
         }
         this.addActionListener(this);
     }

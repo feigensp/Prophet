@@ -1,4 +1,4 @@
-package test.experimentEditorDataVisualizer;
+package de.uni_passau.fim.infosun.prophet.experimentEditorDataVisualizer;
 
 /**
  * File which contains useful conversion methods
