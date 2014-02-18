@@ -35,8 +35,7 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settingsComponents.c
 public class SettingsEditorPanel extends ExperimentEditorTab {
 
     private HashMap<QuestionTreeNode, JScrollPane> scrollPanes = new HashMap<>();
-    private HashMap<QuestionTreeNode, ArrayList<SettingsComponent>> settingsComponents =
-            new HashMap<>();
+    private HashMap<QuestionTreeNode, ArrayList<SettingsComponent>> settingsComponents = new HashMap<>();
     private QuestionTreeNode selected;
 
     /**
@@ -50,46 +49,73 @@ public class SettingsEditorPanel extends ExperimentEditorTab {
     /**
      * Loads the settings and saved options for the specified node into the tab, called by EditorTabbedPane
      */
-    public void activate(QuestionTreeNode s) {
-        selected = s;
+    public void activate(QuestionTreeNode selectedNode) {
+
+        if (selectedNode == null) {
+            return;
+        }
+
+        selected = selectedNode;
         this.removeAll();
         this.updateUI();
-        if (selected != null) {
-            JScrollPane scrollPane = scrollPanes.get(selected);
-            if (scrollPane == null) {
-                JPanel settingsPanel = new JPanel();
-                settingsPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-                settingsPanel.setLayout(new VerticalLayout(5, VerticalLayout.LEFT, VerticalLayout.TOP));
 
-                if (selected.isExperiment()) {
-                    settingsPanel.add(new SettingsComponentDescription(SettingsTextField.class,
-                            Constants.KEY_EXPERIMENT_CODE, UIElementNames.EXPERIMENT_CODE + ": ").build(selected));
-                }
-                if (selected.isCategory()) {
-                    settingsPanel.add(new SettingsComponentDescription(SettingsCheckBox.class,
-                            Constants.KEY_DONOTSHOWCONTENT, UIElementNames.MENU_TAB_SETTINGS_DONT_SHOW_CONTENT)
-                            .build(selected));
-                    settingsPanel.add(new SettingsComponentDescription(SettingsCheckBox.class,
-                            Constants.KEY_QUESTIONSWITCHING, UIElementNames.MENU_TAB_SETTINGS_ALLOW_BACK_AND_FORTH)
-                            .build(selected));
-                }
-                SettingsComponentDescription desc = PluginList.getSettingsComponentDescription(selected);
-                if (desc != null) {
-                    settingsComponents.put(s, new ArrayList<SettingsComponent>());
-                    do {
-                        SettingsComponent c = desc.build(selected);
-                        settingsComponents.get(s).add(c);
-                        settingsPanel.add(c);
-                    } while ((desc = desc.getNextComponentDescription()) != null);
-                }
-                scrollPane = new JScrollPane(settingsPanel);
-                scrollPane.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
-                scrollPane.getVerticalScrollBar().setUnitIncrement(16);
-                ExperimentEditorTabbedPane.recursiveSetOpaque(scrollPane);
-                scrollPanes.put(selected, scrollPane);
-            }
-            add(scrollPane, BorderLayout.CENTER);
+        JScrollPane scrollPane = scrollPanes.get(selected);
+
+        if (scrollPane == null) {
+            scrollPane = buildOptionScrollPane();
+            scrollPanes.put(selected, scrollPane);
         }
+
+        add(scrollPane, BorderLayout.CENTER);
+    }
+
+    /**
+     * Builds a <code>JScrollPane</code> containing all the <code>SettingsComponentDescription</code> objects
+     * appropriate for the currently selected node.
+     *
+     * @return the JScrollPane containing all options
+     */
+    private JScrollPane buildOptionScrollPane() {
+        JScrollPane scrollPane;
+        JPanel settingsPanel;
+
+        settingsPanel = new JPanel();
+        settingsPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        settingsPanel.setLayout(new VerticalLayout(5, VerticalLayout.LEFT, VerticalLayout.TOP));
+
+        scrollPane = new JScrollPane(settingsPanel);
+        scrollPane.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
+
+        // add the standard options for experiments and categories
+        if (selected.isExperiment()) {
+            settingsPanel.add(new SettingsComponentDescription(SettingsTextField.class, Constants.KEY_EXPERIMENT_CODE,
+                    UIElementNames.EXPERIMENT_CODE + ": ").build(selected));
+        }
+
+        if (selected.isCategory()) {
+            settingsPanel.add(new SettingsComponentDescription(SettingsCheckBox.class, Constants.KEY_DONOTSHOWCONTENT,
+                    UIElementNames.MENU_TAB_SETTINGS_DONT_SHOW_CONTENT).build(selected));
+            settingsPanel.add(new SettingsComponentDescription(SettingsCheckBox.class, Constants.KEY_QUESTIONSWITCHING,
+                    UIElementNames.MENU_TAB_SETTINGS_ALLOW_BACK_AND_FORTH).build(selected));
+        }
+
+        // add the options contributed by plugins
+        SettingsComponentDescription desc = PluginList.getSettingsComponentDescription(selected);
+
+        if (desc != null) {
+            settingsComponents.put(selected, new ArrayList<SettingsComponent>());
+
+            do {
+                SettingsComponent c = desc.build(selected);
+                settingsComponents.get(selected).add(c);
+                settingsPanel.add(c);
+            } while ((desc = desc.getNextComponentDescription()) != null);
+        }
+
+        ExperimentEditorTabbedPane.recursiveSetOpaque(scrollPane);
+
+        return scrollPane;
     }
 
     /**

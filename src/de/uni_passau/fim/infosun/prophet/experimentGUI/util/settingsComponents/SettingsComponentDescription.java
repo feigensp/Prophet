@@ -30,17 +30,21 @@ public class SettingsComponentDescription {
 
     public SettingsComponent build(QuestionTreeNode treeNode) {
         SettingsComponent result;
+
         try {
             result = myClass.newInstance();
-        } catch (Exception e) {
+        } catch (InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
             return null;
         }
+
         result.setCaption(caption);
+
         if (key != null) {
             QuestionTreeNode myNode = treeNode.getAddAttribute(key);
             result.setTreeNode(myNode);
         }
+
         return result;
     }
 
