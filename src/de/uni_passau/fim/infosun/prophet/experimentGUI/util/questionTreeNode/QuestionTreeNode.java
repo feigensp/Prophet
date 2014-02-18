@@ -24,19 +24,19 @@ public class QuestionTreeNode extends DefaultMutableTreeNode {
         this("");
     }
 
-    public QuestionTreeNode(String t) {
-        this(t, "");
+    public QuestionTreeNode(String type) {
+        this(type, "");
     }
 
-    public QuestionTreeNode(String t, String n) {
+    public QuestionTreeNode(String type, String name) {
         value = "";
         attributes = new TreeMap<>();
         answers = new TreeMap<>();
 
-        type = "(default)";
-        setType(t);
-        name = "(default)";
-        setName(n);
+        this.type = "(default)";
+        setType(type);
+        this.name = "(default)";
+        setName(name);
     }
 
     public long getAnswerTime() {
@@ -67,11 +67,11 @@ public class QuestionTreeNode extends DefaultMutableTreeNode {
         return name;
     }
 
-    public boolean setName(String n) {
-        if (n == null || n.trim().equals("")) {
+    public boolean setName(String name) {
+        if (name == null || name.trim().equals("")) {
             return false;
         }
-        name = n;
+        this.name = name;
         return true;
     }
 
@@ -85,8 +85,11 @@ public class QuestionTreeNode extends DefaultMutableTreeNode {
     }
 
     @Override
-    public void setUserObject(Object object) {
-        setName((String) object);
+    public void setUserObject(Object name) {
+
+        if (name instanceof String) {
+            setName((String) name);
+        }
     }
 
     public TreeMap<String, QuestionTreeNode> getAttributes() {
@@ -119,9 +122,9 @@ public class QuestionTreeNode extends DefaultMutableTreeNode {
         return value;
     }
 
-    public void setValue(String v) {
-        if (v != null) {
-            value = v;
+    public void setValue(String value) {
+        if (value != null) {
+            this.value = value;
         }
     }
 
@@ -129,11 +132,11 @@ public class QuestionTreeNode extends DefaultMutableTreeNode {
         return type;
     }
 
-    public boolean setType(String t) {
-        if (t == null || t.trim().equals("")) {
+    public boolean setType(String type) {
+        if (type == null || type.trim().equals("")) {
             return false;
         }
-        type = t;
+        this.type = type;
         return true;
     }
 
