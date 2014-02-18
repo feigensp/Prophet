@@ -12,56 +12,57 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settingsComponents.S
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settingsComponents.components.SettingsTextArea;
 
 public class AnswerRequiredPlugin implements PluginInterface {
-	private static final String KEY = "answers_required";
-	private static final String KEY_NAMES = "names";
 
-	@Override
-	public SettingsComponentDescription getSettingsComponentDescription(QuestionTreeNode node) {
-		SettingsPluginComponentDescription result = new SettingsPluginComponentDescription(KEY,
-			UIElementNames.MENU_TAB_SETTINGS_REQUIRED_ANSWERS, true);
-		result.addSubComponent(new SettingsComponentDescription(SettingsTextArea.class, KEY_NAMES,
-				UIElementNames.MENU_TAB_SETTINGS_REQUIRED_ANSWER_COMPONENTS + ":"));
-		return result;
-	}
+    private static final String KEY = "answers_required";
+    private static final String KEY_NAMES = "names";
 
-	@Override
-	public void experimentViewerRun(ExperimentViewer experimentViewer) {
-	}
+    @Override
+    public SettingsComponentDescription getSettingsComponentDescription(QuestionTreeNode node) {
+        SettingsPluginComponentDescription result =
+                new SettingsPluginComponentDescription(KEY, UIElementNames.MENU_TAB_SETTINGS_REQUIRED_ANSWERS, true);
+        result.addSubComponent(new SettingsComponentDescription(SettingsTextArea.class, KEY_NAMES,
+                UIElementNames.MENU_TAB_SETTINGS_REQUIRED_ANSWER_COMPONENTS + ":"));
+        return result;
+    }
 
-	@Override
-	public boolean denyEnterNode(QuestionTreeNode node) {
-		return false;
-	}
+    @Override
+    public void experimentViewerRun(ExperimentViewer experimentViewer) {
+    }
 
-	@Override
-	public void enterNode(QuestionTreeNode node) {
-	}
+    @Override
+    public boolean denyEnterNode(QuestionTreeNode node) {
+        return false;
+    }
 
-	@Override
-	public String denyNextNode(QuestionTreeNode currentNode) {
-		boolean enabled = Boolean.parseBoolean(currentNode.getAttributeValue(KEY));
-			if (enabled) {
-				String requiredAnswers = currentNode.getAttribute(KEY).getAttributeValue(KEY_NAMES);
+    @Override
+    public void enterNode(QuestionTreeNode node) {
+    }
 
-				TreeMap<String,String> answers = currentNode.getAnswers();
+    @Override
+    public String denyNextNode(QuestionTreeNode currentNode) {
+        boolean enabled = Boolean.parseBoolean(currentNode.getAttributeValue(KEY));
+        if (enabled) {
+            String requiredAnswers = currentNode.getAttribute(KEY).getAttributeValue(KEY_NAMES);
 
-				Scanner sc = new Scanner(requiredAnswers);
-				while(sc.hasNext()) {
-					String requiredAnswerKey = sc.next();
-					if(!answers.containsKey(requiredAnswerKey) || answers.get(requiredAnswerKey).equals("")) {
-						return UIElementNames.MENU_TAB_SETTINGS_MESSAGE_FILL_ALL_FIELDS;
-					}
-				}
-		}
-		return null;
-	}
+            TreeMap<String, String> answers = currentNode.getAnswers();
 
-	@Override
-	public void exitNode(QuestionTreeNode node) {
-	}
+            Scanner sc = new Scanner(requiredAnswers);
+            while (sc.hasNext()) {
+                String requiredAnswerKey = sc.next();
+                if (!answers.containsKey(requiredAnswerKey) || answers.get(requiredAnswerKey).equals("")) {
+                    return UIElementNames.MENU_TAB_SETTINGS_MESSAGE_FILL_ALL_FIELDS;
+                }
+            }
+        }
+        return null;
+    }
 
-	@Override
-	public String finishExperiment() {
-		return null;
-	}
+    @Override
+    public void exitNode(QuestionTreeNode node) {
+    }
+
+    @Override
+    public String finishExperiment() {
+        return null;
+    }
 }

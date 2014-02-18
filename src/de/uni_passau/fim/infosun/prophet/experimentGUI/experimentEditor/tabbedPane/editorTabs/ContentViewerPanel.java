@@ -8,41 +8,42 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTreeNode.Que
 
 /**
  * Preview of the Content entered in the ContentEditorPanel
+ *
  * @author Andreas Hasselberg
  * @author Markus K�ppen
- *
  */
 @SuppressWarnings("serial")
 public class ContentViewerPanel extends ExperimentEditorTab {
-	/**
-	 * the pane featuring the preview
-	 */
-	private QuestionViewPane viewerPane;
 
-	/**
-	 * Constructor
-	 */
-	public ContentViewerPanel() {
-		setLayout(new BorderLayout());
-		this.setOpaque(false);
-	}
+    /**
+     * the pane featuring the preview
+     */
+    private QuestionViewPane viewerPane;
 
-	/**
-	 * loads the current content and displays it appropriately, called by EditorTabbedPane
-	 */
-	public void activate(QuestionTreeNode selected) {
-		removeAll();
-		updateUI();
-		if (selected!=null) {
-			viewerPane = new QuestionViewPane(selected);
-			add(viewerPane,BorderLayout.CENTER);
-		}
-	}
+    /**
+     * Constructor
+     */
+    public ContentViewerPanel() {
+        setLayout(new BorderLayout());
+        this.setOpaque(false);
+    }
 
-	/**
-	 * saves any changes to the tree, i.e. does nothing, called by EditorTabbedPane
-	 */
-	@Override
-	public void save() {
-	}
+    /**
+     * loads the current content and displays it appropriately, called by EditorTabbedPane
+     */
+    public void activate(QuestionTreeNode selected) {
+        removeAll();
+        updateUI();
+        if (selected != null) {
+            viewerPane = new QuestionViewPane(selected);
+            add(viewerPane, BorderLayout.CENTER);
+        }
+    }
+
+    /**
+     * saves any changes to the tree, i.e. does nothing, called by EditorTabbedPane
+     */
+    @Override
+    public void save() {
+    }
 }

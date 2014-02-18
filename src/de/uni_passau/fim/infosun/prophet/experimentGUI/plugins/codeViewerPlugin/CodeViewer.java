@@ -5,7 +5,6 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.io.File;
-
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -23,139 +22,149 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTreeNode.Que
 
 @SuppressWarnings("serial")
 public class CodeViewer extends JFrame implements FileListener {
-	public final static String KEY_PATH = "path";
-	public final static String KEY_EDITABLE = "editable";
 
-	private JMenuBar menuBar;
-	private JMenu fileMenu;
-	private JMenu editMenu;
+    public final static String KEY_PATH = "path";
+    public final static String KEY_EDITABLE = "editable";
 
-	private JSplitPane splitPane;
-	private FileTree myTree;
-	private EditorTabbedPane tabbedPane;
+    private JMenuBar menuBar;
+    private JMenu fileMenu;
+    private JMenu editMenu;
 
-	private File showDir;
-	private File saveDir;
+    private JSplitPane splitPane;
+    private FileTree myTree;
+    private EditorTabbedPane tabbedPane;
 
-	private Recorder recorder;
+    private File showDir;
+    private File saveDir;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					CodeViewer frame = new CodeViewer(null, null);
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+    private Recorder recorder;
 
-	public CodeViewer(QuestionTreeNode selected, File saveDir) {
-		setTitle(UIElementNames.TITLE_CODE_VIEWER);
-		setSize(800, 600);
-		setLayout(new BorderLayout());
+    /**
+     * Launch the application.
+     */
+    public static void main(String[] args) {
+        EventQueue.invokeLater(new Runnable() {
 
-		if (selected==null) {
-			selected = new QuestionTreeNode();
-		}
-		if (saveDir==null) {
-			saveDir=new File(".");
-		}
-		this.saveDir=saveDir;
+            public void run() {
+                try {
+                    CodeViewer frame = new CodeViewer(null, null);
+                    frame.setVisible(true);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
 
-		//read settings, store in variables
+    public CodeViewer(QuestionTreeNode selected, File saveDir) {
+        setTitle(UIElementNames.TITLE_CODE_VIEWER);
+        setSize(800, 600);
+        setLayout(new BorderLayout());
 
-		String showPath = selected.getAttributeValue(KEY_PATH).replace('/', System.getProperty("file.separator").charAt(0));
-		showDir = new File(showPath==null || showPath.length()==0 ? "." : showPath);
-		if (!showDir.exists()) {
-			JOptionPane.showMessageDialog(this, UIElementNames.MESSAGE_PATH_DOES_NOT_EXIST, UIElementNames.MESSAGE_ERROR, JOptionPane.ERROR_MESSAGE);
-		}
+        if (selected == null) {
+            selected = new QuestionTreeNode();
+        }
+        if (saveDir == null) {
+            saveDir = new File(".");
+        }
+        this.saveDir = saveDir;
 
-		menuBar = new JMenuBar();
-		setJMenuBar(menuBar);
-		menuBar.setVisible(false);
+        //read settings, store in variables
 
-		fileMenu = new JMenu(UIElementNames.MENU_FILE);
-		menuBar.add(fileMenu);
-		fileMenu.setVisible(false);
+        String showPath =
+                selected.getAttributeValue(KEY_PATH).replace('/', System.getProperty("file.separator").charAt(0));
+        showDir = new File(showPath == null || showPath.length() == 0 ? "." : showPath);
+        if (!showDir.exists()) {
+            JOptionPane
+                    .showMessageDialog(this, UIElementNames.MESSAGE_PATH_DOES_NOT_EXIST, UIElementNames.MESSAGE_ERROR,
+                            JOptionPane.ERROR_MESSAGE);
+        }
 
-		editMenu = new JMenu(UIElementNames.MENU_EDIT);
-		menuBar.add(editMenu);
-		editMenu.setVisible(false);
+        menuBar = new JMenuBar();
+        setJMenuBar(menuBar);
+        menuBar.setVisible(false);
 
-		splitPane = new JSplitPane();
+        fileMenu = new JMenu(UIElementNames.MENU_FILE);
+        menuBar.add(fileMenu);
+        fileMenu.setVisible(false);
 
-		myTree = new FileTree(showDir);
-		myTree.setBorder(null);
-		myTree.setPreferredSize(new Dimension(200, 400));
-		myTree.addFileListener(this);
-		splitPane.setLeftComponent(myTree);
+        editMenu = new JMenu(UIElementNames.MENU_EDIT);
+        menuBar.add(editMenu);
+        editMenu.setVisible(false);
 
-		recorder = new Recorder(selected);
+        splitPane = new JSplitPane();
 
-		tabbedPane = new EditorTabbedPane(selected, showDir, recorder);
-		tabbedPane.setBorder(null);
-		splitPane.setRightComponent(tabbedPane);
+        myTree = new FileTree(showDir);
+        myTree.setBorder(null);
+        myTree.setPreferredSize(new Dimension(200, 400));
+        myTree.addFileListener(this);
+        splitPane.setLeftComponent(myTree);
 
-		splitPane.setBorder(null);
-		for (Component component : splitPane.getComponents())
-			if (component instanceof BasicSplitPaneDivider)
-				((BasicSplitPaneDivider) component).setBorder(null);
+        recorder = new Recorder(selected);
 
-		add(splitPane, BorderLayout.CENTER);
+        tabbedPane = new EditorTabbedPane(selected, showDir, recorder);
+        tabbedPane.setBorder(null);
+        splitPane.setRightComponent(tabbedPane);
 
-		CodeViewerPluginList.init(selected);
-		recorder.onFrameCreate(this);
-		CodeViewerPluginList.onFrameCreate(this);
-	}
+        splitPane.setBorder(null);
+        for (Component component : splitPane.getComponents()) {
+            if (component instanceof BasicSplitPaneDivider) {
+                ((BasicSplitPaneDivider) component).setBorder(null);
+            }
+        }
 
-	@Override
-	public void fileEventOccured(FileEvent arg0) {
-		if (arg0.getID()==FileEvent.FILE_OPENED) {
-			tabbedPane.openFile(arg0.getFilePath());
-		}
-	}
+        add(splitPane, BorderLayout.CENTER);
 
-	public Recorder getRecorder() {
-		return recorder;
-	}
+        CodeViewerPluginList.init(selected);
+        recorder.onFrameCreate(this);
+        CodeViewerPluginList.onFrameCreate(this);
+    }
 
-	public JSplitPane getSplitPane() {
-		return splitPane;
-	}
+    @Override
+    public void fileEventOccured(FileEvent arg0) {
+        if (arg0.getID() == FileEvent.FILE_OPENED) {
+            tabbedPane.openFile(arg0.getFilePath());
+        }
+    }
 
-	public FileTree getFileTree() {
-		return myTree;
-	}
+    public Recorder getRecorder() {
+        return recorder;
+    }
 
-	public EditorTabbedPane getTabbedPane() {
-		return tabbedPane;
-	}
-	public File getShowDir() {
-		return showDir;
-	}
-	public File getSaveDir() {
-		return saveDir;
-	}
+    public JSplitPane getSplitPane() {
+        return splitPane;
+    }
 
-	public void addMenu(JMenu menu) {
-		menuBar.add(menu);
-		menuBar.setVisible(true);
-	}
+    public FileTree getFileTree() {
+        return myTree;
+    }
 
-	public void addMenuItemToFileMenu(JMenuItem item) {
-		fileMenu.add(item);
-		fileMenu.setVisible(true);
-		menuBar.setVisible(true);
-	}
-	public void addMenuItemToEditMenu(JMenuItem item) {
-		editMenu.add(item);
-		editMenu.setVisible(true);
-		menuBar.setVisible(true);
-	}
+    public EditorTabbedPane getTabbedPane() {
+        return tabbedPane;
+    }
+
+    public File getShowDir() {
+        return showDir;
+    }
+
+    public File getSaveDir() {
+        return saveDir;
+    }
+
+    public void addMenu(JMenu menu) {
+        menuBar.add(menu);
+        menuBar.setVisible(true);
+    }
+
+    public void addMenuItemToFileMenu(JMenuItem item) {
+        fileMenu.add(item);
+        fileMenu.setVisible(true);
+        menuBar.setVisible(true);
+    }
+
+    public void addMenuItemToEditMenu(JMenuItem item) {
+        editMenu.add(item);
+        editMenu.setVisible(true);
+        menuBar.setVisible(true);
+    }
 }

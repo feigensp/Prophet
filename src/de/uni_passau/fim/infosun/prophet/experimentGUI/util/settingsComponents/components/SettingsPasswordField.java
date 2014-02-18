@@ -2,50 +2,47 @@ package de.uni_passau.fim.infosun.prophet.experimentGUI.util.settingsComponents.
 
 import java.awt.BorderLayout;
 import java.io.IOException;
-
 import javax.swing.JLabel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settingsComponents.SettingsComponent;
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settingsComponents.SettingsComponent;
-
 
 @SuppressWarnings("serial")
-public class SettingsPasswordField extends SettingsComponent{
-	private JLabel caption;
-	private JTextField textField;
-	private final static byte XOR_KEY = 77;
+public class SettingsPasswordField extends SettingsComponent {
 
-	private static byte[] xor(byte[] input) {
-		byte[] result = new byte[input.length];
-		for (int i = 0; i < input.length; i++) {
-			result[i] = (byte) (input[i] ^ XOR_KEY);
-		}
-		return result;
-	}
+    private JLabel caption;
+    private JTextField textField;
+    private final static byte XOR_KEY = 77;
 
-	private static String encode(String s) {
-		return new BASE64Encoder().encode(xor(s.getBytes()));
-	}
+    private static byte[] xor(byte[] input) {
+        byte[] result = new byte[input.length];
+        for (int i = 0; i < input.length; i++) {
+            result[i] = (byte) (input[i] ^ XOR_KEY);
+        }
+        return result;
+    }
 
-	public static String decode(String s) {
-		try {
-			return new String(xor(new BASE64Decoder().decodeBuffer(s)));
-		} catch (IOException e) {
-			return null;
-		}
-	}
+    private static String encode(String s) {
+        return new BASE64Encoder().encode(xor(s.getBytes()));
+    }
 
-	public SettingsPasswordField() {
-		setLayout(new BorderLayout());
-		caption = new JLabel();
-		add(caption, BorderLayout.NORTH);
-		textField = new JPasswordField();
-		add(textField, BorderLayout.CENTER);
+    public static String decode(String s) {
+        try {
+            return new String(xor(new BASE64Decoder().decodeBuffer(s)));
+        } catch (IOException e) {
+            return null;
+        }
+    }
+
+    public SettingsPasswordField() {
+        setLayout(new BorderLayout());
+        caption = new JLabel();
+        add(caption, BorderLayout.NORTH);
+        textField = new JPasswordField();
+        add(textField, BorderLayout.CENTER);
 //		textField.getDocument().addDocumentListener(new DocumentListener() {
 //
 //			@Override
@@ -63,17 +60,17 @@ public class SettingsPasswordField extends SettingsComponent{
 //				saveValue();
 //			}
 //		});
-	}
+    }
 
-	public void setCaption(String cap) {
-		caption.setText(cap);
-	}
+    public void setCaption(String cap) {
+        caption.setText(cap);
+    }
 
-	public void loadValue() {
-		textField.setText(decode(getTreeNode().getValue()));
-	}
+    public void loadValue() {
+        textField.setText(decode(getTreeNode().getValue()));
+    }
 
-	public void saveValue() {
-		getTreeNode().setValue(encode(textField.getText()));
-	}
+    public void saveValue() {
+        getTreeNode().setValue(encode(textField.getText()));
+    }
 }

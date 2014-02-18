@@ -41,19 +41,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.ListSelectionModel;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 
 /*
  * ListDialog.java is meant to be used by programs such as
@@ -65,23 +53,23 @@ import javax.swing.SwingConstants;
  * list.  See ListDialogRunner.java for an example of using ListDialog.
  * The basics:
  * &lt;pre&gt;
-    String[] choices = {"A", "long", "array", "of", "strings"};
-    String selectedName = ListDialog.showDialog(
-                                componentInControllingFrame,
-                                locatorComponent,
-                                "A description of the list:",
-                                "Dialog Title",
-                                choices,
-                                choices[0]);
+ * String[] choices = {"A", "long", "array", "of", "strings"};
+ * String selectedName = ListDialog.showDialog(
+ * componentInControllingFrame,
+ * locatorComponent,
+ * "A description of the list:",
+ * "Dialog Title",
+ * choices,
+ * choices[0]);
  * &lt;/pre&gt;
  */
-public class ListDialog extends JDialog
-                        implements ActionListener {
+public class ListDialog extends JDialog implements ActionListener {
+
     /**
-	 *
-	 */
-	private static final long serialVersionUID = 1L;
-	private static ListDialog dialog;
+     *
+     */
+    private static final long serialVersionUID = 1L;
+    private static ListDialog dialog;
     private static String value = "";
     private JList list;
 
@@ -94,21 +82,10 @@ public class ListDialog extends JDialog
      * otherwise, it should be the component on top of which the
      * dialog should appear.
      */
-    public static String showDialog(Component frameComp,
-                                    Component locationComp,
-                                    String labelText,
-                                    String title,
-                                    String[] possibleValues,
-                                    String initialValue,
-                                    String longValue) {
+    public static String showDialog(Component frameComp, Component locationComp, String labelText, String title,
+            String[] possibleValues, String initialValue, String longValue) {
         Frame frame = JOptionPane.getFrameForComponent(frameComp);
-        dialog = new ListDialog(frame,
-                                locationComp,
-                                labelText,
-                                title,
-                                possibleValues,
-                                initialValue,
-                                longValue);
+        dialog = new ListDialog(frame, locationComp, labelText, title, possibleValues, initialValue, longValue);
         dialog.setVisible(true);
         return value;
     }
@@ -118,13 +95,8 @@ public class ListDialog extends JDialog
         list.setSelectedValue(value, true);
     }
 
-    private ListDialog(Frame frame,
-                       Component locationComp,
-                       String labelText,
-                       String title,
-                       Object[] data,
-                       String initialValue,
-                       String longValue) {
+    private ListDialog(Frame frame, Component locationComp, String labelText, String title, Object[] data,
+            String initialValue, String longValue) {
         super(frame, title, true);
 
         //Create and initialize the buttons.
@@ -138,24 +110,23 @@ public class ListDialog extends JDialog
 
         //main part of the dialog
         list = new JList(data) {
-            /**
-			 *
-			 */
-			private static final long serialVersionUID = 1L;
 
-			//Subclass JList to workaround bug 4832765, which can cause the
+            /**
+             *
+             */
+            private static final long serialVersionUID = 1L;
+
+            //Subclass JList to workaround bug 4832765, which can cause the
             //scroll pane to not let the user easily scroll up to the beginning
             //of the list.  An alternative would be to set the unitIncrement
             //of the JScrollBar to a fixed value. You wouldn't get the nice
             //aligned scrolling, but it should work.
-            public int getScrollableUnitIncrement(Rectangle visibleRect,
-                                                  int orientation,
-                                                  int direction) {
+            public int getScrollableUnitIncrement(Rectangle visibleRect, int orientation, int direction) {
                 int row;
                 if (orientation == SwingConstants.VERTICAL &&
-                      direction < 0 && (row = getFirstVisibleIndex()) != -1) {
+                        direction < 0 && (row = getFirstVisibleIndex()) != -1) {
                     Rectangle r = getCellBounds(row, row);
-                    if ((r.y == visibleRect.y) && (row != 0))  {
+                    if ((r.y == visibleRect.y) && (row != 0)) {
                         Point loc = r.getLocation();
                         loc.y--;
                         int prevIndex = locationToIndex(loc);
@@ -167,8 +138,7 @@ public class ListDialog extends JDialog
                         return prevR.height;
                     }
                 }
-                return super.getScrollableUnitIncrement(
-                                visibleRect, orientation, direction);
+                return super.getScrollableUnitIncrement(visibleRect, orientation, direction);
             }
         };
 
@@ -179,6 +149,7 @@ public class ListDialog extends JDialog
         list.setLayoutOrientation(JList.HORIZONTAL_WRAP);
         list.setVisibleRowCount(-1);
         list.addMouseListener(new MouseAdapter() {
+
             public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() == 2) {
                     setButton.doClick(); //emulate button click
@@ -198,9 +169,9 @@ public class ListDialog extends JDialog
         JLabel label = new JLabel(labelText);
         label.setLabelFor(list);
         listPane.add(label);
-        listPane.add(Box.createRigidArea(new Dimension(0,5)));
+        listPane.add(Box.createRigidArea(new Dimension(0, 5)));
         listPane.add(listScroller);
-        listPane.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+        listPane.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         //Lay out the buttons from left to right.
         JPanel buttonPane = new JPanel();
@@ -225,7 +196,7 @@ public class ListDialog extends JDialog
     //Handle clicks on the Set and Cancel buttons.
     public void actionPerformed(ActionEvent e) {
         if ("Set".equals(e.getActionCommand())) {
-            ListDialog.value = (String)(list.getSelectedValue());
+            ListDialog.value = (String) (list.getSelectedValue());
         }
         ListDialog.dialog.setVisible(false);
     }

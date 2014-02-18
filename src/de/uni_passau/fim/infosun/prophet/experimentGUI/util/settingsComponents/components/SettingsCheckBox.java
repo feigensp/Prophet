@@ -1,32 +1,30 @@
 package de.uni_passau.fim.infosun.prophet.experimentGUI.util.settingsComponents.components;
 
 import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
 import javax.swing.JCheckBox;
 
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settingsComponents.SettingsComponent;
 
-
 @SuppressWarnings("serial")
 public class SettingsCheckBox extends SettingsComponent {
-	private JCheckBox myCheckBox;
 
-	public SettingsCheckBox() {
-		setLayout(new BorderLayout());
-		myCheckBox = new JCheckBox();
-		add(myCheckBox,BorderLayout.CENTER);
-	}
+    private JCheckBox myCheckBox;
 
-	public void setCaption(String cap) {
-		myCheckBox.setText(cap);
-	}
-	public void loadValue() {
-		myCheckBox.setSelected(Boolean.parseBoolean(getTreeNode().getValue()));
-	}
+    public SettingsCheckBox() {
+        setLayout(new BorderLayout());
+        myCheckBox = new JCheckBox();
+        add(myCheckBox, BorderLayout.CENTER);
+    }
 
-	public void saveValue() {
-		getTreeNode().setValue(""+myCheckBox.isSelected());
-	}
+    public void setCaption(String cap) {
+        myCheckBox.setText(cap);
+    }
+
+    public void loadValue() {
+        myCheckBox.setSelected(Boolean.parseBoolean(getTreeNode().getValue()));
+    }
+
+    public void saveValue() {
+        getTreeNode().setValue("" + myCheckBox.isSelected());
+    }
 }

@@ -1,7 +1,6 @@
 package de.uni_passau.fim.infosun.prophet.experimentGUI.plugins.questionListPlugin;
 
 import java.util.Enumeration;
-
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -14,59 +13,59 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTreeNode.Que
  * every item in the list represents a question
  *
  * @author Markus K�ppen, Andreas Hasselberg
- *
  */
 public class QuestionList extends JScrollPane {
-	private static final long serialVersionUID = 1L;
-	private QuestionTreeNode root;
-	private JTree tree;
 
-	/**
-	 * Constructor which creates an Empty Panel
-	 */
-	public QuestionList(QuestionTreeNode root) {
-		this.root = root;
-		tree = new JTree(root);
-		tree.setEnabled(false);
-		tree.setCellRenderer(new SimpleTreeCellRenderer());
-		// expand all
-		for (int i = 0; i < tree.getRowCount(); i++) {
-			tree.expandRow(i);
-		}
+    private static final long serialVersionUID = 1L;
+    private QuestionTreeNode root;
+    private JTree tree;
 
-		this.setViewportView(tree);
-	}
+    /**
+     * Constructor which creates an Empty Panel
+     */
+    public QuestionList(QuestionTreeNode root) {
+        this.root = root;
+        tree = new JTree(root);
+        tree.setEnabled(false);
+        tree.setCellRenderer(new SimpleTreeCellRenderer());
+        // expand all
+        for (int i = 0; i < tree.getRowCount(); i++) {
+            tree.expandRow(i);
+        }
 
-	// public QuestionList(QuestionTreeNode root) {
-	// this.root=root;
-	// textPane = new JTextPane();
-	// textPane.setEditorKit(new HTMLEditorKit());
-	// textPane.setEditable(false);
-	// this.setViewportView(textPane);
-	// }
+        this.setViewportView(tree);
+    }
 
-	public void visit(QuestionTreeNode selectionNode) {
-		Enumeration e = root.breadthFirstEnumeration();
-		while(e.hasMoreElements()) {
-			DefaultMutableTreeNode node = (DefaultMutableTreeNode)e.nextElement();
-			if(node.equals(selectionNode)) {
-				TreePath path = new TreePath(node.getPath());
-				tree.setSelectionPath(path);
-				break;
-			}
-		}
-	}
+    // public QuestionList(QuestionTreeNode root) {
+    // this.root=root;
+    // textPane = new JTextPane();
+    // textPane.setEditorKit(new HTMLEditorKit());
+    // textPane.setEditable(false);
+    // this.setViewportView(textPane);
+    // }
 
-	// public void visit(QuestionTreeNode node) {
-	// String content = "<html><body>";
-	// boolean inactive =
-	// Boolean.parseBoolean(root.getAttributeValue("inactive"));
-	// if (!inactive) {
-	// content+=print(root,node);
-	// }
-	// content+="</body></html>";
-	// textPane.setText(content);
-	// }
+    public void visit(QuestionTreeNode selectionNode) {
+        Enumeration e = root.breadthFirstEnumeration();
+        while (e.hasMoreElements()) {
+            DefaultMutableTreeNode node = (DefaultMutableTreeNode) e.nextElement();
+            if (node.equals(selectionNode)) {
+                TreePath path = new TreePath(node.getPath());
+                tree.setSelectionPath(path);
+                break;
+            }
+        }
+    }
+
+    // public void visit(QuestionTreeNode node) {
+    // String content = "<html><body>";
+    // boolean inactive =
+    // Boolean.parseBoolean(root.getAttributeValue("inactive"));
+    // if (!inactive) {
+    // content+=print(root,node);
+    // }
+    // content+="</body></html>";
+    // textPane.setText(content);
+    // }
 
 //	private String print(QuestionTreeNode node, QuestionTreeNode selected) {
 //		String name = node == selected ? "<b><u>" + node.getName().toUpperCase() + "</u></b>" : node

@@ -4,7 +4,6 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.io.File;
 import java.util.HashMap;
-
 import javax.swing.JFrame;
 
 import de.uni_passau.fim.infosun.prophet.experimentGUI.PluginInterface;
@@ -19,82 +18,88 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settingsComponents.S
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settingsComponents.components.SettingsDirectoryPathChooser;
 
 public class CodeViewerPlugin implements PluginInterface {
-	public final static String KEY = "codeviewer";
 
-	private ExperimentViewer experimentViewer;
-	private int count = 1;
+    public final static String KEY = "codeviewer";
 
-	private HashMap<QuestionTreeNode,CodeViewer> codeViewers;
+    private ExperimentViewer experimentViewer;
+    private int count = 1;
 
-	private Rectangle bounds;
+    private HashMap<QuestionTreeNode, CodeViewer> codeViewers;
 
-	@Override
-	public SettingsComponentDescription getSettingsComponentDescription(
-			QuestionTreeNode node) {
-		if (node.getType().equals(QuestionTreeNode.TYPE_CATEGORY)) {
-			SettingsPluginComponentDescription result = new SettingsPluginComponentDescription(KEY, UIElementNames.MENU_TAB_SETTINGS_ACTIVATE_CODE_VIEWER, true);
-			result.addSubComponent(new SettingsComponentDescription(SettingsDirectoryPathChooser.class, CodeViewer.KEY_PATH, UIElementNames.MENU_TAB_SETTINGS_SOURCE_CODE_PATH + ":"));
-			result.addSubComponent(Recorder.getSettingsComponentDescription());
-			SettingsComponentDescription desc = CodeViewerPluginList.getSettingsComponentDescription();
-			if (desc!=null) {
-				result.addSubComponent(desc);
-				while ((desc = desc.getNextComponentDescription()) != null) {
-					result.addSubComponent(desc);
-				}
-			}
-			return result;
-		}
-		return null;
-	}
+    private Rectangle bounds;
 
-	@Override
-	public void experimentViewerRun(ExperimentViewer experimentViewer) {
-		this.experimentViewer=experimentViewer;
-		codeViewers = new HashMap<QuestionTreeNode,CodeViewer>();
-	}
+    @Override
+    public SettingsComponentDescription getSettingsComponentDescription(QuestionTreeNode node) {
+        if (node.getType().equals(QuestionTreeNode.TYPE_CATEGORY)) {
+            SettingsPluginComponentDescription result =
+                    new SettingsPluginComponentDescription(KEY, UIElementNames.MENU_TAB_SETTINGS_ACTIVATE_CODE_VIEWER,
+                            true);
+            result.addSubComponent(
+                    new SettingsComponentDescription(SettingsDirectoryPathChooser.class, CodeViewer.KEY_PATH,
+                            UIElementNames.MENU_TAB_SETTINGS_SOURCE_CODE_PATH + ":"));
+            result.addSubComponent(Recorder.getSettingsComponentDescription());
+            SettingsComponentDescription desc = CodeViewerPluginList.getSettingsComponentDescription();
+            if (desc != null) {
+                result.addSubComponent(desc);
+                while ((desc = desc.getNextComponentDescription()) != null) {
+                    result.addSubComponent(desc);
+                }
+            }
+            return result;
+        }
+        return null;
+    }
 
-	@Override
-	public boolean denyEnterNode(QuestionTreeNode node) {
-		return false;
-	}
+    @Override
+    public void experimentViewerRun(ExperimentViewer experimentViewer) {
+        this.experimentViewer = experimentViewer;
+        codeViewers = new HashMap<QuestionTreeNode, CodeViewer>();
+    }
 
-	@Override
-	public void enterNode(QuestionTreeNode node) {
-		boolean enabled = Boolean.parseBoolean(node.getAttributeValue(KEY));
-		if (enabled) {
-			String savePath = experimentViewer.getSaveDir().getPath()+System.getProperty("file.separator")+(count++)+"_"+node.getName()+"_codeviewer";
-			CodeViewer cv = new CodeViewer(node.getAttribute(KEY), new File(savePath));
-			if (bounds==null) {
-				Point location = experimentViewer.getLocation();
-				cv.setLocation(new Point(location.x+20, location.y+20));
-			} else {
-				cv.setBounds(bounds);
-			}
-			cv.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-			cv.setVisible(true);
-			codeViewers.put(node, cv);
-		}
-	}
+    @Override
+    public boolean denyEnterNode(QuestionTreeNode node) {
+        return false;
+    }
 
-	@Override
-	public String denyNextNode(QuestionTreeNode currentNode) {
-		return null;
-	}
+    @Override
+    public void enterNode(QuestionTreeNode node) {
+        boolean enabled = Boolean.parseBoolean(node.getAttributeValue(KEY));
+        if (enabled) {
+            String savePath =
+                    experimentViewer.getSaveDir().getPath() + System.getProperty("file.separator") + (count++) + "_"
+                            + node.getName() + "_codeviewer";
+            CodeViewer cv = new CodeViewer(node.getAttribute(KEY), new File(savePath));
+            if (bounds == null) {
+                Point location = experimentViewer.getLocation();
+                cv.setLocation(new Point(location.x + 20, location.y + 20));
+            } else {
+                cv.setBounds(bounds);
+            }
+            cv.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+            cv.setVisible(true);
+            codeViewers.put(node, cv);
+        }
+    }
 
-	@Override
-	public void exitNode(QuestionTreeNode node) {
-		CodeViewer cv = codeViewers.get(node);
-		if (cv!=null) {
-			CodeViewerPluginList.onClose();
-			cv.getRecorder().onClose();
-			bounds = cv.getBounds();
-			cv.dispose();
-			codeViewers.remove(node);
-		}
-	}
+    @Override
+    public String denyNextNode(QuestionTreeNode currentNode) {
+        return null;
+    }
 
-	@Override
-	public String finishExperiment() {
-		return null;
-	}
+    @Override
+    public void exitNode(QuestionTreeNode node) {
+        CodeViewer cv = codeViewers.get(node);
+        if (cv != null) {
+            CodeViewerPluginList.onClose();
+            cv.getRecorder().onClose();
+            bounds = cv.getBounds();
+            cv.dispose();
+            codeViewers.remove(node);
+        }
+    }
+
+    @Override
+    public String finishExperiment() {
+        return null;
+    }
 }

@@ -31,18 +31,28 @@
 
 package de.uni_passau.fim.infosun.prophet;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GraphicsEnvironment;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 /**
  * A 1.4 application that brings up a ListDialog.
  */
 public class ListDialogRunner {
+
     static JFrame frame;
-    static String[] names = {"Arlo", "Cosmo", "Elmo", "Hugo",
-                             "Jethro", "Laszlo", "Milo", "Nemo",
-                             "Otto", "Ringo", "Rocco", "Rollo"};
+    static String[] names =
+            {"Arlo", "Cosmo", "Elmo", "Hugo", "Jethro", "Laszlo", "Milo", "Nemo", "Otto", "Ringo", "Rocco", "Rollo"};
 
     public static JPanel createUI() {
         //Create the labels.
@@ -57,24 +67,19 @@ public class ListDialogRunner {
         //Create the button.
         final JButton button = new JButton("Pick a new name...");
         button.addActionListener(new ActionListener() {
+
             public void actionPerformed(ActionEvent e) {
-                String selectedName = ListDialog.showDialog(
-                                        frame,
-                                        button,
-                                        "<html>Baby names ending in O-O-O-O-O-O-O-O-O-O-O-O-O-O-O-O-O-O:</html>",
-                                        "Name Chooser",
-                                        names,
-                                        name.getText(),
-                                        "Cosmo  ");
+                String selectedName = ListDialog.showDialog(frame, button,
+                        "<html>Baby names ending in O-O-O-O-O-O-O-O-O-O-O-O-O-O-O-O-O-O:</html>", "Name Chooser", names,
+                        name.getText(), "Cosmo  ");
                 name.setText(selectedName);
             }
         });
 
         //Create the panel we'll return and set up the layout.
         JPanel panel = new JPanel();
-        panel.setLayout(new BoxLayout(panel,
-                                      BoxLayout.PAGE_AXIS));
-        panel.setBorder(BorderFactory.createEmptyBorder(20,20,10,20));
+        panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
+        panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 10, 20));
         intro.setAlignmentX(JComponent.CENTER_ALIGNMENT);
         name.setAlignmentX(JComponent.CENTER_ALIGNMENT);
         button.setAlignmentX(JComponent.CENTER_ALIGNMENT);
@@ -85,7 +90,7 @@ public class ListDialogRunner {
         panel.add(name);
 
         //Add a vertical spacer that also guarantees us a minimum width:
-        panel.add(Box.createRigidArea(new Dimension(150,10)));
+        panel.add(Box.createRigidArea(new Dimension(150, 10)));
 
         //Add the button.
         panel.add(button);
@@ -99,8 +104,7 @@ public class ListDialogRunner {
      */
     protected static Font getAFont() {
         //initial strings of desired fonts
-        String[] desiredFonts =
-            {"French Script", "FrenchScript", "Script"};
+        String[] desiredFonts = {"French Script", "FrenchScript", "Script"};
 
         String[] existingFamilyNames = null; //installed fonts
         String fontName = null;        //font we'll use
@@ -117,8 +121,7 @@ public class ListDialogRunner {
         //anything else that searches for all fonts.)  If this call
         //causes problems for you under the latest JRE, please let
         //us know.
-        GraphicsEnvironment ge =
-            GraphicsEnvironment.getLocalGraphicsEnvironment();
+        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
         if (ge != null) {
             existingFamilyNames = ge.getAvailableFontFamilyNames();
         }
@@ -137,8 +140,7 @@ public class ListDialogRunner {
                         //the Latin character 'A'.  (You might test for
                         //a different character if you're using a different
                         //language.)
-                        Font f = new Font(existingFamilyNames[j],
-                                          Font.PLAIN, 1);
+                        Font f = new Font(existingFamilyNames[j], Font.PLAIN, 1);
                         if (f.canDisplay('A')) {
                             fontName = existingFamilyNames[j];
                             System.out.println("Using font: " + fontName);
@@ -183,6 +185,7 @@ public class ListDialogRunner {
         //Schedule a job for the event-dispatching thread:
         //creating and showing this application's GUI.
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
+
             public void run() {
                 createAndShowGUI();
             }

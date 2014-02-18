@@ -5,8 +5,6 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.util.Locale;
-import java.util.ResourceBundle;
-
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JSplitPane;
@@ -27,139 +25,144 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTreeNode.Que
  * @author Markus K�ppen
  */
 public class ExperimentEditor extends JFrame {
-	/**
-	 * The window title for the main frame
-	 */
-	public static final String TITLE = "ExperimentEditor";
 
-	private static final long serialVersionUID = 1L;
+    /**
+     * The window title for the main frame
+     */
+    public static final String TITLE = "ExperimentEditor";
 
-	/**
-	 * JTree component on the left side of the ExperimentEditor
-	 */
-	private QuestionTree tree;
+    private static final long serialVersionUID = 1L;
 
-	/**
-	 * JTabbedPane component on the right side of the ExperimentEditor
-	 */
-	private ExperimentEditorTabbedPane questionEditorTabbedPane;
+    /**
+     * JTree component on the left side of the ExperimentEditor
+     */
+    private QuestionTree tree;
 
-	/**
-	 * Main method to launch the ExperimentEditor
-	 *
-	 * @param args
-	 *            not used
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					String laf = UIManager.getSystemLookAndFeelClassName();
-					UIManager.setLookAndFeel(laf);
-					ExperimentEditor frame = new ExperimentEditor();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+    /**
+     * JTabbedPane component on the right side of the ExperimentEditor
+     */
+    private ExperimentEditorTabbedPane questionEditorTabbedPane;
 
-	/**
-	 * Constructor of the ExperimentEditor, called by the main() method;<br>
-	 * sets some basic settings and adds used components
-	 */
-	public ExperimentEditor() {
-		String selectedLanguage = getPreferredLanguage();
+    /**
+     * Main method to launch the ExperimentEditor
+     *
+     * @param args
+     *         not used
+     */
+    public static void main(String[] args) {
+        EventQueue.invokeLater(new Runnable() {
 
-		// TODO initialize with selected language
-		Locale locale = Locale.ENGLISH;
-		if (selectedLanguage.equals("English"))
-			locale = Locale.ENGLISH;
-		else if (selectedLanguage.equals("German"))
-			locale = Locale.GERMAN;
+            public void run() {
+                try {
+                    String laf = UIManager.getSystemLookAndFeelClassName();
+                    UIManager.setLookAndFeel(laf);
+                    ExperimentEditor frame = new ExperimentEditor();
+                    frame.setVisible(true);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
 
-		UIElementNames.setUIElements(locale);
+    /**
+     * Constructor of the ExperimentEditor, called by the main() method;<br>
+     * sets some basic settings and adds used components
+     */
+    public ExperimentEditor() {
+        String selectedLanguage = getPreferredLanguage();
 
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setSize(800, 600);
-		setLayout(new BorderLayout());
-		setLocationRelativeTo(null);
-		setTitle(TITLE);
+        // TODO initialize with selected language
+        Locale locale = Locale.ENGLISH;
+        if (selectedLanguage.equals("English")) {
+            locale = Locale.ENGLISH;
+        } else if (selectedLanguage.equals("German")) {
+            locale = Locale.GERMAN;
+        }
 
-		JSplitPane splitPane = new JSplitPane();
-		add(splitPane);
+        UIElementNames.setUIElements(locale);
 
-		ExperimentEditorMenuBar menuBar = new ExperimentEditorMenuBar(this);
-		setJMenuBar(menuBar);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(800, 600);
+        setLayout(new BorderLayout());
+        setLocationRelativeTo(null);
+        setTitle(TITLE);
 
-		tree = new QuestionTree();
-		tree.setPreferredSize(new Dimension(175, 10));
-		tree.addQuestionTreeNodeListener(new QuestionTreeNodeListener() {
-			public void questionTreeEventOccured(QuestionTreeNodeEvent e) {
-				questionEditorTabbedPane.setSelected(e.getNode());
-			}
-		});
-		tree.setBorder(null);
-		splitPane.setLeftComponent(tree);
+        JSplitPane splitPane = new JSplitPane();
+        add(splitPane);
 
-		questionEditorTabbedPane = new ExperimentEditorTabbedPane();
-		questionEditorTabbedPane.setBorder(null);
-		splitPane.setRightComponent(questionEditorTabbedPane);
+        ExperimentEditorMenuBar menuBar = new ExperimentEditorMenuBar(this);
+        setJMenuBar(menuBar);
 
-		splitPane.setBorder(null);
-		for (Component component : splitPane.getComponents())
-			if (component instanceof BasicSplitPaneDivider)
-				((BasicSplitPaneDivider) component).setBorder(null);
+        tree = new QuestionTree();
+        tree.setPreferredSize(new Dimension(175, 10));
+        tree.addQuestionTreeNodeListener(new QuestionTreeNodeListener() {
 
-		add(splitPane, BorderLayout.CENTER);
-	}
+            public void questionTreeEventOccured(QuestionTreeNodeEvent e) {
+                questionEditorTabbedPane.setSelected(e.getNode());
+            }
+        });
+        tree.setBorder(null);
+        splitPane.setLeftComponent(tree);
 
-	private String getPreferredLanguage() {
-		//TODO better modularization
-		Object[] possibleValues = { "German", "English" };
-		Object selectedLanguage = JOptionPane.showInputDialog(null,
-				"Select a language for PROPHET", "Input",
-				JOptionPane.INFORMATION_MESSAGE, null, possibleValues,
-				possibleValues[0]);
-		if (selectedLanguage == null)
-			selectedLanguage = "English";
-		System.out.println("Language: " + selectedLanguage);
+        questionEditorTabbedPane = new ExperimentEditorTabbedPane();
+        questionEditorTabbedPane.setBorder(null);
+        splitPane.setRightComponent(questionEditorTabbedPane);
 
-		return selectedLanguage.toString();
-	}
+        splitPane.setBorder(null);
+        for (Component component : splitPane.getComponents()) {
+            if (component instanceof BasicSplitPaneDivider) {
+                ((BasicSplitPaneDivider) component).setBorder(null);
+            }
+        }
 
-	/**
-	 *
-	 * @return The JTree that represents the question tree
-	 */
-	public QuestionTree getTreeComponent() {
-		return tree;
-	}
+        add(splitPane, BorderLayout.CENTER);
+    }
 
-	/**
-	 * Tells the QuestionTree to create a new tree, called when the "New" item
-	 * is selected in main menu
-	 */
-	public void newTree() {
-		tree.newRoot();
-	}
+    private String getPreferredLanguage() {
+        //TODO better modularization
+        Object[] possibleValues = {"German", "English"};
+        Object selectedLanguage = JOptionPane
+                .showInputDialog(null, "Select a language for PROPHET", "Input", JOptionPane.INFORMATION_MESSAGE, null,
+                        possibleValues, possibleValues[0]);
+        if (selectedLanguage == null) {
+            selectedLanguage = "English";
+        }
+        System.out.println("Language: " + selectedLanguage);
 
-	/**
-	 * Loads a question tree into the JTree component
-	 *
-	 * @param root
-	 */
-	public void loadTree(QuestionTreeNode root) {
-		tree.setRoot(root);
-	}
+        return selectedLanguage.toString();
+    }
 
-	/**
-	 * return the ExperimentEditorTabbedPane-object from the ExperimentEditor
-	 *
-	 * @return questionEditorTabbedPane
-	 */
-	public ExperimentEditorTabbedPane getTabbedPane() {
-		return questionEditorTabbedPane;
-	}
+    /**
+     * @return The JTree that represents the question tree
+     */
+    public QuestionTree getTreeComponent() {
+        return tree;
+    }
+
+    /**
+     * Tells the QuestionTree to create a new tree, called when the "New" item
+     * is selected in main menu
+     */
+    public void newTree() {
+        tree.newRoot();
+    }
+
+    /**
+     * Loads a question tree into the JTree component
+     *
+     * @param root
+     */
+    public void loadTree(QuestionTreeNode root) {
+        tree.setRoot(root);
+    }
+
+    /**
+     * return the ExperimentEditorTabbedPane-object from the ExperimentEditor
+     *
+     * @return questionEditorTabbedPane
+     */
+    public ExperimentEditorTabbedPane getTabbedPane() {
+        return questionEditorTabbedPane;
+    }
 }

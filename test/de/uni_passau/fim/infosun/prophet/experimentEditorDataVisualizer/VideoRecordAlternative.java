@@ -4,10 +4,10 @@ import javax.swing.JFrame;
 
 public class VideoRecordAlternative extends JFrame {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
 //
 //	private JTextField minutesTextField;
 //	private JTextField secondsTextField;
@@ -52,7 +52,7 @@ public class VideoRecordAlternative extends JFrame {
 //		CodeViewer codeViewer = new CodeViewer(questionnaire, null);
 //		codeViewer.setVisible(true);
 //		controller = new VideoRecordController(log, codeViewer);
-//		
+//
 //		initializeGUI();
 //		deactivate();
 //		addListener();
@@ -177,25 +177,25 @@ public class VideoRecordAlternative extends JFrame {
 //		JPanel panel_1 = new JPanel();
 //		jumpToTimePanel.add(panel_1, BorderLayout.CENTER);
 //				panel_1.setLayout(new BorderLayout(0, 0));
-//		
+//
 //				jumpToTimeButton = new JButton("OK");
 //				panel_1.add(jumpToTimeButton, BorderLayout.EAST);
-//				
+//
 //				JPanel panel_3 = new JPanel();
 //				FlowLayout flowLayout_1 = (FlowLayout) panel_3.getLayout();
 //				flowLayout_1.setAlignment(FlowLayout.LEADING);
 //				panel_1.add(panel_3);
-//				
+//
 //						JLabel lblMinuten = new JLabel("Minuten");
 //						panel_3.add(lblMinuten);
-//						
+//
 //								minutesTextField = new JTextField();
 //								panel_3.add(minutesTextField);
 //								minutesTextField.setColumns(10);
-//								
+//
 //										JLabel lblSekunden = new JLabel("Sekunden");
 //										panel_3.add(lblSekunden);
-//										
+//
 //												secondsTextField = new JTextField();
 //												panel_3.add(secondsTextField);
 //												secondsTextField.setColumns(10);
@@ -212,23 +212,22 @@ public class VideoRecordAlternative extends JFrame {
 //		JPanel panel_2 = new JPanel();
 //		jumpToAction.add(panel_2, BorderLayout.CENTER);
 //				panel_2.setLayout(new BorderLayout(0, 0));
-//		
+//
 //				jumpToActionButton = new JButton("OK");
 //				panel_2.add(jumpToActionButton, BorderLayout.EAST);
-//				
+//
 //				JPanel panel_4 = new JPanel();
 //				FlowLayout flowLayout = (FlowLayout) panel_4.getLayout();
 //				flowLayout.setAlignment(FlowLayout.LEADING);
 //				panel_2.add(panel_4);
-//				
+//
 //						JLabel lblActionsindex = new JLabel("Index:");
 //						panel_4.add(lblActionsindex);
-//						
+//
 //								actionIndexTextField = new JTextField();
 //								panel_4.add(actionIndexTextField);
 //								actionIndexTextField.setColumns(10);
 //
 //		pack();
 //	}
-
 }

@@ -1,6 +1,5 @@
 package test.experimentEditorDataVisualizer;
 
-
 public class VideoRecordController {
 //
 //	private LoggingTreeNode data;
@@ -129,9 +128,9 @@ public class VideoRecordController {
 //				System.out.println("Fehler im Dateiformat");
 //			}
 //		} else if (actionCommand.equals("scroll")) {
-//			// TODO: scroll-Action einfügen
+//			// TODO: scroll-Action einfï¿½gen
 //		} else if (actionCommand.equals("search")) {
-//			// TODO: search-Action einfügen
+//			// TODO: search-Action einfï¿½gen
 //		}
 //	}
 //
@@ -142,7 +141,7 @@ public class VideoRecordController {
 //			// TODO: Tab schliessen
 //		} else if (actionCommand.equals(RecorderPlugin.TYPE_CLOSED)) {
 //			currentActionNumber--;
-//			// TODO: Tab öffnen
+//			// TODO: Tab ï¿½ffnen
 //		} else if (actionCommand.equals("insert")) {
 //			currentActionNumber--;
 //			// TODO: Text entfernen
@@ -150,12 +149,12 @@ public class VideoRecordController {
 //			currentActionNumber--;
 //			// TODO: Text wiederherstellen (undo/redo)
 //		} else if (actionCommand.equals("scroll")) {
-//			// TODO: scroll-Action einfügen
+//			// TODO: scroll-Action einfï¿½gen
 //		} else if (actionCommand.equals("search")) {
-//			// TODO: search-Action einfügen
+//			// TODO: search-Action einfï¿½gen
 //		}
 //	}
-//	
+//
 //	public int getTotalActionNumber() {
 //		return totalActionNumber;
 //	}
