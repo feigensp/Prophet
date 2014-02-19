@@ -16,10 +16,8 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
-import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import com.sun.javafx.scene.shape.PathUtils;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.Constants;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentEditor.tabbedPane.editorTabs.ContentEditorPanel;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.Pair;
@@ -27,7 +25,7 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNa
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTreeNode.QuestionTreeHTMLHandler;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTreeNode.QuestionTreeNode;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTreeNode.QuestionTreeXMLHandler;
-import org.w3c.dom.Document;
+import org.cdmckay.coffeedom.Document;
 
 /**
  * The menu bar of the ExperimentViewer. Separated to enhance readability.
@@ -265,7 +263,8 @@ public class ExperimentEditorMenuBar extends JMenuBar {
                 fileChooser.setName(UIElementNames.EXPORT_SELECT_TARGET_CSV);
                 fileChooser.setFileFilter(new FileNameExtensionFilter("CSV-Dateien", "csv"));
                 fileChooser.setMultiSelectionEnabled(false);
-                fileChooser.; csvReturnCode = fileChooser.showSaveDialog(null);
+
+                csvReturnCode = fileChooser.showSaveDialog(null);
 
                 if (csvReturnCode == JFileChooser.APPROVE_OPTION) {
                     csvFile = fileChooser.getSelectedFile();

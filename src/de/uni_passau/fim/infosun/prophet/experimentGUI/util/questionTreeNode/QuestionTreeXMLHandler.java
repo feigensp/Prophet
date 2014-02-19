@@ -7,7 +7,11 @@
 
 package de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTreeNode;
 
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -105,7 +109,7 @@ public class QuestionTreeXMLHandler {
      * @param xmlAnswerFiles the answer XML files to be saved
      * @param csvFile the file in which the data is to be stored
      */
-    public static void saveAsCSV(List<Document> xmlAnswerFiles, File csvFile) {
+    public static void saveAsCSV(List<Document> xmlAnswerFiles, File csvFile, String experimentCode) { //TODO use experimentCode
         Objects.requireNonNull(xmlAnswerFiles, "xmlAnswerFiles must not be null!");
         Objects.requireNonNull(csvFile, "csvFile must not be null!");
 
