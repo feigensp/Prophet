@@ -24,6 +24,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import au.com.bytecode.opencsv.CSVWriter;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.Constants;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.Pair;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames;
@@ -117,7 +118,69 @@ public class QuestionTreeXMLHandler {
      * @param csvFile the file in which the data is to be stored
      */
     public static void saveAsCSV(List<Document> xmlAnswerFiles, File csvFile) {
+        Objects.requireNonNull(xmlAnswerFiles, "xmlAnswerFiles must not be null!");
+        Objects.requireNonNull(csvFile, "csvFile must not be null!");
 
+        if (xmlAnswerFiles.isEmpty()) {
+            return;
+        }
+
+        try {
+            if (csvFile.exists()) {
+                if (!csvFile.delete()) {
+                    System.err.println("Could not overwrite " + csvFile);
+                    return;
+                }
+            }
+
+            if (!csvFile.createNewFile()) {
+                throw new IOException();
+            }
+        } catch (IOException e) {
+            System.err.println("Could not create " + csvFile);
+            return;
+        }
+
+        CSVWriter csvWriter;
+        try {
+            csvWriter = new CSVWriter(new FileWriter(csvFile));
+        } catch (IOException e) {
+            System.err.println("Could not create a Writer for " + csvFile);
+            return;
+        }
+
+        csvWriter.writeNext(makeHeader(xmlAnswerFiles.get(0)));
+
+        for (Document doc : xmlAnswerFiles) {
+            csvWriter.writeNext(makeContentLine(doc));
+        }
+    }
+
+    private static String[] makeContentLine(Document document) {
+        Objects.requireNonNull(document, "doc must not be null");
+
+        ArrayList<String> contentElements = new ArrayList<>();
+        Element root = document.getDocumentElement();
+
+
+        return contentElements.toArray(new String[contentElements.size()]);
+    }
+
+    private static String[] makeHeader(Document document) {
+        Objects.requireNonNull(document, "document must not be null");
+
+        ArrayList<String> headerElements = new ArrayList<>();
+        Element root = document.getDocumentElement();
+
+        headerElements.add("ExperimentCode");
+
+        Node rootAnswer = root.getElementsByTagName("answers").item(0).getFirstChild(); // assumed to be subjectcode
+        Node rootChildren = root.getElementsByTagName("children").item(0);
+
+        headerElements.add(rootAnswer.getAttributes().getNamedItem("name").getTextContent());
+
+
+        return headerElements.toArray(new String[headerElements.size()]);
     }
 
     /**
