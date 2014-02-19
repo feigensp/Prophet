@@ -12,7 +12,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-import de.uni_passau.fim.infosun.prophet.experimentGUI.PluginInterface;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.Plugin;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentViewer.ExperimentViewer;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.VerticalLayout;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames;
@@ -21,7 +21,7 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settingsComponents.S
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settingsComponents.SettingsPluginComponentDescription;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settingsComponents.components.SettingsTextArea;
 
-public class ExternalProgramsPlugin extends Thread implements PluginInterface {
+public class ExternalProgramsPlugin extends Thread implements Plugin {
 
     private static final String KEY = "start_external_progs";
     private static final String KEY_COMMANDS = "commands";

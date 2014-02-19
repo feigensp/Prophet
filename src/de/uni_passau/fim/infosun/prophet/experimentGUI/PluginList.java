@@ -26,7 +26,7 @@ public class PluginList {
     /**
      * the order of the plugins in this vector assigns the order of the calls
      */
-    private static Vector<PluginInterface> plugins = new Vector<PluginInterface>() {
+    private static Vector<Plugin> plugins = new Vector<Plugin>() {
 
         private static final long serialVersionUID = 1L;
 
@@ -47,7 +47,7 @@ public class PluginList {
     /**
      * @return Vector describing all active plugins
      */
-    public static Vector<PluginInterface> getPlugins() {
+    public static Vector<Plugin> getPlugins() {
         return plugins;
     }
 
@@ -57,7 +57,7 @@ public class PluginList {
      * @param plugin
      *         Plugin to be added and activated
      */
-    public static void add(PluginInterface plugin) {
+    public static void add(Plugin plugin) {
         plugins.add(plugin);
     }
 
@@ -70,7 +70,7 @@ public class PluginList {
      * @return <b>true</b> if a plugin is removed<br>
      * <b>false</b> if it wasn't active
      */
-    public static boolean remove(PluginInterface plugin) {
+    public static boolean remove(Plugin plugin) {
         return plugins.remove(plugin);
     }
 
@@ -84,7 +84,7 @@ public class PluginList {
      */
     public static SettingsComponentDescription getSettingsComponentDescription(QuestionTreeNode node) {
         SettingsComponentDescription result = null;
-        for (PluginInterface plugin : plugins) {
+        for (Plugin plugin : plugins) {
             try {
                 SettingsComponentDescription desc = plugin.getSettingsComponentDescription(node);
                 if (desc != null) {
@@ -108,7 +108,7 @@ public class PluginList {
      *         ExperimentViewer that has been started
      */
     public static void experimentViewerRun(ExperimentViewer experimentViewer) {
-        for (PluginInterface plugin : plugins) {
+        for (Plugin plugin : plugins) {
             try {
                 plugin.experimentViewerRun(experimentViewer);
             } catch (Exception e) {
@@ -127,7 +127,7 @@ public class PluginList {
      * <b>false</b> if any plugin denies the entrance
      */
     public static boolean denyEnterNode(QuestionTreeNode node) {
-        for (PluginInterface plugin : plugins) {
+        for (Plugin plugin : plugins) {
             try {
                 if (plugin.denyEnterNode(node)) {
                     return true;
@@ -146,7 +146,7 @@ public class PluginList {
      *         the node to be entered
      */
     public static void enterNode(QuestionTreeNode node) {
-        for (PluginInterface plugin : plugins) {
+        for (Plugin plugin : plugins) {
             try {
                 plugin.enterNode(node);
             } catch (Exception e) {
@@ -167,7 +167,7 @@ public class PluginList {
      */
     public static String denyNextNode(QuestionTreeNode currentNode) {
         String result = null;
-        for (PluginInterface plugin : plugins) {
+        for (Plugin plugin : plugins) {
             try {
                 String ret = plugin.denyNextNode(currentNode);
                 if (ret != null) {
@@ -190,7 +190,7 @@ public class PluginList {
      *         the node to be exited
      */
     public static void exitNode(QuestionTreeNode node) {
-        for (PluginInterface plugin : plugins) {
+        for (Plugin plugin : plugins) {
             try {
                 plugin.exitNode(node);
             } catch (Exception e) {
@@ -206,7 +206,7 @@ public class PluginList {
      */
     public static String finishExperiment() {
         String result = "";
-        for (PluginInterface plugin : plugins) {
+        for (Plugin plugin : plugins) {
             try {
                 String ret = plugin.finishExperiment();
                 if (ret != null && ret.length() > 0) {

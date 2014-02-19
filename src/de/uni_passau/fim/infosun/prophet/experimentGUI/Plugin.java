@@ -11,7 +11,7 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settingsComponents.S
  * @author Andreas Hasselberg
  * @author Markus K�ppen
  */
-public interface PluginInterface {
+public interface Plugin {
 
     /**
      * Delivers settings components shown in the settings tab of the experiment editor

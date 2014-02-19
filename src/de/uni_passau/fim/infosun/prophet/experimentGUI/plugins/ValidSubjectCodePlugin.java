@@ -5,7 +5,7 @@ import java.io.FileReader;
 import java.util.Scanner;
 
 import de.uni_passau.fim.infosun.prophet.experimentGUI.Constants;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.PluginInterface;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.Plugin;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentViewer.ExperimentViewer;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTreeNode.QuestionTreeNode;
@@ -15,7 +15,7 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settingsComponents.c
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settingsComponents.components.SettingsFilePathChooser;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settingsComponents.components.SettingsTextArea;
 
-public class ValidSubjectCodePlugin implements PluginInterface {
+public class ValidSubjectCodePlugin implements Plugin {
 
     private static final String KEY = "valid_code";
     private static final String KEY_CODES = "codes";

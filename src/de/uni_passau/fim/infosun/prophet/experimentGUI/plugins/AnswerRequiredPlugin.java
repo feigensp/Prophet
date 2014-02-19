@@ -3,7 +3,7 @@ package de.uni_passau.fim.infosun.prophet.experimentGUI.plugins;
 import java.util.Scanner;
 import java.util.TreeMap;
 
-import de.uni_passau.fim.infosun.prophet.experimentGUI.PluginInterface;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.Plugin;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentViewer.ExperimentViewer;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTreeNode.QuestionTreeNode;
@@ -11,7 +11,7 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settingsComponents.S
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settingsComponents.SettingsPluginComponentDescription;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settingsComponents.components.SettingsTextArea;
 
-public class AnswerRequiredPlugin implements PluginInterface {
+public class AnswerRequiredPlugin implements Plugin {
 
     private static final String KEY = "answers_required";
     private static final String KEY_NAMES = "names";

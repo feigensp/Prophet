@@ -8,12 +8,12 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 
-import de.uni_passau.fim.infosun.prophet.experimentGUI.PluginInterface;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.Plugin;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentViewer.ExperimentViewer;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTreeNode.QuestionTreeNode;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settingsComponents.SettingsComponentDescription;
 
-public class KeyPressedPlugin implements PluginInterface {
+public class KeyPressedPlugin implements Plugin {
 
     @Override
     public SettingsComponentDescription getSettingsComponentDescription(QuestionTreeNode node) {

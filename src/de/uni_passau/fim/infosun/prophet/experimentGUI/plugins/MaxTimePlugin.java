@@ -7,7 +7,7 @@ import java.util.Map.Entry;
 import java.util.Vector;
 import javax.swing.JOptionPane;
 
-import de.uni_passau.fim.infosun.prophet.experimentGUI.PluginInterface;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.Plugin;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentViewer.ExperimentViewer;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTreeNode.QuestionTreeNode;
@@ -16,7 +16,7 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settingsComponents.S
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settingsComponents.components.SettingsCheckBox;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settingsComponents.components.SettingsTextField;
 
-public class MaxTimePlugin implements PluginInterface {
+public class MaxTimePlugin implements Plugin {
 
     public class TimeOut implements Runnable {
 

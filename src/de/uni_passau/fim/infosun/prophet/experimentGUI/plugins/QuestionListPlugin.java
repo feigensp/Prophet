@@ -2,7 +2,7 @@ package de.uni_passau.fim.infosun.prophet.experimentGUI.plugins;
 
 import java.awt.BorderLayout;
 
-import de.uni_passau.fim.infosun.prophet.experimentGUI.PluginInterface;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.Plugin;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentViewer.ExperimentViewer;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugins.questionListPlugin.QuestionList;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames;
@@ -10,7 +10,7 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTreeNode.Que
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settingsComponents.SettingsComponentDescription;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settingsComponents.components.SettingsCheckBox;
 
-public class QuestionListPlugin implements PluginInterface {
+public class QuestionListPlugin implements Plugin {
 
     private final static String KEY = "question_list";
 

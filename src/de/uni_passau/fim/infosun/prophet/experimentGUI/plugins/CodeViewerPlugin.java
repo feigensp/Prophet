@@ -6,7 +6,7 @@ import java.io.File;
 import java.util.HashMap;
 import javax.swing.JFrame;
 
-import de.uni_passau.fim.infosun.prophet.experimentGUI.PluginInterface;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.Plugin;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentViewer.ExperimentViewer;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugins.codeViewerPlugin.CodeViewer;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugins.codeViewerPlugin.CodeViewerPluginList;
@@ -17,7 +17,7 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settingsComponents.S
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settingsComponents.SettingsPluginComponentDescription;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settingsComponents.components.SettingsDirectoryPathChooser;
 
-public class CodeViewerPlugin implements PluginInterface {
+public class CodeViewerPlugin implements Plugin {
 
     public final static String KEY = "codeviewer";
 

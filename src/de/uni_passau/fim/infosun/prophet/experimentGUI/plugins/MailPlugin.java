@@ -17,7 +17,7 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
-import de.uni_passau.fim.infosun.prophet.experimentGUI.PluginInterface;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.Plugin;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentViewer.ExperimentViewer;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugins.mailPlugin.ZipFile;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames;
@@ -27,7 +27,7 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settingsComponents.S
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settingsComponents.components.SettingsPasswordField;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settingsComponents.components.SettingsTextField;
 
-public class MailPlugin implements PluginInterface {
+public class MailPlugin implements Plugin {
 
     private final static String KEY = "sendmail";
     private final static String SMTP_SERVER = "smtp_server";
