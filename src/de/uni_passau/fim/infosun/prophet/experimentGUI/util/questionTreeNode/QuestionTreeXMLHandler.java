@@ -397,7 +397,7 @@ public class QuestionTreeXMLHandler {
     }
 
     /**
-     * @param formInfos
+     * @param formInfo
      *         Liste(Knotenname, Liste(Formname, Formvalue)) --> enth�lt alle
      *         formularknoten
      * @param answerNodes
@@ -405,56 +405,60 @@ public class QuestionTreeXMLHandler {
      * @param experimentCode
      *         code des derzeitigen Experimentes
      */
-    public static void saveAsCSVFile(ArrayList<Pair<QuestionTreeNode, ArrayList<Pair<String, String>>>> formInfos,
+    public static void saveAsCSVFile(ArrayList<Pair<QuestionTreeNode, ArrayList<Pair<String, String>>>> formInfo,
             ArrayList<QuestionTreeNode> answerNodes, String experimentCode, String path) {
         String lineSep = System.getProperty("line.separator");
         FileWriter fw;
         BufferedWriter bw;
-        String line;
+        StringBuilder header = new StringBuilder();
+        StringBuilder line = new StringBuilder();
 
         try {
+            // TODO check if valid path
             fw = new FileWriter(new File(path + System.getProperty("file.separator") + experimentCode + ".csv"));
             bw = new BufferedWriter(fw);
-            // header schreiben
-            line = "\"expCode\";\"probCode\"";
+            // write header
+            header.append("\"expCode\";\"probCode\"");
 
-            for (Pair<QuestionTreeNode, ArrayList<Pair<String, String>>> questionInfos : formInfos) {
-                line += ";\"" + questionInfos.getKey().getName() + "::time\"";
-                ArrayList<Pair<String, String>> questionForms = questionInfos.getValue();
+            for (Pair<QuestionTreeNode, ArrayList<Pair<String, String>>> questionInfo : formInfo) {
+                header.append(";\"" + questionInfo.getKey().getName() + "::time\"");
+                ArrayList<Pair<String, String>> questionForms = questionInfo.getValue();
 
                 for (Pair<String, String> questionForm : questionForms) {
                     String formName = questionForm.getKey();
                     if (formName != null) {
-                        line += ";\"" + questionInfos.getKey().getName() + "::" + formName + "\"";
+                        header.append(";\"" + questionInfo.getKey().getName() + "::" + formName + "\"");
                     }
                 }
             }
-            bw.write(line + lineSep);
+            bw.write(header + lineSep);
 
             // Daten schreiben
-            for (QuestionTreeNode answerNode : answerNodes) {
+            for (QuestionTreeNode currentNode : answerNodes) {
                 int nodeIndex = 0;
-                QuestionTreeNode currentNode = answerNode;
-                line = "\"" + experimentCode.replaceAll("\"", "\"\"") + "\""; //expCode
+                //line.append("\"" + experimentCode.replaceAll("\"", "\"\"") + "\""); //expCode TODO auskommentiert...
+
 
                 //probCode
                 if (currentNode.getAnswer(Constants.KEY_SUBJECT) != null) {
-                    line += ";\"" + currentNode.getAnswer(Constants.KEY_SUBJECT).replaceAll("\"", "\"\"") + "\"";
+                    line.append(";\"" + currentNode.getAnswer(Constants.KEY_SUBJECT).replaceAll("\"", "\"\"") + "\"");
                 } else {
-                    line += ";\"\"";
+                    line.append(";\"\"");
                 }
 
                 while (currentNode != null) {
-                    line += ";\"" + currentNode.getAttributeValue(ATTRIBUTE_TIME) + "\""; // Knotenzeit
-                    // Knotenantworten
-                    ArrayList<Pair<String, String>> questionForms = formInfos.get(nodeIndex).getValue();
+                    // Times
+                    line.append(";\"" + currentNode.getAttributeValue(ATTRIBUTE_TIME) + "\"");
+
+                    // Answers
+                    ArrayList<Pair<String, String>> questionForms = formInfo.get(nodeIndex).getValue();
 
                     for (Pair<String, String> questionForm : questionForms) {
                         String value = currentNode.getAnswer(questionForm.getKey());
                         if (value == null) {
-                            line += ";\"\"";
+                            line.append(";\"\"");
                         } else {
-                            line += ";\"" + value.replaceAll("\"", "\"\"") + "\"";
+                            line.append(";\"" + value.replaceAll("\"", "\"\"") + "\"");
                         }
                     }
                     currentNode = (QuestionTreeNode) currentNode.getNextNode();
@@ -462,6 +466,7 @@ public class QuestionTreeXMLHandler {
                 }
 
                 bw.write(line + lineSep);
+                line = new StringBuilder();
             }
 
             bw.close();
