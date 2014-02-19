@@ -1,5 +1,6 @@
 package de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTreeNode;
 
+import java.util.Objects;
 import java.util.TreeMap;
 import javax.swing.tree.DefaultMutableTreeNode;
 
@@ -20,15 +21,41 @@ public class QuestionTreeNode extends DefaultMutableTreeNode {
 
     long answerTime = 0;
 
+    /**
+     * Creates a new <code>QuestionTreeNode</code> with (default) as type and name.
+     */
     public QuestionTreeNode() {
         this("");
     }
 
+    /**
+     * Creates a new <code>QuestionTreeNode</code> with the given <code>type</code> and (default) as name.
+     *
+     * @param type
+     *         the type of this node
+     *
+     * @throws java.lang.NullPointerException
+     *         if <code>type</code> was <code>null</code>
+     */
     public QuestionTreeNode(String type) {
         this(type, "");
     }
 
+    /**
+     * Creates a new <code>QuestionTreeNode</code> with the given <code>type</code> and <code>name</code>.
+     *
+     * @param type
+     *         the type of this node
+     * @param name
+     *         the name of this node
+     *
+     * @throws java.lang.NullPointerException
+     *         if <code>type</code> or <code>name</code> was <code>null</code>
+     */
     public QuestionTreeNode(String type, String name) {
+        Objects.requireNonNull(type, "type must not be null!");
+        Objects.requireNonNull(name, "name must not be null!");
+
         value = "";
         attributes = new TreeMap<>();
         answers = new TreeMap<>();

@@ -49,7 +49,9 @@ public class QuestionTreeXMLHandler {
      * Recursively searches the given <code>directory</code> for files named <code>fileName</code> and
      * collects them in a list. If the given <code>File</code> is not a directory an empty list will be returned.
      *
-     * @param directory the directory to be searched
+     * @param directory
+     *         the directory to be searched
+     *
      * @return the list of files
      */
     public static List<File> getFilesByName(File directory, String fileName) {
@@ -77,9 +79,12 @@ public class QuestionTreeXMLHandler {
     }
 
     /**
-     * Parses the given <code>File</code> objects as XML files and collects the resulting <code>Document</code> objects.
+     * Parses the given <code>File</code> objects as XML files and collects the resulting <code>Document</code>
+     * objects.
      *
-     * @param files the files to be parsed
+     * @param files
+     *         the files to be parsed
+     *
      * @return the list of <code>Document</code>s
      */
     public static List<Document> getDocuments(List<File> files) {
@@ -106,10 +111,13 @@ public class QuestionTreeXMLHandler {
      * Saves the given XML answer files as one CSV file <code>csvFile</code>. If <code>csvFile</code> already exists
      * it will be overwritten.
      *
-     * @param xmlAnswerFiles the answer XML files to be saved
-     * @param csvFile the file in which the data is to be stored
+     * @param xmlAnswerFiles
+     *         the answer XML files to be saved
+     * @param csvFile
+     *         the file in which the data is to be stored
      */
-    public static void saveAsCSV(List<Document> xmlAnswerFiles, File csvFile, String experimentCode) { //TODO use experimentCode
+    public static void saveAsCSV(List<Document> xmlAnswerFiles, File csvFile,
+            String experimentCode) { //TODO use experimentCode
         Objects.requireNonNull(xmlAnswerFiles, "xmlAnswerFiles must not be null!");
         Objects.requireNonNull(csvFile, "csvFile must not be null!");
 
@@ -153,7 +161,6 @@ public class QuestionTreeXMLHandler {
 
         ArrayList<String> contentElements = new ArrayList<>();
 
-
         return contentElements.toArray(new String[contentElements.size()]);
     }
 
@@ -164,42 +171,44 @@ public class QuestionTreeXMLHandler {
 
         Element root = document.getRootElement();
 
-
-
         return headerElements.toArray(new String[headerElements.size()]);
     }
 
     /**
-     * method which adds recursively the childs (to an xml file)
+     * Inserts the treeNode and all its children to the xmlNode and puts the xmlNode into the given xmlTree.
      *
-     * @param treeChilds
-     *         childs which should bye added
-     * @param xmlParent
-     *         the parent who should get the childs
      * @param xmlTree
-     *         the xml-document
+     *         the xml document
+     * @param xmlNode
+     *         the xml node in which to add the treeNode
+     * @param treeNode
+     *         the treeNode that is to be converted to xml
      */
-    private static void saveXMLNode(org.w3c.dom.Document xmlTree, org.w3c.dom.Element xmlNode, QuestionTreeNode treeNode) {
+    private static void saveXMLNode(org.w3c.dom.Document xmlTree, org.w3c.dom.Element xmlNode,
+            QuestionTreeNode treeNode) {
 
-        // Name und Value hinzufügen
+        // add name and value
         xmlNode.setAttribute(ATTRIBUTE_NAME, treeNode.getName());
         xmlNode.setAttribute(ATTRIBUTE_VALUE, treeNode.getValue());
 
-        // evtl. Attribute hinzuf�gen
+        // add attributes
         if (!treeNode.getAttributes().isEmpty()) {
             org.w3c.dom.Element xmlAttributesNode = xmlTree.createElement(TYPE_ATTRIBUTES);
 
             xmlNode.appendChild(xmlAttributesNode);
 
-            for (Entry<String, QuestionTreeNode> attributeNode : treeNode.getAttributes().entrySet()) {
-                QuestionTreeNode treeChild = attributeNode.getValue();
+            // add all tree attributes as new xml elements as children of xmlNode.xmlAttributesNode
+            for (Entry<String, QuestionTreeNode> treeAttributeEntry : treeNode.getAttributes().entrySet()) {
+                QuestionTreeNode treeChild = treeAttributeEntry.getValue();
                 org.w3c.dom.Element xmlChild = xmlTree.createElement(treeChild.getType());
+
                 xmlAttributesNode.appendChild(xmlChild);
+
                 saveXMLNode(xmlTree, xmlChild, treeChild);
             }
         }
 
-        // evtl. Kinder hinzuf�gen
+        // add children
         if (treeNode.getChildCount() > 0) {
             org.w3c.dom.Element xmlChildrenNode = xmlTree.createElement(TYPE_CHILDREN);
 
@@ -208,37 +217,44 @@ public class QuestionTreeXMLHandler {
             for (int i = 0; i < treeNode.getChildCount(); i++) {
                 QuestionTreeNode treeChild = (QuestionTreeNode) treeNode.getChildAt(i);
                 org.w3c.dom.Element xmlChild = xmlTree.createElement(treeChild.getType());
+
                 xmlChildrenNode.appendChild(xmlChild);
+
                 saveXMLNode(xmlTree, xmlChild, treeChild);
             }
         }
     }
 
     /**
-     * writes an DataTreeNode with his children into an XML-File
+     * Writes a QuestionTreeNode and all its children to a XML-File.
      *
      * @param treeRoot
-     *         DataTreeNode which should be added (with children)
+     *         QuestionTreeNode which should be added (with children)
      * @param path
-     *         path for the xml-file
+     *         path where to save the xml-file
      */
     public static void saveXMLTree(QuestionTreeNode treeRoot, String path) {
         org.w3c.dom.Document xmlTree = null;
+
+        // Create file
+        File parentDir = new File(path).getParentFile();
+
+        if (!parentDir.exists()) {
+            parentDir.mkdirs();
+        }
+
         try {
-            // Dokument erstellen
-            File dir = new File(path).getParentFile();
-            if (!dir.exists()) {
-                dir.mkdirs();
-            }
             xmlTree = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
-            // Wurzelknoten erschaffen
-            org.w3c.dom.Element xmlRoot = xmlTree.createElement(treeRoot.getType());
-            xmlTree.appendChild(xmlRoot);
-            saveXMLNode(xmlTree, xmlRoot, treeRoot);
         } catch (ParserConfigurationException e1) {
             e1.printStackTrace();
         }
-        // Fragebogen in Datei speichern
+
+        // Create root node
+        org.w3c.dom.Element xmlRoot = xmlTree.createElement(treeRoot.getType());
+        xmlTree.appendChild(xmlRoot);
+        saveXMLNode(xmlTree, xmlRoot, treeRoot);
+
+        // Save to file
         try {
             if (xmlTree != null) {
                 TransformerFactory.newInstance().newTransformer()
@@ -259,7 +275,8 @@ public class QuestionTreeXMLHandler {
      * @param xmlTree
      *         the xml-document
      */
-    private static void saveXMLAnswerNode(org.w3c.dom.Document xmlTree, org.w3c.dom.Element xmlNode, QuestionTreeNode treeNode) {
+    private static void saveXMLAnswerNode(org.w3c.dom.Document xmlTree, org.w3c.dom.Element xmlNode,
+            QuestionTreeNode treeNode) {
         // Name hinzuf�gen
         xmlNode.setAttribute(ATTRIBUTE_NAME, treeNode.getName());
         xmlNode.setAttribute(ATTRIBUTE_TIME, "" + treeNode.getAnswerTime());
@@ -486,7 +503,6 @@ public class QuestionTreeXMLHandler {
             for (QuestionTreeNode currentNode : answerNodes) {
                 int nodeIndex = 0;
                 //line.append("\"" + experimentCode.replaceAll("\"", "\"\"") + "\""); //expCode TODO auskommentiert...
-
 
                 //probCode
                 if (currentNode.getAnswer(Constants.KEY_SUBJECT) != null) {
