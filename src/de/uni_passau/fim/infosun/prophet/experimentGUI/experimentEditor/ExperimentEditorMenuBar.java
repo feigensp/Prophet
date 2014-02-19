@@ -132,8 +132,10 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 
             public void actionPerformed(ActionEvent arg0) {
                 JFileChooser fc = new JFileChooser(currentFile);
+
                 if (fc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
                     File file = fc.getSelectedFile();
+
                     if (file.exists()) {
                         int n = JOptionPane
                                 .showConfirmDialog(null, file.getName() + UIElementNames.MESSAGE_REPLACE_FILE,
@@ -142,9 +144,12 @@ public class ExperimentEditorMenuBar extends JMenuBar {
                             return;
                         }
                     }
+
                     currentFile = file;
-                    QuestionTreeXMLHandler
-                            .saveXMLTree(experimentEditor.getTreeComponent().getRoot(), file.getAbsolutePath());
+
+                    QuestionTreeNode rootNode = experimentEditor.getTreeComponent().getRoot();
+                    QuestionTreeXMLHandler.saveXMLTree(rootNode, file.getAbsolutePath());
+
                     experimentEditor.setTitle(ExperimentEditor.TITLE + " - " + currentFile.getAbsolutePath());
                     enableMenuItems();
                 }
@@ -162,8 +167,10 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 
             public void actionPerformed(ActionEvent arg0) {
                 JFileChooser fc = new JFileChooser(currentFile);
+
                 if (fc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
                     File file = fc.getSelectedFile();
+
                     if (file.exists()) {
                         int n = JOptionPane
                                 .showConfirmDialog(null, file.getName() + UIElementNames.MESSAGE_REPLACE_FILE,
@@ -176,6 +183,7 @@ public class ExperimentEditorMenuBar extends JMenuBar {
                 }
             }
         });
+
         exportCSVMenuItem = new JMenuItem(UIElementNames.MENU_ITEM_CSV_OF_ANSWERS);
         exportMenu.add(exportCSVMenuItem);
         exportCSVMenuItem.addActionListener(new ActionListener() {
@@ -244,7 +252,6 @@ public class ExperimentEditorMenuBar extends JMenuBar {
                     } else {
                         experimentCode = "unknown";
                     }
-
                 } else {
                     return;
                 }
@@ -258,8 +265,7 @@ public class ExperimentEditorMenuBar extends JMenuBar {
                 fileChooser.setName(UIElementNames.EXPORT_SELECT_TARGET_CSV);
                 fileChooser.setFileFilter(new FileNameExtensionFilter("CSV-Dateien", "csv"));
                 fileChooser.setMultiSelectionEnabled(false);
-                fileChooser.;
-                csvReturnCode = fileChooser.showSaveDialog(null);
+                fileChooser.; csvReturnCode = fileChooser.showSaveDialog(null);
 
                 if (csvReturnCode == JFileChooser.APPROVE_OPTION) {
                     csvFile = fileChooser.getSelectedFile();
