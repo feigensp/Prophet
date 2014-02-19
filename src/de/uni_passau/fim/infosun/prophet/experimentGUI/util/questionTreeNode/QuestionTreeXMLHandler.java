@@ -13,7 +13,10 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map.Entry;
+import java.util.Objects;
 import javax.swing.JOptionPane;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -39,6 +42,38 @@ public class QuestionTreeXMLHandler {
     public final static String TYPE_ANSWERS = "answers";
     public final static String TYPE_ANSWER = "answer";
     public final static String TYPE_CHILDREN = "children";
+
+    /**
+     * Recursively searches the given <code>directory</code> for files named <code>fileName</code> and
+     * collects them in a list. If the given <code>File</code> is not a directory an empty list will be returned.
+     *
+     * @param directory the directory to be searched
+     * @return the list of files
+     */
+    public static List<File> getFilesByName(File directory, String fileName) {
+
+    }
+
+    /**
+     * Parses the given <code>File</code> objects as XML files and collects the resulting <code>Document</code> objects.
+     *
+     * @param files the files to be parsed
+     * @return the list of <code>Document</code>s
+     */
+    public static List<Document> getDocuments(List<File> files) {
+
+    }
+
+    /**
+     * Saves the given XML answer files as one CSV file <code>csvFile</code>. If <code>csvFile</code> already exists
+     * it will be overwritten.
+     *
+     * @param xmlAnswerFiles the answer XML files to be saved
+     * @param csvFile the file in which the data is to be stored
+     */
+    public static void saveAsCSV(List<Document> xmlAnswerFiles, File csvFile) {
+
+    }
 
     /**
      * method which adds recursively the childs (to an xml file)
