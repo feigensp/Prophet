@@ -8,16 +8,12 @@
 package de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTreeNode;
 
 import java.io.*;
-import java.nio.file.DirectoryStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Objects;
 import javax.swing.JOptionPane;
-import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerFactory;
@@ -28,12 +24,12 @@ import au.com.bytecode.opencsv.CSVWriter;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.Constants;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.Pair;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
+import org.cdmckay.coffeedom.Document;
+import org.cdmckay.coffeedom.Element;
+import org.cdmckay.coffeedom.input.SAXBuilder;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
 public class QuestionTreeXMLHandler {
 
@@ -86,24 +82,16 @@ public class QuestionTreeXMLHandler {
         Objects.requireNonNull(files, "files must not be null!");
 
         List<Document> documents = new LinkedList<>();
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder parser;
         Document document;
-
-        try {
-            parser = factory.newDocumentBuilder();
-        } catch (ParserConfigurationException e) {
-            System.err.println("Could not create the XML parser. Returning an empty list.");
-            return documents;
-        }
+        SAXBuilder builder = new SAXBuilder();
 
         for (File file : files) {
 
             try {
-                document = parser.parse(file);
+                document = builder.build(file);
                 documents.add(document);
-            } catch (SAXException | IOException e) {
-                System.err.println("Could not parse a file as XML: " + file.toString());
+            } catch (IOException e) {
+                System.err.println("Could not parse a file to XML: " + file);
             }
         }
 
@@ -143,7 +131,7 @@ public class QuestionTreeXMLHandler {
 
         CSVWriter csvWriter;
         try {
-            csvWriter = new CSVWriter(new FileWriter(csvFile));
+            csvWriter = new CSVWriter(new FileWriter(csvFile), ';', '"');
         } catch (IOException e) {
             System.err.println("Could not create a Writer for " + csvFile);
             return;
@@ -160,7 +148,6 @@ public class QuestionTreeXMLHandler {
         Objects.requireNonNull(document, "doc must not be null");
 
         ArrayList<String> contentElements = new ArrayList<>();
-        Element root = document.getDocumentElement();
 
 
         return contentElements.toArray(new String[contentElements.size()]);
@@ -170,14 +157,9 @@ public class QuestionTreeXMLHandler {
         Objects.requireNonNull(document, "document must not be null");
 
         ArrayList<String> headerElements = new ArrayList<>();
-        Element root = document.getDocumentElement();
 
-        headerElements.add("ExperimentCode");
+        Element root = document.getRootElement();
 
-        Node rootAnswer = root.getElementsByTagName("answers").item(0).getFirstChild(); // assumed to be subjectcode
-        Node rootChildren = root.getElementsByTagName("children").item(0);
-
-        headerElements.add(rootAnswer.getAttributes().getNamedItem("name").getTextContent());
 
 
         return headerElements.toArray(new String[headerElements.size()]);
@@ -193,7 +175,7 @@ public class QuestionTreeXMLHandler {
      * @param xmlTree
      *         the xml-document
      */
-    private static void saveXMLNode(Document xmlTree, Element xmlNode, QuestionTreeNode treeNode) {
+    private static void saveXMLNode(org.w3c.dom.Document xmlTree, org.w3c.dom.Element xmlNode, QuestionTreeNode treeNode) {
 
         // Name und Value hinzufügen
         xmlNode.setAttribute(ATTRIBUTE_NAME, treeNode.getName());
@@ -201,13 +183,13 @@ public class QuestionTreeXMLHandler {
 
         // evtl. Attribute hinzuf�gen
         if (!treeNode.getAttributes().isEmpty()) {
-            Element xmlAttributesNode = xmlTree.createElement(TYPE_ATTRIBUTES);
+            org.w3c.dom.Element xmlAttributesNode = xmlTree.createElement(TYPE_ATTRIBUTES);
 
             xmlNode.appendChild(xmlAttributesNode);
 
             for (Entry<String, QuestionTreeNode> attributeNode : treeNode.getAttributes().entrySet()) {
                 QuestionTreeNode treeChild = attributeNode.getValue();
-                Element xmlChild = xmlTree.createElement(treeChild.getType());
+                org.w3c.dom.Element xmlChild = xmlTree.createElement(treeChild.getType());
                 xmlAttributesNode.appendChild(xmlChild);
                 saveXMLNode(xmlTree, xmlChild, treeChild);
             }
@@ -215,13 +197,13 @@ public class QuestionTreeXMLHandler {
 
         // evtl. Kinder hinzuf�gen
         if (treeNode.getChildCount() > 0) {
-            Element xmlChildrenNode = xmlTree.createElement(TYPE_CHILDREN);
+            org.w3c.dom.Element xmlChildrenNode = xmlTree.createElement(TYPE_CHILDREN);
 
             xmlNode.appendChild(xmlChildrenNode);
 
             for (int i = 0; i < treeNode.getChildCount(); i++) {
                 QuestionTreeNode treeChild = (QuestionTreeNode) treeNode.getChildAt(i);
-                Element xmlChild = xmlTree.createElement(treeChild.getType());
+                org.w3c.dom.Element xmlChild = xmlTree.createElement(treeChild.getType());
                 xmlChildrenNode.appendChild(xmlChild);
                 saveXMLNode(xmlTree, xmlChild, treeChild);
             }
@@ -237,7 +219,7 @@ public class QuestionTreeXMLHandler {
      *         path for the xml-file
      */
     public static void saveXMLTree(QuestionTreeNode treeRoot, String path) {
-        Document xmlTree = null;
+        org.w3c.dom.Document xmlTree = null;
         try {
             // Dokument erstellen
             File dir = new File(path).getParentFile();
@@ -246,7 +228,7 @@ public class QuestionTreeXMLHandler {
             }
             xmlTree = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
             // Wurzelknoten erschaffen
-            Element xmlRoot = xmlTree.createElement(treeRoot.getType());
+            org.w3c.dom.Element xmlRoot = xmlTree.createElement(treeRoot.getType());
             xmlTree.appendChild(xmlRoot);
             saveXMLNode(xmlTree, xmlRoot, treeRoot);
         } catch (ParserConfigurationException e1) {
@@ -273,16 +255,16 @@ public class QuestionTreeXMLHandler {
      * @param xmlTree
      *         the xml-document
      */
-    private static void saveXMLAnswerNode(Document xmlTree, Element xmlNode, QuestionTreeNode treeNode) {
+    private static void saveXMLAnswerNode(org.w3c.dom.Document xmlTree, org.w3c.dom.Element xmlNode, QuestionTreeNode treeNode) {
         // Name hinzuf�gen
         xmlNode.setAttribute(ATTRIBUTE_NAME, treeNode.getName());
         xmlNode.setAttribute(ATTRIBUTE_TIME, "" + treeNode.getAnswerTime());
         // evtl. Antworten hinzuf�gen
         if (treeNode.getAnswers().size() > 0) {
-            Element xmlAnswersNode = xmlTree.createElement(TYPE_ANSWERS);
+            org.w3c.dom.Element xmlAnswersNode = xmlTree.createElement(TYPE_ANSWERS);
             xmlNode.appendChild(xmlAnswersNode);
             for (Entry<String, String> answerEntry : treeNode.getAnswers().entrySet()) {
-                Element xmlChild = xmlTree.createElement(TYPE_ANSWER);
+                org.w3c.dom.Element xmlChild = xmlTree.createElement(TYPE_ANSWER);
                 xmlChild.setAttribute(ATTRIBUTE_NAME, answerEntry.getKey());
                 xmlChild.setAttribute(ATTRIBUTE_VALUE, answerEntry.getValue());
                 xmlAnswersNode.appendChild(xmlChild);
@@ -290,11 +272,11 @@ public class QuestionTreeXMLHandler {
         }
         // evtl. Kinder hinzuf�gen
         if (treeNode.getChildCount() > 0) {
-            Element xmlChildrenNode = xmlTree.createElement(TYPE_CHILDREN);
+            org.w3c.dom.Element xmlChildrenNode = xmlTree.createElement(TYPE_CHILDREN);
             xmlNode.appendChild(xmlChildrenNode);
             for (int i = 0; i < treeNode.getChildCount(); i++) {
                 QuestionTreeNode treeChild = (QuestionTreeNode) treeNode.getChildAt(i);
-                Element xmlChild = xmlTree.createElement(treeChild.getType());
+                org.w3c.dom.Element xmlChild = xmlTree.createElement(treeChild.getType());
                 xmlChildrenNode.appendChild(xmlChild);
                 saveXMLAnswerNode(xmlTree, xmlChild, treeChild);
             }
@@ -310,7 +292,7 @@ public class QuestionTreeXMLHandler {
      *         path for the xml-file
      */
     public static void saveXMLAnswerTree(QuestionTreeNode treeRoot, String path) {
-        Document xmlTree = null;
+        org.w3c.dom.Document xmlTree = null;
         try {
             // Dokument erstellen
             File dir = new File(path).getParentFile();
@@ -319,7 +301,7 @@ public class QuestionTreeXMLHandler {
             }
             xmlTree = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
             // Wurzelknoten erschaffen
-            Element xmlRoot = xmlTree.createElement(treeRoot.getType());
+            org.w3c.dom.Element xmlRoot = xmlTree.createElement(treeRoot.getType());
             xmlTree.appendChild(xmlRoot);
             saveXMLAnswerNode(xmlTree, xmlRoot, treeRoot);
         } catch (ParserConfigurationException e1) {
@@ -392,7 +374,7 @@ public class QuestionTreeXMLHandler {
         }
         try {
             // Document lesen
-            Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(file);
+            org.w3c.dom.Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(file);
             // Wurzel holen
             Node xmlRoot = doc.getFirstChild();
             return loadXMLNode(xmlRoot);
@@ -450,7 +432,7 @@ public class QuestionTreeXMLHandler {
         }
         try {
             // Document lesen
-            Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(file);
+            org.w3c.dom.Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(file);
             // Wurzel holen
             Node xmlRoot = doc.getFirstChild();
             return loadAnswerXMLNode(xmlRoot);
