@@ -213,6 +213,7 @@ public class ExperimentEditorMenuBar extends JMenuBar {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String answersXmlFileName = "answers.xml";
+                String experimentCode;
                 List<Document> answerXmlDocuments;
                 File csvFile;
 
@@ -233,6 +234,21 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 
                 List<File> answerFiles = QuestionTreeXMLHandler.getFilesByName(searchDir, answersXmlFileName);
 
+                // Try to find experiment code in path. Look in parent dir of the first answerFile found.
+                if (answerFiles.size() > 0) {
+                    String folderName = answerFiles.get(0).getParentFile().getName();
+                    String[] parts = folderName.split("_");
+
+                    if (parts.length > 0) {
+                        experimentCode = parts[1];
+                    } else {
+                        experimentCode = "unknown";
+                    }
+
+                } else {
+                    return;
+                }
+
                 answerXmlDocuments = QuestionTreeXMLHandler.getDocuments(answerFiles);
 
                 // Get the csv file in which the results are to be stored.
@@ -242,12 +258,13 @@ public class ExperimentEditorMenuBar extends JMenuBar {
                 fileChooser.setName(UIElementNames.EXPORT_SELECT_TARGET_CSV);
                 fileChooser.setFileFilter(new FileNameExtensionFilter("CSV-Dateien", "csv"));
                 fileChooser.setMultiSelectionEnabled(false);
+                fileChooser.;
                 csvReturnCode = fileChooser.showSaveDialog(null);
 
                 if (csvReturnCode == JFileChooser.APPROVE_OPTION) {
                     csvFile = fileChooser.getSelectedFile();
 
-                    QuestionTreeXMLHandler.saveAsCSV(answerXmlDocuments, csvFile);
+                    QuestionTreeXMLHandler.saveAsCSV(answerXmlDocuments, csvFile, experimentCode);
                 }
             }
         });
