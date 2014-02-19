@@ -7,11 +7,10 @@
 
 package de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTreeNode;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -51,7 +50,27 @@ public class QuestionTreeXMLHandler {
      * @return the list of files
      */
     public static List<File> getFilesByName(File directory, String fileName) {
+        Objects.requireNonNull(directory, "directory must not be null!");
+        Objects.requireNonNull(fileName, "fileName must not be null!");
 
+        List<File> xmlFiles = new LinkedList<>();
+
+        if (!directory.isDirectory()) {
+            return xmlFiles;
+        }
+
+        for (File file : directory.listFiles()) {
+
+            if (file.isDirectory()) {
+                xmlFiles.addAll(getFilesByName(file, fileName));
+            } else {
+                if (file.getName().equals(fileName)) {
+                    xmlFiles.add(file);
+                }
+            }
+        }
+
+        return xmlFiles;
     }
 
     /**
