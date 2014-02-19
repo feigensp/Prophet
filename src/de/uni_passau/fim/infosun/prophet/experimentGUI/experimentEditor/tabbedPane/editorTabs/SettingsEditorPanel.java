@@ -39,7 +39,7 @@ public class SettingsEditorPanel extends ExperimentEditorTab {
     private QuestionTreeNode selected;
 
     /**
-     * Constructor
+     * Constructs a new <code>SettingsEditorPanel</code>.
      */
     public SettingsEditorPanel() {
         setLayout(new BorderLayout());
@@ -47,7 +47,7 @@ public class SettingsEditorPanel extends ExperimentEditorTab {
     }
 
     /**
-     * Loads the settings and saved options for the specified node into the tab, called by EditorTabbedPane
+     * Loads the settings and saved options for the specified node into the tab.
      */
     public void activate(QuestionTreeNode selectedNode) {
 
@@ -78,6 +78,9 @@ public class SettingsEditorPanel extends ExperimentEditorTab {
     private JScrollPane buildOptionScrollPane() {
         JScrollPane scrollPane;
         JPanel settingsPanel;
+        ArrayList<SettingsComponent> componentList;
+        SettingsComponentDescription desc;
+        SettingsComponent component;
 
         settingsPanel = new JPanel();
         settingsPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
@@ -87,29 +90,41 @@ public class SettingsEditorPanel extends ExperimentEditorTab {
         scrollPane.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
         scrollPane.getVerticalScrollBar().setUnitIncrement(16);
 
+        componentList = new ArrayList<>();
+        settingsComponents.put(selected, componentList);
+
         // add the standard options for experiments and categories
         if (selected.isExperiment()) {
-            settingsPanel.add(new SettingsComponentDescription(SettingsTextField.class, Constants.KEY_EXPERIMENT_CODE,
-                    UIElementNames.EXPERIMENT_CODE + ": ").build(selected));
+            desc = new SettingsComponentDescription(SettingsTextField.class, Constants.KEY_EXPERIMENT_CODE,
+                    UIElementNames.EXPERIMENT_CODE + ": ");
+            component = desc.build(selected);
+            componentList.add(component);
+            settingsPanel.add(component);
         }
 
         if (selected.isCategory()) {
-            settingsPanel.add(new SettingsComponentDescription(SettingsCheckBox.class, Constants.KEY_DONOTSHOWCONTENT,
-                    UIElementNames.MENU_TAB_SETTINGS_DONT_SHOW_CONTENT).build(selected));
-            settingsPanel.add(new SettingsComponentDescription(SettingsCheckBox.class, Constants.KEY_QUESTIONSWITCHING,
-                    UIElementNames.MENU_TAB_SETTINGS_ALLOW_BACK_AND_FORTH).build(selected));
+            desc = new SettingsComponentDescription(SettingsCheckBox.class, Constants.KEY_DONOTSHOWCONTENT,
+                    UIElementNames.MENU_TAB_SETTINGS_DONT_SHOW_CONTENT);
+            component = desc.build(selected);
+            componentList.add(component);
+            settingsPanel.add(component);
+
+            desc = new SettingsComponentDescription(SettingsCheckBox.class, Constants.KEY_QUESTIONSWITCHING,
+                    UIElementNames.MENU_TAB_SETTINGS_ALLOW_BACK_AND_FORTH);
+            component = desc.build(selected);
+            componentList.add(component);
+            settingsPanel.add(component);
         }
 
         // add the options contributed by plugins
-        SettingsComponentDescription desc = PluginList.getSettingsComponentDescription(selected);
+        desc = PluginList.getSettingsComponentDescription(selected);
 
         if (desc != null) {
-            settingsComponents.put(selected, new ArrayList<SettingsComponent>());
 
             do {
-                SettingsComponent c = desc.build(selected);
-                settingsComponents.get(selected).add(c);
-                settingsPanel.add(c);
+                component = desc.build(selected);
+                componentList.add(component);
+                settingsPanel.add(component);
             } while ((desc = desc.getNextComponentDescription()) != null);
         }
 
@@ -119,16 +134,21 @@ public class SettingsEditorPanel extends ExperimentEditorTab {
     }
 
     /**
-     * saves all changes made, called by EditorTabbedPane
+     * Saves all changes made to the settings.
      */
     @Override
     public void save() {
-        if (selected != null) {
-            ArrayList<SettingsComponent> comps = settingsComponents.get(selected);
-            if (comps != null) {
-                for (SettingsComponent c : comps) {
-                    c.saveValue();
-                }
+        ArrayList<SettingsComponent> comps;
+
+        if (selected == null) {
+            return;
+        }
+
+        comps = settingsComponents.get(selected);
+        if (comps != null) {
+
+            for (SettingsComponent c : comps) {
+                c.saveValue();
             }
         }
     }
