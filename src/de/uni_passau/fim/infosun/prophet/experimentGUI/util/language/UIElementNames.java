@@ -5,6 +5,7 @@ import java.util.ResourceBundle;
 
 public class UIElementNames {
 
+
     /**
      * Menu items and elements
      */
@@ -21,6 +22,8 @@ public class UIElementNames {
     public static String MENU_EXPORT = "Export";
     public static String MENU_ITEM_HTML_OF_QUESTIONS = "Html file of questions";
     public static String MENU_ITEM_CSV_OF_ANSWERS = "CSV file of answers";
+    public static String MENU_ITEM_XML_TO_CSV;
+    public static String EXPORT_SELECT_TARGET_CSV;
 
     public static String MENU_PLAUSIBILITY_FEATURES = "Check";
 
@@ -236,6 +239,8 @@ public class UIElementNames {
         MENU_EXPORT = labels.getString("MENU_EXPORT");
         MENU_ITEM_HTML_OF_QUESTIONS = labels.getString("MENU_ITEM_HTML_OF_QUESTIONS");
         MENU_ITEM_CSV_OF_ANSWERS = labels.getString("MENU_ITEM_CSV_OF_ANSWERS");
+        MENU_ITEM_XML_TO_CSV = labels.getString("menu.item.xml.to.csv");
+        EXPORT_SELECT_TARGET_CSV = labels.getString("export.select.target.csv");
 
         MENU_PLAUSIBILITY_FEATURES = labels.getString("MENU_PLAUSIBILITY_FEATURES");
         MENU_ITEM_CHECK_FORM_NAMES = labels.getString("MENU_ITEM_CHECK_FORM_NAMES");

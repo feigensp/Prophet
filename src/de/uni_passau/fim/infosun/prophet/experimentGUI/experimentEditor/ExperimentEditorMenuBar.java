@@ -9,13 +9,17 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JFileChooser;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
+import com.sun.javafx.scene.shape.PathUtils;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.Constants;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentEditor.tabbedPane.editorTabs.ContentEditorPanel;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.Pair;
@@ -23,6 +27,7 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNa
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTreeNode.QuestionTreeHTMLHandler;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTreeNode.QuestionTreeNode;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTreeNode.QuestionTreeXMLHandler;
+import org.w3c.dom.Document;
 
 /**
  * The menu bar of the ExperimentViewer. Separated to enhance readability.
@@ -178,20 +183,71 @@ public class ExperimentEditorMenuBar extends JMenuBar {
             public void actionPerformed(ActionEvent arg0) {
                 try {
                     QuestionTreeNode experimentNode = experimentEditor.getTreeComponent().getRoot();
+
                     ArrayList<Pair<QuestionTreeNode, ArrayList<Pair<String, String>>>> formInfos =
                             QuestionTreeHTMLHandler.getForms(experimentNode);
+
                     ArrayList<QuestionTreeNode> answerNodes = new ArrayList<>();
                     String experimentCode = experimentNode.getAttributeValue(Constants.KEY_EXPERIMENT_CODE);
+
                     // Antwortdateien ermitteln
                     String path = currentFile.getCanonicalPath();
                     int index = path.lastIndexOf(System.getProperty("file.separator"));
                     path = index != -1 ? path.substring(0, index) : path;
                     File f = new File(path);
+
                     getAnswerFiles(f, answerNodes, experimentCode, true);
+
                     // csv Datei erstellen
                     QuestionTreeXMLHandler.saveAsCSVFile(formInfos, answerNodes, experimentCode, path);
                 } catch (IOException e) {
                     JOptionPane.showMessageDialog(null, UIElementNames.MESSAGE_PATH_NOT_FOUND);
+                }
+            }
+        });
+
+        JMenuItem xmlToCsvAllInDir = new JMenuItem(UIElementNames.MENU_ITEM_XML_TO_CSV);
+        exportMenu.add(xmlToCsvAllInDir);
+        xmlToCsvAllInDir.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String answersXmlFileName = "answers.xml";
+                List<Document> answerXmlDocuments;
+                File csvFile;
+
+                // Get the dir in which to search for the answer files. Subdirs will be searched, too.
+                File searchDir;
+                JFileChooser dirChooser = new JFileChooser();
+                int dirReturnCode;
+
+                dirChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+                dirChooser.setMultiSelectionEnabled(false);
+                dirReturnCode = dirChooser.showOpenDialog(null);
+
+                if (dirReturnCode == JFileChooser.APPROVE_OPTION) {
+                    searchDir = dirChooser.getSelectedFile();
+                } else {
+                    return;
+                }
+
+                List<File> answerFiles = QuestionTreeXMLHandler.getFilesByName(searchDir, answersXmlFileName);
+
+                answerXmlDocuments = QuestionTreeXMLHandler.getDocuments(answerFiles);
+
+                // Get the csv file in which the results are to be stored.
+                JFileChooser fileChooser = new JFileChooser(searchDir);
+                int csvReturnCode;
+
+                fileChooser.setName(UIElementNames.EXPORT_SELECT_TARGET_CSV);
+                fileChooser.setFileFilter(new FileNameExtensionFilter("CSV-Dateien", "csv"));
+                fileChooser.setMultiSelectionEnabled(false);
+                csvReturnCode = fileChooser.showSaveDialog(null);
+
+                if (csvReturnCode == JFileChooser.APPROVE_OPTION) {
+                    csvFile = fileChooser.getSelectedFile();
+
+                    QuestionTreeXMLHandler.saveAsCSV(answerXmlDocuments, csvFile);
                 }
             }
         });
@@ -333,12 +389,10 @@ public class ExperimentEditorMenuBar extends JMenuBar {
             }
             saveMenuItem.setEnabled(true);
             saveAsMenuItem.setEnabled(true);
-            exportMenu.setEnabled(true);
             nameCheckMenuItem.setEnabled(true);
         } else {
             saveMenuItem.setEnabled(false);
             saveAsMenuItem.setEnabled(false);
-            exportMenu.setEnabled(false);
             nameCheckMenuItem.setEnabled(false);
         }
     }
