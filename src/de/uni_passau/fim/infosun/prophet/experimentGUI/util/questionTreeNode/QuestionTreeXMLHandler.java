@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Objects;
 import javax.swing.JOptionPane;
+import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerFactory;
@@ -31,6 +32,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 public class QuestionTreeXMLHandler {
 
@@ -80,7 +82,31 @@ public class QuestionTreeXMLHandler {
      * @return the list of <code>Document</code>s
      */
     public static List<Document> getDocuments(List<File> files) {
+        Objects.requireNonNull(files, "files must not be null!");
 
+        List<Document> documents = new LinkedList<>();
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder parser;
+        Document document;
+
+        try {
+            parser = factory.newDocumentBuilder();
+        } catch (ParserConfigurationException e) {
+            System.err.println("Could not create the XML parser. Returning an empty list.");
+            return documents;
+        }
+
+        for (File file : files) {
+
+            try {
+                document = parser.parse(file);
+                documents.add(document);
+            } catch (SAXException | IOException e) {
+                System.err.println("Could not parse a file as XML: " + file.toString());
+            }
+        }
+
+        return documents;
     }
 
     /**
