@@ -154,6 +154,12 @@ public class QuestionTreeXMLHandler {
         for (Document doc : xmlAnswerFiles) {
             csvWriter.writeNext(makeContentLine(doc));
         }
+
+        try {
+            csvWriter.close();
+        } catch (IOException e) {
+            System.err.println("Could not close the Writer");
+        }
     }
 
     private static String[] makeContentLine(Document document) {
