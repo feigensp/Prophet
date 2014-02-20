@@ -44,6 +44,9 @@ public class QuestionTreeXMLHandler {
     public final static String TYPE_ANSWERS = "answers";
     public final static String TYPE_ANSWER = "answer";
     public final static String TYPE_CHILDREN = "children";
+    public final static String TYPE_CATEGORY = "category";
+    public final static String TYPE_QUESTION = "question";
+    private final static String HEADER_SEPARATOR = ":";
 
     /**
      * Recursively searches the given <code>directory</code> for files named <code>fileName</code> and
@@ -170,12 +173,100 @@ public class QuestionTreeXMLHandler {
         return contentElements.toArray(new String[contentElements.size()]);
     }
 
-    private static String[] makeHeader(Document document) {
+    public static String[] makeHeader(Document document) { // TODO make private
         Objects.requireNonNull(document, "document must not be null");
 
         ArrayList<String> headerElements = new ArrayList<>();
-
+        StringBuilder headerBuilder = new StringBuilder();
         Element root = document.getRootElement();
+        List<Element> categories;
+        List<Element> questions;
+        List<Element> answers;
+        Element collectionNode;
+        int catLength; // the length of the header up to the category level
+        int qLength; // the length of the header up to the question level
+
+        headerElements.add("expCode");
+
+        // create header columns for the 'time' attribute of the root node and all its answers
+        headerBuilder.append(root.getAttributeValue(ATTRIBUTE_NAME)).append(HEADER_SEPARATOR).append(ATTRIBUTE_TIME);
+        headerElements.add(headerBuilder.toString());
+        headerBuilder.delete(0, headerBuilder.length());
+
+        headerBuilder.append(root.getAttributeValue(ATTRIBUTE_NAME)).append(HEADER_SEPARATOR);
+        catLength = headerBuilder.length();
+
+        if ((collectionNode = root.getChild(TYPE_ANSWERS)) != null) {
+            answers = collectionNode.getChildren(TYPE_ANSWER);
+
+            for (Element answer : answers) {
+                headerBuilder.append(answer.getAttributeValue(ATTRIBUTE_NAME));
+                headerElements.add(headerBuilder.toString());
+                headerBuilder.delete(catLength, headerBuilder.length());
+            }
+        }
+
+        headerBuilder.delete(0, headerBuilder.length());
+
+        if ((collectionNode = root.getChild(TYPE_CHILDREN)) != null) {
+
+            // create column sections for all categories (and their question children)
+            categories = collectionNode.getChildren(TYPE_CATEGORY);
+            for (Element category : categories) {
+
+                // append the category part of the header
+                headerBuilder.append(category.getAttributeValue(ATTRIBUTE_NAME)).append(HEADER_SEPARATOR);
+                catLength = headerBuilder.length();
+
+                // the :time column for the category
+                headerBuilder.append(ATTRIBUTE_TIME);
+                headerElements.add(headerBuilder.toString());
+                headerBuilder.delete(catLength, headerBuilder.length());
+
+                if ((collectionNode = category.getChild(TYPE_ANSWERS)) != null) {
+
+                    // columns for all answers in the category
+                    answers = collectionNode.getChildren(TYPE_ANSWER);
+                    for (Element answer : answers) {
+                        headerBuilder.append(answer.getAttributeValue(ATTRIBUTE_NAME));
+                        headerElements.add(headerBuilder.toString());
+                        headerBuilder.delete(catLength, headerBuilder.length());
+                    }
+                }
+
+                if ((collectionNode = category.getChild(TYPE_CHILDREN)) != null) {
+
+                    // columns for all questions in the category
+                    questions = collectionNode.getChildren(TYPE_QUESTION);
+                    for (Element question : questions) {
+
+                        // append the question part of the header
+                        headerBuilder.append(question.getAttributeValue(ATTRIBUTE_NAME)).append(HEADER_SEPARATOR);
+                        qLength = headerBuilder.length();
+
+                        // the :time column for the question
+                        headerBuilder.append(ATTRIBUTE_TIME);
+                        headerElements.add(headerBuilder.toString());
+                        headerBuilder.delete(qLength, headerBuilder.length());
+
+                        if ((collectionNode = question.getChild(TYPE_ANSWERS)) != null) {
+
+                            // columns for all answers in the question
+                            answers = collectionNode.getChildren(TYPE_ANSWER);
+                            for (Element answer : answers) {
+                                headerBuilder.append(answer.getAttributeValue(ATTRIBUTE_NAME));
+                                headerElements.add(headerBuilder.toString());
+                                headerBuilder.delete(qLength, headerBuilder.length());
+                            }
+                        }
+
+                        headerBuilder.delete(catLength, headerBuilder.length());
+                    }
+                }
+
+                headerBuilder.delete(0, headerBuilder.length());
+            }
+        }
 
         return headerElements.toArray(new String[headerElements.size()]);
     }
