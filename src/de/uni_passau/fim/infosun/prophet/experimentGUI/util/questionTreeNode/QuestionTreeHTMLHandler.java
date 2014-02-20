@@ -6,6 +6,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
@@ -22,6 +24,55 @@ public class QuestionTreeHTMLHandler {
     public static final int EXPERIMENT_LEVEL = 0;
     public static final int CATEGORY_LEVEL = 1;
     public static final int QUESTION_LEVEL = 2;
+
+    public static final String HEAER_EXPCODE = "expCode";
+    public static final String HEADER_PROBCODE = "probCode";
+
+    public static List<String> headerFromQuestionTree(QuestionTreeNode root) {
+        List<String> header = new LinkedList<>();
+        HTML.Tag[] tags = {HTML.Tag.INPUT, HTML.Tag.SELECT, HTML.Tag.TEXTAREA};
+        QuestionTreeNode currentNode = root;
+
+        header.add(HEAER_EXPCODE);
+        header.add(HEADER_PROBCODE);
+
+        while (currentNode != null) {
+
+            header.add(currentNode.getName() + ":time");
+
+            String htmlContent = currentNode.getValue();
+            HTMLEditorKit editorKit = new HTMLEditorKit();
+            StringReader reader = new StringReader(htmlContent);
+            HTMLDocument.Iterator iterator;
+            HTMLDocument htmlDocument = (HTMLDocument) editorKit.createDefaultDocument();
+
+            try {
+                editorKit.read(reader, htmlDocument, 0);
+            } catch (IOException | BadLocationException e) {
+                System.err.println("Could not read a nodes value as html. Returning an empty Map.");
+                return new LinkedList<>();
+            }
+
+            for (HTML.Tag tag : tags) {
+                iterator = htmlDocument.getIterator(tag);
+
+                while (iterator.isValid()) {
+                    AttributeSet attributeSet = iterator.getAttributes();
+                    String formName = (String) attributeSet.getAttribute(HTML.Attribute.NAME);
+
+                    if (!header.contains(formName)) { // TODO use set?
+                        header.add(formName);
+                    }
+
+                    iterator.next();
+                }
+            }
+
+            currentNode = (QuestionTreeNode) currentNode.getNextNode();
+        }
+
+        return header;
+    }
 
     public static ArrayList<Pair<QuestionTreeNode, ArrayList<Pair<String, String>>>> getForms(
             QuestionTreeNode startNode) {

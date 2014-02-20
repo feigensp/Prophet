@@ -13,8 +13,11 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import javax.swing.JOptionPane;
@@ -47,6 +50,7 @@ public class QuestionTreeXMLHandler {
     public final static String TYPE_CATEGORY = "category";
     public final static String TYPE_QUESTION = "question";
     private final static String HEADER_SEPARATOR = ":";
+    private final static String HEADER_TIME = "time";
 
     /**
      * Recursively searches the given <code>directory</code> for files named <code>fileName</code> and
@@ -114,13 +118,17 @@ public class QuestionTreeXMLHandler {
      * Saves the given XML answer files as one CSV file <code>csvFile</code>. If <code>csvFile</code> already exists
      * it will be overwritten.
      *
+     * @param root
+     * the root node of the current <code>QuestionTree</code>
      * @param xmlAnswerFiles
      *         the answer XML files to be saved
      * @param csvFile
-     *         the file in which the data is to be stored
+     *       the file in which the CSV data is to be saved
      */
-    public static void saveAsCSV(List<Document> xmlAnswerFiles, File csvFile,
-            String experimentCode) { //TODO use experimentCode
+    public static void saveAsCSV(QuestionTreeNode root, List<Document> xmlAnswerFiles, File csvFile,
+            String experimentCode) {
+
+        Objects.requireNonNull(root, "root must not be null");
         Objects.requireNonNull(xmlAnswerFiles, "xmlAnswerFiles must not be null!");
         Objects.requireNonNull(csvFile, "csvFile must not be null!");
 
@@ -152,10 +160,12 @@ public class QuestionTreeXMLHandler {
             return;
         }
 
-        csvWriter.writeNext(makeHeader(xmlAnswerFiles.get(0)));
+        List<String> header = QuestionTreeHTMLHandler.headerFromQuestionTree(root);
+
+        csvWriter.writeNext(header.toArray(new String[header.size()]));
 
         for (Document doc : xmlAnswerFiles) {
-            csvWriter.writeNext(makeContentLine(doc, experimentCode));
+            csvWriter.writeNext(inputDocument(header, doc, experimentCode));
         }
 
         try {
@@ -163,6 +173,80 @@ public class QuestionTreeXMLHandler {
         } catch (IOException e) {
             System.err.println("Could not close the Writer");
         }
+    }
+
+    public static String[] inputDocument(List<String> columns, Document document, String expCode) {
+        Map<String, String> entries = new LinkedHashMap<>();
+
+        for (String cName : columns) {
+            entries.put(cName, "");
+        }
+
+        entries.put(QuestionTreeHTMLHandler.HEAER_EXPCODE, expCode);
+
+        Element root = document.getRootElement();
+        String key;
+        List<Element> categories;
+        List<Element> questions;
+        List<Element> answers;
+        Element collectionNode;
+
+        // the experiment time
+        key = root.getAttributeValue(ATTRIBUTE_NAME) + HEADER_SEPARATOR + HEADER_TIME;
+        entries.put(key, root.getAttributeValue(ATTRIBUTE_TIME));
+
+        // the subjectcode
+        if ((collectionNode = root.getChild(TYPE_ANSWERS)) != null) {
+            Element subjCode = collectionNode.getChild(TYPE_ANSWER);
+            entries.put(QuestionTreeHTMLHandler.HEADER_PROBCODE, subjCode.getAttributeValue(ATTRIBUTE_VALUE));
+        }
+
+        if ((collectionNode = root.getChild(TYPE_CHILDREN)) != null) {
+
+            categories = collectionNode.getChildren(TYPE_CATEGORY);
+            for (Element category : categories) {
+
+                key = category.getAttributeValue(ATTRIBUTE_NAME) + HEADER_SEPARATOR + HEADER_TIME;
+                entries.put(key, category.getAttributeValue(ATTRIBUTE_TIME));
+
+                if ((collectionNode = category.getChild(TYPE_ANSWERS)) != null) {
+
+                    // all answers in the category
+                    answers = collectionNode.getChildren(TYPE_ANSWER);
+                    for (Element answer : answers) {
+                        entries.put(answer.getAttributeValue(ATTRIBUTE_NAME), answer.getAttributeValue(ATTRIBUTE_VALUE));
+                    }
+                }
+
+                if ((collectionNode = category.getChild(TYPE_CHILDREN)) != null) {
+
+                    // all questions in the category
+                    questions = collectionNode.getChildren(TYPE_QUESTION);
+                    for (Element question : questions) {
+
+                        key = question.getAttributeValue(ATTRIBUTE_NAME) + HEADER_SEPARATOR + HEADER_TIME;
+                        entries.put(key, category.getAttributeValue(ATTRIBUTE_TIME));
+
+                        if ((collectionNode = question.getChild(TYPE_ANSWERS)) != null) {
+
+                            // all answers in the question
+                            answers = collectionNode.getChildren(TYPE_ANSWER);
+                            for (Element answer : answers) {
+                                entries.put(answer.getAttributeValue(ATTRIBUTE_NAME), answer.getAttributeValue(ATTRIBUTE_VALUE));
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        String[] values = new String[entries.size()];
+        Iterator<Entry<String, String>> valueIterator = entries.entrySet().iterator();
+        for (int i = 0; i < entries.size(); i++) {
+            values[i] = valueIterator.next().getValue();
+        }
+
+        return values;
     }
 
     public static String[] makeContentLine(Document document, String experimentCode) { // TODO make private
@@ -673,7 +757,7 @@ public class QuestionTreeXMLHandler {
             // Daten schreiben
             for (QuestionTreeNode currentNode : answerNodes) {
                 int nodeIndex = 0;
-                //line.append("\"" + experimentCode.replaceAll("\"", "\"\"") + "\""); //expCode TODO auskommentiert...
+                line.append("\"" + experimentCode.replaceAll("\"", "\"\"") + "\"");
 
                 //probCode
                 if (currentNode.getAnswer(Constants.KEY_SUBJECT) != null) {

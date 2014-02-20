@@ -37,45 +37,50 @@ import org.cdmckay.coffeedom.Document;
  */
 public class ExperimentEditorMenuBar extends JMenuBar {
 
-    private static class XMLToCSVActionListener implements ActionListener {
+    private class XMLToCSVActionListener implements ActionListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
             String answersXmlFileName = "answers.xml";
             String experimentCode;
+            QuestionTreeNode root;
             List<Document> answerXmlDocuments;
             File csvFile;
 
             // Get the dir in which to search for the answer files. Subdirs will be searched, too.
-            File searchDir;
-            JFileChooser dirChooser = new JFileChooser();
-            int dirReturnCode;
+            File searchDir = currentFile.getParentFile();
 
-            dirChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-            dirChooser.setMultiSelectionEnabled(false);
-            dirReturnCode = dirChooser.showOpenDialog(null);
-
-            if (dirReturnCode == JFileChooser.APPROVE_OPTION) {
-                searchDir = dirChooser.getSelectedFile();
-            } else {
-                return;
-            }
+//            JFileChooser dirChooser = new JFileChooser();
+//            int dirReturnCode;
+//
+//            dirChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+//            dirChooser.setMultiSelectionEnabled(false);
+//            dirReturnCode = dirChooser.showOpenDialog(null);
+//
+//            if (dirReturnCode == JFileChooser.APPROVE_OPTION) {
+//                searchDir = dirChooser.getSelectedFile();
+//            } else {
+//                return;
+//            }
 
             List<File> answerFiles = QuestionTreeXMLHandler.getFilesByName(searchDir, answersXmlFileName);
 
-            // Try to find experiment code in path. Look in parent dir of the first answerFile found.
-            if (answerFiles.size() > 0) {
-                String folderName = answerFiles.get(0).getParentFile().getName();
-                String[] parts = folderName.split("_");
+//            // Try to find experiment code in path. Look in parent dir of the first answerFile found.
+//            if (answerFiles.size() > 0) {
+//                String folderName = answerFiles.get(0).getParentFile().getName();
+//                String[] parts = folderName.split("_");
+//
+//                if (parts.length > 0) {
+//                    experimentCode = parts[1];
+//                } else {
+//                    experimentCode = "unknown";
+//                }
+//            } else {
+//                return;
+//            }
 
-                if (parts.length > 0) {
-                    experimentCode = parts[1];
-                } else {
-                    experimentCode = "unknown";
-                }
-            } else {
-                return;
-            }
+            root = experimentEditor.getTreeComponent().getRoot();
+            experimentCode = root.getAttributeValue(Constants.KEY_EXPERIMENT_CODE);
 
             answerXmlDocuments = QuestionTreeXMLHandler.getDocuments(answerFiles);
 
@@ -92,7 +97,7 @@ public class ExperimentEditorMenuBar extends JMenuBar {
             if (csvReturnCode == JFileChooser.APPROVE_OPTION) {
                 csvFile = fileChooser.getSelectedFile();
 
-                QuestionTreeXMLHandler.saveAsCSV(answerXmlDocuments, csvFile, experimentCode);
+                QuestionTreeXMLHandler.saveAsCSV(root, answerXmlDocuments, csvFile, experimentCode);
             }
         }
     }
