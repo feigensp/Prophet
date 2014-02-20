@@ -155,7 +155,7 @@ public class QuestionTreeXMLHandler {
         csvWriter.writeNext(makeHeader(xmlAnswerFiles.get(0)));
 
         for (Document doc : xmlAnswerFiles) {
-            csvWriter.writeNext(makeContentLine(doc));
+            csvWriter.writeNext(makeContentLine(doc, experimentCode));
         }
 
         try {
@@ -165,10 +165,67 @@ public class QuestionTreeXMLHandler {
         }
     }
 
-    private static String[] makeContentLine(Document document) {
+    public static String[] makeContentLine(Document document, String experimentCode) { // TODO make private
         Objects.requireNonNull(document, "doc must not be null");
 
         ArrayList<String> contentElements = new ArrayList<>();
+        Element root = document.getRootElement();
+        List<Element> categories;
+        List<Element> questions;
+        List<Element> answers;
+        Element collectionNode;
+
+        // the experiment code
+        contentElements.add(experimentCode);
+
+        // the experiment time and all its answers
+        contentElements.add(root.getAttributeValue(ATTRIBUTE_TIME));
+        if ((collectionNode = root.getChild(TYPE_ANSWERS)) != null) {
+            answers = collectionNode.getChildren(TYPE_ANSWER);
+
+            for (Element answer : answers) {
+                contentElements.add(answer.getAttributeValue(ATTRIBUTE_VALUE));
+            }
+        }
+
+        if ((collectionNode = root.getChild(TYPE_CHILDREN)) != null) {
+
+            categories = collectionNode.getChildren(TYPE_CATEGORY);
+            for (Element category : categories) {
+
+                // the time for the category
+                contentElements.add(category.getAttributeValue(ATTRIBUTE_TIME));
+
+                if ((collectionNode = category.getChild(TYPE_ANSWERS)) != null) {
+
+                    // all answers in the category
+                    answers = collectionNode.getChildren(TYPE_ANSWER);
+                    for (Element answer : answers) {
+                        contentElements.add(answer.getAttributeValue(ATTRIBUTE_VALUE));
+                    }
+                }
+
+                if ((collectionNode = category.getChild(TYPE_CHILDREN)) != null) {
+
+                    // all questions in the category
+                    questions = collectionNode.getChildren(TYPE_QUESTION);
+                    for (Element question : questions) {
+
+                        // the time for the question
+                        contentElements.add(question.getAttributeValue(ATTRIBUTE_TIME));
+
+                        if ((collectionNode = question.getChild(TYPE_ANSWERS)) != null) {
+
+                            // all answers in the question
+                            answers = collectionNode.getChildren(TYPE_ANSWER);
+                            for (Element answer : answers) {
+                                contentElements.add(answer.getAttributeValue(ATTRIBUTE_VALUE));
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
         return contentElements.toArray(new String[contentElements.size()]);
     }
