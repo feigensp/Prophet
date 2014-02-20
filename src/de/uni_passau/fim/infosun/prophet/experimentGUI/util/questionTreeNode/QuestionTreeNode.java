@@ -125,15 +125,18 @@ public class QuestionTreeNode extends DefaultMutableTreeNode {
 
     public String getAttributeValue(String key) {
         QuestionTreeNode attribute = attributes.get(key);
+
         return attribute == null ? null : attribute.getValue();
     }
 
     public QuestionTreeNode getAddAttribute(String key) {
         QuestionTreeNode attribute = attributes.get(key);
+
         if (attribute == null) {
             attribute = new QuestionTreeNode(TYPE_ATTRIBUTE, key);
             attributes.put(key, attribute);
         }
+
         return attribute;
     }
 
@@ -150,6 +153,7 @@ public class QuestionTreeNode extends DefaultMutableTreeNode {
     }
 
     public void setValue(String value) {
+
         if (value != null) {
             this.value = value;
         }
