@@ -37,11 +37,6 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 
     private static final long serialVersionUID = 1L;
 
-//	public final static String MESSAGE_FILE_NOT_FOUND = "Datei nicht gefunden";
-//	public final static String MESSAGE_FILE_NOT_FOUND_TITLE = "Fehler";
-//	public final static String MESSAGE_REPLACE_FILE = " ist bereits vorhanden.\nWollen Sie sie ersetzen?";
-//	public final static String MESSAGE_REPLACE_FILE_TITLE = "Speichern unter best\u00e4tigen";
-
     private ExperimentEditor experimentEditor;
     private File currentFile;
     private JMenuItem saveMenuItem;
