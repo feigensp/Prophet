@@ -175,10 +175,10 @@ public class QuestionTreeXMLHandler {
     }
 
     /**
-     * Inserts the treeNode and all its children to the xmlNode and puts the xmlNode into the given xmlTree.
+     * Inserts the treeNode and all its children to the xmlNode.
      *
      * @param xmlTree
-     *         the xml document
+     *         the xml document where the xmlNode resides
      * @param xmlNode
      *         the xml node in which to add the treeNode
      * @param treeNode
@@ -266,69 +266,86 @@ public class QuestionTreeXMLHandler {
     }
 
     /**
-     * method which adds recursively the childs (to an xml file)
+     * Adds all the answers in the treeNode and its children to the given xmlNode. Children of treeNode will be
+     * converted to xml nodes.
      *
-     * @param treeChilds
-     *         childs which should bye added
-     * @param xmlParent
-     *         the parent who should get the childs
      * @param xmlTree
-     *         the xml-document
+     *         the xml document where the xmlNode resides
+     * @param xmlNode
+     *         the xml node in which to add the treeNode
+     * @param treeNode
+     *         the treeNode that is to be converted to xml
      */
     private static void saveXMLAnswerNode(org.w3c.dom.Document xmlTree, org.w3c.dom.Element xmlNode,
             QuestionTreeNode treeNode) {
-        // Name hinzuf�gen
+        // add name and time
         xmlNode.setAttribute(ATTRIBUTE_NAME, treeNode.getName());
         xmlNode.setAttribute(ATTRIBUTE_TIME, "" + treeNode.getAnswerTime());
-        // evtl. Antworten hinzuf�gen
+
+        // add answers
         if (treeNode.getAnswers().size() > 0) {
             org.w3c.dom.Element xmlAnswersNode = xmlTree.createElement(TYPE_ANSWERS);
+
             xmlNode.appendChild(xmlAnswersNode);
+
+            // add the single answers
             for (Entry<String, String> answerEntry : treeNode.getAnswers().entrySet()) {
                 org.w3c.dom.Element xmlChild = xmlTree.createElement(TYPE_ANSWER);
+
                 xmlChild.setAttribute(ATTRIBUTE_NAME, answerEntry.getKey());
                 xmlChild.setAttribute(ATTRIBUTE_VALUE, answerEntry.getValue());
+
                 xmlAnswersNode.appendChild(xmlChild);
             }
         }
-        // evtl. Kinder hinzuf�gen
+
+        // add children
         if (treeNode.getChildCount() > 0) {
             org.w3c.dom.Element xmlChildrenNode = xmlTree.createElement(TYPE_CHILDREN);
+
             xmlNode.appendChild(xmlChildrenNode);
+
             for (int i = 0; i < treeNode.getChildCount(); i++) {
                 QuestionTreeNode treeChild = (QuestionTreeNode) treeNode.getChildAt(i);
                 org.w3c.dom.Element xmlChild = xmlTree.createElement(treeChild.getType());
+
                 xmlChildrenNode.appendChild(xmlChild);
+
                 saveXMLAnswerNode(xmlTree, xmlChild, treeChild);
             }
         }
     }
 
     /**
-     * writes an DataTreeNode with his children into an XML-File
+     * Writes a <code>QuestionTreeNode</code> with all its children into a XML-File.
      *
      * @param treeRoot
-     *         DataTreeNode which should be added (with children)
+     *         QuestionTreeNode which should be added (with children)
      * @param path
-     *         path for the xml-file
+     *         path where to save the xml-file
      */
     public static void saveXMLAnswerTree(QuestionTreeNode treeRoot, String path) {
         org.w3c.dom.Document xmlTree = null;
+
+        // create file
+        File dir = new File(path).getParentFile();
+
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+
         try {
-            // Dokument erstellen
-            File dir = new File(path).getParentFile();
-            if (!dir.exists()) {
-                dir.mkdirs();
-            }
             xmlTree = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
-            // Wurzelknoten erschaffen
-            org.w3c.dom.Element xmlRoot = xmlTree.createElement(treeRoot.getType());
-            xmlTree.appendChild(xmlRoot);
-            saveXMLAnswerNode(xmlTree, xmlRoot, treeRoot);
         } catch (ParserConfigurationException e1) {
             e1.printStackTrace();
         }
-        // Fragebogen in Datei speichern
+
+        // create root node
+        org.w3c.dom.Element xmlRoot = xmlTree.createElement(treeRoot.getType());
+        xmlTree.appendChild(xmlRoot);
+        saveXMLAnswerNode(xmlTree, xmlRoot, treeRoot);
+
+        // save to file
         try {
             if (xmlTree != null) {
                 TransformerFactory.newInstance().newTransformer()
