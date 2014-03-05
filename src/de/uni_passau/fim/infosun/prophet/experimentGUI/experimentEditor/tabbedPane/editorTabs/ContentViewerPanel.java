@@ -4,7 +4,7 @@ import java.awt.BorderLayout;
 
 import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentEditor.tabbedPane.ExperimentEditorTab;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.QuestionViewPane;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTreeNode.QuestionTreeNode;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTree.QuestionTreeNode;
 
 /**
  * Preview of the Content entered in the ContentEditorPanel

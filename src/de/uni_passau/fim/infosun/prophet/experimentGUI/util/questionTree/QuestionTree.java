@@ -1,4 +1,4 @@
-package de.uni_passau.fim.infosun.prophet.experimentGUI.experimentEditor;
+package de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTree;
 
 /**
  * This Class inherits from JTree.
@@ -33,10 +33,6 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
-
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTreeNode.QuestionTreeNode;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTreeNode.QuestionTreeNodeEvent;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTreeNode.QuestionTreeNodeListener;
 
 /**
  * JTree within a JScrollPane component that displays the content of a tree

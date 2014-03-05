@@ -1,6 +1,6 @@
 package de.uni_passau.fim.infosun.prophet.experimentGUI.util.settingsComponents;
 
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTreeNode.QuestionTreeNode;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTree.QuestionTreeNode;
 
 public class SettingsComponentDescription {
 

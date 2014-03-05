@@ -9,7 +9,7 @@ import javax.swing.JTabbedPane;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugins.codeViewerPlugin.CodeViewerPluginList;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugins.codeViewerPlugin.Recorder;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTreeNode.QuestionTreeNode;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTree.QuestionTreeNode;
 
 @SuppressWarnings("serial")
 public class EditorTabbedPane extends JTabbedPane {

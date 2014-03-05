@@ -12,7 +12,7 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.plugins.MaxTimePlugin;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugins.PHPExportPlugin;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugins.QuestionListPlugin;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugins.ValidSubjectCodePlugin;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTreeNode.QuestionTreeNode;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTree.QuestionTreeNode;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settingsComponents.SettingsComponentDescription;
 
 /**

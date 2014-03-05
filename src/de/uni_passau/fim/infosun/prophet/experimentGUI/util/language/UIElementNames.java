@@ -5,7 +5,6 @@ import java.util.ResourceBundle;
 
 public class UIElementNames {
 
-
     /**
      * Menu items and elements
      */
@@ -115,8 +114,8 @@ public class UIElementNames {
             "This feature can only be used after the existing instance is closed";
     public static String MESSAGE_COULD_NOT_START_PROGRAM = "Could not start program";
     public static String MESSAGE_RELATIVE_PATH_NOTIFICATION =
-            "Please note:\nYour action created a path relative to the current working directory.\nIf your XML file is" +
-                    " not in the current working directory, you have to adjust the created path.";
+            "Please note:\nYour action created a path relative to the current working directory.\nIf your XML file is"
+                    + " not in the current working directory, you have to adjust the created path.";
     public static String MESSAGE_PATH_DOES_NOT_EXIST = "Path defined in the experiment does not exist";
     public static String TITLE_CODE_VIEWER = "Source code";
 

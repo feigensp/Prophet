@@ -1,6 +1,5 @@
 package de.uni_passau.fim.infosun.prophet.log;
 
-
 public aspect LogAspect {
 //
 //	static HashMap<String, Logger> logger = new HashMap<String, Logger>();

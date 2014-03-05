@@ -20,8 +20,8 @@ import javax.swing.text.html.HTMLEditorKit;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.Constants;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.PluginList;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.QuestionViewPane;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTreeNode.QuestionTreeNode;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTreeNode.QuestionTreeXMLHandler;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTree.QuestionTreeNode;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTree.QuestionTreeXMLHandler;
 
 /**
  * This class shows the html files (questions) creates the navigation and

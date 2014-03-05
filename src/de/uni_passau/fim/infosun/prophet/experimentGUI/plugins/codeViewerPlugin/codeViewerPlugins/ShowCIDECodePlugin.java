@@ -23,7 +23,7 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.plugins.codeViewerPlugin.
         .Triple;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugins.codeViewerPlugin.tabbedPane.EditorPanel;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTreeNode.QuestionTreeNode;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTree.QuestionTreeNode;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settingsComponents.SettingsComponentDescription;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settingsComponents.SettingsPluginComponentDescription;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settingsComponents.components.SettingsTextField;
@@ -219,8 +219,7 @@ public class ShowCIDECodePlugin implements CodeViewerPluginInterface {
 
     private HashMap<String, ArrayList<Triple<Integer, Integer, ArrayList<String>>>> loadXMLTree(String path)
             throws FileNotFoundException {
-        HashMap<String, ArrayList<Triple<Integer, Integer, ArrayList<String>>>> infos =
-                new HashMap<>();
+        HashMap<String, ArrayList<Triple<Integer, Integer, ArrayList<String>>>> infos = new HashMap<>();
         File file = new File(path);
         if (!file.exists()) {
             throw new FileNotFoundException();

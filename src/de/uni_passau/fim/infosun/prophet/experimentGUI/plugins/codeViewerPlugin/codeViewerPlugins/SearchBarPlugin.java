@@ -13,7 +13,7 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.plugins.codeViewerPlugin.
         .LoggingTreeNode;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugins.codeViewerPlugin.tabbedPane.EditorPanel;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTreeNode.QuestionTreeNode;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTree.QuestionTreeNode;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.searchBar.GlobalSearchBar;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.searchBar.SearchBar;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.searchBar.SearchBarListener;

@@ -18,7 +18,7 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.plugins.codeViewerPlugin.
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugins.codeViewerPlugin.fileTree.FileTree;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugins.codeViewerPlugin.tabbedPane.EditorTabbedPane;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTreeNode.QuestionTreeNode;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTree.QuestionTreeNode;
 
 @SuppressWarnings("serial")
 public class CodeViewer extends JFrame implements FileListener {

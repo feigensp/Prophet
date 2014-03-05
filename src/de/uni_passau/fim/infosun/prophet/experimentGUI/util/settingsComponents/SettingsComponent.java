@@ -2,7 +2,7 @@ package de.uni_passau.fim.infosun.prophet.experimentGUI.util.settingsComponents;
 
 import javax.swing.JPanel;
 
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTreeNode.QuestionTreeNode;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTree.QuestionTreeNode;
 
 @SuppressWarnings("serial")
 public abstract class SettingsComponent extends JPanel {

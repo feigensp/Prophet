@@ -5,7 +5,7 @@
  * @author Markus K�ppen, Andreas Hasselberg
  */
 
-package de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTreeNode;
+package de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTree;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -119,11 +119,11 @@ public class QuestionTreeXMLHandler {
      * it will be overwritten.
      *
      * @param root
-     * the root node of the current <code>QuestionTree</code>
+     *         the root node of the current <code>QuestionTree</code>
      * @param xmlAnswerFiles
      *         the answer XML files to be saved
      * @param csvFile
-     *       the file in which the CSV data is to be saved
+     *         the file in which the CSV data is to be saved
      */
     public static void saveAsCSV(QuestionTreeNode root, List<Document> xmlAnswerFiles, File csvFile,
             String experimentCode) {
@@ -214,7 +214,8 @@ public class QuestionTreeXMLHandler {
                     // all answers in the category
                     answers = collectionNode.getChildren(TYPE_ANSWER);
                     for (Element answer : answers) {
-                        entries.put(answer.getAttributeValue(ATTRIBUTE_NAME), answer.getAttributeValue(ATTRIBUTE_VALUE));
+                        entries.put(answer.getAttributeValue(ATTRIBUTE_NAME),
+                                answer.getAttributeValue(ATTRIBUTE_VALUE));
                     }
                 }
 
@@ -232,7 +233,8 @@ public class QuestionTreeXMLHandler {
                             // all answers in the question
                             answers = collectionNode.getChildren(TYPE_ANSWER);
                             for (Element answer : answers) {
-                                entries.put(answer.getAttributeValue(ATTRIBUTE_NAME), answer.getAttributeValue(ATTRIBUTE_VALUE));
+                                entries.put(answer.getAttributeValue(ATTRIBUTE_NAME),
+                                        answer.getAttributeValue(ATTRIBUTE_VALUE));
                             }
                         }
                     }

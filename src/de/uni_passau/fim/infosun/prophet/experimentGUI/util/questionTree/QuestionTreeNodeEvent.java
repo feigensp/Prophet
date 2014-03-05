@@ -1,4 +1,4 @@
-package de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTreeNode;
+package de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTree;
 
 import java.awt.AWTEvent;
 

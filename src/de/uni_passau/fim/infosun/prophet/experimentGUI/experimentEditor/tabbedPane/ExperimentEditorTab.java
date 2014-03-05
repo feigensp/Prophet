@@ -2,7 +2,7 @@ package de.uni_passau.fim.infosun.prophet.experimentGUI.experimentEditor.tabbedP
 
 import javax.swing.JPanel;
 
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTreeNode.QuestionTreeNode;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTree.QuestionTreeNode;
 
 /**
  * Abstract class representing an ExperimentEditorTab used by the ExperimentEditorTabbedPane
