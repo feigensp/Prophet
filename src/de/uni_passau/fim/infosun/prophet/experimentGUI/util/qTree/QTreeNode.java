@@ -1,0 +1,150 @@
+package de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
+/**
+ * A tree where nodes contain data (name and type of the node, HTML content) to be displayed by the
+ * <code>ExperimentViewer</code> or <code>ExperimentEditor</code> and <code>Attribute</code>s.
+ */
+public class QTreeNode {
+
+    /**
+     * Possible types of <code>QTreeNode</code>s.
+     */
+    public static enum Type {
+        EXPERIMENT, CATEGORY, QUESTION
+    }
+
+    private Type type;
+    private String name;
+    private String html;
+    private Map<String, Attribute> attributes;
+
+    private QTreeNode parent;
+    private List<QTreeNode> children;
+
+    /**
+     * Constructs a new <code>QTreeNode</code> with the given parameters. The <code>parent</code> may be
+     * <code>null</code> if this is the root node of the tree.
+     *
+     * @param parent the parent of this node
+     * @param type the <code>Type</code> of the node
+     * @param name the name of the node
+     *
+     * @throws NullPointerException if <code>type</code> or <code>name</code> is <code>null</code>
+     */
+    public QTreeNode(QTreeNode parent, Type type, String name) {
+        Objects.requireNonNull(type, "type must not be null!");
+        Objects.requireNonNull(name, "name must not be null!");
+
+        this.type = type;
+        this.name = name;
+        this.html = "";
+        this.attributes = new HashMap<>();
+        this.parent = parent;
+        this.children = new ArrayList<>();
+    }
+
+    /**
+     * Adds a child to this node.
+     *
+     * @param child the child to be added
+     */
+    public void addChild(QTreeNode child) {
+        children.add(child);
+    }
+
+    /**
+     * Gets the <code>Type</code> of the node.
+     *
+     * @return the type
+     */
+    public Type getType() {
+        return type;
+    }
+
+    /**
+     * Gets the name of the node.
+     *
+     * @return the name
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * Gets the HTML content stored in the node.
+     *
+     * @return the HTML content
+     */
+    public String getHtml() {
+        return html;
+    }
+
+    /**
+     * Gets the children of the node.
+     *
+     * @return the children
+     */
+    public List<QTreeNode> getChildren() {
+        return children;
+    }
+
+    /**
+     * Gets the parent of this <code>QTreeNode</code> or <code>null</code> if this is the root node.
+     *
+     * @return the parent
+     */
+    public  QTreeNode getParent() {
+        return parent;
+    }
+
+    /**
+     * Gets the child at the given index.
+     *
+     * @param index the index
+     * @return the <code>QTreeNode</code> or <code>null</code>
+     *
+     * @throws IndexOutOfBoundsException if <code>index</code> is out of range (index < 0 || index >= getChildCount())
+     */
+    public QTreeNode getChild(int index) {
+        return children.get(index);
+    }
+
+    /**
+     * Gets the index of the given node or -1 if the node is not a child of this node.
+     *
+     * @param node the node whose index is to be returned
+     * @return the index of the node
+     */
+    public int getIndexOfChild(QTreeNode node) {
+        return children.indexOf(node);
+    }
+
+    /**
+     * Gets the number of children this node has.
+     *
+     * @return the number of children
+     */
+    public int getChildCount() {
+        return children.size();
+    }
+
+    /**
+     * Returns whether this node is a leaf (it has no children).
+     *
+     * @return true iff the node is a leaf
+     */
+    public boolean isLeaf() {
+        return children.isEmpty();
+    }
+
+    @Override
+    public String toString() {
+        return name;
+    }
+}
