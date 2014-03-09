@@ -23,7 +23,7 @@ public class QTree extends JTree {
                 TreePath selectedPath = e.getPath();
                 QTreeNode selectedNode = (QTreeNode) selectedPath.getLastPathComponent();
 
-                selectedNode.addChild(new QTreeNode(selectedNode, QTreeNode.Type.CATEGORY, "Name"));
+                model.addChild(selectedNode, new QTreeNode(selectedNode, QTreeNode.Type.CATEGORY, "Name"));
             }
         });
     }

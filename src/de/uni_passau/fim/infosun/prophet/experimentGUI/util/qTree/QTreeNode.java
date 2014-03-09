@@ -59,6 +59,16 @@ public class QTreeNode {
     }
 
     /**
+     * Adds a child to this node at the given index.
+     *
+     * @param child the child to be added
+     * @param index the desired index
+     */
+    public void addChild(QTreeNode child, int index) {
+        children.add(index, child);
+    }
+
+    /**
      * Gets the <code>Type</code> of the node.
      *
      * @return the type
