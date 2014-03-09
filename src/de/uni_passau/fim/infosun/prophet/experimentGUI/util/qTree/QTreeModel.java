@@ -68,8 +68,14 @@ public class QTreeModel implements TreeModel {
         fireNodeInserted(child);
     }
 
+    /**
+     * Fires a <code>TreeModelEvent</code> indicating that the given node has been inserted.
+     *
+     * @param insertedNode
+     *         the node that has been inserted
+     */
     private void fireNodeInserted(QTreeNode insertedNode) {
-        Object[] path = buildPath(insertedNode);
+        Object[] path = buildPath(insertedNode, false);
         Object[] children = {insertedNode};
         int[] childIndices = {insertedNode.getParent().getIndexOfChild(insertedNode)};
         TreeModelEvent event = new TreeModelEvent(this, path, childIndices, children);
@@ -86,12 +92,18 @@ public class QTreeModel implements TreeModel {
      *
      * @param from
      *         the node for which the path is to be built
+     * @param includeFrom
+     *         whether to include the <code>QTreeNode</code> <code>from</code>
      *
      * @return the path in the specified format
      */
-    private Object[] buildPath(QTreeNode from) {
+    private Object[] buildPath(QTreeNode from, boolean includeFrom) {
         ArrayList<Object> path = new ArrayList<>();
         QTreeNode node = from.getParent();
+
+        if (includeFrom) {
+            path.add(from);
+        }
 
         while (node != null) {
             path.add(node);
@@ -103,13 +115,13 @@ public class QTreeModel implements TreeModel {
     }
 
     /**
-     * Fires a <code>TreeModelEvent</code> indicating that the whole tree has changed.
+     * Fires a <code>TreeModelEvent</code> indicating that the whole subtree under <code>root</code> has changed.
      *
-     * @param oldRoot
+     * @param root
      *         the old root of the tree
      */
-    private void fireTreeStructureChanged(QTreeNode oldRoot) {
-        TreeModelEvent event = new TreeModelEvent(this, new Object[] {oldRoot});
+    private void fireTreeStructureChanged(QTreeNode root) {
+        TreeModelEvent event = new TreeModelEvent(this, buildPath(root, true));
 
         for (TreeModelListener tml : listeners) {
             tml.treeStructureChanged(event);

@@ -28,7 +28,7 @@ public class Attribute {
 
         this.key = key;
         this.value = value;
-        subAttributes = new HashMap<>();
+        this.subAttributes = new HashMap<>();
     }
 
     /**
