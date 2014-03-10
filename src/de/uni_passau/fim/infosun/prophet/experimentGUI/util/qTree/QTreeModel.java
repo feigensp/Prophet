@@ -3,6 +3,7 @@ package de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreeModel;
@@ -32,8 +33,11 @@ public class QTreeModel implements TreeModel {
      *
      * @param newRoot
      *         the new root of the tree
+     * @throws NullPointerException if <code>newRoot</code> is <code>null</code>
      */
     public void setRoot(QTreeNode newRoot) {
+        Objects.requireNonNull(newRoot, "newRoot must not be null!");
+
         QTreeNode oldRoot = root;
 
         root = newRoot;
@@ -183,12 +187,20 @@ public class QTreeModel implements TreeModel {
 
     /**
      * Fires a <code>TreeModelEvent</code> indicating that the whole subtree under <code>root</code> has changed.
+     * Passing <code>null</code> as <code>root</code> indicates that the tree has a new root node when there was none
+     * before.
      *
      * @param root
-     *         the old root of the tree
+     *         the root of the subtree
      */
     private void fireTreeStructureChanged(QTreeNode root) {
-        TreeModelEvent event = new TreeModelEvent(this, buildPath(root, true));
+        TreeModelEvent event;
+
+        if (root != null) {
+            event = new TreeModelEvent(this, buildPath(root, true));
+        } else {
+            event = new TreeModelEvent(this, new Object[] {this.root});
+        }
 
         for (TreeModelListener tml : listeners) {
             tml.treeStructureChanged(event);

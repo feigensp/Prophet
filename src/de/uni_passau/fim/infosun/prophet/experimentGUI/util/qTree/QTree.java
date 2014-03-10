@@ -62,8 +62,11 @@ public class QTree extends JTree {
 
     private QTreeModel model;
 
-    public QTree(QTreeNode root) {
-        super(new QTreeModel(root));
+    /**
+     * Constructs a new <code>QTree</code>.
+     */
+    public QTree() {
+        super(new QTreeModel(null));
 
         model = (QTreeModel) getModel();
         getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
@@ -75,6 +78,11 @@ public class QTree extends JTree {
         } catch (TooManyListenersException ignored) { }
     }
 
+    /**
+     * Sets up the drag and drop actions for the tree.
+     *
+     * @throws TooManyListenersException if a <code>DropTargetListener</code> is already added to the <code>QTree</code>
+     */
     private void setupDragAndDrop() throws TooManyListenersException {
 
         setDragEnabled(true);
@@ -177,6 +185,9 @@ public class QTree extends JTree {
         });
     }
 
+    /**
+     * Builds the popup menus and sets up the actions available through them.
+     */
     private void buildPopupMenus() {
         JMenuItem menuItem;
         ActionListener popupListener;
