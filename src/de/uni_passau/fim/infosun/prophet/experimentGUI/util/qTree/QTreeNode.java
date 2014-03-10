@@ -2,6 +2,7 @@ package de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -10,7 +11,7 @@ import java.util.Objects;
  * A tree where nodes contain data (name and type of the node, HTML content) to be displayed by the
  * <code>ExperimentViewer</code> or <code>ExperimentEditor</code> and <code>Attribute</code>s.
  */
-public class QTreeNode {
+public class QTreeNode implements Cloneable {
 
     /**
      * Possible types of <code>QTreeNode</code>s.
@@ -47,6 +48,15 @@ public class QTreeNode {
         this.attributes = new HashMap<>();
         this.parent = parent;
         this.children = new ArrayList<>();
+    }
+
+    /**
+     * Sets the parent of the node to the new value.
+     *
+     * @param parent the new parent of the node
+     */
+    public void setParent(QTreeNode parent) {
+        this.parent = parent;
     }
 
     /**
@@ -198,5 +208,30 @@ public class QTreeNode {
     @Override
     public String toString() {
         return name;
+    }
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        QTreeNode clone = (QTreeNode) super.clone();
+        Map<String, Attribute> cAttributes = new HashMap<>();
+        List<QTreeNode> cChildren = new LinkedList<>();
+
+        clone.parent = null;
+
+        // clone the attributes
+        for (Map.Entry<String, Attribute> entry : attributes.entrySet()) {
+            cAttributes.put(entry.getKey(), (Attribute) entry.getValue().clone());
+        }
+        clone.attributes = cAttributes;
+
+        // clone the children
+        for (QTreeNode child : children) {
+            QTreeNode cChild = (QTreeNode) child.clone();
+            cChild.parent = clone;
+            cChildren.add(cChild);
+        }
+        clone.children = cChildren;
+
+        return clone;
     }
 }

@@ -8,7 +8,7 @@ import java.util.Objects;
 /**
  * A simple key/value pair that can have sub-attributes.
  */
-public class Attribute {
+public class Attribute implements Cloneable {
 
     private String key;
     private String value;
@@ -93,5 +93,19 @@ public class Attribute {
         Objects.requireNonNull(attribute, "attribute must not be null!");
 
         subAttributes.put(attribute.getKey(), attribute);
+    }
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        Attribute clone = (Attribute) super.clone();
+        Map<String, Attribute> cSubAttributes = new HashMap<>();
+
+        // clone the sub attributes
+        for (Map.Entry<String, Attribute> entry :  subAttributes.entrySet()) {
+            cSubAttributes.put(entry.getKey(), (Attribute) entry.getValue().clone());
+        }
+        clone.subAttributes = cSubAttributes;
+
+        return clone;
     }
 }
