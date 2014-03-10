@@ -41,6 +41,43 @@ public class QTreeModel implements TreeModel {
     }
 
     /**
+     * Renames a node to the new name.
+     *
+     * @param renameNode the node to be renamed
+     * @param newName the new name for the node
+     */
+    public void rename(QTreeNode renameNode, String newName) {
+        renameNode.setName(newName);
+        fireNodeChanged(renameNode);
+    }
+
+    /**
+     * Fires a <code>TreeModelEvent</code> indicating that the given node has changed.
+     *
+     * @param changedNode the node that has changed
+     */
+    private void fireNodeChanged(QTreeNode changedNode) {
+        Object[] path;
+        Object[] children = {changedNode};
+        int[] childIndices;
+        QTreeNode parent = changedNode.getParent();
+
+        if (parent == null) { // construct a NodeChanged event for the root node
+            path = new Object[] {changedNode};
+            childIndices = null;
+        } else {
+            path = buildPath(changedNode, false);
+            childIndices = new int[] {parent.getIndexOfChild(changedNode)};
+        }
+
+        TreeModelEvent event = new TreeModelEvent(this, path, childIndices, children);
+
+        for (TreeModelListener tml : listeners) {
+            tml.treeNodesChanged(event);
+        }
+    }
+
+    /**
      * Removes the given node from its parent thereby deleting it from the tree.
      *
      * @param removeNode the node to be removed

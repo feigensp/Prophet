@@ -34,6 +34,10 @@ public class QTree extends JTree {
     private JPopupMenu questionPopup;
     private JPopupMenu treePopup;
 
+    private JMenuItem experimentPasteItem;
+    private JMenuItem categoryPasteItem;
+    private QTreeNode clipboard;
+
     /**
      * ActionCommand String constants for the popup menus.
      */
@@ -98,6 +102,46 @@ public class QTree extends JTree {
                         remove(selNode);
                     }
                     break;
+                    case ACTION_COPY: {
+                        copy(selNode);
+                    }
+                    break;
+                    case ACTION_PASTE: {
+                        paste(selNode);
+                    }
+                    break;
+                }
+            }
+
+            private void copy(QTreeNode selNode) {
+                clipboard = selNode;
+
+                experimentPasteItem.setEnabled(true);
+                categoryPasteItem.setEnabled(true);
+            }
+
+            private void paste(QTreeNode selNode) {
+                boolean categoryToExperiment = selNode.getType() == QTreeNode.Type.EXPERIMENT
+                        && clipboard.getType() == QTreeNode.Type.CATEGORY;
+                boolean questionToCategory =
+                        selNode.getType() == QTreeNode.Type.CATEGORY && clipboard.getType() == QTreeNode.Type.QUESTION;
+
+                if (categoryToExperiment || questionToCategory) {
+                    QTreeNode copy;
+
+                    try {
+                        copy = (QTreeNode) clipboard.clone();
+                    } catch (CloneNotSupportedException e) {
+                        JOptionPane.showMessageDialog(QTree.this, resourceBundle.getString("TREE.POPUP.COPY_FAILED"),
+                                resourceBundle.getString("TREE.POPUP.ERROR"), JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+
+                    copy.setParent(selNode);
+                    model.addChild(selNode, copy);
+                } else {
+                    JOptionPane.showMessageDialog(QTree.this, resourceBundle.getString("TREE.POPUP.COPY_IMPOSSIBLE"),
+                            resourceBundle.getString("TREE.POPUP.ERROR"), JOptionPane.ERROR_MESSAGE);
                 }
             }
 
@@ -131,7 +175,7 @@ public class QTree extends JTree {
                     return;
                 }
 
-                selNode.setName(name);
+                model.rename(selNode, name);
             }
 
             private void newQuestion(QTreeNode selNode) {
@@ -166,6 +210,12 @@ public class QTree extends JTree {
         menuItem.setActionCommand(ACTION_RENAME);
         menuItem.addActionListener(popupListener);
         experimentPopup.add(menuItem);
+        experimentPopup.add(new JPopupMenu.Separator());
+        experimentPasteItem = new JMenuItem(resourceBundle.getString("TREE.POPUP.PASTE"));
+        experimentPasteItem.setActionCommand(ACTION_PASTE);
+        experimentPasteItem.addActionListener(popupListener);
+        experimentPasteItem.setEnabled(false);
+        experimentPopup.add(experimentPasteItem);
 
         // setup for the category popup menu
         menuItem = new JMenuItem(resourceBundle.getString("TREE.POPUP.NEW_QUESTION"));
@@ -180,6 +230,16 @@ public class QTree extends JTree {
         menuItem.setActionCommand(ACTION_REMOVE);
         menuItem.addActionListener(popupListener);
         categoryPopup.add(menuItem);
+        categoryPopup.add(new JPopupMenu.Separator());
+        menuItem = new JMenuItem(resourceBundle.getString("TREE.POPUP.COPY"));
+        menuItem.setActionCommand(ACTION_COPY);
+        menuItem.addActionListener(popupListener);
+        categoryPopup.add(menuItem);
+        categoryPasteItem = new JMenuItem(resourceBundle.getString("TREE.POPUP.PASTE"));
+        categoryPasteItem.setActionCommand(ACTION_PASTE);
+        categoryPasteItem.addActionListener(popupListener);
+        categoryPasteItem.setEnabled(false);
+        categoryPopup.add(categoryPasteItem);
 
         // setup for the question popup menu
         menuItem = new JMenuItem(resourceBundle.getString("TREE.POPUP.RENAME"));
@@ -188,6 +248,11 @@ public class QTree extends JTree {
         questionPopup.add(menuItem);
         menuItem = new JMenuItem(resourceBundle.getString("TREE.POPUP.REMOVE"));
         menuItem.setActionCommand(ACTION_REMOVE);
+        menuItem.addActionListener(popupListener);
+        questionPopup.add(menuItem);
+        questionPopup.add(new JPopupMenu.Separator());
+        menuItem = new JMenuItem(resourceBundle.getString("TREE.POPUP.COPY"));
+        menuItem.setActionCommand(ACTION_COPY);
         menuItem.addActionListener(popupListener);
         questionPopup.add(menuItem);
 
