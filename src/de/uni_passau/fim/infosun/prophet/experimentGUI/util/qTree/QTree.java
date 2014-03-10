@@ -34,6 +34,9 @@ public class QTree extends JTree {
     private JPopupMenu questionPopup;
     private JPopupMenu treePopup;
 
+    /**
+     * Menu items and the reference to the clipboard reference to support copy and paste.
+     */
     private JMenuItem experimentPasteItem;
     private JMenuItem categoryPasteItem;
     private QTreeNode clipboard;
