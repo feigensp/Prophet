@@ -75,7 +75,21 @@ public class QTree extends JTree {
                         newQuestion(selNode);
                     }
                     break;
+                    case ACTION_RENAME: {
+                        rename(selNode);
+                    }
+                    break;
                 }
+            }
+
+            private void rename(QTreeNode selNode) {
+                String name = JOptionPane.showInputDialog(QTree.this, resourceBundle.getString("TREE.POPUP.NAME"));
+
+                if (name == null) {
+                    return;
+                }
+
+                selNode.setName(name);
             }
 
             private void newQuestion(QTreeNode selNode) {
@@ -106,12 +120,25 @@ public class QTree extends JTree {
         menuItem.setActionCommand(ACTION_NEW_CATEGORY);
         menuItem.addActionListener(popupListener);
         experimentPopup.add(menuItem);
+        menuItem = new JMenuItem(resourceBundle.getString("TREE.POPUP.RENAME"));
+        menuItem.setActionCommand(ACTION_RENAME);
+        menuItem.addActionListener(popupListener);
+        experimentPopup.add(menuItem);
 
         // setup for the category popup menu
         menuItem = new JMenuItem(resourceBundle.getString("TREE.POPUP.NEW_QUESTION"));
         menuItem.setActionCommand(ACTION_NEW_QUESTION);
         menuItem.addActionListener(popupListener);
         categoryPopup.add(menuItem);
+        menuItem = new JMenuItem(resourceBundle.getString("TREE.POPUP.RENAME"));
+        menuItem.setActionCommand(ACTION_RENAME);
+        menuItem.addActionListener(popupListener);
+        categoryPopup.add(menuItem);
+
+        menuItem = new JMenuItem(resourceBundle.getString("TREE.POPUP.RENAME"));
+        menuItem.setActionCommand(ACTION_RENAME);
+        menuItem.addActionListener(popupListener);
+        questionPopup.add(menuItem);
 
         // mouse listener for showing the popup menus when a node of the tree is right clicked
         addMouseListener(new MouseAdapter() {

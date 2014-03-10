@@ -50,6 +50,30 @@ public class QTreeNode {
     }
 
     /**
+     * Sets the name of the node to the new value.
+     *
+     * @param name the new name of the node
+     * @throws NullPointerException if <code>name</code> is <code>null</code>
+     */
+    public void setName(String name) {
+        Objects.requireNonNull(name, "name must not be null!");
+
+        this.name = name;
+    }
+
+    /**
+     * Sets the HTML content of the node to the new value.
+     *
+     * @param html the new HTML content of the node
+     * @throws NullPointerException if <code>html</code> is <code>null</code>
+     */
+    public void setHtml(String html) {
+        Objects.requireNonNull(html, "html must not be null!");
+
+        this.html = html;
+    }
+
+    /**
      * Adds a child to this node.
      *
      * @param child the child to be added
