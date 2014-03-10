@@ -41,6 +41,36 @@ public class QTreeModel implements TreeModel {
     }
 
     /**
+     * Removes the given node from its parent thereby deleting it from the tree.
+     *
+     * @param removeNode the node to be removed
+     */
+    public void removeFromParent(QTreeNode removeNode) {
+        QTreeNode parent = removeNode.getParent();
+        int oldIndex = parent.getIndexOfChild(removeNode);
+
+        parent.removeChild(removeNode);
+        fireNodeRemoved(removeNode, oldIndex);
+    }
+
+    /**
+     * Fires a <code>TreeModelEvent</code> indicating that the given node was removed from its parent.
+     *
+     * @param removedNode the node that was removed
+     * @param oldIndex the index of the node in its parent before it was removed
+     */
+    private void fireNodeRemoved(QTreeNode removedNode, int oldIndex) {
+        Object[] path = buildPath(removedNode, false);
+        Object[] children = {removedNode};
+        int[] childIndices = {oldIndex};
+        TreeModelEvent event = new TreeModelEvent(this, path, childIndices, children);
+
+        for (TreeModelListener tml : listeners) {
+            tml.treeNodesRemoved(event);
+        }
+    }
+
+    /**
      * Adds a child node to the given parent.
      *
      * @param parent

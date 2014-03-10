@@ -74,11 +74,26 @@ public class QTreeNode {
     }
 
     /**
+     * Removes the given child from this node.
+     *
+     * @param child the child to be removed
+     * @throws NullPointerException if <code>child</code> is <code>null</code>
+     */
+    public void removeChild(QTreeNode child) {
+        Objects.requireNonNull(child, "child must not be null!");
+
+        children.remove(child);
+    }
+
+    /**
      * Adds a child to this node.
      *
      * @param child the child to be added
+     * @throws NullPointerException if <code>child</code> if <code>null</code>
      */
     public void addChild(QTreeNode child) {
+        Objects.requireNonNull(child, "child must not be null!");
+
         children.add(child);
     }
 
@@ -87,8 +102,11 @@ public class QTreeNode {
      *
      * @param child the child to be added
      * @param index the desired index
+     * @throws NullPointerException if <code>child</code> is <code>null</code>
      */
     public void addChild(QTreeNode child, int index) {
+        Objects.requireNonNull(child, "child must not be null!");
+
         children.add(index, child);
     }
 

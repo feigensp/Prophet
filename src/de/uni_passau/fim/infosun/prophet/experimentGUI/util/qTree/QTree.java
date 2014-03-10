@@ -79,7 +79,15 @@ public class QTree extends JTree {
                         rename(selNode);
                     }
                     break;
+                    case ACTION_REMOVE: {
+                        remove(selNode);
+                    }
+                    break;
                 }
+            }
+
+            private void remove(QTreeNode selNode) {
+                model.removeFromParent(selNode);
             }
 
             private void rename(QTreeNode selNode) {
@@ -134,9 +142,18 @@ public class QTree extends JTree {
         menuItem.setActionCommand(ACTION_RENAME);
         menuItem.addActionListener(popupListener);
         categoryPopup.add(menuItem);
+        menuItem = new JMenuItem(resourceBundle.getString("TREE.POPUP.REMOVE"));
+        menuItem.setActionCommand(ACTION_REMOVE);
+        menuItem.addActionListener(popupListener);
+        categoryPopup.add(menuItem);
 
+        // setup for the question popup menu
         menuItem = new JMenuItem(resourceBundle.getString("TREE.POPUP.RENAME"));
         menuItem.setActionCommand(ACTION_RENAME);
+        menuItem.addActionListener(popupListener);
+        questionPopup.add(menuItem);
+        menuItem = new JMenuItem(resourceBundle.getString("TREE.POPUP.REMOVE"));
+        menuItem.setActionCommand(ACTION_REMOVE);
         menuItem.addActionListener(popupListener);
         questionPopup.add(menuItem);
 
