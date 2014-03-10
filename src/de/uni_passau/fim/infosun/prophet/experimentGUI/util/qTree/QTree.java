@@ -1,10 +1,16 @@
 package de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree;
 
+import java.awt.Point;
+import java.awt.dnd.DropTarget;
+import java.awt.dnd.DropTargetAdapter;
+import java.awt.dnd.DropTargetDragEvent;
+import java.awt.dnd.DropTargetDropEvent;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ResourceBundle;
+import java.util.TooManyListenersException;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
@@ -12,6 +18,8 @@ import javax.swing.JTree;
 import javax.swing.SwingUtilities;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
+
+import static de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode.Type.*;
 
 /**
  * A <code>JTree</code> subclass displaying a tree of <code>QTreeNode</code> objects.
@@ -61,6 +69,112 @@ public class QTree extends JTree {
         getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 
         buildPopupMenus();
+
+        try {
+            setupDragAndDrop();
+        } catch (TooManyListenersException ignored) { }
+    }
+
+    private void setupDragAndDrop() throws TooManyListenersException {
+
+        setDragEnabled(true);
+        setDropTarget(new DropTarget());
+
+        getDropTarget().addDropTargetListener(new DropTargetAdapter() {
+
+            @Override
+            public void dragOver(DropTargetDragEvent dtde) {
+                QTreeNode dragComponent = (QTreeNode) getSelectionPath().getLastPathComponent();
+
+                // you can't drag the experiment node
+                if (dragComponent.getType() == EXPERIMENT) {
+                    dtde.rejectDrag();
+                    return;
+                }
+
+                Point mouseLocation = dtde.getLocation();
+                TreePath selPath = getPathForLocation(mouseLocation.x, mouseLocation.y);
+
+                // you can only drag onto a tree component
+                if (selPath == null) {
+                    dtde.rejectDrag();
+                    return;
+                }
+
+                QTreeNode target = (QTreeNode) selPath.getLastPathComponent();
+
+                // you can't drag onto the experiment node
+                if (target.getType() == EXPERIMENT) {
+                    dtde.rejectDrag();
+
+                    // you can't drag a category onto a question
+                } else if (dragComponent.getType() == CATEGORY && target.getType() != CATEGORY) {
+                    dtde.rejectDrag();
+                } else {
+                    dtde.acceptDrag(dtde.getDropAction());
+                }
+            }
+
+            @Override
+            public void drop(DropTargetDropEvent dtde) {
+                Point dropLocation = dtde.getLocation();
+                TreePath dropPath = getPathForLocation(dropLocation.x, dropLocation.y);
+                QTreeNode dragComponent = (QTreeNode) getSelectionPath().getLastPathComponent();
+
+                if (dropPath == null) {
+                    dtde.rejectDrop();
+                    return;
+                }
+
+                QTreeNode target = (QTreeNode) dropPath.getLastPathComponent();
+
+                switch (dragComponent.getType()) {
+
+                    case CATEGORY: {
+                        moveCategory(dragComponent, target);
+                    }
+                    break;
+                    case QUESTION: {
+                        moveQuestion(dragComponent, target);
+                    }
+                    break;
+                }
+            }
+
+            private void moveCategory(QTreeNode dragComponent, QTreeNode target) {
+                model.removeFromParent(dragComponent);
+
+                int index = target.getParent().getIndexOfChild(target) + 1;
+
+                dragComponent.setParent(target.getParent());
+                model.addChild(target.getParent(), dragComponent, index);
+            }
+
+            private void moveQuestion(QTreeNode dragComponent, QTreeNode target) {
+
+                switch (target.getType()) {
+
+                    case CATEGORY: {
+                        model.removeFromParent(dragComponent);
+
+                        int index = target.getChildCount();
+
+                        dragComponent.setParent(target);
+                        model.addChild(target, dragComponent, index);
+                    }
+                    break;
+                    case QUESTION: {
+                        model.removeFromParent(dragComponent);
+
+                        int index = target.getParent().getIndexOfChild(target) + 1;
+
+                        dragComponent.setParent(target.getParent());
+                        model.addChild(target.getParent(), dragComponent, index);
+                    }
+                    break;
+                }
+            }
+        });
     }
 
     private void buildPopupMenus() {
@@ -124,10 +238,8 @@ public class QTree extends JTree {
             }
 
             private void paste(QTreeNode selNode) {
-                boolean categoryToExperiment = selNode.getType() == QTreeNode.Type.EXPERIMENT
-                        && clipboard.getType() == QTreeNode.Type.CATEGORY;
-                boolean questionToCategory =
-                        selNode.getType() == QTreeNode.Type.CATEGORY && clipboard.getType() == QTreeNode.Type.QUESTION;
+                boolean categoryToExperiment = selNode.getType() == EXPERIMENT && clipboard.getType() == CATEGORY;
+                boolean questionToCategory = selNode.getType() == CATEGORY && clipboard.getType() == QUESTION;
 
                 if (categoryToExperiment || questionToCategory) {
                     QTreeNode copy;
@@ -164,7 +276,7 @@ public class QTree extends JTree {
                     return;
                 }
 
-                model.setRoot(new QTreeNode(null, QTreeNode.Type.EXPERIMENT, name));
+                model.setRoot(new QTreeNode(null, EXPERIMENT, name));
             }
 
             private void remove(QTreeNode selNode) {
@@ -188,7 +300,7 @@ public class QTree extends JTree {
                     return;
                 }
 
-                model.addChild(selNode, new QTreeNode(selNode, QTreeNode.Type.QUESTION, name));
+                model.addChild(selNode, new QTreeNode(selNode, QUESTION, name));
                 expandPath(getSelectionPath());
             }
 
@@ -199,7 +311,7 @@ public class QTree extends JTree {
                     return;
                 }
 
-                model.addChild(selNode, new QTreeNode(selNode, QTreeNode.Type.CATEGORY, name));
+                model.addChild(selNode, new QTreeNode(selNode, CATEGORY, name));
                 expandPath(getSelectionPath());
             }
         };
