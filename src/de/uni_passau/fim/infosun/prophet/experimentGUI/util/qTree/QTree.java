@@ -13,6 +13,9 @@ import javax.swing.SwingUtilities;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
+/**
+ * A <code>JTree</code> subclass displaying a tree of <code>QTreeNode</code> objects.
+ */
 public class QTree extends JTree {
 
     // TODO store reference to the bundle in a central location
@@ -29,12 +32,14 @@ public class QTree extends JTree {
     private JPopupMenu experimentPopup;
     private JPopupMenu categoryPopup;
     private JPopupMenu questionPopup;
+    private JPopupMenu treePopup;
 
     /**
      * ActionCommand String constants for the popup menus.
      */
     private final static String ACTION_NEW_CATEGORY = "newcategory";
     private final static String ACTION_NEW_QUESTION = "newquestion";
+    private final static String ACTION_NEW_EXPERIMENT = "newexperiment";
     private final static String ACTION_RENAME = "rename";
     private final static String ACTION_REMOVE = "remove";
     private final static String ACTION_COPY = "copy";
@@ -58,13 +63,19 @@ public class QTree extends JTree {
         experimentPopup = new JPopupMenu();
         categoryPopup = new JPopupMenu();
         questionPopup = new JPopupMenu();
+        treePopup = new JPopupMenu();
 
         // action listener for handling all actions coming from the popup menus
         popupListener = new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                QTreeNode selNode = (QTreeNode) getSelectionPath().getLastPathComponent();
+                QTreeNode selNode = null;
+                TreePath selPath = getSelectionPath();
+
+                if (selPath != null) {
+                    selNode = (QTreeNode) selPath.getLastPathComponent();
+                }
 
                 switch (e.getActionCommand()) {
                     case ACTION_NEW_CATEGORY: {
@@ -73,6 +84,10 @@ public class QTree extends JTree {
                     break;
                     case ACTION_NEW_QUESTION: {
                         newQuestion(selNode);
+                    }
+                    break;
+                    case ACTION_NEW_EXPERIMENT: {
+                        newExperiment();
                     }
                     break;
                     case ACTION_RENAME: {
@@ -84,6 +99,25 @@ public class QTree extends JTree {
                     }
                     break;
                 }
+            }
+
+            private void newExperiment() {
+                int choice = JOptionPane
+                        .showOptionDialog(QTree.this, resourceBundle.getString("TREE.POPUP.CONFIRM.NEW_EXPERIMENT"),
+                                resourceBundle.getString("TREE.POPUP.NEW_EXPERIMENT"), JOptionPane.OK_CANCEL_OPTION,
+                                JOptionPane.WARNING_MESSAGE, null, null, null);
+
+                if (choice != JOptionPane.OK_OPTION) {
+                    return;
+                }
+
+                String name = JOptionPane.showInputDialog(QTree.this, resourceBundle.getString("TREE.POPUP.NAME"));
+
+                if (name == null) {
+                    return;
+                }
+
+                model.setRoot(new QTreeNode(null, QTreeNode.Type.EXPERIMENT, name));
             }
 
             private void remove(QTreeNode selNode) {
@@ -157,6 +191,11 @@ public class QTree extends JTree {
         menuItem.addActionListener(popupListener);
         questionPopup.add(menuItem);
 
+        menuItem = new JMenuItem(resourceBundle.getString("TREE.POPUP.NEW_EXPERIMENT"));
+        menuItem.setActionCommand(ACTION_NEW_EXPERIMENT);
+        menuItem.addActionListener(popupListener);
+        treePopup.add(menuItem);
+
         // mouse listener for showing the popup menus when a node of the tree is right clicked
         addMouseListener(new MouseAdapter() {
 
@@ -172,6 +211,7 @@ public class QTree extends JTree {
                 TreePath path = getPathForLocation(selX, selY);
 
                 if (path == null) {
+                    treePopup.show(QTree.this, selX, selY);
                     return;
                 }
 
