@@ -83,6 +83,9 @@ public class QTree extends JTree {
         setupShortcuts();
     }
 
+    /**
+     * Sets up the shortcuts.
+     */
     private void setupShortcuts() {
 
         addKeyListener(new KeyAdapter() {
@@ -474,7 +477,8 @@ public class QTree extends JTree {
             }
         }
 
-        String name = JOptionPane.showInputDialog(QTree.this, resourceBundle.getString("TREE.POPUP.NAME"), resourceBundle.getString("TREE.POPUP.NEW_EXPERIMENT"), JOptionPane.QUESTION_MESSAGE);
+        String name = JOptionPane.showInputDialog(QTree.this, resourceBundle.getString("TREE.POPUP.NAME"),
+                resourceBundle.getString("TREE.POPUP.NEW_EXPERIMENT"), JOptionPane.QUESTION_MESSAGE);
 
         if (name == null) {
             return;
@@ -500,7 +504,8 @@ public class QTree extends JTree {
      *         the node to be renamed
      */
     private void rename(QTreeNode selNode) {
-        String name = JOptionPane.showInputDialog(QTree.this, resourceBundle.getString("TREE.POPUP.NAME"), resourceBundle.getString("TREE.POPUP.RENAME"), JOptionPane.QUESTION_MESSAGE);
+        String name = JOptionPane.showInputDialog(QTree.this, resourceBundle.getString("TREE.POPUP.NAME"),
+                resourceBundle.getString("TREE.POPUP.RENAME"), JOptionPane.QUESTION_MESSAGE);
 
         if (name == null) {
             return;
