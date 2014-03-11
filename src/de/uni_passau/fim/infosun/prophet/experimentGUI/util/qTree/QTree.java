@@ -257,94 +257,6 @@ public class QTree extends JTree {
                     break;
                 }
             }
-
-            private void copy(QTreeNode selNode) {
-                clipboard = selNode;
-
-                experimentPasteItem.setEnabled(true);
-                categoryPasteItem.setEnabled(true);
-            }
-
-            private void paste(QTreeNode selNode) {
-                boolean categoryToExperiment = selNode.getType() == EXPERIMENT && clipboard.getType() == CATEGORY;
-                boolean questionToCategory = selNode.getType() == CATEGORY && clipboard.getType() == QUESTION;
-
-                if (categoryToExperiment || questionToCategory) {
-                    QTreeNode copy;
-
-                    try {
-                        copy = (QTreeNode) clipboard.clone();
-                    } catch (CloneNotSupportedException e) {
-                        JOptionPane.showMessageDialog(QTree.this, resourceBundle.getString("TREE.POPUP.COPY_FAILED"),
-                                resourceBundle.getString("TREE.POPUP.ERROR"), JOptionPane.ERROR_MESSAGE);
-                        return;
-                    }
-
-                    copy.setParent(selNode);
-                    model.addChild(selNode, copy);
-                } else {
-                    JOptionPane.showMessageDialog(QTree.this, resourceBundle.getString("TREE.POPUP.COPY_IMPOSSIBLE"),
-                            resourceBundle.getString("TREE.POPUP.ERROR"), JOptionPane.ERROR_MESSAGE);
-                }
-            }
-
-            private void newExperiment() {
-
-                if (model.getRoot() != null) {
-                    int choice = JOptionPane
-                            .showOptionDialog(QTree.this, resourceBundle.getString("TREE.POPUP.CONFIRM.NEW_EXPERIMENT"),
-                                    resourceBundle.getString("TREE.POPUP.NEW_EXPERIMENT"), JOptionPane.OK_CANCEL_OPTION,
-                                    JOptionPane.WARNING_MESSAGE, null, null, null);
-
-                    if (choice != JOptionPane.OK_OPTION) {
-                        return;
-                    }
-                }
-
-                String name = JOptionPane.showInputDialog(QTree.this, resourceBundle.getString("TREE.POPUP.NAME"));
-
-                if (name == null) {
-                    return;
-                }
-
-                model.setRoot(new QTreeNode(null, EXPERIMENT, name));
-            }
-
-            private void remove(QTreeNode selNode) {
-                model.removeFromParent(selNode);
-            }
-
-            private void rename(QTreeNode selNode) {
-                String name = JOptionPane.showInputDialog(QTree.this, resourceBundle.getString("TREE.POPUP.NAME"));
-
-                if (name == null) {
-                    return;
-                }
-
-                model.rename(selNode, name);
-            }
-
-            private void newQuestion(QTreeNode selNode) {
-                String name = JOptionPane.showInputDialog(QTree.this, resourceBundle.getString("TREE.POPUP.NAME"));
-
-                if (name == null) {
-                    return;
-                }
-
-                model.addChild(selNode, new QTreeNode(selNode, QUESTION, name));
-                expandPath(getSelectionPath());
-            }
-
-            private void newCategory(QTreeNode selNode) {
-                String name = JOptionPane.showInputDialog(QTree.this, resourceBundle.getString("TREE.POPUP.NAME"));
-
-                if (name == null) {
-                    return;
-                }
-
-                model.addChild(selNode, new QTreeNode(selNode, CATEGORY, name));
-                expandPath(getSelectionPath());
-            }
         };
 
         // setup for the experiment popup menu
@@ -447,5 +359,126 @@ public class QTree extends JTree {
                 }
             }
         });
+    }
+
+    /**
+     * Copies the given node.
+     *
+     * @param selNode the node to be copied
+     */
+    private void copy(QTreeNode selNode) {
+        clipboard = selNode;
+
+        experimentPasteItem.setEnabled(true);
+        categoryPasteItem.setEnabled(true);
+    }
+
+    /**
+     * Pasts the node currently in <code>clipboard</code> into the given node.
+     *
+     * @param selNode the node into which to paste
+     */
+    private void paste(QTreeNode selNode) {
+        boolean categoryToExperiment = selNode.getType() == EXPERIMENT && clipboard.getType() == CATEGORY;
+        boolean questionToCategory = selNode.getType() == CATEGORY && clipboard.getType() == QUESTION;
+
+        if (categoryToExperiment || questionToCategory) {
+            QTreeNode copy;
+
+            try {
+                copy = (QTreeNode) clipboard.clone();
+            } catch (CloneNotSupportedException e) {
+                JOptionPane.showMessageDialog(QTree.this, resourceBundle.getString("TREE.POPUP.COPY_FAILED"),
+                        resourceBundle.getString("TREE.POPUP.ERROR"), JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            copy.setParent(selNode);
+            model.addChild(selNode, copy);
+        } else {
+            JOptionPane.showMessageDialog(QTree.this, resourceBundle.getString("TREE.POPUP.COPY_IMPOSSIBLE"),
+                    resourceBundle.getString("TREE.POPUP.ERROR"), JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    /**
+     * Replaces the current experiment with a new one.
+     */
+    private void newExperiment() {
+
+        if (model.getRoot() != null) {
+            int choice = JOptionPane
+                    .showOptionDialog(QTree.this, resourceBundle.getString("TREE.POPUP.CONFIRM.NEW_EXPERIMENT"),
+                            resourceBundle.getString("TREE.POPUP.NEW_EXPERIMENT"), JOptionPane.OK_CANCEL_OPTION,
+                            JOptionPane.WARNING_MESSAGE, null, null, null);
+
+            if (choice != JOptionPane.OK_OPTION) {
+                return;
+            }
+        }
+
+        String name = JOptionPane.showInputDialog(QTree.this, resourceBundle.getString("TREE.POPUP.NAME"));
+
+        if (name == null) {
+            return;
+        }
+
+        model.setRoot(new QTreeNode(null, EXPERIMENT, name));
+    }
+
+    /**
+     * Removes the given node from the tree.
+     *
+     * @param selNode the node to be removed
+     */
+    private void remove(QTreeNode selNode) {
+        model.removeFromParent(selNode);
+    }
+
+    /**
+     * Renames the given node.
+     *
+     * @param selNode the node to be renamed
+     */
+    private void rename(QTreeNode selNode) {
+        String name = JOptionPane.showInputDialog(QTree.this, resourceBundle.getString("TREE.POPUP.NAME"));
+
+        if (name == null) {
+            return;
+        }
+
+        model.rename(selNode, name);
+    }
+
+    /**
+     * Adds a new question to the given node.
+     *
+     * @param selNode the node to which a new question is to be added
+     */
+    private void newQuestion(QTreeNode selNode) {
+        String name = JOptionPane.showInputDialog(QTree.this, resourceBundle.getString("TREE.POPUP.NAME"));
+
+        if (name == null) {
+            return;
+        }
+
+        model.addChild(selNode, new QTreeNode(selNode, QUESTION, name));
+        expandPath(getSelectionPath());
+    }
+
+    /**
+     * Adds a new category to the given node.
+     *
+     * @param selNode the node to which a new category is to be added
+     */
+    private void newCategory(QTreeNode selNode) {
+        String name = JOptionPane.showInputDialog(QTree.this, resourceBundle.getString("TREE.POPUP.NAME"));
+
+        if (name == null) {
+            return;
+        }
+
+        model.addChild(selNode, new QTreeNode(selNode, CATEGORY, name));
+        expandPath(getSelectionPath());
     }
 }
