@@ -7,6 +7,8 @@ import java.awt.dnd.DropTargetDragEvent;
 import java.awt.dnd.DropTargetDropEvent;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ResourceBundle;
@@ -75,13 +77,62 @@ public class QTree extends JTree {
 
         try {
             setupDragAndDrop();
-        } catch (TooManyListenersException ignored) { }
+        } catch (TooManyListenersException ignored) {
+        }
+
+        setupShortcuts();
+    }
+
+    private void setupShortcuts() {
+
+        addKeyListener(new KeyAdapter() {
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+
+                if (!e.isControlDown()) {
+                    return;
+                }
+
+                TreePath selPath = getSelectionPath();
+
+                if (selPath == null) {
+                    return;
+                }
+
+                QTreeNode selNode = (QTreeNode) selPath.getLastPathComponent();
+
+                switch (e.getKeyCode()) {
+
+                    case KeyEvent.VK_N:
+                        if (selNode.getType() == EXPERIMENT) {
+                            newCategory(selNode);
+                        } else if (selNode.getType() == CATEGORY) {
+                            newQuestion(selNode);
+                        }
+                        break;
+                    case KeyEvent.VK_R:
+                        rename(selNode);
+                        break;
+                    case KeyEvent.VK_Q:
+                        remove(selNode);
+                        break;
+                    case KeyEvent.VK_C:
+                        copy(selNode);
+                        break;
+                    case KeyEvent.VK_V:
+                        paste(selNode);
+                        break;
+                }
+            }
+        });
     }
 
     /**
      * Sets up the drag and drop actions for the tree.
      *
-     * @throws TooManyListenersException if a <code>DropTargetListener</code> is already added to the <code>QTree</code>
+     * @throws TooManyListenersException
+     *         if a <code>DropTargetListener</code> is already added to the <code>QTree</code>
      */
     private void setupDragAndDrop() throws TooManyListenersException {
 
@@ -316,8 +367,10 @@ public class QTree extends JTree {
      * Moves a category. Categories can only be dragged onto other categories and will be placed after the
      * node <code>target</code> in the targets parent.
      *
-     * @param dragComponent the component that is being dragged
-     * @param target the component <code>dragComponent</code> is being dropped on
+     * @param dragComponent
+     *         the component that is being dragged
+     * @param target
+     *         the component <code>dragComponent</code> is being dropped on
      */
     private void moveCategory(QTreeNode dragComponent, QTreeNode target) {
         model.removeFromParent(dragComponent);
@@ -333,8 +386,10 @@ public class QTree extends JTree {
      * a category they will be added as the last child of the category, if the are dragged onto a question
      * they will be added after the node <code>target</code> in the targets parent.
      *
-     * @param dragComponent the component that is being dragged
-     * @param target the component <code>dragComponent</code> is being dropped on
+     * @param dragComponent
+     *         the component that is being dragged
+     * @param target
+     *         the component <code>dragComponent</code> is being dropped on
      */
     private void moveQuestion(QTreeNode dragComponent, QTreeNode target) {
 
@@ -364,7 +419,8 @@ public class QTree extends JTree {
     /**
      * Copies the given node.
      *
-     * @param selNode the node to be copied
+     * @param selNode
+     *         the node to be copied
      */
     private void copy(QTreeNode selNode) {
         clipboard = selNode;
@@ -376,7 +432,8 @@ public class QTree extends JTree {
     /**
      * Pasts the node currently in <code>clipboard</code> into the given node.
      *
-     * @param selNode the node into which to paste
+     * @param selNode
+     *         the node into which to paste
      */
     private void paste(QTreeNode selNode) {
         boolean categoryToExperiment = selNode.getType() == EXPERIMENT && clipboard.getType() == CATEGORY;
@@ -417,7 +474,7 @@ public class QTree extends JTree {
             }
         }
 
-        String name = JOptionPane.showInputDialog(QTree.this, resourceBundle.getString("TREE.POPUP.NAME"));
+        String name = JOptionPane.showInputDialog(QTree.this, resourceBundle.getString("TREE.POPUP.NAME"), resourceBundle.getString("TREE.POPUP.NEW_EXPERIMENT"), JOptionPane.QUESTION_MESSAGE);
 
         if (name == null) {
             return;
@@ -429,7 +486,8 @@ public class QTree extends JTree {
     /**
      * Removes the given node from the tree.
      *
-     * @param selNode the node to be removed
+     * @param selNode
+     *         the node to be removed
      */
     private void remove(QTreeNode selNode) {
         model.removeFromParent(selNode);
@@ -438,10 +496,11 @@ public class QTree extends JTree {
     /**
      * Renames the given node.
      *
-     * @param selNode the node to be renamed
+     * @param selNode
+     *         the node to be renamed
      */
     private void rename(QTreeNode selNode) {
-        String name = JOptionPane.showInputDialog(QTree.this, resourceBundle.getString("TREE.POPUP.NAME"));
+        String name = JOptionPane.showInputDialog(QTree.this, resourceBundle.getString("TREE.POPUP.NAME"), resourceBundle.getString("TREE.POPUP.RENAME"), JOptionPane.QUESTION_MESSAGE);
 
         if (name == null) {
             return;
@@ -453,10 +512,12 @@ public class QTree extends JTree {
     /**
      * Adds a new question to the given node.
      *
-     * @param selNode the node to which a new question is to be added
+     * @param selNode
+     *         the node to which a new question is to be added
      */
     private void newQuestion(QTreeNode selNode) {
-        String name = JOptionPane.showInputDialog(QTree.this, resourceBundle.getString("TREE.POPUP.NAME"));
+        String name = JOptionPane.showInputDialog(QTree.this, resourceBundle.getString("TREE.POPUP.NAME"),
+                resourceBundle.getString("TREE.POPUP.NEW_QUESTION"), JOptionPane.QUESTION_MESSAGE);
 
         if (name == null) {
             return;
@@ -469,10 +530,12 @@ public class QTree extends JTree {
     /**
      * Adds a new category to the given node.
      *
-     * @param selNode the node to which a new category is to be added
+     * @param selNode
+     *         the node to which a new category is to be added
      */
     private void newCategory(QTreeNode selNode) {
-        String name = JOptionPane.showInputDialog(QTree.this, resourceBundle.getString("TREE.POPUP.NAME"));
+        String name = JOptionPane.showInputDialog(QTree.this, resourceBundle.getString("TREE.POPUP.NAME"),
+                resourceBundle.getString("TREE.POPUP.NEW_CATEGORY"), JOptionPane.QUESTION_MESSAGE);
 
         if (name == null) {
             return;
