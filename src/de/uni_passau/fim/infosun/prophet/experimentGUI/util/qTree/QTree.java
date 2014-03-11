@@ -150,55 +150,6 @@ public class QTree extends JTree {
 
                 dtde.dropComplete(true);
             }
-
-            /**
-             * Moves a category. Categories can only be dragged onto other categories and will be placed after the
-             * node <code>target</code> in the targets parent.
-             *
-             * @param dragComponent the component that is being dragged
-             * @param target the component <code>dragComponent</code> is being dropped on
-             */
-            private void moveCategory(QTreeNode dragComponent, QTreeNode target) {
-                model.removeFromParent(dragComponent);
-
-                int index = target.getParent().getIndexOfChild(target) + 1;
-
-                dragComponent.setParent(target.getParent());
-                model.addChild(target.getParent(), dragComponent, index);
-            }
-
-            /**
-             * Moves a question. Questions can be dragged onto categories or other questions. If the are dragged onto
-             * a category they will be added as the last child of the category, if the are dragged onto a question
-             * they will be added after the node <code>target</code> in the targets parent.
-             *
-             * @param dragComponent the component that is being dragged
-             * @param target the component <code>dragComponent</code> is being dropped on
-             */
-            private void moveQuestion(QTreeNode dragComponent, QTreeNode target) {
-
-                switch (target.getType()) {
-
-                    case CATEGORY: {
-                        model.removeFromParent(dragComponent);
-
-                        int index = target.getChildCount();
-
-                        dragComponent.setParent(target);
-                        model.addChild(target, dragComponent, index);
-                    }
-                    break;
-                    case QUESTION: {
-                        model.removeFromParent(dragComponent);
-
-                        int index = target.getParent().getIndexOfChild(target) + 1;
-
-                        dragComponent.setParent(target.getParent());
-                        model.addChild(target.getParent(), dragComponent, index);
-                    }
-                    break;
-                }
-            }
         });
     }
 
@@ -359,6 +310,55 @@ public class QTree extends JTree {
                 }
             }
         });
+    }
+
+    /**
+     * Moves a category. Categories can only be dragged onto other categories and will be placed after the
+     * node <code>target</code> in the targets parent.
+     *
+     * @param dragComponent the component that is being dragged
+     * @param target the component <code>dragComponent</code> is being dropped on
+     */
+    private void moveCategory(QTreeNode dragComponent, QTreeNode target) {
+        model.removeFromParent(dragComponent);
+
+        int index = target.getParent().getIndexOfChild(target) + 1;
+
+        dragComponent.setParent(target.getParent());
+        model.addChild(target.getParent(), dragComponent, index);
+    }
+
+    /**
+     * Moves a question. Questions can be dragged onto categories or other questions. If the are dragged onto
+     * a category they will be added as the last child of the category, if the are dragged onto a question
+     * they will be added after the node <code>target</code> in the targets parent.
+     *
+     * @param dragComponent the component that is being dragged
+     * @param target the component <code>dragComponent</code> is being dropped on
+     */
+    private void moveQuestion(QTreeNode dragComponent, QTreeNode target) {
+
+        switch (target.getType()) {
+
+            case CATEGORY: {
+                model.removeFromParent(dragComponent);
+
+                int index = target.getChildCount();
+
+                dragComponent.setParent(target);
+                model.addChild(target, dragComponent, index);
+            }
+            break;
+            case QUESTION: {
+                model.removeFromParent(dragComponent);
+
+                int index = target.getParent().getIndexOfChild(target) + 1;
+
+                dragComponent.setParent(target.getParent());
+                model.addChild(target.getParent(), dragComponent, index);
+            }
+            break;
+        }
     }
 
     /**
