@@ -428,8 +428,13 @@ public class QTree extends JTree {
     private void copy(QTreeNode selNode) {
         clipboard = selNode;
 
-        experimentPasteItem.setEnabled(true);
-        categoryPasteItem.setEnabled(true);
+        if (selNode.getType() == QUESTION) {
+            categoryPasteItem.setEnabled(true);
+            experimentPasteItem.setEnabled(false);
+        } else if (selNode.getType() == CATEGORY) {
+            categoryPasteItem.setEnabled(false);
+            experimentPasteItem.setEnabled(true);
+        }
     }
 
     /**
