@@ -147,8 +147,17 @@ public class QTree extends JTree {
                     }
                     break;
                 }
+
+                dtde.dropComplete(true);
             }
 
+            /**
+             * Moves a category. Categories can only be dragged onto other categories and will be placed after the
+             * node <code>target</code> in the targets parent.
+             *
+             * @param dragComponent the component that is being dragged
+             * @param target the component <code>dragComponent</code> is being dropped on
+             */
             private void moveCategory(QTreeNode dragComponent, QTreeNode target) {
                 model.removeFromParent(dragComponent);
 
@@ -158,6 +167,14 @@ public class QTree extends JTree {
                 model.addChild(target.getParent(), dragComponent, index);
             }
 
+            /**
+             * Moves a question. Questions can be dragged onto categories or other questions. If the are dragged onto
+             * a category they will be added as the last child of the category, if the are dragged onto a question
+             * they will be added after the node <code>target</code> in the targets parent.
+             *
+             * @param dragComponent the component that is being dragged
+             * @param target the component <code>dragComponent</code> is being dropped on
+             */
             private void moveQuestion(QTreeNode dragComponent, QTreeNode target) {
 
                 switch (target.getType()) {
@@ -272,13 +289,16 @@ public class QTree extends JTree {
             }
 
             private void newExperiment() {
-                int choice = JOptionPane
-                        .showOptionDialog(QTree.this, resourceBundle.getString("TREE.POPUP.CONFIRM.NEW_EXPERIMENT"),
-                                resourceBundle.getString("TREE.POPUP.NEW_EXPERIMENT"), JOptionPane.OK_CANCEL_OPTION,
-                                JOptionPane.WARNING_MESSAGE, null, null, null);
 
-                if (choice != JOptionPane.OK_OPTION) {
-                    return;
+                if (model.getRoot() != null) {
+                    int choice = JOptionPane
+                            .showOptionDialog(QTree.this, resourceBundle.getString("TREE.POPUP.CONFIRM.NEW_EXPERIMENT"),
+                                    resourceBundle.getString("TREE.POPUP.NEW_EXPERIMENT"), JOptionPane.OK_CANCEL_OPTION,
+                                    JOptionPane.WARNING_MESSAGE, null, null, null);
+
+                    if (choice != JOptionPane.OK_OPTION) {
+                        return;
+                    }
                 }
 
                 String name = JOptionPane.showInputDialog(QTree.this, resourceBundle.getString("TREE.POPUP.NAME"));
@@ -332,6 +352,7 @@ public class QTree extends JTree {
         menuItem.setActionCommand(ACTION_NEW_CATEGORY);
         menuItem.addActionListener(popupListener);
         experimentPopup.add(menuItem);
+        experimentPopup.add(new JPopupMenu.Separator());
         menuItem = new JMenuItem(resourceBundle.getString("TREE.POPUP.RENAME"));
         menuItem.setActionCommand(ACTION_RENAME);
         menuItem.addActionListener(popupListener);
@@ -348,6 +369,7 @@ public class QTree extends JTree {
         menuItem.setActionCommand(ACTION_NEW_QUESTION);
         menuItem.addActionListener(popupListener);
         categoryPopup.add(menuItem);
+        categoryPopup.add(new JPopupMenu.Separator());
         menuItem = new JMenuItem(resourceBundle.getString("TREE.POPUP.RENAME"));
         menuItem.setActionCommand(ACTION_RENAME);
         menuItem.addActionListener(popupListener);
@@ -372,6 +394,7 @@ public class QTree extends JTree {
         menuItem.setActionCommand(ACTION_RENAME);
         menuItem.addActionListener(popupListener);
         questionPopup.add(menuItem);
+        questionPopup.add(new JPopupMenu.Separator());
         menuItem = new JMenuItem(resourceBundle.getString("TREE.POPUP.REMOVE"));
         menuItem.setActionCommand(ACTION_REMOVE);
         menuItem.addActionListener(popupListener);
