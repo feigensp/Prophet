@@ -49,7 +49,7 @@ public class QuestionTreeHTMLHandler {
             try {
                 editorKit.read(reader, htmlDocument, 0);
             } catch (IOException | BadLocationException e) {
-                System.err.println("Could not read a nodes value as html. Returning an empty Map.");
+                System.err.println("Could not read a nodes value as html. Returning an empty list.");
                 return new LinkedList<>();
             }
 
