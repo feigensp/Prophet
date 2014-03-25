@@ -2,7 +2,6 @@ package de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -234,7 +233,7 @@ public class QTreeNode implements Cloneable {
     protected Object clone() throws CloneNotSupportedException {
         QTreeNode clone = (QTreeNode) super.clone();
         Map<String, Attribute> cAttributes = new HashMap<>();
-        List<QTreeNode> cChildren = new LinkedList<>();
+        List<QTreeNode> cChildren = new ArrayList<>();
 
         clone.parent = null;
 
@@ -253,5 +252,25 @@ public class QTreeNode implements Cloneable {
         clone.children = cChildren;
 
         return clone;
+    }
+
+    /**
+     * This method will be called (by the JVM) after this object was deserialised. It is implemented because
+     * the XML representation for this object uses implicit collections/maps whose fields will be <code>null</code>
+     * if they were empty at the time of serialisation. These fields will be initialised with empty collections.
+     *
+     * @return always returns <code>this</code>
+     */
+    private Object readResolve() {
+
+        if (attributes == null) {
+            attributes = new HashMap<>();
+        }
+
+        if (children == null) {
+            children = new ArrayList<>();
+        }
+
+        return this;
     }
 }

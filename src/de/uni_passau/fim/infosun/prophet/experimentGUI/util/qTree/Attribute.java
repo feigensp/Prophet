@@ -108,4 +108,20 @@ public class Attribute implements Cloneable {
 
         return clone;
     }
+
+    /**
+     * This method will be called (by the JVM) after this object was deserialised. It is implemented because
+     * the XML representation for this object uses implicit collections/maps whose fields will be <code>null</code>
+     * if they were empty at the time of serialisation. These fields will be initialised with empty collections.
+     *
+     * @return always returns <code>this</code>
+     */
+    private Object readResolve() {
+
+        if (subAttributes == null) {
+            subAttributes = new HashMap<>();
+        }
+
+        return this;
+    }
 }
