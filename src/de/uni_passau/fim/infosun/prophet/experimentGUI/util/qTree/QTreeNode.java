@@ -51,6 +51,26 @@ public class QTreeNode implements Cloneable {
     }
 
     /**
+     * Adds an <code>Attribute</code> to this <code>QTreeNode</code>. If an <code>Attribute</code> with the key of
+     * the given <code>Attribute</code> has previously been added it will be overwritten.
+     *
+     * @param attribute the <code>Attribute</code> to be added
+     */
+    public void addAttribute(Attribute attribute) {
+        attributes.put(attribute.getKey(), attribute);
+    }
+
+    /**
+     * Gets the <code>Attribute</code> with the given key.
+     *
+     * @param key the key of the <code>Attribute</code>
+     * @return the <code>Attribute</code>
+     */
+    public Attribute getAttribute(String key) {
+        return attributes.get(key);
+    }
+
+    /**
      * Sets the parent of the node to the new value.
      *
      * @param parent the new parent of the node
