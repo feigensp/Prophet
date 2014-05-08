@@ -1,10 +1,6 @@
 package de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * A tree where nodes contain data (name and type of the node, HTML content) to be displayed by the
@@ -56,17 +52,49 @@ public class QTreeNode implements Cloneable {
      * @param attribute the <code>Attribute</code> to be added
      */
     public void addAttribute(Attribute attribute) {
+        Objects.requireNonNull(attribute, "attribute must not be null!");
+
         attributes.put(attribute.getKey(), attribute);
     }
 
     /**
-     * Gets the <code>Attribute</code> with the given key.
+     * Gets the <code>Attribute</code> with the given key. If it does not exist it will be created with the empty
+     * <code>String</code> as its content.
      *
      * @param key the key of the <code>Attribute</code>
      * @return the <code>Attribute</code>
      */
     public Attribute getAttribute(String key) {
-        return attributes.get(key);
+        Objects.requireNonNull(key, "key must not be null!");
+
+        Attribute attribute = attributes.get(key);
+
+        if (attribute == null) {
+            attribute = new Attribute(key);
+        }
+
+        return attribute;
+    }
+
+    /**
+     * Gets the <code>Attribute</code>s of this <code>QTreeNode</code>.
+     *
+     * @return the <code>Attribute</code>s
+     */
+    public Collection<Attribute> getAttributes() {
+        return attributes.values();
+    }
+
+    /**
+     * Tests whether an <code>Attribute</code> with the given key exists for this <code>QTreeNode</code>.
+     *
+     * @param key the key of the <code>Attribute</code>
+     * @return true iff an <code>Attribute</code> with the given key exists
+     */
+    public boolean containsAttribute(String key) {
+        Objects.requireNonNull(key, "key must not be null!");
+
+        return attributes.containsKey(key);
     }
 
     /**

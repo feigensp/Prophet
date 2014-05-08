@@ -32,6 +32,20 @@ public class Attribute implements Cloneable {
     }
 
     /**
+     * Constructs a new <code>Attribute</code> representing the given key with the empty <code>String</code> as
+     * its value.
+     *
+     * @param key
+     *         the key for the <code>Attribute</code>
+     *
+     * @throws NullPointerException
+     *         if key is <code>null</code>
+     */
+    public Attribute(String key) {
+        this(key, "");
+    }
+
+    /**
      * Gets the key.
      *
      * @return the key
@@ -63,15 +77,36 @@ public class Attribute implements Cloneable {
     }
 
     /**
-     * Gets the sub-attribute with the given key.
+     * Gets the sub-attribute with the given key. If it does not exist it will be created with the empty
+     * <code>String</code> as its content.
      *
      * @param key the key of the sub-attribute
-     * @return the <code>Attribute</code> or <code>null</code> if no <code>Attribute</code> with the given key is found
+     * @return the <code>Attribute</code>
      */
     public Attribute getSubAttribute(String key) {
         Objects.requireNonNull(key, "key must not be null!");
 
-        return subAttributes.get(key);
+        Attribute subAttribute = subAttributes.get(key);
+
+        if (subAttribute == null) {
+            subAttribute = new Attribute(key);
+        }
+
+        return subAttribute;
+    }
+
+    /**
+     * Tests whether an <code>Attribute</code> with the given key exists for this <code>QTreeNode</code>.
+     *
+     * @param key
+     *         the key of the <code>Attribute</code>
+     *
+     * @return true iff an <code>Attribute</code> with the given key exists
+     */
+    public boolean containsSubAttribute(String key) {
+        Objects.requireNonNull(key, "key must not be null!");
+
+        return subAttributes.containsKey(key);
     }
 
     /**
