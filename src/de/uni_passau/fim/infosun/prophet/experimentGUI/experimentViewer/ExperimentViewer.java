@@ -9,16 +9,12 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.HashMap;
 import java.util.HashSet;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTextPane;
-import javax.swing.UIManager;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.text.html.HTMLEditorKit;
 
 import de.uni_passau.fim.infosun.prophet.experimentGUI.Constants;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.PluginList;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.PluginList;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.QuestionViewPane;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTree.QuestionTreeNode;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTree.QuestionTreeXMLHandler;

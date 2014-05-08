@@ -1,8 +1,6 @@
 package de.uni_passau.fim.infosun.prophet.experimentGUI.util.settingsComponents;
 
 import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Vector;
 import javax.swing.BorderFactory;
 import javax.swing.JCheckBox;
@@ -20,13 +18,7 @@ public class SettingsPluginComponent extends SettingsComponent {
     public SettingsPluginComponent() {
         setLayout(new BorderLayout());
         activatedCheckBox = new JCheckBox("");
-        activatedCheckBox.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                optionPanel.setVisible(activatedCheckBox.isSelected());
-            }
-        });
+        activatedCheckBox.addActionListener(e -> optionPanel.setVisible(activatedCheckBox.isSelected()));
         add(activatedCheckBox, BorderLayout.NORTH);
         optionPanel = new JPanel();
         optionPanel.setBorder(BorderFactory.createTitledBorder(""));

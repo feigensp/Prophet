@@ -15,16 +15,16 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import de.uni_passau.fim.infosun.prophet.experimentGUI.Constants;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.PluginList;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentEditor.tabbedPane.ExperimentEditorTab;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentEditor.tabbedPane.ExperimentEditorTabbedPane;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.PluginList;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.VerticalLayout;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTree.QuestionTreeNode;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.components.SettingsCheckBox;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.components.SettingsTextField;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settingsComponents.SettingsComponent;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settingsComponents.SettingsComponentDescription;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settingsComponents.components.SettingsCheckBox;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settingsComponents.components.SettingsTextField;
 
 /**
  * A tab for changing settings for nodes. Settings are defined by plugins, some are hard-coded.

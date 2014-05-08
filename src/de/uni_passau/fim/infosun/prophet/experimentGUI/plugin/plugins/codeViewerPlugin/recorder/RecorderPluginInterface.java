@@ -1,0 +1,19 @@
+package de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin.recorder;
+
+import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin.CodeViewer;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin.recorder.loggingTreeNode
+        .LoggingTreeNode;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin.tabbedPane.EditorPanel;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTree.QuestionTreeNode;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settingsComponents.SettingsComponentDescription;
+
+public interface RecorderPluginInterface {
+
+    public SettingsComponentDescription getSettingsComponentDescription();
+
+    public void onFrameCreate(QuestionTreeNode selected, CodeViewer viewer, LoggingTreeNode currentNode);
+
+    public void onNodeChange(LoggingTreeNode newNode, EditorPanel newTab);
+
+    public String getKey();
+}
