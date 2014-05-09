@@ -8,12 +8,14 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.Constants;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentViewer.ExperimentViewer;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.Plugin;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.Attribute;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTree.QuestionTreeNode;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.PluginSettings;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.Setting;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.components.SettingsCheckBox;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.components.SettingsFilePathChooser;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.components.SettingsTextArea;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settingsComponents.SettingsComponentDescription;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settingsComponents.SettingsPluginComponentDescription;
 
 public class ValidSubjectCodePlugin implements Plugin {
 
@@ -23,19 +25,29 @@ public class ValidSubjectCodePlugin implements Plugin {
     private static final String KEY_IGNORE_CASE = "ignorecase";
 
     @Override
-    public SettingsComponentDescription getSettingsComponentDescription(QuestionTreeNode node) {
-        if (node.isExperiment()) {
-            SettingsPluginComponentDescription result =
-                    new SettingsPluginComponentDescription(KEY, UIElementNames.SUBJECT_CODE_CHECK_SUBJECT_CODE, true);
-            result.addSubComponent(new SettingsComponentDescription(SettingsTextArea.class, KEY_CODES,
-                    UIElementNames.SUBJECT_CODE_VALID_CODES));
-            result.addSubComponent(new SettingsComponentDescription(SettingsFilePathChooser.class, KEY_PATH,
-                    UIElementNames.SUBJECT_CODE_CODE_FILE));
-            result.addSubComponent(new SettingsComponentDescription(SettingsCheckBox.class, KEY_IGNORE_CASE,
-                    UIElementNames.SUBJECT_CODE_IGNORE_CASE));
-            return result;
+    public Setting getSetting(QTreeNode node) {
+
+        if (node.getType() != QTreeNode.Type.EXPERIMENT) {
+            return null;
         }
-        return null;
+
+        Attribute mainAttribute = node.getAttribute(KEY);
+        PluginSettings pluginSettings = new PluginSettings(mainAttribute, getClass().getSimpleName(), true);
+        pluginSettings.setCaption(UIElementNames.SUBJECT_CODE_CHECK_SUBJECT_CODE);
+
+        SettingsTextArea settingsTextArea = new SettingsTextArea(mainAttribute.getSubAttribute(KEY_CODES), null);
+        settingsTextArea.setCaption(UIElementNames.SUBJECT_CODE_VALID_CODES);
+        pluginSettings.addSetting(settingsTextArea);
+
+        SettingsFilePathChooser filePathChooser = new SettingsFilePathChooser(mainAttribute.getSubAttribute(KEY_PATH), null);
+        filePathChooser.setCaption(UIElementNames.SUBJECT_CODE_CODE_FILE);
+        pluginSettings.addSetting(filePathChooser);
+
+        SettingsCheckBox settingsCheckBox = new SettingsCheckBox(mainAttribute.getSubAttribute(KEY_IGNORE_CASE), null);
+        settingsCheckBox.setCaption(UIElementNames.SUBJECT_CODE_IGNORE_CASE);
+        pluginSettings.addSetting(settingsCheckBox);
+
+        return pluginSettings;
     }
 
     @Override

@@ -6,10 +6,12 @@ import java.util.TreeMap;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentViewer.ExperimentViewer;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.Plugin;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.Attribute;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTree.QuestionTreeNode;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.PluginSettings;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.Setting;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.components.SettingsTextArea;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settingsComponents.SettingsComponentDescription;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settingsComponents.SettingsPluginComponentDescription;
 
 public class AnswerRequiredPlugin implements Plugin {
 
@@ -17,12 +19,18 @@ public class AnswerRequiredPlugin implements Plugin {
     private static final String KEY_NAMES = "names";
 
     @Override
-    public SettingsComponentDescription getSettingsComponentDescription(QuestionTreeNode node) {
-        SettingsPluginComponentDescription result =
-                new SettingsPluginComponentDescription(KEY, UIElementNames.MENU_TAB_SETTINGS_REQUIRED_ANSWERS, true);
-        result.addSubComponent(new SettingsComponentDescription(SettingsTextArea.class, KEY_NAMES,
-                UIElementNames.MENU_TAB_SETTINGS_REQUIRED_ANSWER_COMPONENTS + ":"));
-        return result;
+    public Setting getSetting(QTreeNode node) {
+
+        Attribute mainAttribute = node.getAttribute(KEY);
+        PluginSettings pluginSettings = new PluginSettings(mainAttribute, getClass().getSimpleName(), true);
+        pluginSettings.setCaption(UIElementNames.MENU_TAB_SETTINGS_REQUIRED_ANSWERS);
+
+        Attribute subAttribute = mainAttribute.getSubAttribute(KEY_NAMES);
+        Setting subSetting = new SettingsTextArea(subAttribute, null);
+        subSetting.setCaption(UIElementNames.MENU_TAB_SETTINGS_REQUIRED_ANSWER_COMPONENTS + ":");
+        pluginSettings.addSetting(subSetting);
+
+        return pluginSettings;
     }
 
     @Override

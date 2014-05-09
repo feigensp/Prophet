@@ -29,7 +29,7 @@ public class CodeViewerPlugin implements Plugin {
     private Rectangle bounds;
 
     @Override
-    public SettingsComponentDescription getSettingsComponentDescription(QuestionTreeNode node) {
+    public SettingsComponentDescription getSettings(QuestionTreeNode node) {
         if (node.getType().equals(QuestionTreeNode.TYPE_CATEGORY)) {
             SettingsPluginComponentDescription result =
                     new SettingsPluginComponentDescription(KEY, UIElementNames.MENU_TAB_SETTINGS_ACTIVATE_CODE_VIEWER,

@@ -3,17 +3,22 @@ package de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentViewer.ExperimentViewer;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.Plugin;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.phpExportPlugin.PHPExportComponent;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTree.QuestionTreeNode;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settingsComponents.SettingsComponentDescription;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.Setting;
+
+import static de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode.Type;
 
 public class PHPExportPlugin implements Plugin {
 
     @Override
-    public SettingsComponentDescription getSettingsComponentDescription(QuestionTreeNode node) {
-        if (node.isExperiment()) {
-            return new SettingsComponentDescription(PHPExportComponent.class, null, null);
+    public Setting getSetting(QTreeNode node) {
+
+        if (node.getType() != Type.EXPERIMENT) {
+            return null;
         }
-        return null;
+
+        return new PHPExportComponent(getClass().getSimpleName());
     }
 
     @Override

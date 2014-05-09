@@ -117,7 +117,7 @@ public class SettingsEditorPanel extends ExperimentEditorTab {
         }
 
         // add the options contributed by plugins
-        desc = PluginList.getSettingsComponentDescription(selected);
+        desc = PluginList.getAllSettings(selected);
 
         if (desc != null) {
 

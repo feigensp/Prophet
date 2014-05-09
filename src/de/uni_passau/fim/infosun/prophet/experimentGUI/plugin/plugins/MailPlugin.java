@@ -16,11 +16,15 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentViewer.Experime
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.Plugin;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.mailPlugin.ZipFile;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.Attribute;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTree.QuestionTreeNode;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.PluginSettings;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.Setting;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.components.SettingsPasswordField;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.components.SettingsTextField;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settingsComponents.SettingsComponentDescription;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settingsComponents.SettingsPluginComponentDescription;
+
+import static de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode.Type;
 
 public class MailPlugin implements Plugin {
 
@@ -77,23 +81,42 @@ public class MailPlugin implements Plugin {
     }
 
     @Override
-    public SettingsComponentDescription getSettingsComponentDescription(QuestionTreeNode node) {
-        if (node.isExperiment()) {
-            SettingsPluginComponentDescription result =
-                    new SettingsPluginComponentDescription(KEY, UIElementNames.MAIL_SEND_MAIL, true);
-            result.addSubComponent(new SettingsComponentDescription(SettingsTextField.class, SMTP_SERVER,
-                    UIElementNames.MAIL_SMTP_SERVER + ":"));
-            result.addSubComponent(new SettingsComponentDescription(SettingsTextField.class, SMTP_USER,
-                    UIElementNames.MAIL_SMTP_USER + ":"));
-            result.addSubComponent(new SettingsComponentDescription(SettingsPasswordField.class, SMTP_PASS,
-                    UIElementNames.MAIL_SMTP_PASSWORD + ":"));
-            result.addSubComponent(new SettingsComponentDescription(SettingsTextField.class, SMTP_SENDER,
-                    UIElementNames.MAIL_SMTP_SENDER + ":"));
-            result.addSubComponent(new SettingsComponentDescription(SettingsTextField.class, SMTP_RECEIVER,
-                    UIElementNames.MAIL_SMTP_RECIPIENT + ":"));
-            return result;
+    public Setting getSetting(QTreeNode node) {
+
+        if (node.getType() != Type.EXPERIMENT) {
+            return null;
         }
-        return null;
+
+        Attribute mainAttribute = node.getAttribute(KEY);
+        PluginSettings pluginSettings = new PluginSettings(mainAttribute, getClass().getSimpleName(), true);
+        pluginSettings.setCaption(UIElementNames.MAIL_SEND_MAIL);
+
+        Attribute subAttribute = mainAttribute.getSubAttribute(SMTP_SERVER);
+        Setting subSetting = new SettingsTextField(subAttribute, null);
+        subSetting.setCaption(UIElementNames.MAIL_SMTP_SERVER + ":");
+        pluginSettings.addSetting(subSetting);
+
+        subAttribute = mainAttribute.getSubAttribute(SMTP_USER);
+        subSetting = new SettingsTextField(subAttribute, null);
+        subSetting.setCaption(UIElementNames.MAIL_SMTP_USER + ":");
+        pluginSettings.addSetting(subSetting);
+
+        subAttribute = mainAttribute.getSubAttribute(SMTP_PASS);
+        subSetting = new SettingsPasswordField(subAttribute, null);
+        subSetting.setCaption(UIElementNames.MAIL_SMTP_PASSWORD + ":");
+        pluginSettings.addSetting(subSetting);
+
+        subAttribute = mainAttribute.getSubAttribute(SMTP_SENDER);
+        subSetting = new SettingsTextField(subAttribute, null);
+        subSetting.setCaption(UIElementNames.MAIL_SMTP_SENDER + ":");
+        pluginSettings.addSetting(subSetting);
+
+        subAttribute = mainAttribute.getSubAttribute(SMTP_RECEIVER);
+        subSetting = new SettingsTextField(subAttribute, null);
+        subSetting.setCaption(UIElementNames.MAIL_SMTP_RECIPIENT + ":");
+        pluginSettings.addSetting(subSetting);
+
+        return pluginSettings;
     }
 
     @Override

@@ -11,7 +11,7 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settingsComponents.S
 public class KeyPressedPlugin implements Plugin {
 
     @Override
-    public SettingsComponentDescription getSettingsComponentDescription(QuestionTreeNode node) {
+    public SettingsComponentDescription getSettings(QuestionTreeNode node) {
         // TODO Auto-generated method stub
         return null;
     }

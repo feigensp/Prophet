@@ -12,10 +12,14 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentViewer.Experime
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.Plugin;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.VerticalLayout;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.Attribute;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTree.QuestionTreeNode;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.PluginSettings;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.Setting;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.components.SettingsTextArea;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settingsComponents.SettingsComponentDescription;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settingsComponents.SettingsPluginComponentDescription;
+
+import static de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode.Type.CATEGORY;
 
 public class ExternalProgramsPlugin extends Thread implements Plugin {
 
@@ -30,16 +34,22 @@ public class ExternalProgramsPlugin extends Thread implements Plugin {
     private boolean enabled;
 
     @Override
-    public SettingsComponentDescription getSettingsComponentDescription(QuestionTreeNode node) {
-        if (node.isCategory()) {
-            SettingsPluginComponentDescription result =
-                    new SettingsPluginComponentDescription(KEY, UIElementNames.MENU_TAB_SETTINGS_EXTERNAL_PROGRAMS,
-                            true);
-            result.addSubComponent(new SettingsComponentDescription(SettingsTextArea.class, KEY_COMMANDS,
-                    UIElementNames.MENU_TAB_SETTINGS_PATH_OF_EXTERNAL_PROGRAMS));
-            return result;
+    public Setting getSetting(QTreeNode node) {
+
+        if (node.getType() != CATEGORY) {
+            return null;
         }
-        return null;
+
+        Attribute mainAttribute = node.getAttribute(KEY);
+        PluginSettings pluginSettings = new PluginSettings(mainAttribute, getClass().getSimpleName(), true);
+        pluginSettings.setCaption(UIElementNames.MENU_TAB_SETTINGS_EXTERNAL_PROGRAMS);
+
+        Attribute subAttribute = mainAttribute.getSubAttribute(KEY_COMMANDS);
+        Setting subSetting = new SettingsTextArea(subAttribute, null);
+        subSetting.setCaption(UIElementNames.MENU_TAB_SETTINGS_PATH_OF_EXTERNAL_PROGRAMS);
+        pluginSettings.addSetting(subSetting);
+
+        return pluginSettings;
     }
 
     @Override

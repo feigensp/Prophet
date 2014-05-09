@@ -1,8 +1,9 @@
 package de.uni_passau.fim.infosun.prophet.experimentGUI.plugin;
 
 import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentViewer.ExperimentViewer;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTree.QuestionTreeNode;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settingsComponents.SettingsComponentDescription;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.Setting;
 
 /**
  * Interface for all plugins to be used immediately within the product. It represents methods called on special
@@ -14,15 +15,15 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settingsComponents.S
 public interface Plugin {
 
     /**
-     * Delivers settings components shown in the settings tab of the experiment editor
+     * Returns the <code>Setting</code> object of this <code>Plugin</code> for the given <code>Node</code>
      *
      * @param node
-     *         The currently active node within the experiment viewer
+     *         the currently active node within the experiment viewer
      *
-     * @return A SettingsComponentDescription that describes the possible settings of the plugin or null if there are
+     * @return a <code>Setting</code> object representing the settings of the plugin or null if there are
      * none
      */
-    public SettingsComponentDescription getSettingsComponentDescription(QuestionTreeNode node);
+    public Setting getSetting(QTreeNode node);
 
     /**
      * Called once when the experiment viewer is initialized. May be used to manipulate the viewer.

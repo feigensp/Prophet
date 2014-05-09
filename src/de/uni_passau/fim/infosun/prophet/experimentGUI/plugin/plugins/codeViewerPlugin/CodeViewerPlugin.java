@@ -2,11 +2,11 @@ package de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewe
 
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin.tabbedPane.EditorPanel;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTree.QuestionTreeNode;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settingsComponents.SettingsComponentDescription;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.Setting;
 
-public interface CodeViewerPluginInterface {
+public interface CodeViewerPlugin {
 
-    public SettingsComponentDescription getSettingsComponentDescription();
+    public Setting getSetting();
 
     public void init(QuestionTreeNode selected);
 
@@ -16,6 +16,5 @@ public interface CodeViewerPluginInterface {
 
     public void onEditorPanelClose(EditorPanel editorPanel);
 
-    //public String getKey();
     public void onClose();
 }

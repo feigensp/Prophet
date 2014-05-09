@@ -128,7 +128,7 @@ public class MaxTimePlugin implements Plugin {
     private boolean activateForExperiment;
 
     @Override
-    public SettingsComponentDescription getSettingsComponentDescription(QuestionTreeNode node) {
+    public SettingsComponentDescription getSettings(QuestionTreeNode node) {
         SettingsPluginComponentDescription result =
                 new SettingsPluginComponentDescription(KEY, UIElementNames.MENU_TAB_SETTINGS_TIME_OUT, true);
         if (node.isExperiment()) {

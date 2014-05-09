@@ -3,25 +3,35 @@ package de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentViewer.ExperimentViewer;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.Plugin;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.Attribute;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTree.QuestionTreeNode;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.Setting;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.components.SettingsCheckBox;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settingsComponents.SettingsComponentDescription;
+
+import static de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode.Type.*;
 
 public class InactivityPlugin implements Plugin {
 
     public static final String KEY = "inactive";
 
     @Override
-    public SettingsComponentDescription getSettingsComponentDescription(QuestionTreeNode node) {
-        if (node.isCategory()) {
-            return new SettingsComponentDescription(SettingsCheckBox.class, KEY,
-                    UIElementNames.MENU_TAB_SETTINGS_DEACTIVATE_NODES);
-        } else if (node.isQuestion()) {
-            return new SettingsComponentDescription(SettingsCheckBox.class, KEY,
-                    UIElementNames.MENU_TAB_SETTINGS_DEACTIVATE_THIS_NODE);
-        } else {
+    public Setting getSetting(QTreeNode node) {
+
+        if (node.getType() == EXPERIMENT) {
             return null;
         }
+
+        Attribute mainAttribute = node.getAttribute(KEY);
+        Setting setting = new SettingsCheckBox(mainAttribute, getClass().getSimpleName());
+
+        if (node.getType() == CATEGORY) {
+            setting.setCaption(UIElementNames.MENU_TAB_SETTINGS_DEACTIVATE_NODES);
+        } else if (node.getType() == QUESTION) {
+            setting.setCaption(UIElementNames.MENU_TAB_SETTINGS_DEACTIVATE_THIS_NODE);
+        }
+
+        return setting;
     }
 
     @Override

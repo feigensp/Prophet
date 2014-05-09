@@ -1,11 +1,14 @@
 package de.uni_passau.fim.infosun.prophet.experimentGUI.plugin;
 
+import java.util.List;
 import java.util.Vector;
+import java.util.stream.Collectors;
 
 import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentViewer.ExperimentViewer;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.*;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTree.QuestionTreeNode;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settingsComponents.SettingsComponentDescription;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.Setting;
 
 /**
  * Class to store active plugins, allows calls to all plugins within one line of code.
@@ -67,30 +70,13 @@ public class PluginList {
     }
 
     /**
-     * Returns the settings shown in the settings tab of the experiment viewer for all plugins at once.
+     * Returns the settings for all plugins.
      *
-     * @param node
-     *         Node to be get the settings for
-     *
-     * @return settings shown in the settings tab of the experiment viewer for all plugins at once
+     * @param node the <code>QTreeNode</code> to get the <code>Setting</code> objects for
+     * @return the <code>Setting</code> objects for all plugins
      */
-    public static SettingsComponentDescription getSettingsComponentDescription(QuestionTreeNode node) {
-        SettingsComponentDescription result = null;
-        for (Plugin plugin : plugins) {
-            try {
-                SettingsComponentDescription desc = plugin.getSettingsComponentDescription(node);
-                if (desc != null) {
-                    if (result == null) {
-                        result = desc;
-                    } else {
-                        result.addNextComponent(desc);
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return result;
+    public static List<Setting> getAllSettings(QTreeNode node) {
+        return plugins.stream().map(p -> p.getSetting(node)).filter(s -> s != null).collect(Collectors.toList());
     }
 
     /**

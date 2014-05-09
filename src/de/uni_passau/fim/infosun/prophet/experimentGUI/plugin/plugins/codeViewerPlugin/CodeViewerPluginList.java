@@ -9,7 +9,7 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settingsComponents.S
 
 public class CodeViewerPluginList {
 
-    private static Vector<CodeViewerPluginInterface> plugins = new Vector<CodeViewerPluginInterface>() {
+    private static Vector<CodeViewerPlugin> plugins = new Vector<CodeViewerPlugin>() {
 
         private static final long serialVersionUID = 1L;
 
@@ -23,20 +23,17 @@ public class CodeViewerPluginList {
         }
     };
 
-    //	public static Vector<CodeViewerPluginInterface> getPlugins() {
-//		return plugins;
-//	}
-    public static void add(CodeViewerPluginInterface plugin) {
+    public static void add(CodeViewerPlugin plugin) {
         plugins.add(plugin);
     }
 
-    public static boolean remove(CodeViewerPluginInterface plugin) {
+    public static boolean remove(CodeViewerPlugin plugin) {
         return plugins.remove(plugin);
     }
 
     public static SettingsComponentDescription getSettingsComponentDescription() {
         SettingsComponentDescription result = null;
-        for (CodeViewerPluginInterface plugin : plugins) {
+        for (CodeViewerPlugin plugin : plugins) {
             try {
                 SettingsComponentDescription desc = plugin.getSettingsComponentDescription();
                 if (desc != null) {
@@ -54,7 +51,7 @@ public class CodeViewerPluginList {
     }
 
     public static void init(QuestionTreeNode selected) {
-        for (CodeViewerPluginInterface plugin : plugins) {
+        for (CodeViewerPlugin plugin : plugins) {
             try {
                 plugin.init(selected);
             } catch (Exception e) {
@@ -64,7 +61,7 @@ public class CodeViewerPluginList {
     }
 
     public static void onFrameCreate(CodeViewer viewer) {
-        for (CodeViewerPluginInterface plugin : plugins) {
+        for (CodeViewerPlugin plugin : plugins) {
             try {
                 plugin.onFrameCreate(viewer);
             } catch (Exception e) {
@@ -74,7 +71,7 @@ public class CodeViewerPluginList {
     }
 
     public static void onEditorPanelCreate(EditorPanel editorPanel) {
-        for (CodeViewerPluginInterface plugin : plugins) {
+        for (CodeViewerPlugin plugin : plugins) {
             try {
                 plugin.onEditorPanelCreate(editorPanel);
             } catch (Exception e) {
@@ -84,7 +81,7 @@ public class CodeViewerPluginList {
     }
 
     public static void onEditorPanelClose(EditorPanel editorPanel) {
-        for (CodeViewerPluginInterface plugin : plugins) {
+        for (CodeViewerPlugin plugin : plugins) {
             try {
                 plugin.onEditorPanelClose(editorPanel);
             } catch (Exception e) {
@@ -94,7 +91,7 @@ public class CodeViewerPluginList {
     }
 
     public static void onClose() {
-        for (CodeViewerPluginInterface plugin : plugins) {
+        for (CodeViewerPlugin plugin : plugins) {
             try {
                 plugin.onClose();
             } catch (Exception e) {

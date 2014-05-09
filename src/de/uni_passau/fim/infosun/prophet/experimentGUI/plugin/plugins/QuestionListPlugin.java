@@ -5,10 +5,12 @@ import java.awt.BorderLayout;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentViewer.ExperimentViewer;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.Plugin;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.questionListPlugin.QuestionList;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTree.QuestionTreeNode;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.Setting;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.components.SettingsCheckBox;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settingsComponents.SettingsComponentDescription;
+
+import static de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode.Type;
 
 public class QuestionListPlugin implements Plugin {
 
@@ -18,12 +20,13 @@ public class QuestionListPlugin implements Plugin {
     private boolean enabled;
 
     @Override
-    public SettingsComponentDescription getSettingsComponentDescription(QuestionTreeNode node) {
-        if (node.isExperiment()) {
-            return new SettingsComponentDescription(SettingsCheckBox.class, KEY,
-                    UIElementNames.QUESTION_LIST_SHOW_LIST);
+    public Setting getSetting(QTreeNode node) {
+
+        if (node.getType() != Type.EXPERIMENT) {
+            return null;
         }
-        return null;
+
+        return new SettingsCheckBox(node.getAttribute(KEY), getClass().getSimpleName());
     }
 
     @Override
