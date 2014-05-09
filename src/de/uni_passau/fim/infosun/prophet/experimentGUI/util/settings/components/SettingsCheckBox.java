@@ -10,8 +10,8 @@ public class SettingsCheckBox extends Setting {
 
     private JCheckBox myCheckBox;
 
-    public SettingsCheckBox(Attribute attribute) {
-        super(attribute);
+    public SettingsCheckBox(Attribute attribute, String borderDesc) {
+        super(attribute, borderDesc);
 
         myCheckBox = new JCheckBox();
         add(myCheckBox, BorderLayout.CENTER);

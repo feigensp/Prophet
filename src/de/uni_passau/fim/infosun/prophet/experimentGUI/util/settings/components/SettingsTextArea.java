@@ -14,8 +14,8 @@ public class SettingsTextArea extends Setting {
     private JLabel caption;
     private JTextArea textArea;
 
-    public SettingsTextArea(Attribute attribute) {
-        super(attribute);
+    public SettingsTextArea(Attribute attribute, String borderDesc) {
+        super(attribute, borderDesc);
 
         setPreferredSize(new Dimension(500, 150));
 

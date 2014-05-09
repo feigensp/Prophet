@@ -5,7 +5,6 @@ import java.awt.Component;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
-import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
@@ -31,11 +30,9 @@ public class PluginSettings extends Setting {
      * @param enableable whether the settings are enableable
      */
     public PluginSettings(Attribute attribute, String pluginName, boolean enableable) {
-        super(attribute);
+        super(attribute, pluginName);
 
         settingsList = new LinkedList<>();
-
-        setBorder(BorderFactory.createTitledBorder(pluginName));
 
         settingsPanel = new JPanel();
         settingsPanel.setLayout(new BoxLayout(settingsPanel, BoxLayout.PAGE_AXIS));

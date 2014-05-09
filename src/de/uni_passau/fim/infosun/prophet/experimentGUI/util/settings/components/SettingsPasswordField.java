@@ -17,8 +17,8 @@ public class SettingsPasswordField extends Setting {
     private JTextField textField;
     private final static byte XOR_KEY = 77;
 
-    public SettingsPasswordField(Attribute attribute) {
-        super(attribute);
+    public SettingsPasswordField(Attribute attribute, String borderDesc) {
+        super(attribute, borderDesc);
 
         caption = new JLabel();
         add(caption, BorderLayout.NORTH);

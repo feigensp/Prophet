@@ -1,5 +1,6 @@
 package de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings;
 
+import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.Attribute;
@@ -16,12 +17,20 @@ public abstract class Setting extends JPanel {
     protected Attribute attribute;
 
     /**
-     * Constructs a new <code>Setting</code> for the specified <code>Attribute</code>.
+     * Constructs a new <code>Setting</code> for the given Attribute. If <code>borderDesc</code> is not
+     * <code>null</code> this <code>JPanel</code> will be surrounded by a titled border with the given title.
      *
-     * @param attribute the <code>Attribute</code> for this <code>Setting</code>
+     * @param attribute
+     *         the <code>Attribute</code> for this <code>Setting</code>
+     * @param borderDesc
+     *         the title for the border or <code>null</code> for no border
      */
-    public Setting(Attribute attribute) {
+    public Setting(Attribute attribute, String borderDesc) {
         this.attribute = attribute;
+
+        if (borderDesc != null) {
+            setBorder(BorderFactory.createTitledBorder(borderDesc));
+        }
     }
 
     /**

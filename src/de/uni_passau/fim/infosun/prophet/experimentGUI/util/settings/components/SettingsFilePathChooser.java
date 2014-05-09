@@ -17,8 +17,8 @@ public class SettingsFilePathChooser extends Setting {
     private JTextField textField;
     private JButton pathButton;
 
-    public SettingsFilePathChooser(Attribute attribute) {
-        super(attribute);
+    public SettingsFilePathChooser(Attribute attribute, String borderDesc) {
+        super(attribute, borderDesc);
 
         caption = new JLabel();
         add(caption, BorderLayout.NORTH);

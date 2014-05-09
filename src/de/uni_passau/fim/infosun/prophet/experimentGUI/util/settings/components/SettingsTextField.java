@@ -13,8 +13,8 @@ public class SettingsTextField extends Setting {
     private JLabel caption;
     private JTextField textField;
 
-    public SettingsTextField(Attribute attribute) {
-        super(attribute);
+    public SettingsTextField(Attribute attribute, String borderDesc) {
+        super(attribute, borderDesc);
 
         caption = new JLabel();
         add(caption, BorderLayout.NORTH);
