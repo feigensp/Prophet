@@ -71,6 +71,7 @@ public class QTreeNode implements Cloneable {
 
         if (attribute == null) {
             attribute = new Attribute(key);
+            addAttribute(attribute);
         }
 
         return attribute;

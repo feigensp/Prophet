@@ -90,6 +90,7 @@ public class Attribute implements Cloneable {
 
         if (subAttribute == null) {
             subAttribute = new Attribute(key);
+            addSubAttribute(subAttribute);
         }
 
         return subAttribute;
