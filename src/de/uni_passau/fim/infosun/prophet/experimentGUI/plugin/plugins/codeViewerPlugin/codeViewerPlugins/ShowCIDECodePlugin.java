@@ -23,10 +23,11 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewer
         .showCIDECodePlugin.Triple;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin.tabbedPane.EditorPanel;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.Attribute;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTree.QuestionTreeNode;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.PluginSettings;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.Setting;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.components.SettingsTextField;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settingsComponents.SettingsComponentDescription;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settingsComponents.SettingsPluginComponentDescription;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextAreaHighlighter;
 import org.w3c.dom.Document;
@@ -61,12 +62,18 @@ public class ShowCIDECodePlugin implements CodeViewerPlugin {
     private boolean enabled;
 
     @Override
-    public SettingsComponentDescription getSettingsComponentDescription() {
-        SettingsPluginComponentDescription result =
-                new SettingsPluginComponentDescription(KEY, UIElementNames.CIDE_HIGHLIGHT_SOURCE_CODE, true);
-        result.addSubComponent(
-                new SettingsComponentDescription(SettingsTextField.class, CIDE_INFO_PATH, "annotations.xml"));
-        return result;
+    public Setting getSetting(Attribute mainAttribute) {
+
+        Attribute attribute = mainAttribute.getSubAttribute(KEY);
+        PluginSettings pluginSettings = new PluginSettings(attribute, getClass().getSimpleName(), true);
+        pluginSettings.setCaption(UIElementNames.CIDE_HIGHLIGHT_SOURCE_CODE);
+
+        Attribute subAttribute = attribute.getSubAttribute(CIDE_INFO_PATH);
+        Setting subSetting = new SettingsTextField(subAttribute, null);
+        subSetting.setCaption("annotations.xml");
+        pluginSettings.addSetting(subSetting);
+
+        return pluginSettings;
     }
 
     @Override

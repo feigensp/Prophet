@@ -12,10 +12,14 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewer
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin.CodeViewerPluginList;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin.Recorder;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.Attribute;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTree.QuestionTreeNode;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.PluginSettings;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.Setting;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.components.SettingsDirectoryPathChooser;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settingsComponents.SettingsComponentDescription;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settingsComponents.SettingsPluginComponentDescription;
+
+import static de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode.Type.CATEGORY;
 
 public class CodeViewerPlugin implements Plugin {
 
@@ -29,24 +33,24 @@ public class CodeViewerPlugin implements Plugin {
     private Rectangle bounds;
 
     @Override
-    public SettingsComponentDescription getSettings(QuestionTreeNode node) {
-        if (node.getType().equals(QuestionTreeNode.TYPE_CATEGORY)) {
-            SettingsPluginComponentDescription result =
-                    new SettingsPluginComponentDescription(KEY, UIElementNames.MENU_TAB_SETTINGS_ACTIVATE_CODE_VIEWER,
-                            true);
-            result.addSubComponent(
-                    new SettingsComponentDescription(SettingsDirectoryPathChooser.class, CodeViewer.KEY_PATH,
-                            UIElementNames.MENU_TAB_SETTINGS_SOURCE_CODE_PATH + ":"));
-            result.addSubComponent(Recorder.getSettingsComponentDescription());
-            SettingsComponentDescription desc = CodeViewerPluginList.getSettingsComponentDescription();
-            if (desc != null) {
-                result.addSubComponent(desc);
-                while ((desc = desc.getNextComponentDescription()) != null) {
-                    result.addSubComponent(desc);
-                }
-            }
-            return result;
+    public Setting getSetting(QTreeNode node) {
+
+        if (node.getType() != CATEGORY) {
+            return null;
         }
+
+        Attribute mainAttribute = node.getAttribute(KEY);
+        PluginSettings pluginSettings = new PluginSettings(mainAttribute, getClass().getSimpleName(), true);
+        pluginSettings.setCaption(UIElementNames.MENU_TAB_SETTINGS_ACTIVATE_CODE_VIEWER);
+
+        Attribute subAttribute = mainAttribute.getSubAttribute(CodeViewer.KEY_PATH);
+        Setting subSetting = new SettingsDirectoryPathChooser(subAttribute, null);
+        subSetting.setCaption(UIElementNames.MENU_TAB_SETTINGS_SOURCE_CODE_PATH + ":");
+        pluginSettings.addSetting(subSetting);
+
+        pluginSettings.addSetting(Recorder.getSetting(mainAttribute));
+        pluginSettings.addAllSettings(CodeViewerPluginList.getAllSettings(mainAttribute));
+
         return null;
     }
 

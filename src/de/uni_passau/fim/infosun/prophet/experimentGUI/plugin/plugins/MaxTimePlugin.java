@@ -10,11 +10,15 @@ import javax.swing.JOptionPane;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentViewer.ExperimentViewer;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.Plugin;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.Attribute;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTree.QuestionTreeNode;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.PluginSettings;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.Setting;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.components.SettingsCheckBox;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.components.SettingsTextField;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settingsComponents.SettingsComponentDescription;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settingsComponents.SettingsPluginComponentDescription;
+
+import static de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode.Type.CATEGORY;
 
 public class MaxTimePlugin implements Plugin {
 
@@ -128,38 +132,62 @@ public class MaxTimePlugin implements Plugin {
     private boolean activateForExperiment;
 
     @Override
-    public SettingsComponentDescription getSettings(QuestionTreeNode node) {
-        SettingsPluginComponentDescription result =
-                new SettingsPluginComponentDescription(KEY, UIElementNames.MENU_TAB_SETTINGS_TIME_OUT, true);
-        if (node.isExperiment()) {
-            result.addSubComponent(new SettingsComponentDescription(SettingsTextField.class, KEY_MAX_TIME,
-                    UIElementNames.MENU_TAB_SETTINGS_MAX_TIME_EXPERIMENT + ":"));
+    public Setting getSetting(QTreeNode node) {
+
+        Attribute resultAttribute = node.getAttribute(KEY);
+        PluginSettings result = new PluginSettings(resultAttribute, getClass().getSimpleName(), true);
+        result.setCaption(UIElementNames.MENU_TAB_SETTINGS_TIME_OUT);
+
+        Attribute subAttribute = resultAttribute.getSubAttribute(KEY_MAX_TIME);
+        Setting subSetting = new SettingsTextField(subAttribute, null);
+
+        switch (node.getType()) {
+
+            case EXPERIMENT:
+                subSetting.setCaption(UIElementNames.MENU_TAB_SETTINGS_MAX_TIME_EXPERIMENT);
+                break;
+            case CATEGORY:
+                subSetting.setCaption(UIElementNames.MENU_TAB_SETTINGS_MAX_TIME_EXPERIMENT);
+                break;
+            case QUESTION:
+                subSetting.setCaption(UIElementNames.MENU_TAB_SETTINGS_MAX_TIME_EXPERIMENT);
+                break;
         }
-        if (node.isCategory()) {
-            result.addSubComponent(new SettingsComponentDescription(SettingsTextField.class, KEY_MAX_TIME,
-                    UIElementNames.MENU_TAB_SETTINGS_MAX_TIME_CATEGORY + ":"));
+        result.addSetting(subSetting);
+
+        Attribute hardExitAttribute = resultAttribute.getSubAttribute(KEY_HARD_EXIT);
+        PluginSettings hardExit = new PluginSettings(hardExitAttribute, null, true);
+        hardExit.setCaption(UIElementNames.MENU_TAB_SETTINGS_HARD_TIME_OUT);
+
+        Attribute warningAttribute = hardExitAttribute.getSubAttribute(KEY_HARD_EXIT_WARNING);
+        PluginSettings warning = new PluginSettings(warningAttribute, null, true);
+        warning.setCaption(UIElementNames.MENU_TAB_SETTINGS_TIME_OUT_WARN_SUBJECTS);
+
+        subAttribute = warningAttribute.getSubAttribute(KEY_HARD_EXIT_WARNING_TIME);
+        subSetting = new SettingsTextField(subAttribute, null);
+        subSetting.setCaption(UIElementNames.MENU_TAB_SETTINGS_TIME_OUT_WARNING_TIME + ":");
+        warning.addSetting(subSetting);
+
+        subAttribute = warningAttribute.getSubAttribute(KEY_HARD_EXIT_WARNING_MESSAGE);
+        subSetting = new SettingsTextField(subAttribute, null);
+        subSetting.setCaption(UIElementNames.MENU_TAB_SETTINGS_TIME_OUT_WARNING_MESSAGE + ":");
+        warning.addSetting(subSetting);
+
+        hardExit.addSetting(warning);
+        result.addSetting(hardExit);
+
+        subAttribute = resultAttribute.getSubAttribute(KEY_MESSAGE);
+        subSetting = new SettingsTextField(subAttribute, null);
+        subSetting.setCaption(UIElementNames.MENU_TAB_SETTINGS_TIME_OUT_MESSAGE + ":");
+        result.addSetting(subSetting);
+
+        if (node.getType() == CATEGORY) {
+            subAttribute = resultAttribute.getSubAttribute(KEY_IGNORE_TIMEOUT);
+            subSetting = new SettingsCheckBox(subAttribute, null);
+            subSetting.setCaption(UIElementNames.MENU_TAB_SETTINGS_IGNORE_TIME_OUT);
+            result.addSetting(subSetting);
         }
-        if (node.isQuestion()) {
-            result.addSubComponent(new SettingsComponentDescription(SettingsTextField.class, KEY_MAX_TIME,
-                    UIElementNames.MENU_TAB_SETTINGS_MAX_TIME_QUESTION + ":"));
-        }
-        SettingsPluginComponentDescription hardExit =
-                new SettingsPluginComponentDescription(KEY_HARD_EXIT, UIElementNames.MENU_TAB_SETTINGS_HARD_TIME_OUT,
-                        true);
-        SettingsPluginComponentDescription warning = new SettingsPluginComponentDescription(KEY_HARD_EXIT_WARNING,
-                UIElementNames.MENU_TAB_SETTINGS_TIME_OUT_WARN_SUBJECTS, true);
-        warning.addSubComponent(new SettingsComponentDescription(SettingsTextField.class, KEY_HARD_EXIT_WARNING_TIME,
-                UIElementNames.MENU_TAB_SETTINGS_TIME_OUT_WARNING_TIME + ":"));
-        warning.addSubComponent(new SettingsComponentDescription(SettingsTextField.class, KEY_HARD_EXIT_WARNING_MESSAGE,
-                UIElementNames.MENU_TAB_SETTINGS_TIME_OUT_WARNING_MESSAGE + ":"));
-        hardExit.addSubComponent(warning);
-        result.addSubComponent(hardExit);
-        result.addSubComponent(new SettingsComponentDescription(SettingsTextField.class, KEY_MESSAGE,
-                UIElementNames.MENU_TAB_SETTINGS_TIME_OUT_MESSAGE + ":"));
-        if (node.isCategory()) {
-            result.addNextComponent(new SettingsComponentDescription(SettingsCheckBox.class, KEY_IGNORE_TIMEOUT,
-                    UIElementNames.MENU_TAB_SETTINGS_IGNORE_TIME_OUT));
-        }
+
         return result;
     }
 

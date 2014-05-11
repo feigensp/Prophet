@@ -13,13 +13,14 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewer
         .LoggingTreeNode;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin.tabbedPane.EditorPanel;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.Attribute;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTree.QuestionTreeNode;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.searchBar.GlobalSearchBar;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.searchBar.SearchBar;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.searchBar.SearchBarListener;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.PluginSettings;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.Setting;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.components.SettingsCheckBox;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settingsComponents.SettingsComponentDescription;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settingsComponents.SettingsPluginComponentDescription;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
 public class SearchBarPlugin implements CodeViewerPlugin {
@@ -41,14 +42,23 @@ public class SearchBarPlugin implements CodeViewerPlugin {
     GlobalSearchBar globalSearchBar;
 
     @Override
-    public SettingsComponentDescription getSettingsComponentDescription() {
-        SettingsPluginComponentDescription result =
-                new SettingsPluginComponentDescription(KEY, UIElementNames.SEARCH_BAR_ENABLE_SEARCH, true);
-        result.addSubComponent(new SettingsComponentDescription(SettingsCheckBox.class, KEY_DISABLE_REGEX,
-                UIElementNames.SEARCH_BAR_DEACTIVATE_REGULAR_EXPRESSIONS));
-        result.addSubComponent(new SettingsComponentDescription(SettingsCheckBox.class, KEY_ENABLE_GLOBAL,
-                UIElementNames.SEARCH_BAR_ACTIVATE_GLOBAL_SEARCH));
-        return result;
+    public Setting getSetting(Attribute mainAttribute) {
+
+        Attribute attribute = mainAttribute.getSubAttribute(KEY);
+        PluginSettings pluginSettings = new PluginSettings(attribute, getClass().getSimpleName(), true);
+        pluginSettings.setCaption(UIElementNames.SEARCH_BAR_ENABLE_SEARCH);
+
+        Attribute subAttribute = attribute.getSubAttribute(KEY_DISABLE_REGEX);
+        Setting subSetting = new SettingsCheckBox(subAttribute, null);
+        subSetting.setCaption(UIElementNames.SEARCH_BAR_DEACTIVATE_REGULAR_EXPRESSIONS);
+        pluginSettings.addSetting(subSetting);
+
+        subAttribute = attribute.getSubAttribute(KEY_ENABLE_GLOBAL);
+        subSetting = new SettingsCheckBox(subAttribute, null);
+        subSetting.setCaption(UIElementNames.SEARCH_BAR_ACTIVATE_GLOBAL_SEARCH);
+        pluginSettings.addSetting(subSetting);
+
+        return pluginSettings;
     }
 
     @Override

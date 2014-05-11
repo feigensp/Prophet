@@ -8,6 +8,7 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
@@ -21,9 +22,10 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewer
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin.tabbedPane.EditorPanel;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin.tabbedPane.EditorTabbedPane;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.Attribute;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTree.QuestionTreeNode;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.Setting;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.components.SettingsCheckBox;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settingsComponents.SettingsComponentDescription;
 import org.fife.ui.rsyntaxtextarea.RSyntaxDocument;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
@@ -33,12 +35,16 @@ public class EditAndSavePlugin implements CodeViewerPlugin {
     private boolean editable;
     private EditorTabbedPane tabbedPane;
     private File saveDir;
-    HashMap<EditorPanel, Boolean> isChanged;
+    Map<EditorPanel, Boolean> isChanged;
 
     @Override
-    public SettingsComponentDescription getSettingsComponentDescription() {
-        return new SettingsComponentDescription(SettingsCheckBox.class, KEY,
-                UIElementNames.EDIT_AND_SAVE_EDITABLE_CODE);
+    public Setting getSetting(Attribute mainAttribute) {
+
+        Attribute attribute = mainAttribute.getSubAttribute(KEY);
+        Setting setting = new SettingsCheckBox(attribute, getClass().getSimpleName());
+        setting.setCaption(UIElementNames.EDIT_AND_SAVE_EDITABLE_CODE);
+
+        return setting;
     }
 
     @Override

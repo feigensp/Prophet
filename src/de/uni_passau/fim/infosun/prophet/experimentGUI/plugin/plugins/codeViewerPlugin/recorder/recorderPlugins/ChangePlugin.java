@@ -6,17 +6,18 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin.CodeViewer;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin.recorder.RecorderPluginInterface;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin.recorder.RecorderPlugin;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin.recorder.loggingTreeNode
         .LoggingTreeNode;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin.tabbedPane.EditorPanel;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.Attribute;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTree.QuestionTreeNode;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.PluginSettings;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.Setting;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.components.SettingsTextField;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settingsComponents.SettingsComponentDescription;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settingsComponents.SettingsPluginComponentDescription;
 
-public class ChangePlugin implements RecorderPluginInterface {
+public class ChangePlugin implements RecorderPlugin {
 
     public final static String KEY = "change";
     public final static String KEY_JOIN = "join";
@@ -37,17 +38,33 @@ public class ChangePlugin implements RecorderPluginInterface {
     private DocumentListener myListener;
 
     @Override
-    public SettingsComponentDescription getSettingsComponentDescription() {
-        SettingsPluginComponentDescription resultDesc =
-                new SettingsPluginComponentDescription(KEY, UIElementNames.RECORDER_CHANGE_SOURCE_CODE_EDITS, true);
-        SettingsPluginComponentDescription joinDesc =
-                new SettingsPluginComponentDescription(KEY_JOIN, UIElementNames.RECORDER_CHANGE_SUMMARIZE_CHANGES,
-                        true);
-        SettingsComponentDescription joinTimeDesc =
-                new SettingsComponentDescription(SettingsTextField.class, KEY_JOIN_TIME,
-                        UIElementNames.RECORDER_TIME_INTERVAL_FOR_SUMMARY);
-        joinDesc.addSubComponent(joinTimeDesc);
-        resultDesc.addSubComponent(joinDesc);
+    public Setting getSetting(Attribute mainAttribute) {
+//        SettingsPluginComponentDescription resultDesc =
+//                new SettingsPluginComponentDescription(KEY, UIElementNames.RECORDER_CHANGE_SOURCE_CODE_EDITS, true);
+//        SettingsPluginComponentDescription joinDesc =
+//                new SettingsPluginComponentDescription(KEY_JOIN, UIElementNames.RECORDER_CHANGE_SUMMARIZE_CHANGES,
+//                        true);
+//        SettingsComponentDescription joinTimeDesc =
+//                new SettingsComponentDescription(SettingsTextField.class, KEY_JOIN_TIME,
+//                        UIElementNames.RECORDER_TIME_INTERVAL_FOR_SUMMARY);
+//        joinDesc.addSubComponent(joinTimeDesc);
+//        resultDesc.addSubComponent(joinDesc);
+
+        Attribute rDescAttribute = mainAttribute.getSubAttribute(KEY);
+        PluginSettings resultDesc = new PluginSettings(rDescAttribute, getClass().getSimpleName(), true);
+        resultDesc.setCaption(UIElementNames.RECORDER_CHANGE_SOURCE_CODE_EDITS);
+
+        Attribute joinDescAttribute = rDescAttribute.getSubAttribute(KEY_JOIN);
+        PluginSettings joinDesc = new PluginSettings(joinDescAttribute, null, true);
+        joinDesc.setCaption(UIElementNames.RECORDER_CHANGE_SUMMARIZE_CHANGES);
+
+        Attribute joinTimeDescAttribute = joinDescAttribute.getSubAttribute(KEY_JOIN_TIME);
+        Setting joinTimeDesc = new SettingsTextField(joinTimeDescAttribute, null);
+        joinTimeDesc.setCaption(UIElementNames.RECORDER_TIME_INTERVAL_FOR_SUMMARY);
+
+        joinDesc.addSetting(joinTimeDesc);
+        resultDesc.addSetting(joinDesc);
+
         return resultDesc;
     }
 

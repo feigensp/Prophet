@@ -1,11 +1,14 @@
 package de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin;
 
+import java.util.List;
 import java.util.Vector;
+import java.util.stream.Collectors;
 
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin.codeViewerPlugins.*;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin.tabbedPane.EditorPanel;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.Attribute;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTree.QuestionTreeNode;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settingsComponents.SettingsComponentDescription;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.Setting;
 
 public class CodeViewerPluginList {
 
@@ -31,23 +34,8 @@ public class CodeViewerPluginList {
         return plugins.remove(plugin);
     }
 
-    public static SettingsComponentDescription getSettingsComponentDescription() {
-        SettingsComponentDescription result = null;
-        for (CodeViewerPlugin plugin : plugins) {
-            try {
-                SettingsComponentDescription desc = plugin.getSettingsComponentDescription();
-                if (desc != null) {
-                    if (result == null) {
-                        result = desc;
-                    } else {
-                        result.addNextComponent(desc);
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return result;
+    public static List<Setting> getAllSettings(Attribute attribute) {
+        return plugins.stream().map(p -> p.getSetting(attribute)).filter(s -> s != null).collect(Collectors.toList());
     }
 
     public static void init(QuestionTreeNode selected) {

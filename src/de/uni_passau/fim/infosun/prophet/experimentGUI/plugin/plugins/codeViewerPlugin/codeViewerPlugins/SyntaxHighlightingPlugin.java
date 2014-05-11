@@ -8,9 +8,10 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewer
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin.CodeViewerPlugin;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin.tabbedPane.EditorPanel;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.Attribute;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTree.QuestionTreeNode;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.Setting;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.components.SettingsCheckBox;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settingsComponents.SettingsComponentDescription;
 import org.fife.ui.rsyntaxtextarea.RSyntaxDocument;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 
@@ -21,8 +22,13 @@ public class SyntaxHighlightingPlugin implements CodeViewerPlugin {
     private boolean enabled;
 
     @Override
-    public SettingsComponentDescription getSettingsComponentDescription() {
-        return new SettingsComponentDescription(SettingsCheckBox.class, KEY, UIElementNames.SYNTAX_HIGHLIGHTING_ENABLE);
+    public Setting getSetting(Attribute mainAttribute) {
+
+        Attribute attribute = mainAttribute.getSubAttribute(KEY);
+        Setting setting = new SettingsCheckBox(attribute, getClass().getSimpleName());
+        setting.setCaption(UIElementNames.SYNTAX_HIGHLIGHTING_ENABLE);
+
+        return setting;
     }
 
     @Override

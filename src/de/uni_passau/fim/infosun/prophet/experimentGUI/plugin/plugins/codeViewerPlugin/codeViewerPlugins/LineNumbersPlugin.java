@@ -4,9 +4,10 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewer
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin.CodeViewerPlugin;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin.tabbedPane.EditorPanel;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.Attribute;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTree.QuestionTreeNode;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.Setting;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.components.SettingsCheckBox;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settingsComponents.SettingsComponentDescription;
 
 public class LineNumbersPlugin implements CodeViewerPlugin {
 
@@ -14,13 +15,13 @@ public class LineNumbersPlugin implements CodeViewerPlugin {
     private QuestionTreeNode selected;
 
     @Override
-    public SettingsComponentDescription getSettingsComponentDescription() {
-        SettingsComponentDescription result =
-                new SettingsComponentDescription(SettingsCheckBox.class, "linenumbers_default",
-                        UIElementNames.LINE_NUMBER_SHOW_LINE_NUMBERS);
-        //result.addNextComponent(new SettingsComponentDescription(SettingsCheckBox.class,"linenumbers_toggle",
-        // "Zeilennummern ein- und ausschaltbar"));
-        return result;
+    public Setting getSetting(Attribute mainAttribute) {
+
+        Attribute attribute = mainAttribute.getSubAttribute(KEY);
+        Setting setting = new SettingsCheckBox(attribute, getClass().getSimpleName());
+        setting.setCaption(UIElementNames.LINE_NUMBER_SHOW_LINE_NUMBERS);
+
+        return setting;
     }
 
     @Override

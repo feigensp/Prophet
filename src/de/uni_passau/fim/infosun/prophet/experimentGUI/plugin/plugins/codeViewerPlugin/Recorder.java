@@ -1,9 +1,6 @@
 package de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin;
 
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-
-import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin.recorder.RecorderPluginInterface;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin.recorder.RecorderPlugin;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin.recorder.RecorderPluginList;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin.recorder.loggingTreeNode
         .LoggingTreeNode;
@@ -11,9 +8,10 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewer
         .LoggingTreeXMLHandler;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin.tabbedPane.EditorPanel;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin.tabbedPane.EditorTabbedPane;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.Attribute;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTree.QuestionTreeNode;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settingsComponents.SettingsComponentDescription;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settingsComponents.SettingsPluginComponentDescription;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.PluginSettings;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.Setting;
 
 public class Recorder {
 
@@ -33,20 +31,6 @@ public class Recorder {
 
     private QuestionTreeNode selected;
 
-    public static SettingsComponentDescription getSettingsComponentDescription() {
-        SettingsPluginComponentDescription result = new SettingsPluginComponentDescription(KEY, "Recorder", false);
-        for (RecorderPluginInterface plugin : RecorderPluginList.getPlugins()) {
-            SettingsComponentDescription desc = plugin.getSettingsComponentDescription();
-            if (desc != null) {
-                result.addSubComponent(desc);
-                while ((desc = desc.getNextComponentDescription()) != null) {
-                    result.addSubComponent(desc);
-                }
-            }
-        }
-        return result;
-    }
-
     public Recorder(QuestionTreeNode selected) {
         rootNode = new LoggingTreeNode(LoggingTreeNode.TYPE_LOGFILE);
         currentNode = new LoggingTreeNode(LoggingTreeNode.TYPE_NOFILE);
@@ -54,32 +38,39 @@ public class Recorder {
         this.selected = selected;
     }
 
+    public static Setting getSetting(Attribute mainAttribute) {
+        Attribute attribute = mainAttribute.getSubAttribute(KEY);
+        PluginSettings settings = new PluginSettings(mainAttribute, Recorder.class.getSimpleName(), false);
+        settings.setCaption("Recorder");
+        settings.addAllSettings(RecorderPluginList.getAllSettings(mainAttribute));
+
+        return settings;
+    }
+
     protected void onFrameCreate(CodeViewer viewer) {
         codeViewer = viewer;
         tabbedPane = codeViewer.getTabbedPane();
         currentTab = null;
-        tabbedPane.addChangeListener(new ChangeListener() {
 
-            @Override
-            public void stateChanged(ChangeEvent arg0) {
-                if (currentTab != tabbedPane.getSelectedComponent()) {
-                    //Baum aktualisieren: neuer Zweig
-                    currentTab = (EditorPanel) tabbedPane.getSelectedComponent();
-                    if (currentTab == null) {
-                        currentNode = new LoggingTreeNode(LoggingTreeNode.TYPE_NOFILE);
-                    } else {
-                        currentNode = new LoggingTreeNode(LoggingTreeNode.TYPE_FILE);
-                        currentNode.setAttribute(ATTRIBUTE_PATH, currentTab.getFilePath());
-                    }
-                    rootNode.add(currentNode);
-                    //Plugins aktualisieren
-                    for (RecorderPluginInterface plugin : RecorderPluginList.getPlugins()) {
-                        plugin.onNodeChange(currentNode, currentTab);
-                    }
+        tabbedPane.addChangeListener(arg0 -> {
+            if (currentTab != tabbedPane.getSelectedComponent()) {
+                //Baum aktualisieren: neuer Zweig
+                currentTab = (EditorPanel) tabbedPane.getSelectedComponent();
+                if (currentTab == null) {
+                    currentNode = new LoggingTreeNode(LoggingTreeNode.TYPE_NOFILE);
+                } else {
+                    currentNode = new LoggingTreeNode(LoggingTreeNode.TYPE_FILE);
+                    currentNode.setAttribute(ATTRIBUTE_PATH, currentTab.getFilePath());
+                }
+                rootNode.add(currentNode);
+                //Plugins aktualisieren
+                for (RecorderPlugin plugin : RecorderPluginList.getPlugins()) {
+                    plugin.onNodeChange(currentNode, currentTab);
                 }
             }
         });
-        for (RecorderPluginInterface plugin : RecorderPluginList.getPlugins()) {
+
+        for (RecorderPlugin plugin : RecorderPluginList.getPlugins()) {
             plugin.onFrameCreate(selected.getAddAttribute(KEY), codeViewer, currentNode);
         }
     }
