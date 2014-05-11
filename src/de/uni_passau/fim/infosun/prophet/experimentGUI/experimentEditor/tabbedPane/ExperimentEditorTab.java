@@ -2,7 +2,7 @@ package de.uni_passau.fim.infosun.prophet.experimentGUI.experimentEditor.tabbedP
 
 import javax.swing.JPanel;
 
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTree.QuestionTreeNode;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode;
 
 /**
  * Abstract class representing an ExperimentEditorTab used by the ExperimentEditorTabbedPane
@@ -10,7 +10,6 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTree.Questio
  * @author Andreas Hasselberg
  * @author Markus K�ppen
  */
-@SuppressWarnings("serial")
 public abstract class ExperimentEditorTab extends JPanel {
 
     /**
@@ -19,7 +18,7 @@ public abstract class ExperimentEditorTab extends JPanel {
      * @param sel
      *         the node that has been opened
      */
-    public abstract void activate(QuestionTreeNode sel);
+    public abstract void activate(QTreeNode sel);
 
     /**
      * advises the tab to save all changes (e.g. before a file save, upon loading a new node, on tab change)
