@@ -169,6 +169,20 @@ public class QTreeNode implements Cloneable {
     }
 
     /**
+     * Returns the tree under this node in preorder.
+     *
+     * @return the subtree in preorder
+     */
+    public List<QTreeNode> preOrder() {
+        List<QTreeNode> preOrderNodes = new LinkedList<>();
+
+        preOrderNodes.add(this);
+        children.parallelStream().map(QTreeNode::preOrder).sequential().forEach(preOrderNodes::addAll);
+
+        return preOrderNodes;
+    }
+
+    /**
      * Gets the <code>Type</code> of the node.
      *
      * @return the type
