@@ -2,11 +2,12 @@ package de.uni_passau.fim.infosun.prophet.experimentGUI.experimentEditor.tabbedP
 
 import java.awt.BorderLayout;
 import java.util.HashMap;
+import java.util.Map;
 import javax.swing.text.BadLocationException;
 
 import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentEditor.tabbedPane.ExperimentEditorTab;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.ModifiedRSyntaxTextArea;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTree.QuestionTreeNode;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode;
 import org.fife.ui.rsyntaxtextarea.RSyntaxDocument;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
@@ -21,9 +22,9 @@ import org.fife.ui.rtextarea.RTextScrollPane;
 @SuppressWarnings("serial")
 public class NoteEditorPanel extends ExperimentEditorTab {
 
-    private HashMap<QuestionTreeNode, RTextScrollPane> scrollPanes;
-    private HashMap<QuestionTreeNode, RSyntaxTextArea> editAreas = new HashMap<>();
-    private QuestionTreeNode selected;
+    private Map<QTreeNode, RTextScrollPane> scrollPanes;
+    private Map<QTreeNode, RSyntaxTextArea> editAreas = new HashMap<>();
+    private QTreeNode selected;
     public final static String KEY_NOTES = "notes";
 
     /**
@@ -38,7 +39,7 @@ public class NoteEditorPanel extends ExperimentEditorTab {
     /**
      * loads the notes for a selected node into the tab, called by EditorTabbedPane
      */
-    public void activate(final QuestionTreeNode s) {
+    public void activate(final QTreeNode s) {
         selected = s;
         this.removeAll();
         this.updateUI();
@@ -47,7 +48,7 @@ public class NoteEditorPanel extends ExperimentEditorTab {
             if (scrollPane == null) {
                 RSyntaxDocument doc = new RSyntaxDocument(SyntaxConstants.SYNTAX_STYLE_NONE);
                 try {
-                    doc.insertString(0, s.getAddAttribute(KEY_NOTES).getValue(), null);
+                    doc.insertString(0, s.getAttribute(KEY_NOTES).getValue(), null);
                 } catch (BadLocationException e) {
                     e.printStackTrace();
                 }
@@ -69,9 +70,9 @@ public class NoteEditorPanel extends ExperimentEditorTab {
     public void save() {
         if (selected != null) {
             RSyntaxTextArea editArea = editAreas.get(selected);
+
             if (editArea != null) {
-                QuestionTreeNode node = selected.getAddAttribute(KEY_NOTES);
-                node.setValue(editArea.getText());
+                selected.getAttribute(KEY_NOTES).setValue(editArea.getText());
             }
         }
     }

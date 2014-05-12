@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.HashMap;
+import java.util.Map;
 import javax.swing.JPanel;
 import javax.swing.text.BadLocationException;
 
@@ -12,7 +13,7 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentEditor.tabbedPa
 import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentEditor.tabbedPane.editorTabs.contentEditorToolBar
         .ContentEditorToolBar;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.ModifiedRSyntaxTextArea;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTree.QuestionTreeNode;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.searchBar.SearchBar;
 import org.fife.ui.rsyntaxtextarea.RSyntaxDocument;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
@@ -31,19 +32,19 @@ public class ContentEditorPanel extends ExperimentEditorTab {
     /**
      * Storage of all EditorPanels, let the user continue where he left the node/tab
      */
-    private HashMap<QuestionTreeNode, JPanel> editPanels = new HashMap<>();
+    private Map<QTreeNode, JPanel> editPanels = new HashMap<>();
     /**
      * Storage of all text editor areas, used to save the current work
      */
-    private HashMap<QuestionTreeNode, RSyntaxTextArea> editAreas = new HashMap<>();
+    private Map<QTreeNode, RSyntaxTextArea> editAreas = new HashMap<>();
     /**
      * Storage of all search bars, used to delegate the search operation to the correct bar
      */
-    private HashMap<QuestionTreeNode, SearchBar> searchBars = new HashMap<>();
+    private Map<QTreeNode, SearchBar> searchBars = new HashMap<>();
     /**
      * the currently selected node
      */
-    private QuestionTreeNode selected;
+    private QTreeNode selected;
 
     /**
      * Constructor
@@ -56,7 +57,7 @@ public class ContentEditorPanel extends ExperimentEditorTab {
     /**
      * Called by EditorTabbedPane to indicate a possible node change, (re)loads the panel
      */
-    public void activate(QuestionTreeNode s) {
+    public void activate(QTreeNode s) {
         selected = s;
         this.removeAll();
         this.updateUI();
@@ -68,7 +69,7 @@ public class ContentEditorPanel extends ExperimentEditorTab {
 
                 RSyntaxDocument doc = new RSyntaxDocument(SyntaxConstants.SYNTAX_STYLE_HTML);
                 try {
-                    doc.insertString(0, s.getValue(), null);
+                    doc.insertString(0, s.getHtml(), null);
                 } catch (BadLocationException e) {
                     e.printStackTrace();
                 }
@@ -110,7 +111,7 @@ public class ContentEditorPanel extends ExperimentEditorTab {
         if (selected != null) {
             RSyntaxTextArea editArea = editAreas.get(selected);
             if (editArea != null) {
-                selected.setValue(editArea.getText());
+                selected.setHtml(editArea.getText());
             }
         }
     }

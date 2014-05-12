@@ -11,7 +11,7 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentEditor.tabbedPa
 import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentEditor.tabbedPane.editorTabs.NoteEditorPanel;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentEditor.tabbedPane.editorTabs.SettingsEditorPanel;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTree.QuestionTreeNode;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode;
 
 /**
  * The right-side tabbed pane of the Experiment Editor
@@ -25,7 +25,7 @@ public class ExperimentEditorTabbedPane extends JTabbedPane {
     /**
      * the currently selected QuestionTreeNode
      */
-    private QuestionTreeNode selected;
+    private QTreeNode selected;
     /**
      * the currently open ExperimentEditorTab
      */
@@ -70,7 +70,7 @@ public class ExperimentEditorTabbedPane extends JTabbedPane {
      *
      * @param selected
      */
-    public void setSelected(QuestionTreeNode selected) {
+    public void setSelected(QTreeNode selected) {
         save();
         this.selected = selected;
         activate();

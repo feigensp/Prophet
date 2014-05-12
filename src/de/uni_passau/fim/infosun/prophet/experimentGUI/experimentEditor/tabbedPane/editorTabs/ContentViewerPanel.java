@@ -4,7 +4,7 @@ import java.awt.BorderLayout;
 
 import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentEditor.tabbedPane.ExperimentEditorTab;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.QuestionViewPane;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTree.QuestionTreeNode;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode;
 
 /**
  * Preview of the Content entered in the ContentEditorPanel
@@ -31,7 +31,7 @@ public class ContentViewerPanel extends ExperimentEditorTab {
     /**
      * loads the current content and displays it appropriately, called by EditorTabbedPane
      */
-    public void activate(QuestionTreeNode selected) {
+    public void activate(QTreeNode selected) {
         removeAll();
         updateUI();
         if (selected != null) {
