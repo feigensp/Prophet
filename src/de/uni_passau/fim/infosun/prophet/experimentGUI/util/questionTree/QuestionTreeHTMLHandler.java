@@ -1,14 +1,9 @@
 package de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTree;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.StringReader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import javax.swing.JOptionPane;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.html.HTML;
@@ -18,6 +13,9 @@ import javax.swing.text.html.HTMLEditorKit;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.Pair;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.QuestionViewPane;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode;
+
+import static javax.swing.JOptionPane.showMessageDialog;
 
 public class QuestionTreeHTMLHandler {
 
@@ -74,45 +72,43 @@ public class QuestionTreeHTMLHandler {
         return header;
     }
 
-    public static ArrayList<Pair<QuestionTreeNode, ArrayList<Pair<String, String>>>> getForms(
-            QuestionTreeNode startNode) {
-        ArrayList<Pair<QuestionTreeNode, ArrayList<Pair<String, String>>>> ret = new ArrayList<>();
-        QuestionTreeNode node = startNode;
+    public static List<Pair<QTreeNode, List<Pair<String, String>>>> getForms(QTreeNode startNode) {
+        List<Pair<QTreeNode, List<Pair<String, String>>>> ret = new ArrayList<>();
         HTML.Tag[] tags = {HTML.Tag.INPUT, HTML.Tag.SELECT, HTML.Tag.TEXTAREA};
 
-        try {
-            while (node != null) {
-                String content = node.getValue();
-                ArrayList<Pair<String, String>> forms = new ArrayList<>();
-                HTMLEditorKit editKit = new HTMLEditorKit();
-                StringReader reader = new StringReader(content);
-                HTMLDocument.Iterator iterator;
+        for (QTreeNode node : startNode.preOrder()) {
+            String content = node.getHtml();
+            List<Pair<String, String>> forms = new ArrayList<>();
+            HTMLEditorKit editKit = new HTMLEditorKit();
+            StringReader reader = new StringReader(content);
+            HTMLDocument.Iterator iterator;
 
-                HTMLDocument htmlDoc = (HTMLDocument) editKit.createDefaultDocument();
+            HTMLDocument htmlDoc = (HTMLDocument) editKit.createDefaultDocument();
+
+            try {
                 editKit.read(reader, htmlDoc, 0);
-
-                for (HTML.Tag tag : tags) {
-                    iterator = htmlDoc.getIterator(tag);
-
-                    while (iterator.isValid()) {
-                        AttributeSet attributes = iterator.getAttributes();
-                        String formName = (String) attributes.getAttribute(HTML.Attribute.NAME);
-                        String formValue = (String) attributes.getAttribute(HTML.Attribute.VALUE);
-
-                        forms.add(new Pair<>(formName, formValue));
-                        iterator.next();
-                    }
-                }
-
-                ret.add(new Pair<>(node, forms));
-                node = (QuestionTreeNode) node.getNextNode();
+            } catch (IOException e) {
+                showMessageDialog(null, UIElementNames.QUESTION_TREE_HTML_HANDLER_MESSAGE_ERROR_WHILE_READING);
+                return null;
+            } catch (BadLocationException e) {
+                showMessageDialog(null, UIElementNames.QUESTION_TREE_HTML_HANDLER_MESSAGE_ERROR_WHILE_READING);
+                return null;
             }
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(null, UIElementNames.QUESTION_TREE_HTML_HANDLER_MESSAGE_ERROR_WHILE_READING);
-            return null;
-        } catch (BadLocationException e) {
-            JOptionPane.showMessageDialog(null, UIElementNames.QUESTION_TREE_HTML_HANDLER_MESSAGE_ERROR_WHILE_READING);
-            return null;
+
+            for (HTML.Tag tag : tags) {
+                iterator = htmlDoc.getIterator(tag);
+
+                while (iterator.isValid()) {
+                    AttributeSet attributes = iterator.getAttributes();
+                    String formName = (String) attributes.getAttribute(HTML.Attribute.NAME);
+                    String formValue = (String) attributes.getAttribute(HTML.Attribute.VALUE);
+
+                    forms.add(new Pair<>(formName, formValue));
+                    iterator.next();
+                }
+            }
+
+            ret.add(new Pair<>(node, forms));
         }
 
         return ret;
