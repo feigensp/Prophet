@@ -5,18 +5,14 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.util.Locale;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JSplitPane;
-import javax.swing.UIManager;
+import javax.swing.*;
 import javax.swing.plaf.basic.BasicSplitPaneDivider;
+import javax.swing.tree.TreePath;
 
 import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentEditor.tabbedPane.ExperimentEditorTabbedPane;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTree.QuestionTree;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTree.QuestionTreeNode;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTree.QuestionTreeNodeEvent;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTree.QuestionTreeNodeListener;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTree;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode;
 
 /**
  * An ExperimentEditor is a frame which allows its user to create and edit
@@ -32,12 +28,10 @@ public class ExperimentEditor extends JFrame {
      */
     public static final String TITLE = "ExperimentEditor";
 
-    private static final long serialVersionUID = 1L;
-
     /**
      * JTree component on the left side of the ExperimentEditor
      */
-    private QuestionTree tree;
+    private QTree tree;
 
     /**
      * JTabbedPane component on the right side of the ExperimentEditor
@@ -51,17 +45,14 @@ public class ExperimentEditor extends JFrame {
      *         not used
      */
     public static void main(String[] args) {
-        EventQueue.invokeLater(new Runnable() {
-
-            public void run() {
-                try {
-                    String laf = UIManager.getSystemLookAndFeelClassName();
-                    UIManager.setLookAndFeel(laf);
-                    ExperimentEditor frame = new ExperimentEditor();
-                    frame.setVisible(true);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+        EventQueue.invokeLater(() -> {
+            try {
+                String laf = UIManager.getSystemLookAndFeelClassName();
+                UIManager.setLookAndFeel(laf);
+                ExperimentEditor frame = new ExperimentEditor();
+                frame.setVisible(true);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         });
     }
@@ -83,39 +74,38 @@ public class ExperimentEditor extends JFrame {
 
         UIElementNames.setUIElements(locale);
 
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setSize(800, 600);
-        setLayout(new BorderLayout());
         setLocationRelativeTo(null);
         setTitle(TITLE);
 
         JSplitPane splitPane = new JSplitPane();
-        add(splitPane);
 
-        ExperimentEditorMenuBar menuBar = new ExperimentEditorMenuBar(this);
-        setJMenuBar(menuBar);
+        ExperimentEditorTabbedPane tabbedPane = new ExperimentEditorTabbedPane();
+        tabbedPane.setBorder(null); // TODO nötig?
+        splitPane.setRightComponent(tabbedPane);
 
-        tree = new QuestionTree();
+        QTree tree = new QTree();
         tree.setPreferredSize(new Dimension(175, 10));
-        tree.addQuestionTreeNodeListener(new QuestionTreeNodeListener() {
+        tree.addTreeSelectionListener(event -> {
+            TreePath selectionPath = tree.getSelectionPath();
 
-            public void questionTreeEventOccured(QuestionTreeNodeEvent e) {
-                questionEditorTabbedPane.setSelected(e.getNode());
+            if (selectionPath != null) {
+                tabbedPane.setSelected((QTreeNode) selectionPath.getLastPathComponent());
             }
         });
-        tree.setBorder(null);
+        tree.setBorder(null); // TODO nötig?
         splitPane.setLeftComponent(tree);
 
-        questionEditorTabbedPane = new ExperimentEditorTabbedPane();
-        questionEditorTabbedPane.setBorder(null);
-        splitPane.setRightComponent(questionEditorTabbedPane);
-
-        splitPane.setBorder(null);
+        splitPane.setBorder(null); //TODO nötig?
         for (Component component : splitPane.getComponents()) {
             if (component instanceof BasicSplitPaneDivider) {
                 ((BasicSplitPaneDivider) component).setBorder(null);
             }
         }
+
+        ExperimentEditorMenuBar menuBar = new ExperimentEditorMenuBar(tree, tabbedPane);
+        setJMenuBar(menuBar);
 
         add(splitPane, BorderLayout.CENTER);
     }
@@ -132,38 +122,5 @@ public class ExperimentEditor extends JFrame {
         System.out.println("Language: " + selectedLanguage);
 
         return selectedLanguage.toString();
-    }
-
-    /**
-     * @return The JTree that represents the question tree
-     */
-    public QuestionTree getTreeComponent() {
-        return tree;
-    }
-
-    /**
-     * Tells the QuestionTree to create a new tree, called when the "New" item
-     * is selected in main menu
-     */
-    public void newTree() {
-        tree.newRoot();
-    }
-
-    /**
-     * Loads a question tree into the JTree component
-     *
-     * @param root
-     */
-    public void loadTree(QuestionTreeNode root) {
-        tree.setRoot(root);
-    }
-
-    /**
-     * return the ExperimentEditorTabbedPane-object from the ExperimentEditor
-     *
-     * @return questionEditorTabbedPane
-     */
-    public ExperimentEditorTabbedPane getTabbedPane() {
-        return questionEditorTabbedPane;
     }
 }
