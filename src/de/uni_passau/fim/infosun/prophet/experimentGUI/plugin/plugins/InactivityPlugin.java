@@ -5,7 +5,6 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.Plugin;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.Attribute;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTree.QuestionTreeNode;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.Setting;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.components.SettingsCheckBox;
 
@@ -39,21 +38,21 @@ public class InactivityPlugin implements Plugin {
     }
 
     @Override
-    public boolean denyEnterNode(QuestionTreeNode node) {
+    public boolean denyEnterNode(QTreeNode node) {
         return Boolean.parseBoolean(node.getAttributeValue(KEY));
     }
 
     @Override
-    public void enterNode(QuestionTreeNode node) {
+    public void enterNode(QTreeNode node) {
     }
 
     @Override
-    public String denyNextNode(QuestionTreeNode currentNode) {
+    public String denyNextNode(QTreeNode currentNode) {
         return null;
     }
 
     @Override
-    public void exitNode(QuestionTreeNode node) {
+    public void exitNode(QTreeNode node) {
     }
 
     @Override

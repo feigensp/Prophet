@@ -41,25 +41,25 @@ public class QuestionListPlugin implements Plugin {
     }
 
     @Override
-    public boolean denyEnterNode(QuestionTreeNode node) {
+    public boolean denyEnterNode(QTreeNode node) {
         return false;
     }
 
     @Override
-    public void enterNode(QuestionTreeNode node) {
+    public void enterNode(QTreeNode node) {
         if (enabled) {
             overview.visit(node);
         }
     }
 
     @Override
-    public String denyNextNode(QuestionTreeNode currentNode) {
+    public String denyNextNode(QTreeNode currentNode) {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public void exitNode(QuestionTreeNode node) {
+    public void exitNode(QTreeNode node) {
     }
 
     @Override

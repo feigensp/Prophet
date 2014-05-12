@@ -7,7 +7,6 @@ import java.util.stream.Collectors;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentViewer.ExperimentViewer;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.*;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTree.QuestionTreeNode;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.Setting;
 
 /**
@@ -104,7 +103,7 @@ public class PluginList {
      * @return <b>true</b> if the node may be entered<br/>
      * <b>false</b> if any plugin denies the entrance
      */
-    public static boolean denyEnterNode(QuestionTreeNode node) {
+    public static boolean denyEnterNode(QTreeNode node) {
         for (Plugin plugin : plugins) {
             try {
                 if (plugin.denyEnterNode(node)) {
@@ -123,7 +122,7 @@ public class PluginList {
      * @param node
      *         the node to be entered
      */
-    public static void enterNode(QuestionTreeNode node) {
+    public static void enterNode(QTreeNode node) {
         for (Plugin plugin : plugins) {
             try {
                 plugin.enterNode(node);
@@ -143,7 +142,7 @@ public class PluginList {
      * an empty String if a plugin returned an empty String and no real messages were returned,
      * null if all plugins allow exiting the node
      */
-    public static String denyNextNode(QuestionTreeNode currentNode) {
+    public static String denyNextNode(QTreeNode currentNode) {
         String result = null;
         for (Plugin plugin : plugins) {
             try {
@@ -167,7 +166,7 @@ public class PluginList {
      * @param node
      *         the node to be exited
      */
-    public static void exitNode(QuestionTreeNode node) {
+    public static void exitNode(QTreeNode node) {
         for (Plugin plugin : plugins) {
             try {
                 plugin.exitNode(node);

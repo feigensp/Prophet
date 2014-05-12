@@ -8,7 +8,6 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.Plugin;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.Attribute;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTree.QuestionTreeNode;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.PluginSettings;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.Setting;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.components.SettingsTextArea;
@@ -38,16 +37,16 @@ public class AnswerRequiredPlugin implements Plugin {
     }
 
     @Override
-    public boolean denyEnterNode(QuestionTreeNode node) {
+    public boolean denyEnterNode(QTreeNode node) {
         return false;
     }
 
     @Override
-    public void enterNode(QuestionTreeNode node) {
+    public void enterNode(QTreeNode node) {
     }
 
     @Override
-    public String denyNextNode(QuestionTreeNode currentNode) {
+    public String denyNextNode(QTreeNode currentNode) {
         boolean enabled = Boolean.parseBoolean(currentNode.getAttributeValue(KEY));
         if (enabled) {
             String requiredAnswers = currentNode.getAttribute(KEY).getAttributeValue(KEY_NAMES);
@@ -66,7 +65,7 @@ public class AnswerRequiredPlugin implements Plugin {
     }
 
     @Override
-    public void exitNode(QuestionTreeNode node) {
+    public void exitNode(QTreeNode node) {
     }
 
     @Override

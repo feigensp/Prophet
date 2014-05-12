@@ -125,12 +125,12 @@ public class MailPlugin implements Plugin {
     }
 
     @Override
-    public boolean denyEnterNode(QuestionTreeNode node) {
+    public boolean denyEnterNode(QTreeNode node) {
         return false;
     }
 
     @Override
-    public void enterNode(QuestionTreeNode node) {
+    public void enterNode(QTreeNode node) {
         try {
             if (node.isExperiment()) {
                 enabled = Boolean.parseBoolean(node.getAttributeValue(KEY));
@@ -149,12 +149,12 @@ public class MailPlugin implements Plugin {
     }
 
     @Override
-    public String denyNextNode(QuestionTreeNode currentNode) {
+    public String denyNextNode(QTreeNode currentNode) {
         return null;
     }
 
     @Override
-    public void exitNode(QuestionTreeNode node) {
+    public void exitNode(QTreeNode node) {
     }
 
     @Override

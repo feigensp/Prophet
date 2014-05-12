@@ -58,12 +58,12 @@ public class ExternalProgramsPlugin extends Thread implements Plugin {
     }
 
     @Override
-    public boolean denyEnterNode(QuestionTreeNode node) {
+    public boolean denyEnterNode(QTreeNode node) {
         return false;
     }
 
     @Override
-    public void enterNode(QuestionTreeNode node) {
+    public void enterNode(QTreeNode node) {
         if (node.isCategory()) {
             enabled = Boolean.parseBoolean(node.getAttributeValue(KEY));
             if (enabled) {
@@ -130,12 +130,12 @@ public class ExternalProgramsPlugin extends Thread implements Plugin {
     }
 
     @Override
-    public String denyNextNode(QuestionTreeNode currentNode) {
+    public String denyNextNode(QTreeNode currentNode) {
         return null;
     }
 
     @Override
-    public void exitNode(QuestionTreeNode node) {
+    public void exitNode(QTreeNode node) {
         if (enabled) {
             location = frame.getLocation();
             frame.setVisible(false);

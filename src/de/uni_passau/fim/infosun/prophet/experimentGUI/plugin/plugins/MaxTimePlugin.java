@@ -224,7 +224,7 @@ public class MaxTimePlugin implements Plugin {
     }
 
     @Override
-    public boolean denyEnterNode(QuestionTreeNode node) {
+    public boolean denyEnterNode(QTreeNode node) {
         if (allMessages.size() > 0) {
             Iterator<Entry<QuestionTreeNode, String>> it = allMessages.entrySet().iterator();
             while (it.hasNext()) {
@@ -300,7 +300,7 @@ public class MaxTimePlugin implements Plugin {
     }
 
     @Override
-    public void enterNode(QuestionTreeNode node) {
+    public void enterNode(QTreeNode node) {
         currentNode = node;
         if (node.isExperiment()) {
             experimentNode = node;
@@ -315,12 +315,12 @@ public class MaxTimePlugin implements Plugin {
     }
 
     @Override
-    public String denyNextNode(QuestionTreeNode currentNode) {
+    public String denyNextNode(QTreeNode currentNode) {
         return null;
     }
 
     @Override
-    public void exitNode(QuestionTreeNode node) {
+    public void exitNode(QTreeNode node) {
         Vector<TimeOut> nodeClocks = allClocks.get(node);
         if (nodeClocks != null) {
             for (TimeOut clock : nodeClocks) {

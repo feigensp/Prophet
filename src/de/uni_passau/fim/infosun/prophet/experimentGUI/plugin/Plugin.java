@@ -2,7 +2,6 @@ package de.uni_passau.fim.infosun.prophet.experimentGUI.plugin;
 
 import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentViewer.ExperimentViewer;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTree.QuestionTreeNode;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.Setting;
 
 /**
@@ -43,7 +42,7 @@ public interface Plugin {
      * @return true if the node shall not be visited<br>
      * false if it might be visited
      */
-    public boolean denyEnterNode(QuestionTreeNode node);
+    public boolean denyEnterNode(QTreeNode node);
 
     /**
      * Called when a node is entered, at the beginning of categories or questions. Is not called if a plugin denied the
@@ -52,7 +51,7 @@ public interface Plugin {
      * @param node
      *         The node entered
      */
-    public void enterNode(QuestionTreeNode node);
+    public void enterNode(QTreeNode node);
 
     /**
      * Called right before a new node is opened in the ExperimentViewer. If any plugin denies the currentNode to be
@@ -64,7 +63,7 @@ public interface Plugin {
      * @return A message shown to the subject to indicate what needs to be done to accept finishing this node (e.g.
      * enter a needed answer)
      */
-    public String denyNextNode(QuestionTreeNode currentNode);
+    public String denyNextNode(QTreeNode currentNode);
 
     /**
      * Called when a node is exited, i.e. after a question, after all active questions of a category are exited, when
@@ -73,7 +72,7 @@ public interface Plugin {
      * @param node
      *         The node to be exited
      */
-    public void exitNode(QuestionTreeNode node);
+    public void exitNode(QTreeNode node);
 
     /**
      * Called after all nodes have been visited. Allows the plugin to do last steps upon finishing the experiment
