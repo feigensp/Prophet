@@ -238,6 +238,70 @@ public class QTreeNode implements Cloneable {
     }
 
     /**
+     * Returns the sub-tree with this node as root in breadth first order.
+     *
+     * @return the breadth first order of the tree
+     */
+    public List<QTreeNode> breadthFirst() {
+        List<QTreeNode> nodes = new LinkedList<>();
+        Queue<QTreeNode> toVisit = new LinkedList<>();
+        QTreeNode currentNode;
+
+        nodes.add(this);
+        toVisit.offer(this);
+
+        while ((currentNode = toVisit.poll()) != null) {
+            nodes.addAll(currentNode.children);
+            currentNode.children.stream().forEach(toVisit::offer);
+        }
+
+        return nodes;
+    }
+
+    /**
+     * Returns the next sibling of this node in the parent's children array.
+     * Returns null if this node has no parent or is the parent's last child.
+     *
+     * @return the next sibling or <code>null</code>
+     */
+    public QTreeNode getNextSibling() {
+
+        if (parent == null) {
+            return null;
+        }
+
+        int nextIndex = parent.children.indexOf(this) + 1;
+        int numChildren = parent.children.size();
+
+        if (nextIndex == numChildren) {
+            return null;
+        }
+
+        return parent.children.get(nextIndex);
+    }
+
+    /**
+     * Returns the previous sibling of this node in the parent's children array.
+     * Returns null if this node has no parent or is the parent's first child.
+     *
+     * @return the next sibling or <code>null</code>
+     */
+    public QTreeNode getPreviousSibling() {
+
+        if (parent == null) {
+            return null;
+        }
+
+        int previousIndex = parent.children.indexOf(this) - 1;
+
+        if (previousIndex < 0) {
+            return null;
+        }
+
+        return parent.children.get(previousIndex);
+    }
+
+    /**
      * Gets the <code>Type</code> of the node.
      *
      * @return the type

@@ -168,7 +168,7 @@ public class QTreeModel implements TreeModel {
      *
      * @return the path in the specified format
      */
-    private Object[] buildPath(QTreeNode from, boolean includeFrom) {
+    public Object[] buildPath(QTreeNode from, boolean includeFrom) {
         ArrayList<Object> path = new ArrayList<>();
         QTreeNode node = from.getParent();
 
