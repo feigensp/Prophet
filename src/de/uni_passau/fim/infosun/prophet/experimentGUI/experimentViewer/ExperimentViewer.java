@@ -2,22 +2,28 @@ package de.uni_passau.fim.infosun.prophet.experimentGUI.experimentViewer;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.html.HTMLEditorKit;
 
 import de.uni_passau.fim.infosun.prophet.experimentGUI.Constants;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.PluginList;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.QuestionViewPane;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTree.QuestionTreeNode;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTree.QuestionTreeXMLHandler;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeXMLHandler;
+
+import static de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode.Type.EXPERIMENT;
+import static de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode.Type.QUESTION;
 
 /**
  * This class shows the html files (questions) creates the navigation and
@@ -27,36 +33,35 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTree.Questio
  */
 public class ExperimentViewer extends JFrame {
 
-    private static final long serialVersionUID = 1L;
     private JPanel contentPane;
+
     // the textpanes (one for each question)
     private QuestionViewPane currentViewPane;
-    private HashMap<QuestionTreeNode, QuestionViewPane> textPanes;
+    private Map<QTreeNode, QuestionViewPane> textPanes;
+
     // time objects
     private JPanel timePanel;
-    private HashMap<QuestionTreeNode, ClockLabel> times;
+    private Map<QTreeNode, ClockLabel> times;
     private ClockLabel totalTime;
+
     // nodes of the question tree
-    private QuestionTreeNode tree;
-    private QuestionTreeNode currentNode;
+    private QTreeNode tree;
+    private QTreeNode currentNode;
 
     private File saveDir;
 
-    private HashSet<QuestionTreeNode> enteredNodes;
+    private Set<QTreeNode> enteredNodes;
 
     private boolean ignoreDenyNextNode = false;
     private boolean exitExperiment = false;
     private boolean experimentNotRunning = true;
 
-    ActionListener myActionListener = new ActionListener() {
-
-        public void actionPerformed(ActionEvent arg0) {
-            String command = arg0.getActionCommand();
-            if (command.equals(Constants.KEY_BACKWARD)) {
-                previousNode();
-            } else if (command.equals(Constants.KEY_FORWARD)) {
-                nextNode();
-            }
+    ActionListener myActionListener = arg0 -> {
+        String command = arg0.getActionCommand();
+        if (command.equals(Constants.KEY_BACKWARD)) {
+            previousNode();
+        } else if (command.equals(Constants.KEY_FORWARD)) {
+            nextNode();
         }
     };
 
@@ -64,17 +69,14 @@ public class ExperimentViewer extends JFrame {
      * Launch the application.
      */
     public static void main(String[] args) {
-        EventQueue.invokeLater(new Runnable() {
-
-            public void run() {
-                try {
-                    String laf = UIManager.getSystemLookAndFeelClassName();
-                    UIManager.setLookAndFeel(laf);
-                    ExperimentViewer frame = new ExperimentViewer();
-                    frame.setVisible(true);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+        EventQueue.invokeLater(() -> {
+            try {
+                String laf = UIManager.getSystemLookAndFeelClassName();
+                UIManager.setLookAndFeel(laf);
+                ExperimentViewer frame = new ExperimentViewer();
+                frame.setVisible(true);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         });
     }
@@ -82,44 +84,69 @@ public class ExperimentViewer extends JFrame {
     /**
      * With the call of the Constructor the data is loaded and everything is
      * initialized. The first question is showed.
-     *
-     * @param path
-     *         path of the xml file with the data
-     * @param cqlp
-     *         the categorieQuestionListsPanel where the overview is shown
      */
     public ExperimentViewer() {
         setTitle("Aufgaben");
-        this.setSize(800, 600);
+        setSize(800, 600);
         setLocationRelativeTo(null);
 
-        String fileName = Constants.DEFAULT_FILE;
-        if (!(new File(fileName).exists())) {
-            fileName = JOptionPane.showInputDialog("Bitte Experiment angeben:");
-            if (fileName == null) {
+        File experimentFile = new File(Constants.DEFAULT_FILE);
+
+        if (!experimentFile.exists()) {
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("XML Files", "*.xml"));
+
+            int returnCode = fileChooser.showOpenDialog(this);
+
+            if (returnCode == JFileChooser.APPROVE_OPTION) {
+                experimentFile = fileChooser.getSelectedFile();
+            } else {
+                JOptionPane.showMessageDialog(this, "Kein Experiment ausgewählt.");
                 System.exit(0);
             }
-            if (!fileName.endsWith(".xml")) {
-                fileName += ".xml";
-            }
-        }
-        try {
-            boolean isInDir =
-                    new File(fileName).getCanonicalFile().getParentFile().equals(new File(".").getCanonicalFile());
-            if (!isInDir) {
+
+            if (!experimentFile.getParentFile().equals(new File("."))) {
                 JOptionPane.showMessageDialog(this, "Experiment nicht im aktuellen Verzeichnis.");
                 System.exit(0);
             }
-            QuestionTreeNode myTree = QuestionTreeXMLHandler.loadXMLTree(fileName);
-            if (myTree != null) {
-                tree = myTree;
-            } else {
-                JOptionPane.showMessageDialog(this, "Keine g\u00fcltige Experiment-Datei.");
-            }
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Experiment nicht gefunden.");
+        }
+
+        QTreeNode myTree = QTreeXMLHandler.loadExperimentXML(experimentFile);
+
+        if (myTree != null) {
+            tree = myTree;
+        } else {
+            JOptionPane.showMessageDialog(this, "Keine gültige Experiment-Datei.");
             System.exit(0);
         }
+
+//        String fileName = Constants.DEFAULT_FILE;
+//        if (!(new File(fileName).exists())) {
+//            fileName = JOptionPane.showInputDialog("Bitte Experiment angeben:");
+//            if (fileName == null) {
+//                System.exit(0);
+//            }
+//            if (!fileName.endsWith(".xml")) {
+//                fileName += ".xml";
+//            }
+//        }
+//        try {
+//            boolean isInDir =
+//                    new File(fileName).getCanonicalFile().getParentFile().equals(new File(".").getCanonicalFile());
+//            if (!isInDir) {
+//                JOptionPane.showMessageDialog(this, "Experiment nicht im aktuellen Verzeichnis.");
+//                System.exit(0);
+//            }
+//            QTreeNode myTree = QTreeXMLHandler.loadFromXML(fileName);
+//            if (myTree != null) {
+//                tree = myTree;
+//            } else {
+//                JOptionPane.showMessageDialog(this, "Keine g\u00fcltige Experiment-Datei.");
+//            }
+//        } catch (Exception e) {
+//            JOptionPane.showMessageDialog(this, "Experiment nicht gefunden.");
+//            System.exit(0);
+//        }
 
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         this.addWindowListener(new WindowAdapter() {
@@ -138,12 +165,12 @@ public class ExperimentViewer extends JFrame {
         });
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-        contentPane.setLayout(new BorderLayout());
-        this.setContentPane(contentPane);
+        setContentPane(contentPane);
         PluginList.experimentViewerRun(this);
+
         // Starte Experiment
-        QuestionTreeNode superRoot = new QuestionTreeNode();
-        superRoot.add(tree);
+        QTreeNode superRoot = new QTreeNode(null, EXPERIMENT, ""); // TODO was soll der Quatsch?
+        superRoot.addChild(tree);
         tree.setParent(null);
         currentNode = superRoot;
         textPanes = new HashMap<>();
@@ -166,7 +193,7 @@ public class ExperimentViewer extends JFrame {
                         JOptionPane.ERROR_MESSAGE);
                 return false;
             }
-            String experiment = currentNode.getAttributeValue(Constants.KEY_EXPERIMENT_CODE);
+            String experiment = currentNode.getAttribute(Constants.KEY_EXPERIMENT_CODE).getValue();
             if (experiment == null) {
                 experiment = "default";
             }
@@ -184,17 +211,17 @@ public class ExperimentViewer extends JFrame {
 
         //step down if we may enter and there are children, else step aside if there is a sibling, else step up
         if (!denyEnterNode() && currentNode.getChildCount() != 0) {
-            currentNode = (QuestionTreeNode) currentNode.getFirstChild();
+            currentNode = currentNode.getChild(0);
         } else {
             exitNode();
             while (currentNode.getNextSibling() == null) {
-                currentNode = (QuestionTreeNode) currentNode.getParent();
+                currentNode = currentNode.getParent();
                 if (currentNode == null) {
                     return false;
                 }
                 exitNode();
             }
-            currentNode = (QuestionTreeNode) currentNode.getNextSibling();
+            currentNode = currentNode.getNextSibling();
         }
 
         //check if found node is visitable
@@ -202,7 +229,7 @@ public class ExperimentViewer extends JFrame {
             return nextNode();
         } else {
             boolean doNotShowContent =
-                    Boolean.parseBoolean(currentNode.getAttributeValue(Constants.KEY_DONOTSHOWCONTENT));
+                    Boolean.parseBoolean(currentNode.getAttribute(Constants.KEY_DONOTSHOWCONTENT).getValue());
             if (doNotShowContent) {
                 enterNode();
                 return nextNode();
@@ -219,10 +246,10 @@ public class ExperimentViewer extends JFrame {
             return false;
         }
         pauseClock();
-        if (currentNode.isQuestion()) {
-            QuestionTreeNode tempNode = currentNode;
+        if (currentNode.getType() == QUESTION) {
+            QTreeNode tempNode = currentNode;
             while (tempNode.getPreviousSibling() != null) {
-                tempNode = (QuestionTreeNode) tempNode.getPreviousSibling();
+                tempNode = tempNode.getPreviousSibling();
                 if (!denyEnterNode()) {
                     exitNode();
                     currentNode = tempNode;
@@ -239,7 +266,7 @@ public class ExperimentViewer extends JFrame {
         return exitExperiment || denyEnterNode(currentNode);
     }
 
-    public static boolean denyEnterNode(QuestionTreeNode node) {
+    public static boolean denyEnterNode(QTreeNode node) {
         return PluginList.denyEnterNode(node);
     }
 
@@ -266,7 +293,7 @@ public class ExperimentViewer extends JFrame {
     private void exitNode() {
         if (enteredNodes.contains(currentNode)) {
             PluginList.exitNode(currentNode);
-            if (currentNode.isExperiment()) {
+            if (currentNode.getType() == EXPERIMENT) {
                 endQuestionnaire();
             }
             enteredNodes.remove(currentNode);
@@ -303,7 +330,7 @@ public class ExperimentViewer extends JFrame {
         timePanel.removeAll();
         ClockLabel clock = times.get(currentNode);
         if (clock == null) {
-            if (currentNode.isExperiment()) {
+            if (currentNode.getType() == EXPERIMENT) {
                 clock = new ClockLabel(currentNode, null);
             } else {
                 clock = new ClockLabel(currentNode, "Aktuell");
@@ -332,8 +359,15 @@ public class ExperimentViewer extends JFrame {
         output.setEditorKit(new HTMLEditorKit());
         String endMessage = "Befragung beendet.";
         String outputString = "<p>" + endMessage + "</p>";
-        QuestionTreeXMLHandler.saveXMLAnswerTree(tree,
-                saveDir.getPath() + System.getProperty("file.separator") + Constants.FILE_ANSWERS);
+//        QuestionTreeXMLHandler.saveXMLAnswerTree(tree,
+//                saveDir.getPath() + System.getProperty("file.separator") + Constants.FILE_ANSWERS);
+
+        try {
+            QTreeXMLHandler.saveAnswerXML(tree, new File(saveDir, Constants.FILE_ANSWERS));
+        } catch (IOException e) {
+            System.err.println("Could not save the answers.xml. " + e); //TODO logging or JDialog
+        }
+
         outputString += PluginList.finishExperiment();
         output.setText(outputString);
         output.setCaretPosition(0);
@@ -341,7 +375,7 @@ public class ExperimentViewer extends JFrame {
         experimentNotRunning = true;
     }
 
-    public QuestionTreeNode getTree() {
+    public QTreeNode getTree() {
         return tree;
     }
 

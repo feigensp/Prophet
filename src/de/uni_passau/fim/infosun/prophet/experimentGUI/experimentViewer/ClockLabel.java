@@ -10,7 +10,7 @@ package de.uni_passau.fim.infosun.prophet.experimentGUI.experimentViewer;
 import java.text.DecimalFormat;
 import javax.swing.JLabel;
 
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTree.QuestionTreeNode;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode;
 
 @SuppressWarnings("serial")
 public class ClockLabel extends JLabel implements Runnable {
@@ -22,9 +22,9 @@ public class ClockLabel extends JLabel implements Runnable {
     private long currentTime = 0;
     private String caption;
     private Thread myThread;
-    private QuestionTreeNode questionNode = null;
+    private QTreeNode questionNode = null;
 
-    public ClockLabel(QuestionTreeNode questionNode, String caption) {
+    public ClockLabel(QTreeNode questionNode, String caption) {
         this.questionNode = questionNode;
         this.caption = caption;
     }
