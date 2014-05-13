@@ -413,12 +413,12 @@ public class ExperimentEditorMenuBar extends JMenuBar {
     private void enableMenuItems() {
         boolean treeExists = qTreeModel.getRoot() != null;
 
-        if (treeExists) {
-            exportCSVMenuItem.setEnabled(currentFile != null);
-        }
+//        if (treeExists) {
+//            exportCSVMenuItem.setEnabled(currentFile != null);
+//        }
 
-        saveMenuItem.setEnabled(treeExists);
-        saveAsMenuItem.setEnabled(treeExists);
+//        saveMenuItem.setEnabled(treeExists);
+//        saveAsMenuItem.setEnabled(treeExists);
         nameCheckMenuItem.setEnabled(treeExists);
     }
 }
