@@ -17,9 +17,11 @@ public class SettingsPluginComponent extends SettingsComponent {
 
     public SettingsPluginComponent() {
         setLayout(new BorderLayout());
+
         activatedCheckBox = new JCheckBox("");
         activatedCheckBox.addActionListener(e -> optionPanel.setVisible(activatedCheckBox.isSelected()));
         add(activatedCheckBox, BorderLayout.NORTH);
+
         optionPanel = new JPanel();
         optionPanel.setBorder(BorderFactory.createTitledBorder(""));
         optionPanel.setLayout(new VerticalLayout(5, VerticalLayout.LEFT, VerticalLayout.TOP));
