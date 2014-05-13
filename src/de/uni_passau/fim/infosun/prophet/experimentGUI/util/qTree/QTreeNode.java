@@ -360,6 +360,10 @@ public class QTreeNode implements Cloneable {
             children = new ArrayList<>();
         }
 
+        if (answers == null) {
+            answers = new HashMap<>();
+        }
+
         return this;
     }
 }
