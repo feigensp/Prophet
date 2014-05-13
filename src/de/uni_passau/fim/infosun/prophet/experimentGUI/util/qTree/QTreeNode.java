@@ -60,6 +60,15 @@ public class QTreeNode implements Cloneable {
     }
 
     /**
+     * Gets the answer map.
+     *
+     * @return the answer map
+     */
+    public Map<String, String> getAnswers() {
+        return answers;
+    }
+
+    /**
      * Sets a mapping from the given <code>key</code> to the given <code>answer</code>.
      * Neither <code>key</code> nor <code>answer</code> may be <code>null</code>.
      *
