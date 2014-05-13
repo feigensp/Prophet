@@ -23,6 +23,9 @@ public class QTreeNode implements Cloneable {
     private QTreeNode parent;
     private List<QTreeNode> children;
 
+    private Map<String, String> answers;
+    private long answerTime;
+
     /**
      * Constructs a new <code>QTreeNode</code> with the given parameters. The <code>parent</code> may be
      * <code>null</code> if this is the root node of the tree.
@@ -43,6 +46,49 @@ public class QTreeNode implements Cloneable {
         this.attributes = new HashMap<>();
         this.parent = parent;
         this.children = new ArrayList<>();
+        this.answers = new HashMap<>();
+    }
+
+    /**
+     * Gets the answer for the given <code>key</code> or <code>null</code> if no mapping for the key exists.
+     *
+     * @param key the key for the answer
+     * @return the answer or <code>null</code>
+     */
+    public String getAnswer(String key) {
+        return answers.get(key);
+    }
+
+    /**
+     * Sets a mapping from the given <code>key</code> to the given <code>answer</code>.
+     * Neither <code>key</code> nor <code>answer</code> may be <code>null</code>.
+     *
+     * @param key the key for the answer
+     * @param answer the answer
+     */
+    public void setAnswer(String key, String answer) {
+        Objects.requireNonNull(key, "key must not be null");
+        Objects.requireNonNull(answer, "answer must not be null");
+
+        answers.put(key, answer);
+    }
+
+    /**
+     * Gets the answer time for this node.
+     *
+     * @return the answer time
+     */
+    public long getAnswerTime() {
+        return answerTime;
+    }
+
+    /**
+     * Sets the answer time for this node.
+     *
+     * @param answerTime the new answer time
+     */
+    public void setAnswerTime(long answerTime) {
+        this.answerTime = answerTime;
     }
 
     /**
