@@ -1,14 +1,13 @@
 package de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
-import javax.swing.BoxLayout;
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.VerticalLayout;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.Attribute;
 
 /**
@@ -35,7 +34,7 @@ public class PluginSettings extends Setting {
         settingsList = new LinkedList<>();
 
         settingsPanel = new JPanel();
-        settingsPanel.setLayout(new BoxLayout(settingsPanel, BoxLayout.PAGE_AXIS));
+        settingsPanel.setLayout(new VerticalLayout(5, VerticalLayout.LEFT, VerticalLayout.TOP));
         add(settingsPanel, BorderLayout.CENTER);
 
         if (enableable) {
@@ -52,7 +51,7 @@ public class PluginSettings extends Setting {
      */
     public void addSetting(Setting setting) {
         settingsList.add(setting);
-        settingsPanel.add(setting, Component.CENTER_ALIGNMENT);
+        settingsPanel.add(setting);
     }
 
     /**
@@ -62,10 +61,7 @@ public class PluginSettings extends Setting {
      */
     public void addAllSettings(Collection<? extends Setting> settings) {
         settingsList.addAll(settings);
-
-        for (Setting s : settings) {
-            settingsPanel.add(s, Component.CENTER_ALIGNMENT);
-        }
+        settings.stream().forEach(settingsPanel::add);
     }
 
     @Override
