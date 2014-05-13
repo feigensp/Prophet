@@ -5,7 +5,6 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewer
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin.tabbedPane.EditorPanel;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.Attribute;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTree.QuestionTreeNode;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.PluginSettings;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.Setting;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.components.SettingsTextField;
@@ -14,7 +13,7 @@ public class OpenedFromStartPlugin implements CodeViewerPlugin {
 
     public static final String KEY = "openedByStart";
     public static final String KEY_PATH = "startPath";
-    private QuestionTreeNode selected;
+    private Attribute selected;
 
     @Override
     public Setting getSetting(Attribute mainAttribute) {
@@ -32,16 +31,17 @@ public class OpenedFromStartPlugin implements CodeViewerPlugin {
     }
 
     @Override
-    public void init(QuestionTreeNode selected) {
+    public void init(Attribute selected) {
         this.selected = selected;
     }
 
     @Override
     public void onFrameCreate(CodeViewer viewer) {
-        if (Boolean.parseBoolean(selected.getAttributeValue(KEY))) {
-            QuestionTreeNode attributes = selected.getAttribute(KEY);
+        if (Boolean.parseBoolean(selected.getSubAttribute(KEY).getValue())) {
+            Attribute attributes = selected.getSubAttribute(KEY);
             String path =
-                    attributes.getAttributeValue(KEY_PATH).replace('/', System.getProperty("file.separator").charAt(0));
+                    attributes.getSubAttribute(KEY_PATH).getValue().replace('/',
+                            System.getProperty("file.separator").charAt(0));
             viewer.getTabbedPane().openFile(path);
             viewer.getFileTree().selectFile(path);
         }
@@ -49,19 +49,13 @@ public class OpenedFromStartPlugin implements CodeViewerPlugin {
 
     @Override
     public void onEditorPanelCreate(EditorPanel editorPanel) {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
     public void onEditorPanelClose(EditorPanel editorPanel) {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
     public void onClose() {
-        // TODO Auto-generated method stub
-
     }
 }

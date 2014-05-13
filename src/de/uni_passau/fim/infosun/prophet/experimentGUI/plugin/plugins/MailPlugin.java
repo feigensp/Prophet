@@ -18,13 +18,12 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.mailPlugin
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.Attribute;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTree.QuestionTreeNode;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.PluginSettings;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.Setting;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.components.SettingsPasswordField;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.components.SettingsTextField;
 
-import static de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode.Type;
+import static de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode.Type.EXPERIMENT;
 
 public class MailPlugin implements Plugin {
 
@@ -83,7 +82,7 @@ public class MailPlugin implements Plugin {
     @Override
     public Setting getSetting(QTreeNode node) {
 
-        if (node.getType() != Type.EXPERIMENT) {
+        if (node.getType() != EXPERIMENT) {
             return null;
         }
 
@@ -132,18 +131,18 @@ public class MailPlugin implements Plugin {
     @Override
     public void enterNode(QTreeNode node) {
         try {
-            if (node.isExperiment()) {
-                enabled = Boolean.parseBoolean(node.getAttributeValue(KEY));
+            if (node.getType() == EXPERIMENT) {
+                enabled = Boolean.parseBoolean(node.getAttribute(KEY).getValue());
                 if (enabled) {
-                    QuestionTreeNode attributes = node.getAttribute(KEY);
-                    smtpServer = attributes.getAttributeValue(SMTP_SERVER);
-                    smtpUser = attributes.getAttributeValue(SMTP_USER);
-                    smtpPass = SettingsPasswordField.decode(attributes.getAttributeValue(SMTP_PASS));
-                    smtpSender = attributes.getAttributeValue(SMTP_SENDER);
-                    smtpReceiver = attributes.getAttributeValue(SMTP_RECEIVER);
+                    Attribute attributes = node.getAttribute(KEY);
+                    smtpServer = attributes.getSubAttribute(SMTP_SERVER).getValue();
+                    smtpUser = attributes.getSubAttribute(SMTP_USER).getValue();
+                    smtpPass = SettingsPasswordField.decode(attributes.getSubAttribute(SMTP_PASS).getValue());
+                    smtpSender = attributes.getSubAttribute(SMTP_SENDER).getValue();
+                    smtpReceiver = attributes.getSubAttribute(SMTP_RECEIVER).getValue();
                 }
             }
-        } catch (Exception e) {
+        } catch (Exception ignored) {
 
         }
     }

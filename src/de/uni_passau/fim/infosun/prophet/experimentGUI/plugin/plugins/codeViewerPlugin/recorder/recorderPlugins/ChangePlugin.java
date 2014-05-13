@@ -12,7 +12,6 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewer
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin.tabbedPane.EditorPanel;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.Attribute;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTree.QuestionTreeNode;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.PluginSettings;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.Setting;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.components.SettingsTextField;
@@ -69,14 +68,14 @@ public class ChangePlugin implements RecorderPlugin {
     }
 
     @Override
-    public void onFrameCreate(QuestionTreeNode selected, CodeViewer viewer, LoggingTreeNode newNode) {
-        enabled = Boolean.parseBoolean(selected.getAttributeValue(KEY));
+    public void onFrameCreate(Attribute selected, CodeViewer viewer, LoggingTreeNode newNode) {
+        enabled = Boolean.parseBoolean(selected.getSubAttribute(KEY).getValue());
         if (enabled) {
-            join = Boolean.parseBoolean(selected.getAttribute(KEY).getAttributeValue(KEY_JOIN));
+            join = Boolean.parseBoolean(selected.getSubAttribute(KEY).getSubAttribute(KEY_JOIN).getValue());
             if (join) {
                 try {
                     joinTime = Long.parseLong(
-                            selected.getAttribute(KEY).getAttribute(KEY_JOIN).getAttributeValue(KEY_JOIN_TIME));
+                            selected.getSubAttribute(KEY).getSubAttribute(KEY_JOIN).getSubAttribute(KEY_JOIN_TIME).getValue());
                 } catch (Exception e) {
                     joinTime = 0;
                 }

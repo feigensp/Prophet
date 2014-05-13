@@ -1,12 +1,11 @@
 package de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.questionListPlugin;
 
-import java.util.Enumeration;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
-import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTree.QuestionTreeNode;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeModel;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode;
 
 /**
  * Creates a panel which consits JList's. The Lists represents categories and
@@ -17,17 +16,23 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTree.Questio
 public class QuestionList extends JScrollPane {
 
     private static final long serialVersionUID = 1L;
-    private QuestionTreeNode root;
+    private QTreeNode root;
     private JTree tree;
 
     /**
      * Constructor which creates an Empty Panel
+     * @param root
      */
-    public QuestionList(QuestionTreeNode root) {
+    public QuestionList(QTreeNode root) {
         this.root = root;
-        tree = new JTree(root);
+        this.tree = new JTree();
+
+        QTreeModel model = new QTreeModel(root);
+
+        tree.setModel(model);
         tree.setEnabled(false);
         tree.setCellRenderer(new SimpleTreeCellRenderer());
+
         // expand all
         for (int i = 0; i < tree.getRowCount(); i++) {
             tree.expandRow(i);
@@ -36,56 +41,22 @@ public class QuestionList extends JScrollPane {
         this.setViewportView(tree);
     }
 
-    // public QuestionList(QuestionTreeNode root) {
-    // this.root=root;
-    // textPane = new JTextPane();
-    // textPane.setEditorKit(new HTMLEditorKit());
-    // textPane.setEditable(false);
-    // this.setViewportView(textPane);
-    // }
+    public void visit(QTreeNode selectionNode) {
+        //TODO why do the search?
 
-    public void visit(QuestionTreeNode selectionNode) {
-        Enumeration e = root.breadthFirstEnumeration();
-        while (e.hasMoreElements()) {
-            DefaultMutableTreeNode node = (DefaultMutableTreeNode) e.nextElement();
-            if (node.equals(selectionNode)) {
-                TreePath path = new TreePath(node.getPath());
-                tree.setSelectionPath(path);
-                break;
-            }
-        }
+//        Enumeration e = root.breadthFirstEnumeration();
+//
+//        while (e.hasMoreElements()) {
+//            DefaultMutableTreeNode node = (DefaultMutableTreeNode) e.nextElement();
+//
+//            if (node.equals(selectionNode)) {
+//                TreePath path = new TreePath(node.getPath());
+//                tree.setSelectionPath(path);
+//                break;
+//            }
+//        }
+
+        Object[] path = ((QTreeModel) tree.getModel()).buildPath(selectionNode, true);
+        tree.setSelectionPath(new TreePath(path));
     }
-
-    // public void visit(QuestionTreeNode node) {
-    // String content = "<html><body>";
-    // boolean inactive =
-    // Boolean.parseBoolean(root.getAttributeValue("inactive"));
-    // if (!inactive) {
-    // content+=print(root,node);
-    // }
-    // content+="</body></html>";
-    // textPane.setText(content);
-    // }
-
-//	private String print(QuestionTreeNode node, QuestionTreeNode selected) {
-//		String name = node == selected ? "<b><u>" + node.getName().toUpperCase() + "</u></b>" : node
-//				.getName();
-//		String subNodes = "";
-//		if (node.getChildCount() > 0) {
-//			String nodeList = "";
-//			for (int i = 0; i < node.getChildCount(); i++) {
-//				QuestionTreeNode subNode = (QuestionTreeNode) node.getChildAt(i);
-//				boolean inactive = Boolean.parseBoolean(subNode.getAttributeValue("inactive"));
-//				if (!inactive) {
-//					String nodeText = print(subNode, selected);
-//					nodeList += nodeText.length() > 0 ? "<li>" + nodeText + "</li>" : "";
-//				}
-//			}
-//			if (nodeList.length() > 0) {
-//				subNodes = "<ul>" + nodeList + "</ul>";
-//			}
-//		}
-//		boolean donotshowcontent = Boolean.parseBoolean(node.getAttributeValue("donotshowcontent"));
-//		return donotshowcontent && subNodes.length() == 0 ? "" : name + subNodes;
-//	}
 }

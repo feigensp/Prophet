@@ -9,7 +9,6 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewer
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin.tabbedPane.EditorPanel;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin.tabbedPane.EditorTabbedPane;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.Attribute;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTree.QuestionTreeNode;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.PluginSettings;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.Setting;
 
@@ -29,13 +28,14 @@ public class Recorder {
     private EditorTabbedPane tabbedPane;
     private EditorPanel currentTab;
 
-    private QuestionTreeNode selected;
+    private Attribute selected;
 
-    public Recorder(QuestionTreeNode selected) {
-        rootNode = new LoggingTreeNode(LoggingTreeNode.TYPE_LOGFILE);
-        currentNode = new LoggingTreeNode(LoggingTreeNode.TYPE_NOFILE);
-        rootNode.add(currentNode);
+    public Recorder(Attribute selected) {
         this.selected = selected;
+        this.rootNode = new LoggingTreeNode(LoggingTreeNode.TYPE_LOGFILE);
+        this.currentNode = new LoggingTreeNode(LoggingTreeNode.TYPE_NOFILE);
+
+        rootNode.add(currentNode);
     }
 
     public static Setting getSetting(Attribute mainAttribute) {
@@ -71,7 +71,7 @@ public class Recorder {
         });
 
         for (RecorderPlugin plugin : RecorderPluginList.getPlugins()) {
-            plugin.onFrameCreate(selected.getAddAttribute(KEY), codeViewer, currentNode);
+            plugin.onFrameCreate(selected.getSubAttribute(KEY), codeViewer, currentNode);
         }
     }
 

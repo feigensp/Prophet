@@ -13,9 +13,8 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewer
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin.fileTree.FileTree;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin.tabbedPane.EditorTabbedPane;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTree.QuestionTreeNode;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.Attribute;
 
-@SuppressWarnings("serial")
 public class CodeViewer extends JFrame implements FileListener {
 
     public final static String KEY_PATH = "path";
@@ -38,27 +37,25 @@ public class CodeViewer extends JFrame implements FileListener {
      * Launch the application.
      */
     public static void main(String[] args) {
-        EventQueue.invokeLater(new Runnable() {
-
-            public void run() {
-                try {
-                    CodeViewer frame = new CodeViewer(null, null);
-                    frame.setVisible(true);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+        EventQueue.invokeLater(() -> {
+            try {
+                CodeViewer frame = new CodeViewer(null, null);
+                frame.setVisible(true);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         });
     }
 
-    public CodeViewer(QuestionTreeNode selected, File saveDir) {
+    public CodeViewer(Attribute selected, File saveDir) {
         setTitle(UIElementNames.TITLE_CODE_VIEWER);
         setSize(800, 600);
         setLayout(new BorderLayout());
 
         if (selected == null) {
-            selected = new QuestionTreeNode();
+            selected = new Attribute("", ""); //TODO does this ever happen?
         }
+
         if (saveDir == null) {
             saveDir = new File(".");
         }
@@ -66,9 +63,9 @@ public class CodeViewer extends JFrame implements FileListener {
 
         //read settings, store in variables
 
-        String showPath =
-                selected.getAttributeValue(KEY_PATH).replace('/', System.getProperty("file.separator").charAt(0));
-        showDir = new File(showPath == null || showPath.length() == 0 ? "." : showPath);
+        String showPath = selected.getSubAttribute(KEY_PATH).getValue()
+                .replace('/', System.getProperty("file.separator").charAt(0));
+        showDir = new File(showPath.length() == 0 ? "." : showPath);
         if (!showDir.exists()) {
             JOptionPane
                     .showMessageDialog(this, UIElementNames.MESSAGE_PATH_DOES_NOT_EXIST, UIElementNames.MESSAGE_ERROR,
@@ -97,7 +94,7 @@ public class CodeViewer extends JFrame implements FileListener {
 
         recorder = new Recorder(selected);
 
-        tabbedPane = new EditorTabbedPane(selected, showDir, recorder);
+        tabbedPane = new EditorTabbedPane(showDir, recorder);
         tabbedPane.setBorder(null);
         splitPane.setRightComponent(tabbedPane);
 

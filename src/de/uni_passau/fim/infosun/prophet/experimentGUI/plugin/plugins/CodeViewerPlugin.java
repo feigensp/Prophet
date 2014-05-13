@@ -14,7 +14,6 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewer
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.Attribute;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTree.QuestionTreeNode;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.PluginSettings;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.Setting;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.components.SettingsDirectoryPathChooser;
@@ -28,7 +27,7 @@ public class CodeViewerPlugin implements Plugin {
     private ExperimentViewer experimentViewer;
     private int count = 1;
 
-    private HashMap<QuestionTreeNode, CodeViewer> codeViewers;
+    private HashMap<QTreeNode, CodeViewer> codeViewers;
 
     private Rectangle bounds;
 
@@ -67,7 +66,8 @@ public class CodeViewerPlugin implements Plugin {
 
     @Override
     public void enterNode(QTreeNode node) {
-        boolean enabled = Boolean.parseBoolean(node.getAttributeValue(KEY));
+        boolean enabled = Boolean.parseBoolean(node.getAttribute(KEY).getValue());
+
         if (enabled) {
             String savePath =
                     experimentViewer.getSaveDir().getPath() + System.getProperty("file.separator") + (count++) + "_"

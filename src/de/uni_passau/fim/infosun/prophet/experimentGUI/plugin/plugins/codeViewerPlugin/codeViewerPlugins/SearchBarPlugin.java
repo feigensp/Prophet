@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
+import java.util.Map;
 import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
 
@@ -14,10 +15,8 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewer
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin.tabbedPane.EditorPanel;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.Attribute;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTree.QuestionTreeNode;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.searchBar.GlobalSearchBar;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.searchBar.SearchBar;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.searchBar.SearchBarListener;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.PluginSettings;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.Setting;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.components.SettingsCheckBox;
@@ -35,11 +34,11 @@ public class SearchBarPlugin implements CodeViewerPlugin {
     public final static String ATTRIBUTE_SUCCESS = "success";
     private CodeViewer viewer;
 
-    QuestionTreeNode selected;
-    boolean enabled;
+    private Attribute selected;
+    private boolean enabled;
 
-    HashMap<EditorPanel, SearchBar> map;
-    GlobalSearchBar globalSearchBar;
+    private Map<EditorPanel, SearchBar> map;
+    private GlobalSearchBar globalSearchBar;
 
     @Override
     public Setting getSetting(Attribute mainAttribute) {
@@ -62,9 +61,9 @@ public class SearchBarPlugin implements CodeViewerPlugin {
     }
 
     @Override
-    public void init(QuestionTreeNode selected) {
+    public void init(Attribute selected) {
         this.selected = selected;
-        enabled = Boolean.parseBoolean(selected.getAttributeValue(KEY));
+        this.enabled = Boolean.parseBoolean(selected.getSubAttribute(KEY).getValue());
     }
 
     @Override
@@ -74,38 +73,30 @@ public class SearchBarPlugin implements CodeViewerPlugin {
             map = new HashMap<>();
             JMenuItem findMenuItem = new JMenuItem(UIElementNames.SEARCH_BAR_MENU_SEARCH);
             findMenuItem.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F, java.awt.Event.CTRL_MASK));
-            findMenuItem.addActionListener(new ActionListener() {
-
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    SearchBar curr = map.get(viewer.getTabbedPane().getSelectedComponent());
-                    if (curr != null) {
-                        curr.setVisible(true);
-                        curr.grabFocus();
-                    }
+            findMenuItem.addActionListener(e -> {
+                SearchBar curr = map.get(viewer.getTabbedPane().getSelectedComponent());
+                if (curr != null) {
+                    curr.setVisible(true);
+                    curr.grabFocus();
                 }
             });
             viewer.addMenuItemToEditMenu(findMenuItem);
 
             boolean activateGlobal =
-                    Boolean.parseBoolean(selected.getAttribute(KEY).getAttributeValue(KEY_ENABLE_GLOBAL));
+                    Boolean.parseBoolean(selected.getSubAttribute(KEY).getSubAttribute(KEY_ENABLE_GLOBAL).getValue());
             if (activateGlobal) {
                 globalSearchBar = new GlobalSearchBar(viewer.getShowDir(), v);
                 globalSearchBar.setVisible(false);
 
-                globalSearchBar.addSearchBarListener(new SearchBarListener() {
-
-                    @Override
-                    public void searched(String action, String query, boolean success) {
-                        LoggingTreeNode node = new LoggingTreeNode(TYPE_SEARCH);
-                        node.setAttribute(ATTRIBUTE_ACTION, action);
-                        node.setAttribute(ATTRIBUTE_QUERY, query);
-                        node.setAttribute(ATTRIBUTE_SUCCESS, "" + success);
-                        viewer.getRecorder().addLoggingTreeNode(node);
-                    }
+                globalSearchBar.addSearchBarListener((action, query, success) -> {
+                    LoggingTreeNode node = new LoggingTreeNode(TYPE_SEARCH);
+                    node.setAttribute(ATTRIBUTE_ACTION, action);
+                    node.setAttribute(ATTRIBUTE_QUERY, query);
+                    node.setAttribute(ATTRIBUTE_SUCCESS, "" + success);
+                    viewer.getRecorder().addLoggingTreeNode(node);
                 });
 
-                if (Boolean.parseBoolean(selected.getAttribute(KEY).getAttributeValue(KEY_DISABLE_REGEX))) {
+                if (Boolean.parseBoolean(selected.getSubAttribute(KEY).getSubAttribute(KEY_DISABLE_REGEX).getValue())) {
                     globalSearchBar.getRegexCB().setVisible(false);
                 }
 
@@ -133,19 +124,15 @@ public class SearchBarPlugin implements CodeViewerPlugin {
             RSyntaxTextArea textPane = editorPanel.getTextArea();
             SearchBar searchBar = new SearchBar(textPane);
             searchBar.setVisible(false);
-            searchBar.addSearchBarListener(new SearchBarListener() {
-
-                @Override
-                public void searched(String action, String query, boolean success) {
-                    LoggingTreeNode node = new LoggingTreeNode(TYPE_SEARCH);
-                    node.setAttribute(ATTRIBUTE_ACTION, action);
-                    node.setAttribute(ATTRIBUTE_QUERY, query);
-                    node.setAttribute(ATTRIBUTE_SUCCESS, "" + success);
-                    viewer.getRecorder().addLoggingTreeNode(node);
-                }
+            searchBar.addSearchBarListener((action, query, success) -> {
+                LoggingTreeNode node = new LoggingTreeNode(TYPE_SEARCH);
+                node.setAttribute(ATTRIBUTE_ACTION, action);
+                node.setAttribute(ATTRIBUTE_QUERY, query);
+                node.setAttribute(ATTRIBUTE_SUCCESS, "" + success);
+                viewer.getRecorder().addLoggingTreeNode(node);
             });
 
-            if (Boolean.parseBoolean(selected.getAttribute(KEY).getAttributeValue(KEY_DISABLE_REGEX))) {
+            if (Boolean.parseBoolean(selected.getSubAttribute(KEY).getSubAttribute(KEY_DISABLE_REGEX).getValue())) {
                 searchBar.getRegexCB().setVisible(false);
             }
 

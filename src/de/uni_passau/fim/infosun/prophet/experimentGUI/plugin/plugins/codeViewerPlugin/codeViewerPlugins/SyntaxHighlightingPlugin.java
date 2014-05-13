@@ -9,7 +9,6 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewer
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin.tabbedPane.EditorPanel;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.Attribute;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTree.QuestionTreeNode;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.Setting;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.components.SettingsCheckBox;
 import org.fife.ui.rsyntaxtextarea.RSyntaxDocument;
@@ -32,8 +31,8 @@ public class SyntaxHighlightingPlugin implements CodeViewerPlugin {
     }
 
     @Override
-    public void init(QuestionTreeNode selected) {
-        enabled = Boolean.parseBoolean(selected.getAttributeValue(KEY));
+    public void init(Attribute selected) {
+        enabled = Boolean.parseBoolean(selected.getSubAttribute(KEY).getValue());
         if (enabled) {
             extensionMap = new HashMap<>();
 

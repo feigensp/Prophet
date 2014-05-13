@@ -23,7 +23,6 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewer
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin.tabbedPane.EditorTabbedPane;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.Attribute;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTree.QuestionTreeNode;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.Setting;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.components.SettingsCheckBox;
 import org.fife.ui.rsyntaxtextarea.RSyntaxDocument;
@@ -48,8 +47,8 @@ public class EditAndSavePlugin implements CodeViewerPlugin {
     }
 
     @Override
-    public void init(QuestionTreeNode selected) {
-        editable = Boolean.parseBoolean(selected.getAttributeValue(KEY));
+    public void init(Attribute selected) {
+        editable = Boolean.parseBoolean(selected.getSubAttribute(KEY).getValue());
     }
 
     @Override

@@ -6,7 +6,6 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentViewer.Experime
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.Plugin;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.questionListPlugin.QuestionList;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTree.QuestionTreeNode;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.Setting;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.components.SettingsCheckBox;
 
@@ -31,8 +30,9 @@ public class QuestionListPlugin implements Plugin {
 
     @Override
     public void experimentViewerRun(ExperimentViewer experimentViewer) {
-        QuestionTreeNode experimentNode = experimentViewer.getTree();
-        enabled = Boolean.parseBoolean(experimentNode.getAttributeValue(KEY));
+        QTreeNode experimentNode = experimentViewer.getTree();
+        enabled = Boolean.parseBoolean(experimentNode.getAttribute(KEY).getValue());
+
         if (enabled) {
             overview = new QuestionList(experimentNode);
             //overview.setPreferredSize(new Dimension(150, 2));

@@ -1,7 +1,7 @@
 package de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins;
 
+import java.util.Map;
 import java.util.Scanner;
-import java.util.TreeMap;
 
 import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentViewer.ExperimentViewer;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.Plugin;
@@ -47,13 +47,13 @@ public class AnswerRequiredPlugin implements Plugin {
 
     @Override
     public String denyNextNode(QTreeNode currentNode) {
-        boolean enabled = Boolean.parseBoolean(currentNode.getAttributeValue(KEY));
+        boolean enabled = Boolean.parseBoolean(currentNode.getAttribute(KEY).getValue());
+
         if (enabled) {
-            String requiredAnswers = currentNode.getAttribute(KEY).getAttributeValue(KEY_NAMES);
-
-            TreeMap<String, String> answers = currentNode.getAnswers();
-
+            String requiredAnswers = currentNode.getAttribute(KEY).getSubAttribute(KEY_NAMES).getValue();
+            Map<String, String> answers = currentNode.getAnswers();
             Scanner sc = new Scanner(requiredAnswers);
+
             while (sc.hasNext()) {
                 String requiredAnswerKey = sc.next();
                 if (!answers.containsKey(requiredAnswerKey) || answers.get(requiredAnswerKey).equals("")) {
@@ -61,6 +61,7 @@ public class AnswerRequiredPlugin implements Plugin {
                 }
             }
         }
+
         return null;
     }
 

@@ -39,7 +39,7 @@ public class InactivityPlugin implements Plugin {
 
     @Override
     public boolean denyEnterNode(QTreeNode node) {
-        return Boolean.parseBoolean(node.getAttributeValue(KEY));
+        return Boolean.parseBoolean(node.getAttribute(KEY).getValue());
     }
 
     @Override

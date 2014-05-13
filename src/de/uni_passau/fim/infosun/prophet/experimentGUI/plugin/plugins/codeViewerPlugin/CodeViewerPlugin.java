@@ -2,14 +2,13 @@ package de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewe
 
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin.tabbedPane.EditorPanel;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.Attribute;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTree.QuestionTreeNode;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.Setting;
 
 public interface CodeViewerPlugin {
 
     public Setting getSetting(Attribute mainAttribute);
 
-    public void init(QuestionTreeNode selected);
+    public void init(Attribute selected);
 
     public void onFrameCreate(CodeViewer viewer);
 

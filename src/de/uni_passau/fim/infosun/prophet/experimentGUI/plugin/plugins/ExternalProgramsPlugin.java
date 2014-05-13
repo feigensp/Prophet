@@ -14,7 +14,6 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.util.VerticalLayout;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.Attribute;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTree.QuestionTreeNode;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.PluginSettings;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.Setting;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.components.SettingsTextArea;
@@ -64,11 +63,12 @@ public class ExternalProgramsPlugin extends Thread implements Plugin {
 
     @Override
     public void enterNode(QTreeNode node) {
-        if (node.isCategory()) {
-            enabled = Boolean.parseBoolean(node.getAttributeValue(KEY));
+
+        if (node.getType() == CATEGORY) {
+            enabled = Boolean.parseBoolean(node.getAttribute(KEY).getValue());
             if (enabled) {
-                QuestionTreeNode attributes = node.getAttribute(KEY);
-                String[] commands = attributes.getAttributeValue(KEY_COMMANDS).split("\n");
+                Attribute attributes = node.getAttribute(KEY);
+                String[] commands = attributes.getSubAttribute(KEY_COMMANDS).getValue().split("\n");
                 createWindow();
                 for (int i = 0; i < commands.length; i++) {
                     if (!commands[i].equals("")) {
@@ -140,7 +140,7 @@ public class ExternalProgramsPlugin extends Thread implements Plugin {
             location = frame.getLocation();
             frame.setVisible(false);
             frame.dispose();
-            if (node.isCategory()) {
+            if (node.getType() == CATEGORY) {
                 for (Process process : processes) {
                     if (process != null) {
                         process.destroy();

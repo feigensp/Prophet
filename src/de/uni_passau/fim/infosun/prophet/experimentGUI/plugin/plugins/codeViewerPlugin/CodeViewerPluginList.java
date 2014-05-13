@@ -7,7 +7,6 @@ import java.util.stream.Collectors;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin.codeViewerPlugins.*;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin.tabbedPane.EditorPanel;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.Attribute;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTree.QuestionTreeNode;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.Setting;
 
 public class CodeViewerPluginList {
@@ -38,7 +37,7 @@ public class CodeViewerPluginList {
         return plugins.stream().map(p -> p.getSetting(attribute)).filter(s -> s != null).collect(Collectors.toList());
     }
 
-    public static void init(QuestionTreeNode selected) {
+    public static void init(Attribute selected) {
         for (CodeViewerPlugin plugin : plugins) {
             try {
                 plugin.init(selected);

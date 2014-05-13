@@ -16,6 +16,8 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.components.
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.components.SettingsFilePathChooser;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.components.SettingsTextArea;
 
+import static de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode.Type.EXPERIMENT;
+
 public class ValidSubjectCodePlugin implements Plugin {
 
     private static final String KEY = "valid_code";
@@ -26,7 +28,7 @@ public class ValidSubjectCodePlugin implements Plugin {
     @Override
     public Setting getSetting(QTreeNode node) {
 
-        if (node.getType() != QTreeNode.Type.EXPERIMENT) {
+        if (node.getType() != EXPERIMENT) {
             return null;
         }
 
@@ -64,16 +66,16 @@ public class ValidSubjectCodePlugin implements Plugin {
 
     @Override
     public String denyNextNode(QTreeNode currentNode) {
-        if (!currentNode.isExperiment()) {
+        if (currentNode.getType() != EXPERIMENT ) {
             return null;
-        } else if (Boolean.parseBoolean(currentNode.getAttributeValue(KEY))) {
+        } else if (Boolean.parseBoolean(currentNode.getAttribute(KEY).getValue())) {
             String subjectCode = currentNode.getAnswer(Constants.KEY_SUBJECT);
-            boolean ignoreCase = Boolean.parseBoolean(currentNode.getAttribute(KEY).getAttributeValue(KEY_IGNORE_CASE));
+            boolean ignoreCase = Boolean.parseBoolean(currentNode.getAttribute(KEY).getSubAttribute(KEY_IGNORE_CASE).getValue());
             if (ignoreCase) {
                 subjectCode = subjectCode.toLowerCase();
             }
 
-            String codes = currentNode.getAttribute(KEY).getAttributeValue(KEY_CODES);
+            String codes = currentNode.getAttribute(KEY).getSubAttribute(KEY_CODES).getValue();
             if (codes != null && !codes.equals("")) {
                 Scanner sc = new Scanner(codes);
                 while (sc.hasNext()) {
@@ -87,7 +89,7 @@ public class ValidSubjectCodePlugin implements Plugin {
                 }
             }
 
-            String path = currentNode.getAttribute(KEY).getAttributeValue(KEY_PATH);
+            String path = currentNode.getAttribute(KEY).getSubAttribute(KEY_PATH).getValue();
             if (path != null && !path.equals("")) {
                 try {
                     Scanner sc = new Scanner(new FileReader(path));

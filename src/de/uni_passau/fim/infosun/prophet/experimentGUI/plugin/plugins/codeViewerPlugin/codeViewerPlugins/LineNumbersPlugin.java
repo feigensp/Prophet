@@ -5,14 +5,13 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewer
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin.tabbedPane.EditorPanel;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.Attribute;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTree.QuestionTreeNode;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.Setting;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.components.SettingsCheckBox;
 
 public class LineNumbersPlugin implements CodeViewerPlugin {
 
     public static final String KEY = "linenumbers";
-    private QuestionTreeNode selected;
+    private Attribute selected;
 
     @Override
     public Setting getSetting(Attribute mainAttribute) {
@@ -25,7 +24,7 @@ public class LineNumbersPlugin implements CodeViewerPlugin {
     }
 
     @Override
-    public void init(QuestionTreeNode selected) {
+    public void init(Attribute selected) {
         this.selected = selected;
     }
 
@@ -35,7 +34,7 @@ public class LineNumbersPlugin implements CodeViewerPlugin {
 
     @Override
     public void onEditorPanelCreate(EditorPanel editorPanel) {
-        boolean lineNumbers = Boolean.parseBoolean(selected.getAttributeValue("linenumbers_default"));
+        boolean lineNumbers = Boolean.parseBoolean(selected.getSubAttribute("linenumbers_default").getValue());
         editorPanel.getScrollPane().setLineNumbersEnabled(lineNumbers);
     }
 
@@ -45,7 +44,5 @@ public class LineNumbersPlugin implements CodeViewerPlugin {
 
     @Override
     public void onEditorPanelClose(EditorPanel editorPanel) {
-        // TODO Auto-generated method stub
-
     }
 }

@@ -24,7 +24,6 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewer
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin.tabbedPane.EditorPanel;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.Attribute;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTree.QuestionTreeNode;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.PluginSettings;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.Setting;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.components.SettingsTextField;
@@ -77,12 +76,12 @@ public class ShowCIDECodePlugin implements CodeViewerPlugin {
     }
 
     @Override
-    public void init(QuestionTreeNode selected) {
-        enabled = Boolean.parseBoolean(selected.getAttributeValue(KEY));
+    public void init(Attribute selected) {
+        enabled = Boolean.parseBoolean(selected.getSubAttribute(KEY).getValue());
         if (enabled) {
             try {
-                QuestionTreeNode attributes = selected.getAttribute(KEY);
-                path = attributes.getAttributeValue(CIDE_INFO_PATH)
+                Attribute attributes = selected.getSubAttribute(KEY);
+                path = attributes.getSubAttribute(CIDE_INFO_PATH).getValue()
                         .replace('/', System.getProperty("file.separator").charAt(0));
                 coloringInfos = loadXMLTree(path);
             } catch (FileNotFoundException e) {
