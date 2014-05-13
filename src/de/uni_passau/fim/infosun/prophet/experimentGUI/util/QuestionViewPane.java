@@ -26,7 +26,9 @@ import javax.swing.text.html.HTMLEditorKit;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.Constants;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentViewer.ExperimentViewer;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTree.QuestionTreeNode;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode;
+
+import static de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode.Type.*;
 
 /**
  * This class shows the html files (questions) creates the navigation and
@@ -34,7 +36,6 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTree.Questio
  *
  * @author Markus K�ppen, Andreas Hasselberg
  */
-@SuppressWarnings("serial")
 public class QuestionViewPane extends JScrollPane {
 
     // constants for the html navigation
@@ -61,7 +62,7 @@ public class QuestionViewPane extends JScrollPane {
     public static final String HEADER_ATTRIBUTE = "header";
 
     private ActionListener actionListener;
-    private QuestionTreeNode questionNode;
+    private QTreeNode questionNode;
     private JTextPane textPane;
 
     private FormView submitButton;
@@ -71,12 +72,9 @@ public class QuestionViewPane extends JScrollPane {
      * With the call of the Constructor the data is loaded and everything is
      * initialized. The first question is showed.
      *
-     * @param path
-     *         path of the xml file with the data
-     * @param cqlp
-     *         the categorieQuestionListsPanel where the overview is shown
+     * @param questionNode
      */
-    public QuestionViewPane(final QuestionTreeNode questionNode) {
+    public QuestionViewPane(final QTreeNode questionNode) {
         this.questionNode = questionNode;
         textPane = new JTextPane();
         this.setViewportView(textPane);
@@ -148,16 +146,16 @@ public class QuestionViewPane extends JScrollPane {
         URL trueBase = ClassLoader.getSystemResource(".");
         ((javax.swing.text.html.HTMLDocument) textPane.getDocument()).setBase(trueBase);
 
-        String questionText = HTML_START + questionNode.getValue() + HTML_DIVIDER;
+        String questionText = HTML_START + questionNode.getHtml() + HTML_DIVIDER;
         boolean questionSwitching = false;
-        if (questionNode.isQuestion()) {
+        if (questionNode.getType() == QUESTION) {
             questionSwitching = Boolean.parseBoolean(
-                    ((QuestionTreeNode) questionNode.getParent()).getAttributeValue("questionswitching"));
+                    questionNode.getParent().getAttribute("questionswitching").getValue());
         }
         if (hasActivePreviousNode(questionNode) && questionSwitching) {
             questionText += FOOTER_BACKWARD;
         }
-        if (questionNode.isExperiment()) {
+        if (questionNode.getType() == EXPERIMENT) {
             questionText += FOOTER_START_EXPERIMENT;
         } else {
             if (hasActiveNextNode(questionNode)) {
@@ -203,25 +201,25 @@ public class QuestionViewPane extends JScrollPane {
         return result;
     }
 
-    private boolean hasActiveNextNode(QuestionTreeNode node) {
-        if (node.isExperiment() || node.isCategory()) {
+    private boolean hasActiveNextNode(QTreeNode node) {
+        if (node.getType() == EXPERIMENT || node.getType() == CATEGORY) {
             if (ExperimentViewer.denyEnterNode(node) || node.getChildCount() == 0) {
                 return false;
             } else {
-                node = (QuestionTreeNode) node.getFirstChild();
+                node = node.getChild(0);
                 return !ExperimentViewer.denyEnterNode(node) || hasActiveNextNode(node);
             }
-        } else if (node.isQuestion()) {
-            node = (QuestionTreeNode) node.getNextSibling();
+        } else if (node.getType() == QUESTION) {
+            node = node.getNextSibling();
             return node != null && (!ExperimentViewer.denyEnterNode(node) || hasActiveNextNode(node));
         } else {
             return false;
         }
     }
 
-    private boolean hasActivePreviousNode(QuestionTreeNode node) {
-        if (node.isQuestion()) {
-            node = (QuestionTreeNode) node.getPreviousSibling();
+    private boolean hasActivePreviousNode(QTreeNode node) {
+        if (node.getType() == QUESTION) {
+            node = node.getPreviousSibling();
             return node != null && (!ExperimentViewer.denyEnterNode(node) || hasActivePreviousNode(node));
         } else {
             return false;

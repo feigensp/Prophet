@@ -3,28 +3,27 @@ package de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewe
 import java.awt.Component;
 import java.io.File;
 import java.util.HashSet;
+import java.util.Set;
 import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
 
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin.CodeViewerPluginList;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin.Recorder;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTree.QuestionTreeNode;
 
 @SuppressWarnings("serial")
 public class EditorTabbedPane extends JTabbedPane {
 
-    private QuestionTreeNode selected;
     private File showDir;
     private Recorder recorder;
-    HashSet<EditorPanel> editorPanels;
+    Set<EditorPanel> editorPanels;
 
-    public EditorTabbedPane(QuestionTreeNode selected, File showDir, Recorder recorder) {
+    public EditorTabbedPane(File showDir, Recorder recorder) {
         super(JTabbedPane.TOP);
-        this.selected = selected;
+
         this.showDir = showDir;
         this.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
-        editorPanels = new HashSet<>();
+        this.editorPanels = new HashSet<>();
         this.recorder = recorder;
     }
 
