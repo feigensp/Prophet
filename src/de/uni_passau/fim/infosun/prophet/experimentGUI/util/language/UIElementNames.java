@@ -30,6 +30,7 @@ public class UIElementNames {
      * String constants for (error) messages
      */
     public static String MESSAGE_FILE_NOT_FOUND = "File not found";
+    public static String MESSAGE_SAVE_ERROR = "Could not save to the file.";
     public static String MESSAGE_ERROR = "Error";
     public static String MESSAGE_REPLACE_FILE = " already exists.\nReplace it?";
     public static String MESSAGE_REPLACE_FILE_TITLE = "Confirm save as";
@@ -230,6 +231,7 @@ public class UIElementNames {
 
         MESSAGE_FILE_NOT_FOUND = labels.getString("MESSAGE_FILE_NOT_FOUND");
         MESSAGE_ERROR = labels.getString("MESSAGE_FILE_NOT_FOUND_TITLE");
+        MESSAGE_SAVE_ERROR = labels.getString("MESSAGE_SAVE_ERROR");
         MESSAGE_REPLACE_FILE = labels.getString("MESSAGE_REPLACE_FILE");
         MESSAGE_REPLACE_FILE_TITLE = labels.getString("MESSAGE_REPLACE_FILE_TITLE");
         MESSAGE_NO_VALID_EXPERIMENT_FILE = labels.getString("MESSAGE_NO_VALID_EXPERIMENT_FILE");

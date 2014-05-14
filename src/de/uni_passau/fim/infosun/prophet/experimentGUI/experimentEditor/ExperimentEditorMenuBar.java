@@ -7,8 +7,10 @@ import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentEditor.tabbedPane.ExperimentEditorTabbedPane;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentEditor.tabbedPane.editorTabs.ContentEditorPanel;
@@ -17,6 +19,7 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNa
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTree;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeModel;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeXMLHandler;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTree.QuestionTreeHTMLHandler;
 
 import static de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode.Type.EXPERIMENT;
@@ -124,6 +127,26 @@ public class ExperimentEditorMenuBar extends JMenuBar {
         enableMenuItems();
     };
 
+    private ActionListener loadActionListener = event -> {
+        JFileChooser fileChooser = new JFileChooser(currentFile == null ? new File(".") : currentFile);
+        fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("Experiment XML", "*.xml"));
+
+        if (fileChooser.showOpenDialog(owner) != JFileChooser.APPROVE_OPTION) {
+            return;
+        }
+        currentFile = fileChooser.getSelectedFile();
+
+        QTreeNode treeRoot = QTreeXMLHandler.loadExperimentXML(currentFile);
+
+        if (treeRoot == null) {
+            JOptionPane.showMessageDialog(owner, UIElementNames.MESSAGE_NO_VALID_EXPERIMENT_FILE);
+            return;
+        }
+
+        qTreeModel.setRoot(treeRoot);
+        owner.setTitle(ExperimentEditor.TITLE + " - " + currentFile.getAbsolutePath());
+        enableMenuItems();
+    };
 //    private class LoadActionListener implements ActionListener {
 //
 //        public void actionPerformed(ActionEvent arg0) {
@@ -148,6 +171,23 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 //            }
 //        }
 //    }
+
+    private ActionListener saveActionListener = event -> {
+
+        if (currentFile != null) {
+            tabbedPane.save();
+
+            try {
+                QTreeXMLHandler.saveExperimentXML((QTreeNode) qTreeModel.getRoot(), currentFile);
+            } catch (IOException e) {
+                JOptionPane.showMessageDialog(owner, UIElementNames.MESSAGE_SAVE_ERROR,
+                        UIElementNames.MESSAGE_ERROR, JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            saveAsMenuItem.doClick();
+        }
+    };
+
 //
 //    private class SaveActionListener implements ActionListener {
 //
@@ -161,7 +201,38 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 //            }
 //        }
 //    }
-//
+
+    private ActionListener saveAsActionListener = event -> {
+      JFileChooser fileChooser = new JFileChooser(currentFile == null ? new File(".") : currentFile);
+
+        if (fileChooser.showSaveDialog(owner) != JFileChooser.APPROVE_OPTION) {
+            return;
+        }
+
+        File chosenFile = fileChooser.getSelectedFile();
+
+        if (chosenFile.exists()) {
+            int option = JOptionPane.showConfirmDialog(owner, chosenFile.getName() + UIElementNames.MESSAGE_REPLACE_FILE,
+                    UIElementNames.MESSAGE_REPLACE_FILE_TITLE, JOptionPane.YES_NO_OPTION);
+
+            if (option == JOptionPane.NO_OPTION) {
+                return;
+            }
+        }
+
+        currentFile = chosenFile;
+
+        try {
+            QTreeXMLHandler.saveExperimentXML((QTreeNode) qTreeModel.getRoot(), currentFile);
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(owner, UIElementNames.MESSAGE_SAVE_ERROR, UIElementNames.MESSAGE_ERROR,
+                    JOptionPane.ERROR_MESSAGE);
+        }
+
+        owner.setTitle(ExperimentEditor.TITLE + " - " + currentFile.getAbsolutePath());
+        enableMenuItems();
+    };
+
 //    private class SaveAsActionListener implements ActionListener {
 //
 //        public void actionPerformed(ActionEvent arg0) {
@@ -307,20 +378,20 @@ public class ExperimentEditorMenuBar extends JMenuBar {
         fileMenu.add(newMenuItem);
         newMenuItem.addActionListener(newActionListener);
 
-//        JMenuItem loadMenuItem = new JMenuItem(UIElementNames.MENU_FILE_OPEN);
-//        loadMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_L, InputEvent.CTRL_MASK));
-//        fileMenu.add(loadMenuItem);
-//        loadMenuItem.addActionListener(new LoadActionListener());
-//
-//        saveMenuItem = new JMenuItem(UIElementNames.MENU_FILE_SAVE);
-//        saveMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_MASK));
-//        fileMenu.add(saveMenuItem);
-//        saveMenuItem.addActionListener(new SaveActionListener());
-//
-//        saveAsMenuItem = new JMenuItem(UIElementNames.MENU_FILE_SAVE_AS);
-//        saveAsMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F12, 0));
-//        fileMenu.add(saveAsMenuItem);
-//        saveAsMenuItem.addActionListener(new SaveAsActionListener());
+        JMenuItem loadMenuItem = new JMenuItem(UIElementNames.MENU_FILE_OPEN);
+        loadMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_L, InputEvent.CTRL_MASK));
+        fileMenu.add(loadMenuItem);
+        loadMenuItem.addActionListener(loadActionListener);
+
+        saveMenuItem = new JMenuItem(UIElementNames.MENU_FILE_SAVE);
+        saveMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_MASK));
+        fileMenu.add(saveMenuItem);
+        saveMenuItem.addActionListener(saveActionListener);
+
+        saveAsMenuItem = new JMenuItem(UIElementNames.MENU_FILE_SAVE_AS);
+        saveAsMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F12, 0));
+        fileMenu.add(saveAsMenuItem);
+        saveAsMenuItem.addActionListener(saveAsActionListener);
 
         fileMenu.addSeparator();
 
@@ -417,8 +488,8 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 //            exportCSVMenuItem.setEnabled(currentFile != null);
 //        }
 
-//        saveMenuItem.setEnabled(treeExists);
-//        saveAsMenuItem.setEnabled(treeExists);
+        saveMenuItem.setEnabled(treeExists);
+        saveAsMenuItem.setEnabled(treeExists);
         nameCheckMenuItem.setEnabled(treeExists);
     }
 }

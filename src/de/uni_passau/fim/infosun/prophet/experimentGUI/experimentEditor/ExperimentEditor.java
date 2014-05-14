@@ -80,6 +80,7 @@ public class ExperimentEditor extends JFrame {
         setTitle(TITLE);
 
         JSplitPane splitPane = new JSplitPane();
+        add(splitPane, BorderLayout.CENTER);
 
         ExperimentEditorTabbedPane tabbedPane = new ExperimentEditorTabbedPane();
         tabbedPane.setBorder(null); // TODO nötig?
@@ -106,8 +107,6 @@ public class ExperimentEditor extends JFrame {
 
         ExperimentEditorMenuBar menuBar = new ExperimentEditorMenuBar(tree, tabbedPane);
         setJMenuBar(menuBar);
-
-        add(splitPane, BorderLayout.CENTER);
     }
 
     private String getPreferredLanguage() {
