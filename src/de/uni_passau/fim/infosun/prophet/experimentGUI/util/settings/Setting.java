@@ -1,5 +1,6 @@
 package de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings;
 
+import java.awt.BorderLayout;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
@@ -28,6 +29,7 @@ public abstract class Setting extends JPanel {
     public Setting(Attribute attribute, String borderDesc) {
         this.attribute = attribute;
 
+        setLayout(new BorderLayout());
         if (borderDesc != null) {
             setBorder(BorderFactory.createTitledBorder(borderDesc));
         }
