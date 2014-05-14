@@ -30,34 +30,41 @@ import static de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNo
 public class SettingsEditorPanel extends ExperimentEditorTab {
 
     private Map<QTreeNode, JScrollPane> scrollPanes = new HashMap<>();
-    private Map<QTreeNode, List<Setting>> settingsComponents = new HashMap<>();
+    private Map<QTreeNode, List<Setting>> settings = new HashMap<>();
     private QTreeNode selected;
 
     /**
      * Constructs a new <code>SettingsEditorPanel</code>.
      */
     public SettingsEditorPanel() {
+        setLayout(new BorderLayout());
         setOpaque(false);
     }
 
     /**
      * Loads the settings and saved options for the specified node into the tab.
      */
-    public void activate(QTreeNode selectedNode) {
+    public void activate(QTreeNode selected) {
 
-        if (selectedNode == null) {
+        if (selected == null) {
             return;
         }
 
-        selected = selectedNode;
+        this.selected = selected;
         this.removeAll();
         this.updateUI();
 
-        JScrollPane scrollPane = scrollPanes.get(selected);
+        JScrollPane scrollPane = scrollPanes.get(this.selected);
 
         if (scrollPane == null) {
             scrollPane = buildOptionScrollPane();
-            scrollPanes.put(selected, scrollPane);
+            scrollPanes.put(this.selected, scrollPane);
+        }
+
+        List<Setting> settingsList = settings.get(selected);
+
+        if (settingsList != null) {
+            settingsList.stream().forEach(Setting::loadValue);
         }
 
         add(scrollPane, BorderLayout.CENTER);
@@ -83,7 +90,7 @@ public class SettingsEditorPanel extends ExperimentEditorTab {
         scrollPane.getVerticalScrollBar().setUnitIncrement(16);
 
         componentList = new LinkedList<>();
-        settingsComponents.put(selected, componentList);
+        settings.put(selected, componentList);
 
         // add the standard options for experiments and categories
         if (selected.getType() == EXPERIMENT) {
@@ -133,7 +140,7 @@ public class SettingsEditorPanel extends ExperimentEditorTab {
             return;
         }
 
-        comps = settingsComponents.get(selected);
+        comps = settings.get(selected);
         if (comps != null) {
             comps.stream().forEach(Setting::saveValue);
         }
