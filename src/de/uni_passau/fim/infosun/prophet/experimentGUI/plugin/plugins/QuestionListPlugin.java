@@ -5,6 +5,7 @@ import java.awt.BorderLayout;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentViewer.ExperimentViewer;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.Plugin;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.questionListPlugin.QuestionList;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.Setting;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.components.SettingsCheckBox;
@@ -25,7 +26,10 @@ public class QuestionListPlugin implements Plugin {
             return null;
         }
 
-        return new SettingsCheckBox(node.getAttribute(KEY), getClass().getSimpleName());
+        Setting setting = new SettingsCheckBox(node.getAttribute(KEY), getClass().getSimpleName());
+        setting.setCaption(UIElementNames.QUESTION_LIST_SHOW_LIST);
+
+        return setting;
     }
 
     @Override
