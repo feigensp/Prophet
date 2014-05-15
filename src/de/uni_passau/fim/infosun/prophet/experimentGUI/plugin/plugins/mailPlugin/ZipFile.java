@@ -10,7 +10,7 @@ import java.util.zip.ZipOutputStream;
 /**
  * this class contains zip methods
  *
- * @author Markus K�ppen, Andreas Hasselberg
+ * @author Markus Köppen, Andreas Hasselberg
  */
 public class ZipFile {
 

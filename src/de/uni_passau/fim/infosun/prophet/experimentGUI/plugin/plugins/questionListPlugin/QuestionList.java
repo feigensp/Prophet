@@ -11,7 +11,7 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode;
  * Creates a panel which consits JList's. The Lists represents categories and
  * every item in the list represents a question
  *
- * @author Markus K�ppen, Andreas Hasselberg
+ * @author Markus Köppen, Andreas Hasselberg
  */
 public class QuestionList extends JScrollPane {
 

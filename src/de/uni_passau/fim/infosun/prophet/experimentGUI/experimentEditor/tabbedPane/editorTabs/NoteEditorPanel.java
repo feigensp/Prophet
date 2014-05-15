@@ -17,7 +17,7 @@ import org.fife.ui.rtextarea.RTextScrollPane;
  * A panel for taking notes for every node in the tree.
  *
  * @author Andreas Hasselberg
- * @author Markus K�ppen
+ * @author Markus Köppen
  */
 @SuppressWarnings("serial")
 public class NoteEditorPanel extends ExperimentEditorTab {

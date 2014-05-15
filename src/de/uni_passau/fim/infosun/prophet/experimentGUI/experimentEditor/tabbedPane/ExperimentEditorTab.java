@@ -8,7 +8,7 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode;
  * Abstract class representing an ExperimentEditorTab used by the ExperimentEditorTabbedPane
  *
  * @author Andreas Hasselberg
- * @author Markus K�ppen
+ * @author Markus Köppen
  */
 public abstract class ExperimentEditorTab extends JPanel {
 

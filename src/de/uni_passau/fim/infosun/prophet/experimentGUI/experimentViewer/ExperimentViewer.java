@@ -29,7 +29,7 @@ import static de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNo
  * This class shows the html files (questions) creates the navigation and
  * navigates everything...
  *
- * @author Markus K�ppen, Andreas Hasselberg
+ * @author Markus Köppen, Andreas Hasselberg
  */
 public class ExperimentViewer extends JFrame {
 

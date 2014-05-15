@@ -2,7 +2,7 @@
 
 
  * Diese Klasse repr�sentiert eine Stoppuhr.
- * @author Markus K�ppen, Andreas Hasselberg
+ * @author Markus Köppen, Andreas Hasselberg
  */
 
 package de.uni_passau.fim.infosun.prophet.experimentGUI.experimentViewer;

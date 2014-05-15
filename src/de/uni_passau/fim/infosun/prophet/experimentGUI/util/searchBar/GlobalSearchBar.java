@@ -23,7 +23,7 @@ import org.fife.ui.rtextarea.SearchEngine;
  * This class adds a JTextPane to a searchbar which is created. With this
  * searchBar the user can search through the text in the JTextPane User
  *
- * @author Robert Futrell, Markus K�ppen, Andreas Hasselberg
+ * @author Robert Futrell, Markus Köppen, Andreas Hasselberg
  */
 
 public class GlobalSearchBar extends JToolBar implements ActionListener {

@@ -4,7 +4,7 @@ package de.uni_passau.fim.infosun.prophet.experimentGUI;
  * Class used to store constants used throughout the code
  *
  * @author Andreas Hasselberg
- * @author Markus K�ppen
+ * @author Markus Köppen
  */
 public class Constants {
 

@@ -19,7 +19,7 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode;
  * experiments usable in the ExperimentViewer
  *
  * @author Andreas Hasselberg
- * @author Markus K�ppen
+ * @author Markus Köppen
  */
 public class ExperimentEditor extends JFrame {
 

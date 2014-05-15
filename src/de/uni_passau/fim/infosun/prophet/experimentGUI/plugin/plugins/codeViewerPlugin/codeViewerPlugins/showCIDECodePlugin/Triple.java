@@ -8,7 +8,7 @@ package de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewe
  * @param <V>
  *         type of the value
  *
- * @author Markus K�ppen, Andreas Hasselberg
+ * @author Markus Köppen, Andreas Hasselberg
  */
 public class Triple<K, V1, V2> {
 

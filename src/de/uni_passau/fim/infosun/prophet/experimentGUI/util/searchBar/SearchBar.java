@@ -5,11 +5,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.Vector;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JOptionPane;
-import javax.swing.JTextField;
-import javax.swing.JToolBar;
+import javax.swing.*;
 
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
@@ -20,7 +16,7 @@ import org.fife.ui.rtextarea.SearchEngine;
  * This class adds a JTextPane to a searchbar which is created. With this
  * searchBar the user can search through the text in the JTextPane User
  *
- * @author Robert Futrell, Markus K�ppen, Andreas Hasselberg
+ * @author Robert Futrell, Markus Köppen, Andreas Hasselberg
  */
 
 public class SearchBar extends JToolBar implements ActionListener {

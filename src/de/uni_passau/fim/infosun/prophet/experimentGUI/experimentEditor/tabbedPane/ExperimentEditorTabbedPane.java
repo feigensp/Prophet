@@ -17,7 +17,7 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode;
  * The right-side tabbed pane of the Experiment Editor
  *
  * @author Andreas Hasselberg
- * @author Markus K�ppen
+ * @author Markus Köppen
  */
 @SuppressWarnings("serial")
 public class ExperimentEditorTabbedPane extends JTabbedPane {

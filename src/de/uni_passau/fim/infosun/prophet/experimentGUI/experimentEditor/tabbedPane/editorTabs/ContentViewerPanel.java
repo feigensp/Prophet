@@ -10,7 +10,7 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode;
  * Preview of the Content entered in the ContentEditorPanel
  *
  * @author Andreas Hasselberg
- * @author Markus K�ppen
+ * @author Markus Köppen
  */
 @SuppressWarnings("serial")
 public class ContentViewerPanel extends ExperimentEditorTab {

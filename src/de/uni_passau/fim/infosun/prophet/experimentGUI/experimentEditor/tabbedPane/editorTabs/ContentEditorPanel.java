@@ -24,7 +24,7 @@ import org.fife.ui.rtextarea.RTextScrollPane;
  * The main tab for editing the content of a node within the ExperimentEditor
  *
  * @author Andreas Hasselberg
- * @author Markus K�ppen
+ * @author Markus Köppen
  */
 @SuppressWarnings("serial")
 public class ContentEditorPanel extends ExperimentEditorTab {

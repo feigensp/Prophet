@@ -16,7 +16,7 @@
  *     contributors may be used to endorse or promote products derived
  *     from this software without specific prior written permission.
  *
- * modified by Markus K�ppen and Andreas Hasselberg
+ * modified by Markus Köppen and Andreas Hasselberg
  */
 package de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin.tabbedPane;
 

@@ -9,7 +9,7 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.Setting;
  * occasions.
  *
  * @author Andreas Hasselberg
- * @author Markus K�ppen
+ * @author Markus Köppen
  */
 public interface Plugin {
 

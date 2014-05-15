@@ -8,7 +8,7 @@ package de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTree;
  * All Childs of the second Level get a SettingDialog and EditorData will save the informations.
  * All nodes will have a unique name.
  *
- * @author Markus K�ppen, Andreas Hasselberg
+ * @author Markus Köppen, Andreas Hasselberg
  */
 
 import java.awt.Point;
@@ -22,11 +22,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Enumeration;
 import java.util.Vector;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JPopupMenu;
-import javax.swing.JScrollPane;
-import javax.swing.JTree;
+import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultTreeModel;
@@ -39,7 +35,7 @@ import javax.swing.tree.TreeSelectionModel;
  * based on the QuestionTreeNode class.
  *
  * @author Andreas Hasselberg
- * @author Markus K�ppen
+ * @author Markus Köppen
  */
 public class QuestionTree extends JScrollPane {
 
