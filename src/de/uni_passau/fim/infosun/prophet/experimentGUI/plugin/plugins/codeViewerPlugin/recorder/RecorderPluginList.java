@@ -13,12 +13,12 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.Setting;
 
 public class RecorderPluginList {
 
+    private static List<RecorderPlugin> plugins = new LinkedList<>();
+
     static {
         add(new ChangePlugin());
         add(new ScrollingPlugin());
     }
-
-    private static List<RecorderPlugin> plugins = new LinkedList<>();
 
     /**
      * Returns the settings for all plugins.

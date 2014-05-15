@@ -17,6 +17,8 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.Setting;
  */
 public class PluginList {
 
+    private static List<Plugin> plugins = new LinkedList<>();
+
     static {
         add(new InactivityPlugin());
         add(new ValidSubjectCodePlugin());
@@ -29,8 +31,6 @@ public class PluginList {
 //		add(new KeyPressedPlugin());
         add(new PHPExportPlugin());
     }
-
-    private static List<Plugin> plugins = new LinkedList<>();
 
     /**
      * @return Vector describing all active plugins

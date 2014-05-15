@@ -11,6 +11,8 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.Setting;
 
 public class CodeViewerPluginList {
 
+    private static List<CodeViewerPlugin> plugins = new LinkedList<>();
+
     static {
         add(new EditAndSavePlugin());
         add(new LineNumbersPlugin());
@@ -19,8 +21,6 @@ public class CodeViewerPluginList {
 //		add(new ShowCIDECodePlugin());
         add(new OpenedFromStartPlugin());
     }
-
-    private static List<CodeViewerPlugin> plugins = new LinkedList<>();
 
     public static void add(CodeViewerPlugin plugin) {
         plugins.add(plugin);
