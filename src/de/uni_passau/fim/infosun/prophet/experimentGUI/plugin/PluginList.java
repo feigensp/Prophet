@@ -10,10 +10,12 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.Setting;
 
 /**
- * Class to store active plugins, allows calls to all plugins within one line of code.
+ * A <code>Plugin</code> repository. Allows adding and removing <code>Plugin</code>s as well as calling the methods
+ * of the <code>Plugin</code> interface on all currently active <code>Plugin</code>s.
  *
+ * @author Georg Seibt
  * @author Andreas Hasselberg
- * @author Markus K�ppen
+ * @author Markus Köppen
  */
 public class PluginList {
 
@@ -28,35 +30,34 @@ public class PluginList {
         add(new MaxTimePlugin());
         add(new ExternalProgramsPlugin());
         add(new AnswerRequiredPlugin());
-//		add(new KeyPressedPlugin());
         add(new PHPExportPlugin());
     }
 
     /**
-     * @return Vector describing all active plugins
+     * Returns all currently active <code>Plugin</code>s.
+     *
+     * @return the list of plugins
      */
     public static List<Plugin> getPlugins() {
         return plugins;
     }
 
     /**
-     * Adds and activates a plugin
+     * Adds a <code>Plugin</code> to the currently active plugins.
      *
      * @param plugin
-     *         Plugin to be added and activated
+     *         the plugin to be added
      */
     public static void add(Plugin plugin) {
         plugins.add(plugin);
     }
 
     /**
-     * Removes and deactives a plugin
+     * Removes a <code>Plugin</code> from the currently active plugins.
      *
      * @param plugin
-     *         Plugin to be deactivated
-     *
-     * @return <b>true</b> if a plugin is removed<br>
-     * <b>false</b> if it wasn't active
+     *         the plugin to be removed
+     *@return true iff the <code>Plugin</code> was active and has been removed
      */
     public static boolean remove(Plugin plugin) {
         return plugins.remove(plugin);
@@ -73,13 +74,15 @@ public class PluginList {
     }
 
     /**
-     * Calls the experimentViewerRun() function of all plugins at once
+     * Calls {@link Plugin#experimentViewerRun(ExperimentViewer)} of all currently active <code>Plugin</code>s with
+     * the given <code>ExperimentViewer</code>.
      *
      * @param experimentViewer
-     *         ExperimentViewer that has been started
+     *         the <code>ExperimentViewer</code> that has been started
      */
     public static void experimentViewerRun(ExperimentViewer experimentViewer) {
         for (Plugin plugin : plugins) {
+
             try {
                 plugin.experimentViewerRun(experimentViewer);
             } catch (Exception e) {
@@ -89,12 +92,13 @@ public class PluginList {
     }
 
     /**
-     * Calls the denyEnterNode() function for all plugins at once
+     * Calls {@link Plugin#experimentViewerRun(ExperimentViewer)} of all currently active <code>Plugin</code>s with
+     * the given <code>QTreeNode</code>.
      *
      * @param node
-     *         The node to be entered
+     *         the node to be entered
      *
-     * @return <b>true</b> if the node may be entered<br/>
+     * @return <b>true</b> if the node may be entered<br/> //TODO suspect its the other way around.. check this
      * <b>false</b> if any plugin denies the entrance
      */
     public static boolean denyEnterNode(QTreeNode node) {
@@ -111,7 +115,8 @@ public class PluginList {
     }
 
     /**
-     * Calls the enterNode() function for all plugins at once
+     * Calls {@link Plugin#enterNode(QTreeNode)} of all currently active <code>Plugin</code>s with the given
+     * <code>QTreeNode</code>.
      *
      * @param node
      *         the node to be entered
@@ -127,17 +132,19 @@ public class PluginList {
     }
 
     /**
-     * Calls the denyExitNode() for all plugins at once.
+     * Calls {@link Plugin#denyNextNode(QTreeNode)} of all currently active <code>Plugin</code>s with the given
+     * <code>QTreeNode</code>.
      *
      * @param currentNode
      *         the node to be exited
      *
-     * @return The resulting String from the first plugin denying exiting the node,
+     * @return the resulting <code>String</code> from the first plugin denying exiting the node,
      * an empty String if a plugin returned an empty String and no real messages were returned,
      * null if all plugins allow exiting the node
      */
     public static String denyNextNode(QTreeNode currentNode) {
         String result = null;
+
         for (Plugin plugin : plugins) {
             try {
                 String ret = plugin.denyNextNode(currentNode);
@@ -151,11 +158,13 @@ public class PluginList {
                 e.printStackTrace();
             }
         }
+
         return result;
     }
 
     /**
-     * Calls the exitNode() function for all plugins at once
+     * Calls {@link Plugin#exitNode(QTreeNode)} of all currently active <code>Plugin</code>s with the given
+     * <code>QTreeNode</code>.
      *
      * @param node
      *         the node to be exited
@@ -171,7 +180,7 @@ public class PluginList {
     }
 
     /**
-     * Calls the finishExperiment() function for all plugins at once
+     * Calls {@link Plugin#exitNode(QTreeNode)} of all currently active <code>Plugin</code>s.
      *
      * @return The finishing messages of all plugins in HTML coding, with an own p-tag for every plugin.
      */
