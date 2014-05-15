@@ -144,10 +144,10 @@ public class MaxTimePlugin implements Plugin {
                 subSetting.setCaption(UIElementNames.MENU_TAB_SETTINGS_MAX_TIME_EXPERIMENT);
                 break;
             case CATEGORY:
-                subSetting.setCaption(UIElementNames.MENU_TAB_SETTINGS_MAX_TIME_EXPERIMENT);
+                subSetting.setCaption(UIElementNames.MENU_TAB_SETTINGS_MAX_TIME_CATEGORY);
                 break;
             case QUESTION:
-                subSetting.setCaption(UIElementNames.MENU_TAB_SETTINGS_MAX_TIME_EXPERIMENT);
+                subSetting.setCaption(UIElementNames.MENU_TAB_SETTINGS_MAX_TIME_QUESTION);
                 break;
         }
         result.addSetting(subSetting);
