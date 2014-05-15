@@ -1,8 +1,6 @@
 package de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin.codeViewerPlugins;
 
 import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.JMenuItem;
@@ -105,13 +103,9 @@ public class SearchBarPlugin implements CodeViewerPlugin {
                 JMenuItem findGlobalMenuItem = new JMenuItem(UIElementNames.SEARCH_BAR_MENU_GLOBAL_SEARCH);
                 findGlobalMenuItem
                         .setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_H, java.awt.Event.CTRL_MASK));
-                findGlobalMenuItem.addActionListener(new ActionListener() {
-
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        globalSearchBar.setVisible(true);
-                        globalSearchBar.grabFocus();
-                    }
+                findGlobalMenuItem.addActionListener(event -> {
+                    globalSearchBar.setVisible(true);
+                    globalSearchBar.grabFocus();
                 });
                 viewer.addMenuItemToEditMenu(findGlobalMenuItem);
             }

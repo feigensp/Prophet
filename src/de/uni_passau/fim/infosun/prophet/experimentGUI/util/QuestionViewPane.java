@@ -14,7 +14,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 import javax.swing.event.HyperlinkEvent;
-import javax.swing.event.HyperlinkListener;
 import javax.swing.text.Element;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.View;
@@ -117,28 +116,25 @@ public class QuestionViewPane extends JScrollPane {
             }
         });
 
-        textPane.addHyperlinkListener(new HyperlinkListener() {
-
-            public void hyperlinkUpdate(HyperlinkEvent event) {
-                if (event.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-                    Desktop desktop = null;
-                    if (Desktop.isDesktopSupported()) {
-                        desktop = Desktop.getDesktop();
-                        if (desktop.isSupported(Desktop.Action.BROWSE)) {
-                            try {
-                                desktop.browse(event.getURL().toURI());
-                            } catch (IOException e) {
-                                JOptionPane.showMessageDialog(textPane, UIElementNames.MESSAGE_COULD_NOT_START_BROWSER);
-                            } catch (URISyntaxException e) {
-                                JOptionPane.showMessageDialog(textPane, UIElementNames.MESSAGE_INVALID_URL);
-                            }
-                        } else {
-                            JOptionPane.showMessageDialog(textPane,
-                                    UIElementNames.MESSAGE_COULD_NOT_OPEN_STANDARD_BROWSER);
+        textPane.addHyperlinkListener(event -> {
+            if (event.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+                Desktop desktop = null;
+                if (Desktop.isDesktopSupported()) {
+                    desktop = Desktop.getDesktop();
+                    if (desktop.isSupported(Desktop.Action.BROWSE)) {
+                        try {
+                            desktop.browse(event.getURL().toURI());
+                        } catch (IOException e) {
+                            JOptionPane.showMessageDialog(textPane, UIElementNames.MESSAGE_COULD_NOT_START_BROWSER);
+                        } catch (URISyntaxException e) {
+                            JOptionPane.showMessageDialog(textPane, UIElementNames.MESSAGE_INVALID_URL);
                         }
                     } else {
-                        JOptionPane.showMessageDialog(textPane, UIElementNames.MESSAGE_COULD_NOT_OPEN_STANDARD_BROWSER);
+                        JOptionPane.showMessageDialog(textPane,
+                                UIElementNames.MESSAGE_COULD_NOT_OPEN_STANDARD_BROWSER);
                     }
+                } else {
+                    JOptionPane.showMessageDialog(textPane, UIElementNames.MESSAGE_COULD_NOT_OPEN_STANDARD_BROWSER);
                 }
             }
         });

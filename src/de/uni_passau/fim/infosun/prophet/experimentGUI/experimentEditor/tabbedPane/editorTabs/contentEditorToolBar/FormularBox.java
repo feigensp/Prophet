@@ -28,9 +28,7 @@ public class FormularBox extends JComboBox implements ActionListener {
         forms.add(UIElementNames.HTML_CHECK_BOX); // index 6
 
         this.addItem(UIElementNames.MENU_TAB_EDITOR_FORMS);
-        for (String form : forms) {
-            this.addItem(form);
-        }
+        forms.forEach(this::addItem);
         this.addActionListener(this);
     }
 

@@ -40,12 +40,8 @@ public class FileTreeNode extends DefaultMutableTreeNode {
                     files.add(new FileTreeNode(f, this.path, false));
                 }
             }
-            for (FileTreeNode newDir : dirs) {
-                this.add(newDir);
-            }
-            for (FileTreeNode newFile : files) {
-                this.add(newFile);
-            }
+            dirs.forEach(this::add);
+            files.forEach(this::add);
         }
     }
 

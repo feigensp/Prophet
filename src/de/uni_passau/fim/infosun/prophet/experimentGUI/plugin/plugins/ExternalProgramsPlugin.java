@@ -2,8 +2,6 @@ package de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins;
 
 import java.awt.BorderLayout;
 import java.awt.Point;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.ArrayList;
 import javax.swing.*;
@@ -103,27 +101,24 @@ public class ExternalProgramsPlugin extends Thread implements Plugin {
     private void addButton(String caption, final String command, final int id) {
         processes.add(id, null);
         JButton button = new JButton(caption);
-        button.addActionListener(new ActionListener() {
-
-            public void actionPerformed(ActionEvent e) {
-                Process p = processes.get(id);
-                try {
-                    if (p == null) {
+        button.addActionListener(event -> {
+            Process p = processes.get(id);
+            try {
+                if (p == null) {
+                    p = Runtime.getRuntime().exec(command);
+                    processes.add(id, p);
+                } else {
+                    try {
+                        p.exitValue();
                         p = Runtime.getRuntime().exec(command);
                         processes.add(id, p);
-                    } else {
-                        try {
-                            p.exitValue();
-                            p = Runtime.getRuntime().exec(command);
-                            processes.add(id, p);
-                        } catch (Exception e1) {
-                            JOptionPane.showMessageDialog(null, UIElementNames.MESSAGE_ONLY_ONE_INSTANCE);
-                        }
+                    } catch (Exception e1) {
+                        JOptionPane.showMessageDialog(null, UIElementNames.MESSAGE_ONLY_ONE_INSTANCE);
                     }
-                } catch (IOException e1) {
-                    JOptionPane.showMessageDialog(null,
-                            UIElementNames.MESSAGE_COULD_NOT_START_PROGRAM + ": " + e1.getMessage());
                 }
+            } catch (IOException e1) {
+                JOptionPane.showMessageDialog(null,
+                        UIElementNames.MESSAGE_COULD_NOT_START_PROGRAM + ": " + e1.getMessage());
             }
         });
         panel.add(button);
@@ -141,11 +136,7 @@ public class ExternalProgramsPlugin extends Thread implements Plugin {
             frame.setVisible(false);
             frame.dispose();
             if (node.getType() == CATEGORY) {
-                for (Process process : processes) {
-                    if (process != null) {
-                        process.destroy();
-                    }
-                }
+                processes.stream().filter(process -> process != null).forEach(Process::destroy);
                 processes.clear();
             }
         }

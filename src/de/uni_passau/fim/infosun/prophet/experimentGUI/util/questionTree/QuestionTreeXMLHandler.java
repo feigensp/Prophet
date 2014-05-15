@@ -258,10 +258,7 @@ public class QuestionTreeXMLHandler {
         contentElements.add(root.getAttributeValue(ATTRIBUTE_TIME));
         if ((collectionNode = root.getChild(TYPE_ANSWERS)) != null) {
             answers = collectionNode.getChildren(TYPE_ANSWER);
-
-            for (Element answer : answers) {
-                contentElements.add(answer.getAttributeValue(ATTRIBUTE_VALUE));
-            }
+            answers.forEach(answer -> contentElements.add(answer.getAttributeValue(ATTRIBUTE_VALUE)));
         }
 
         if ((collectionNode = root.getChild(TYPE_CHILDREN)) != null) {
@@ -276,9 +273,7 @@ public class QuestionTreeXMLHandler {
 
                     // all answers in the category
                     answers = collectionNode.getChildren(TYPE_ANSWER);
-                    for (Element answer : answers) {
-                        contentElements.add(answer.getAttributeValue(ATTRIBUTE_VALUE));
-                    }
+                    answers.forEach(answer -> contentElements.add(answer.getAttributeValue(ATTRIBUTE_VALUE)));
                 }
 
                 if ((collectionNode = category.getChild(TYPE_CHILDREN)) != null) {
@@ -294,9 +289,7 @@ public class QuestionTreeXMLHandler {
 
                             // all answers in the question
                             answers = collectionNode.getChildren(TYPE_ANSWER);
-                            for (Element answer : answers) {
-                                contentElements.add(answer.getAttributeValue(ATTRIBUTE_VALUE));
-                            }
+                            answers.forEach(answer -> contentElements.add(answer.getAttributeValue(ATTRIBUTE_VALUE)));
                         }
                     }
                 }

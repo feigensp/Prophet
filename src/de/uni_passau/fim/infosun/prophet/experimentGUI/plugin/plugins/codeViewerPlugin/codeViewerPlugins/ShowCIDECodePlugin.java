@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.stream.Collectors;
 import javax.swing.JColorChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -154,9 +155,7 @@ public class ShowCIDECodePlugin implements CodeViewerPlugin {
         HashSet<String> features = new HashSet<>();
         while (colorInfosIterator.hasNext()) {
             for (Triple<Integer, Integer, ArrayList<String>> fragmentInfos : colorInfosIterator.next()) {
-                for (String featureName : fragmentInfos.getValue2()) {
-                    features.add(featureName);
-                }
+                features.addAll(fragmentInfos.getValue2().stream().collect(Collectors.toList()));
             }
         }
 
@@ -283,7 +282,7 @@ public class ShowCIDECodePlugin implements CodeViewerPlugin {
                         }
                     }
                     if (infos.get(path) == null) {
-                        infos.put(path, new ArrayList<Triple<Integer, Integer, ArrayList<String>>>());
+                        infos.put(path, new ArrayList<>());
                     }
                     infos.get(path).add(new Triple<>(offset, length, features));
                 }

@@ -39,9 +39,7 @@ public class PluginSettings extends Setting {
 
         if (enableable) {
             enableCheckBox = new JCheckBox();
-            enableCheckBox.addActionListener(action -> {
-                settingsPanel.setVisible(enableCheckBox.isSelected());
-            });
+            enableCheckBox.addActionListener(action -> settingsPanel.setVisible(enableCheckBox.isSelected()));
             add(enableCheckBox, BorderLayout.NORTH);
         }
     }

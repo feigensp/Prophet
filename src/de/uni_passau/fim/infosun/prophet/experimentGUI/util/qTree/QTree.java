@@ -5,19 +5,10 @@ import java.awt.dnd.DropTarget;
 import java.awt.dnd.DropTargetAdapter;
 import java.awt.dnd.DropTargetDragEvent;
 import java.awt.dnd.DropTargetDropEvent;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.util.ResourceBundle;
 import java.util.TooManyListenersException;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JPopupMenu;
-import javax.swing.JTree;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
@@ -220,47 +211,43 @@ public class QTree extends JTree {
         treePopup = new JPopupMenu();
 
         // action listener for handling all actions coming from the popup menus
-        popupListener = new ActionListener() {
+        popupListener = event -> {
+            QTreeNode selNode = null;
+            TreePath selPath = getSelectionPath();
 
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                QTreeNode selNode = null;
-                TreePath selPath = getSelectionPath();
+            if (selPath != null) {
+                selNode = (QTreeNode) selPath.getLastPathComponent();
+            }
 
-                if (selPath != null) {
-                    selNode = (QTreeNode) selPath.getLastPathComponent();
+            switch (event.getActionCommand()) {
+                case ACTION_NEW_CATEGORY: {
+                    newCategory(selNode);
                 }
-
-                switch (e.getActionCommand()) {
-                    case ACTION_NEW_CATEGORY: {
-                        newCategory(selNode);
-                    }
-                    break;
-                    case ACTION_NEW_QUESTION: {
-                        newQuestion(selNode);
-                    }
-                    break;
-                    case ACTION_NEW_EXPERIMENT: {
-                        newExperiment();
-                    }
-                    break;
-                    case ACTION_RENAME: {
-                        rename(selNode);
-                    }
-                    break;
-                    case ACTION_REMOVE: {
-                        remove(selNode);
-                    }
-                    break;
-                    case ACTION_COPY: {
-                        copy(selNode);
-                    }
-                    break;
-                    case ACTION_PASTE: {
-                        paste(selNode);
-                    }
-                    break;
+                break;
+                case ACTION_NEW_QUESTION: {
+                    newQuestion(selNode);
                 }
+                break;
+                case ACTION_NEW_EXPERIMENT: {
+                    newExperiment();
+                }
+                break;
+                case ACTION_RENAME: {
+                    rename(selNode);
+                }
+                break;
+                case ACTION_REMOVE: {
+                    remove(selNode);
+                }
+                break;
+                case ACTION_COPY: {
+                    copy(selNode);
+                }
+                break;
+                case ACTION_PASTE: {
+                    paste(selNode);
+                }
+                break;
             }
         };
 

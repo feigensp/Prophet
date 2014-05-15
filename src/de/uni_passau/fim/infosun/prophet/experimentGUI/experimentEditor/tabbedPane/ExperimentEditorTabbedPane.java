@@ -3,8 +3,6 @@ package de.uni_passau.fim.infosun.prophet.experimentGUI.experimentEditor.tabbedP
 import java.awt.Component;
 import javax.swing.JComponent;
 import javax.swing.JTabbedPane;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentEditor.tabbedPane.editorTabs.ContentEditorPanel;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentEditor.tabbedPane.editorTabs.ContentViewerPanel;
@@ -35,15 +33,12 @@ public class ExperimentEditorTabbedPane extends JTabbedPane {
      * Constructor
      */
     public ExperimentEditorTabbedPane() {
-        addChangeListener(new ChangeListener() {
-
-            public void stateChanged(ChangeEvent arg0) {
-                if (currentTab != null) {
-                    save();
-                }
-                activate();
-                currentTab = (ExperimentEditorTab) getSelectedComponent();
+        addChangeListener(event -> {
+            if (currentTab != null) {
+                save();
             }
+            activate();
+            currentTab = (ExperimentEditorTab) getSelectedComponent();
         });
 
         addEditorPanel(UIElementNames.MENU_TAB_EDITOR, new ContentEditorPanel());

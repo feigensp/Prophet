@@ -13,7 +13,9 @@ import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;
 
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin.CodeViewer;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin.fileTree.*;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin.fileTree.FileTree;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin.fileTree.FileTreeModel;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin.fileTree.FileTreeNode;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rtextarea.SearchContext;
@@ -89,13 +91,7 @@ public class GlobalSearchBar extends JToolBar implements ActionListener {
         forwardButton.addActionListener(this);
 
         tree = new FileTree(null);
-        tree.addFileListener(new FileListener() {
-
-            @Override
-            public void fileEventOccured(FileEvent e) {
-                viewer.getTabbedPane().openFile(e.getFilePath());
-            }
-        });
+        tree.addFileListener(event -> viewer.getTabbedPane().openFile(event.getFilePath()));
         this.file = file;
 
         northPanel.add(forwardButton);

@@ -1,7 +1,5 @@
 package de.uni_passau.fim.infosun.prophet.experimentGUI.experimentEditor.tabbedPane.editorTabs.contentEditorToolBar;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.File;
@@ -29,13 +27,10 @@ public class MacroBox extends JComboBox {
         macros = new ArrayList<>();
         textPane = textP;
         addItem(UIElementNames.MENU_TAB_EDITOR_MACROS);
-        addActionListener(new ActionListener() {
-
-            public void actionPerformed(ActionEvent e) {
-                if (getSelectedIndex() != 0) {
-                    useMacro(macros.get(getSelectedIndex() - 1));
-                    setSelectedIndex(0);
-                }
+        addActionListener(event -> {
+            if (getSelectedIndex() != 0) {
+                useMacro(macros.get(getSelectedIndex() - 1));
+                setSelectedIndex(0);
             }
         });
         textPane.addKeyListener(new KeyAdapter() {

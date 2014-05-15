@@ -23,8 +23,6 @@ import java.awt.event.MouseEvent;
 import java.util.Enumeration;
 import java.util.Vector;
 import javax.swing.*;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
@@ -150,14 +148,11 @@ public class QuestionTree extends JScrollPane {
                 maybeShowPopup(e);
             }
         });
-        tree.addTreeSelectionListener(new TreeSelectionListener() {
-
-            public void valueChanged(TreeSelectionEvent tse) {
-                TreePath selPath = tse.getPath();
-                if (selPath != null) {
-                    selected = (QuestionTreeNode) selPath.getLastPathComponent();
-                    fireEvent(selected);
-                }
+        tree.addTreeSelectionListener(tse -> {
+            TreePath selPath = tse.getPath();
+            if (selPath != null) {
+                selected = (QuestionTreeNode) selPath.getLastPathComponent();
+                fireEvent(selected);
             }
         });
 
