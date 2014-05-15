@@ -1,37 +1,36 @@
 package de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin.codeViewerPlugins.showCIDECodePlugin;
 
 /**
- * This class represents a generic data structure version of a pair
+ * A triple composed of a key and two values.
  *
- * @param <K>
- *         type of the key
- * @param <V>
- *         type of the value
+ * @param <K> the type of the key
+ * @param <V1> the type of the first value
+ * @param <V2> the type of the second value
  *
  * @author Markus Köppen, Andreas Hasselberg
  */
 public class Triple<K, V1, V2> {
 
-    K key;
-    V1 value1;
-    V2 value2;
+    private K key;
+    private V1 value1;
+    private V2 value2;
 
     /**
-     * Constructor which initialize key and value with null
+     * Constructs a new <code>Triple</code> initialising the key and both values with <code>null</code>.
      */
     public Triple() {
-        key = null;
-        value1 = null;
-        value2 = null;
+        this(null, null, null);
     }
 
     /**
-     * Constructor which initialize key and value with specific content
+     * Constructs a new <code>Triple</code> initialising the key and both values with the given parameters.
      *
      * @param key
-     *         value of the key
-     * @param value
-     *         value of the value
+     *         the value for the key
+     * @param value1
+     *         the first value
+     * @param value2
+     *         the second value
      */
     public Triple(K key, V1 value1, V2 value2) {
         this.key = key;
@@ -40,55 +39,61 @@ public class Triple<K, V1, V2> {
     }
 
     /**
-     * returns a String representation of the pair
-     */
-    public String toString() {
-        return key.toString() + ":" + value1.toString() + ":" + value2.toString();
-    }
-
-    /**
-     * returns the key
+     * Gets the key.
      *
-     * @return key
+     * @return the key
      */
     public K getKey() {
         return key;
     }
 
     /**
-     * sets the key
+     * Sets the key.
      *
-     * @param key
-     *         new key
+     * @param key the new key
      */
     public void setKey(K key) {
         this.key = key;
     }
 
     /**
-     * returns the value
+     * Gets the first value.
      *
-     * @return value
+     * @return the first value
      */
     public V1 getValue1() {
         return value1;
     }
 
-    public V2 getValue2() {
-        return value2;
-    }
-
     /**
-     * sets the value
+     * Sets the first value.
      *
-     * @param value
-     *         new value
+     * @param value1 the new first value
      */
     public void setValue1(V1 value1) {
         this.value1 = value1;
     }
 
+    /**
+     * Gets the second value.
+     *
+     * @return the second value
+     */
+    public V2 getValue2() {
+        return value2;
+    }
+
+    /**
+     * Sets the second value.
+     *
+     * @param value2 the new second value
+     */
     public void setValue2(V2 value2) {
         this.value2 = value2;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("(%s, %s, %s)", key.toString(), value1.toString(), value2.toString());
     }
 }
