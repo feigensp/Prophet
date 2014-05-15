@@ -734,13 +734,14 @@ public class QuestionTreeXMLHandler {
             header.append("\"expCode\";\"probCode\"");
 
             for (Pair<QuestionTreeNode, ArrayList<Pair<String, String>>> questionInfo : formInfo) {
-                header.append(";\"" + questionInfo.getKey().getName() + "::time\"");
+                header.append(";\"").append(questionInfo.getKey().getName()).append("::time\"");
                 ArrayList<Pair<String, String>> questionForms = questionInfo.getValue();
 
                 for (Pair<String, String> questionForm : questionForms) {
                     String formName = questionForm.getKey();
                     if (formName != null) {
-                        header.append(";\"" + questionInfo.getKey().getName() + "::" + formName + "\"");
+                        header.append(";\"").append(questionInfo.getKey().getName()).append("::").append(formName)
+                                .append("\"");
                     }
                 }
             }
@@ -749,18 +750,19 @@ public class QuestionTreeXMLHandler {
             // Daten schreiben
             for (QuestionTreeNode currentNode : answerNodes) {
                 int nodeIndex = 0;
-                line.append("\"" + experimentCode.replaceAll("\"", "\"\"") + "\"");
+                line.append("\"").append(experimentCode.replaceAll("\"", "\"\"")).append("\"");
 
                 //probCode
                 if (currentNode.getAnswer(Constants.KEY_SUBJECT) != null) {
-                    line.append(";\"" + currentNode.getAnswer(Constants.KEY_SUBJECT).replaceAll("\"", "\"\"") + "\"");
+                    line.append(";\"").append(currentNode.getAnswer(Constants.KEY_SUBJECT).replaceAll("\"", "\"\""))
+                            .append("\"");
                 } else {
                     line.append(";\"\"");
                 }
 
                 while (currentNode != null) {
                     // Times
-                    line.append(";\"" + currentNode.getAttributeValue(ATTRIBUTE_TIME) + "\"");
+                    line.append(";\"").append(currentNode.getAttributeValue(ATTRIBUTE_TIME)).append("\"");
 
                     // Answers
                     ArrayList<Pair<String, String>> questionForms = formInfo.get(nodeIndex).getValue();
@@ -770,7 +772,7 @@ public class QuestionTreeXMLHandler {
                         if (value == null) {
                             line.append(";\"\"");
                         } else {
-                            line.append(";\"" + value.replaceAll("\"", "\"\"") + "\"");
+                            line.append(";\"").append(value.replaceAll("\"", "\"\"")).append("\"");
                         }
                     }
                     currentNode = (QuestionTreeNode) currentNode.getNextNode();
