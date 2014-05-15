@@ -6,41 +6,41 @@ import javax.swing.JToolBar;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
 /**
- * Toolbar for the ContentEditorPanel
+ * <code>JToolBar</code> for the <code>ContentEditorPanel</code> that contains several <code>JComboBox</code>
+ * subclasses. The <code>JComboBox</code> instances provide functionality for inserting generic HTML components into
+ * the <code>RSyntaxTextArea</code> the <code>ExperimentEditor</code> uses.
  *
  * @author Andreas Hasselberg
  * @author Markus Köppen
  */
-@SuppressWarnings("serial")
 public class ContentEditorToolBar extends JToolBar {
 
     /**
-     * The editor area it is working with
-     */
-    private RSyntaxTextArea editArea;
-
-    /**
-     * Constructor
+     * Constructs a new <code>ContentEditorToolBar</code> whose <code>JComboBox</code> children affect the given
+     * <code>RSyntaxTextArea</code>.
      *
-     * @param ea
-     *         Editor Area to work with
+     * @param textArea
+     *         the <code>RSyntaxTextArea</code> to be affected by this <code>ContentEditorToolBar</code>
      */
-    public ContentEditorToolBar(RSyntaxTextArea ea) {
-        editArea = ea;
+    public ContentEditorToolBar(RSyntaxTextArea textArea) {
         setFloatable(false);
 
-        add(new FontStyleBox(editArea));
-        add(new FontSizeBox(editArea));
-        add(new FormularBox(editArea));
-        add(new MacroBox(editArea));
-//		add(new MultipleNameTestButton(editArea, "Namenstest"));
+        add(new FontStyleComboBox(textArea));
+        add(new FontSizeComboBox(textArea));
+        add(new FormComboBox(textArea));
+        add(new MacroComboBox(textArea));
     }
 
     /**
-     * enable and disable the toolbar
+     * Overwritten to enable/disable the sub-components of this <code>JToolBar</code> when it is enabled/disabled.
+     *
+     * @param enabled
+     *         true if this component should be enabled, false otherwise
      */
     @Override
     public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
+
         for (Component c : this.getComponents()) {
             c.setEnabled(enabled);
         }
