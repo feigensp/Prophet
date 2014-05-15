@@ -1,0 +1,7 @@
+Maven targets for required libraries:
+
+com.fifesoft:rsyntaxtextarea:2.5.0
+javax.mail:mail:1.5.0-b01
+net.sf.opencsv:opencsv:2.3
+org.cdmckay.coffeedom:coffeedom:1.0.0
+com.thoughtworks.xstream:xstream:1.4.7
