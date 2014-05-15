@@ -7,11 +7,7 @@ package de.uni_passau.fim.infosun.prophet.experimentGUI.util;
  PERFORMANCE OF THE PROGRAM AND DOCUMENTATION REMAINS WITH THE USER.
  */
 
-import java.awt.Component;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.Insets;
-import java.awt.LayoutManager;
+import java.awt.*;
 
 /**
  * A vertical layout manager similar to java.awt.FlowLayout.
@@ -135,6 +131,7 @@ public class VerticalLayout implements LayoutManager {
     /**
      * Lays out the container.
      */
+    @Override
     public void layoutContainer(Container parent) {
         Insets insets = parent.getInsets();
         synchronized (parent.getTreeLock()) {
@@ -176,11 +173,13 @@ public class VerticalLayout implements LayoutManager {
     }
 
     //-----------------------------------------------------------------------------
+    @Override
     public Dimension minimumLayoutSize(Container parent) {
         return layoutSize(parent, false);
     }
 
     //-----------------------------------------------------------------------------
+    @Override
     public Dimension preferredLayoutSize(Container parent) {
         return layoutSize(parent, false);
     }
@@ -189,6 +188,7 @@ public class VerticalLayout implements LayoutManager {
     /**
      * Not used by this class
      */
+    @Override
     public void addLayoutComponent(String name, Component comp) {
     }
 //-----------------------------------------------------------------------------
@@ -196,6 +196,7 @@ public class VerticalLayout implements LayoutManager {
     /**
      * Not used by this class
      */
+    @Override
     public void removeLayoutComponent(Component comp) {
     }
 

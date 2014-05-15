@@ -48,6 +48,7 @@ public class FontSizeBox extends JComboBox implements ActionListener {
     /**
      * triggered if the box is changed
      */
+    @Override
     public void actionPerformed(ActionEvent ae) {
         if (this.getSelectedIndex() != 0) {
             String size = fontSizes.get(this.getSelectedIndex() - 1).getValue();

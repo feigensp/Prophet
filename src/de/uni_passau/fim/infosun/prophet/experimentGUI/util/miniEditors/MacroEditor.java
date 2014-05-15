@@ -119,14 +119,17 @@ public class MacroEditor extends JFrame {
                 }
             }
 
+            @Override
             public void changedUpdate(DocumentEvent arg0) {
                 inputChanged();
             }
 
+            @Override
             public void insertUpdate(DocumentEvent arg0) {
                 inputChanged();
             }
 
+            @Override
             public void removeUpdate(DocumentEvent arg0) {
                 inputChanged();
             }
@@ -138,14 +141,17 @@ public class MacroEditor extends JFrame {
                 macros.get(macroList.getSelectedIndex()).setValue(macroContentTextPane.getText());
             }
 
+            @Override
             public void changedUpdate(DocumentEvent arg0) {
                 inputChanged();
             }
 
+            @Override
             public void insertUpdate(DocumentEvent arg0) {
                 inputChanged();
             }
 
+            @Override
             public void removeUpdate(DocumentEvent arg0) {
                 inputChanged();
             }
@@ -213,12 +219,14 @@ public class MacroEditor extends JFrame {
                     macroContent;
             private int fromIndex;
 
+            @Override
             public void mousePressed(final MouseEvent evt) {
                 macroName = macroNameTextField.getText();
                 macroContent = macroContentTextPane.getText();
                 fromIndex = macroList.getSelectedIndex();
             }
 
+            @Override
             public void mouseDragged(final MouseEvent evt) {
                 if (macroList.getSelectedIndex() != -1) {
                     int toIndex = macroList.locationToIndex(evt.getPoint());
@@ -309,6 +317,7 @@ public class MacroEditor extends JFrame {
     private static void addPopup(Component component, final JPopupMenu popup) {
         component.addMouseListener(new MouseAdapter() {
 
+            @Override
             public void mouseReleased(MouseEvent e) {
                 if (e.isPopupTrigger()) {
                     showMenu(e);

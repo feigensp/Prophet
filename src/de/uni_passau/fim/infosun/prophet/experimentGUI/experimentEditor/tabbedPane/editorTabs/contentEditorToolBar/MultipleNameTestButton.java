@@ -17,6 +17,7 @@ public class MultipleNameTestButton extends JButton implements ActionListener {
         this.addActionListener(this);
     }
 
+    @Override
     public void actionPerformed(ActionEvent arg0) {
 //		Document doc = new DocumentBuilder().parse(new InputSource(new StringReader(
 //				textArea.getText())));

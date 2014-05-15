@@ -81,9 +81,11 @@ public class QuestionViewPane extends JScrollPane {
         textPane.setEditable(false);
         textPane.setEditorKit(new HTMLEditorKit() {
 
+            @Override
             public ViewFactory getViewFactory() {
                 return new HTMLEditorKit.HTMLFactory() {
 
+                    @Override
                     public View create(Element elem) {
                         Object o = elem.getAttributes().getAttribute(StyleConstants.NameAttribute);
                         if (o instanceof HTML.Tag) {
@@ -92,6 +94,7 @@ public class QuestionViewPane extends JScrollPane {
 
                                     // What should happen when the buttons are
                                     // pressed?
+                                    @Override
                                     protected void submitData(String data) {
                                         String action = saveAnswers(data);
                                         if (action != null) {

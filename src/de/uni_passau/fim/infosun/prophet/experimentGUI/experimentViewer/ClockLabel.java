@@ -106,6 +106,7 @@ public class ClockLabel extends JLabel implements Runnable {
      * die derzeitige Zeit und schreibt diese bei Benutzung des ensprechenden
      * Konstruktors in das JLabel
      */
+    @Override
     public void run() {
         startTime = System.currentTimeMillis();
         isStarted = true;

@@ -47,14 +47,17 @@ public class SettingsPasswordField extends Setting {
         }
     }
 
+    @Override
     public void setCaption(String cap) {
         caption.setText(cap);
     }
 
+    @Override
     public void loadValue() {
         textField.setText(decode(attribute.getValue()));
     }
 
+    @Override
     public void saveValue() {
         attribute.setValue(encode(textField.getText()));
     }

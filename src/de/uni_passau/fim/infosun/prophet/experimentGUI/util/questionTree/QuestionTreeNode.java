@@ -107,6 +107,7 @@ public class QuestionTreeNode extends DefaultMutableTreeNode {
         return name;
     }
 
+    @Override
     public boolean isLeaf() {
         return isQuestion();
     }

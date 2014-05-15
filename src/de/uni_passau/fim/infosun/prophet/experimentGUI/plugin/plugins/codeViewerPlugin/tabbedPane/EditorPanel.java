@@ -41,6 +41,7 @@ public class EditorPanel extends JPanel {
         add(scrollPane, BorderLayout.CENTER);
     }
 
+    @Override
     public void grabFocus() {
         textArea.grabFocus();
     }

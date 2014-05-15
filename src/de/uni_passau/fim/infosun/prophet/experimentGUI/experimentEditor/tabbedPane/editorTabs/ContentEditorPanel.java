@@ -57,6 +57,7 @@ public class ContentEditorPanel extends ExperimentEditorTab {
     /**
      * Called by EditorTabbedPane to indicate a possible node change, (re)loads the panel
      */
+    @Override
     public void activate(QTreeNode s) {
         selected = s;
         this.removeAll();
@@ -79,6 +80,7 @@ public class ContentEditorPanel extends ExperimentEditorTab {
                 editArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_HTML);
                 editArea.addKeyListener(new KeyAdapter() {
 
+                    @Override
                     public void keyPressed(KeyEvent ke) {
                         if (ke.isShiftDown() && ke.getKeyCode() == KeyEvent.VK_ENTER) {
                             editArea.replaceSelection("<br>");

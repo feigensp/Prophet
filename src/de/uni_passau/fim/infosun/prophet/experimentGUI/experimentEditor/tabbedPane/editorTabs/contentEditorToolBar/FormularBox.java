@@ -32,6 +32,7 @@ public class FormularBox extends JComboBox implements ActionListener {
         this.addActionListener(this);
     }
 
+    @Override
     public void actionPerformed(ActionEvent ae) {
         switch (this.getSelectedIndex()) {
             case 0:

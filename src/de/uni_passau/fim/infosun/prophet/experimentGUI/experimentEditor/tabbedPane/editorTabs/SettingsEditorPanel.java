@@ -44,6 +44,7 @@ public class SettingsEditorPanel extends ExperimentEditorTab {
     /**
      * Loads the settings and saved options for the specified node into the tab.
      */
+    @Override
     public void activate(QTreeNode selected) {
 
         if (selected == null) {

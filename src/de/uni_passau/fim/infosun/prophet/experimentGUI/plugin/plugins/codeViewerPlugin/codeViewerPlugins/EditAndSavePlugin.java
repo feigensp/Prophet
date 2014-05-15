@@ -130,6 +130,7 @@ public class EditAndSavePlugin implements CodeViewerPlugin {
                     isChanged.put(editorPanel, true);
                 }
 
+                @Override
                 public void changedUpdate(DocumentEvent arg0) {
 //					changeOccured();
                 }

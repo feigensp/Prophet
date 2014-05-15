@@ -39,6 +39,7 @@ public class ContentEditorToolBar extends JToolBar {
     /**
      * enable and disable the toolbar
      */
+    @Override
     public void setEnabled(boolean enabled) {
         for (Component c : this.getComponents()) {
             c.setEnabled(enabled);

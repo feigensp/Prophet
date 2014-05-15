@@ -57,6 +57,7 @@ public class SearchBar extends JToolBar implements ActionListener {
     /**
      * Grabs the focus
      */
+    @Override
     public void grabFocus() {
         searchField.grabFocus();
     }
@@ -88,6 +89,7 @@ public class SearchBar extends JToolBar implements ActionListener {
         add(matchCaseCB);
     }
 
+    @Override
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
 

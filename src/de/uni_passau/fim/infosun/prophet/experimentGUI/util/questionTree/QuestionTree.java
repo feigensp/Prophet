@@ -140,10 +140,12 @@ public class QuestionTree extends JScrollPane {
             // http://stackoverflow.com/questions/5736872/java-popup-trigger-in-linux
             // http://download.oracle.com/javase/tutorial/uiswing/examples/components/PopupMenuDemoProject/src
             // /components/PopupMenuDemo.java
+            @Override
             public void mouseReleased(MouseEvent e) {
                 maybeShowPopup(e);
             }
 
+            @Override
             public void mousePressed(MouseEvent e) {
                 maybeShowPopup(e);
             }
@@ -158,6 +160,7 @@ public class QuestionTree extends JScrollPane {
 
         ActionListener myActionlistener = new ActionListener() {
 
+            @Override
             public void actionPerformed(ActionEvent ae) {
                 String name;
                 // remove
@@ -270,6 +273,7 @@ public class QuestionTree extends JScrollPane {
 
             private static final long serialVersionUID = 1L;
 
+            @Override
             public void dragOver(DropTargetDragEvent dtde) {
                 QuestionTreeNode source = (QuestionTreeNode) tree.getSelectionPath().getLastPathComponent();
                 Point p = dtde.getLocation();
@@ -288,6 +292,7 @@ public class QuestionTree extends JScrollPane {
                 }
             }
 
+            @Override
             public void drop(DropTargetDropEvent dtde) {
                 QuestionTreeNode source = (QuestionTreeNode) tree.getSelectionPath().getLastPathComponent();
 
@@ -313,12 +318,15 @@ public class QuestionTree extends JScrollPane {
                 tree.updateUI();
             }
 
+            @Override
             public void dropActionChanged(DropTargetDragEvent arg0) {
             }
 
+            @Override
             public void dragExit(DropTargetEvent dte) {
             }
 
+            @Override
             public void dragEnter(DropTargetDragEvent arg0) {
             }
         });

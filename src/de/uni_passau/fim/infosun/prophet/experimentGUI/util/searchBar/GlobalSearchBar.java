@@ -63,6 +63,7 @@ public class GlobalSearchBar extends JToolBar implements ActionListener {
     /**
      * Grabs the focus
      */
+    @Override
     public void grabFocus() {
         searchField.grabFocus();
     }
@@ -102,6 +103,7 @@ public class GlobalSearchBar extends JToolBar implements ActionListener {
         add(mainPanel);
     }
 
+    @Override
     public void actionPerformed(ActionEvent action) {
         String command = action.getActionCommand();
 

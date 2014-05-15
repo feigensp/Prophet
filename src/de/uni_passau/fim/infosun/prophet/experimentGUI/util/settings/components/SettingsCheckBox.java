@@ -17,14 +17,17 @@ public class SettingsCheckBox extends Setting {
         add(myCheckBox, BorderLayout.CENTER);
     }
 
+    @Override
     public void setCaption(String cap) {
         myCheckBox.setText(cap);
     }
 
+    @Override
     public void loadValue() {
         myCheckBox.setSelected(Boolean.parseBoolean(attribute.getValue()));
     }
 
+    @Override
     public void saveValue() {
         attribute.setValue(String.valueOf(myCheckBox.isSelected()));
     }

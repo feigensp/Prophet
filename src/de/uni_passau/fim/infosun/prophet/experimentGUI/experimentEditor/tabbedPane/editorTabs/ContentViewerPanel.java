@@ -31,6 +31,7 @@ public class ContentViewerPanel extends ExperimentEditorTab {
     /**
      * loads the current content and displays it appropriately, called by EditorTabbedPane
      */
+    @Override
     public void activate(QTreeNode selected) {
         removeAll();
         updateUI();

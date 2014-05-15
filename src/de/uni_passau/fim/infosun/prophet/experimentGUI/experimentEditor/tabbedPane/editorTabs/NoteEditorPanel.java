@@ -39,6 +39,7 @@ public class NoteEditorPanel extends ExperimentEditorTab {
     /**
      * loads the notes for a selected node into the tab, called by EditorTabbedPane
      */
+    @Override
     public void activate(final QTreeNode s) {
         selected = s;
         this.removeAll();

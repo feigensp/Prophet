@@ -17,6 +17,7 @@ class IconCellRenderer extends JLabel implements ListCellRenderer {
         this.iconType = iconType;
     }
 
+    @Override
     public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected,
             boolean cellHasFocus) {
         if (listBox.isSelectedIndex(index)) {

@@ -26,14 +26,17 @@ public class SettingsTextArea extends Setting {
         add(new JScrollPane(textArea), BorderLayout.CENTER);
     }
 
+    @Override
     public void setCaption(String cap) {
         caption.setText(cap);
     }
 
+    @Override
     public void loadValue() {
         textArea.setText(attribute.getValue());
     }
 
+    @Override
     public void saveValue() {
         attribute.setValue(textArea.getText());
     }

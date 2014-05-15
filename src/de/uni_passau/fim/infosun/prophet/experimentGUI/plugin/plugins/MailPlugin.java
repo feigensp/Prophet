@@ -196,6 +196,7 @@ public class MailPlugin implements Plugin {
          *
          * @see javax.mail.Authenticator#getPasswordAuthentication()
          */
+        @Override
         protected PasswordAuthentication getPasswordAuthentication() {
             return new PasswordAuthentication(this.user, this.password);
         }

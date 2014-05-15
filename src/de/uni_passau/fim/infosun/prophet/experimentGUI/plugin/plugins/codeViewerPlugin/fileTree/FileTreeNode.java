@@ -62,6 +62,7 @@ public class FileTreeNode extends DefaultMutableTreeNode {
         return isFile;
     }
 
+    @Override
     public FileTreeNode clone() {
         FileTreeNode result = (FileTreeNode) super.clone();
         result.name = name;

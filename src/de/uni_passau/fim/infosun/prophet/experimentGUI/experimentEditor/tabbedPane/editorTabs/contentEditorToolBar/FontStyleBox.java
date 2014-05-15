@@ -36,6 +36,7 @@ public class FontStyleBox extends JComboBox implements ActionListener {
         this.addActionListener(this);
     }
 
+    @Override
     public void actionPerformed(ActionEvent ae) {
         if (this.getSelectedIndex() != 0) {
             String tag = fontFace.get(this.getSelectedIndex() - 1).getValue();
