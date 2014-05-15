@@ -114,10 +114,13 @@ public class MacroComboBox extends JComboBox<String> {
 
             macroName += String.format("\t [%s + %s]", UIElementNames.KEYBOARD_CTRL, keyDescription);
 
-            keyCodeMap.put(keyCode, macroContent);
-            namesMap.put(macroName, macroContent);
-            namesMap.keySet().forEach(this::addItem);
+            if (!keyCodeMap.containsKey(keyCode)) {
+                keyCodeMap.put(keyCode, macroContent);
+                namesMap.put(macroName, macroContent);
+            }
         }
+
+        namesMap.keySet().forEach(this::addItem);
     }
 
     /**
