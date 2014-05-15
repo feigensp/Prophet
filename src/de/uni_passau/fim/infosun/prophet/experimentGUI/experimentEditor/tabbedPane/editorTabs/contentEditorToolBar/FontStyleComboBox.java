@@ -19,10 +19,10 @@ public class FontStyleComboBox extends JComboBox<String> {
     /**
      * Constructs a new <code>FontStyleComboBox</code> that adds its tags to the given <code>RSyntaxTextArea</code>.
      *
-     * @param editArea
+     * @param textArea
      *         the <code>RSyntaxTextArea</code> this <code>FontStyleComboBox</code> affects
      */
-    public FontStyleComboBox(RSyntaxTextArea editArea) {
+    public FontStyleComboBox(RSyntaxTextArea textArea) {
         List<Pair<String, String>> fontFaces = new ArrayList<>();
 
         fontFaces.add(new Pair<>(UIElementNames.FONT_FACE_BOLD, "b"));
@@ -39,10 +39,10 @@ public class FontStyleComboBox extends JComboBox<String> {
             }
 
             String tag = fontFaces.get(getSelectedIndex() - 1).getValue();
-            String text = editArea.getSelectedText();
+            String text = textArea.getSelectedText();
 
             text = text == null ? "" : text;
-            editArea.replaceSelection(String.format("<%s>%s</%s>", tag, text, tag));
+            textArea.replaceSelection(String.format("<%s>%s</%s>", tag, text, tag));
             setSelectedIndex(0);
         });
     }

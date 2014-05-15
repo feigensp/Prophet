@@ -19,10 +19,10 @@ public class FontSizeComboBox extends JComboBox<String> {
     /**
      * Constructs a new <code>FontSizeComboBox</code> that adds its tags to the given <code>RSyntaxTextArea</code>.
      *
-     * @param editArea
+     * @param textArea
      *         the <code>RSyntaxTextArea</code> this <code>FontSizeBox</code> affects
      */
-    public FontSizeComboBox(RSyntaxTextArea editArea) {
+    public FontSizeComboBox(RSyntaxTextArea textArea) {
         List<Pair<String, String>> fontSizes = new ArrayList<>();
 
         fontSizes.add(new Pair<>("-3", "-3"));
@@ -42,10 +42,10 @@ public class FontSizeComboBox extends JComboBox<String> {
             }
 
             String size = fontSizes.get(getSelectedIndex() - 1).getValue();
-            String text = editArea.getSelectedText();
+            String text = textArea.getSelectedText();
 
             text = text == null ? "" : text;
-            editArea.replaceSelection(String.format("<font size=\"%s\">%s</font>", size, text));
+            textArea.replaceSelection(String.format("<font size=\"%s\">%s</font>", size, text));
             setSelectedIndex(0);
         });
     }

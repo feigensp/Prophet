@@ -20,7 +20,7 @@ public class ContentEditorToolBar extends JToolBar {
      * <code>RSyntaxTextArea</code>.
      *
      * @param textArea
-     *         the <code>RSyntaxTextArea</code> to be affected by this <code>ContentEditorToolBar</code>
+     *         the <code>RSyntaxTextArea</code> this <code>ContentEditorToolBar</code> affects
      */
     public ContentEditorToolBar(RSyntaxTextArea textArea) {
         setFloatable(false);

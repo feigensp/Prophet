@@ -19,18 +19,18 @@ import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
  */
 public class FormComboBox extends JComboBox<String> implements ActionListener {
 
-    private RSyntaxTextArea editArea;
+    private RSyntaxTextArea textArea;
 
     /**
      * Constructs a new <code>FormComboBox</code> that adds its forms to the given <code>RSyntaxTextArea</code>.
      *
-     * @param editArea
+     * @param textArea
      *         the <code>RSyntaxTextArea</code> this <code>FormComboBox</code> affects
      */
-    public FormComboBox(RSyntaxTextArea editArea) {
+    public FormComboBox(RSyntaxTextArea textArea) {
         List<String> forms = new ArrayList<>();
 
-        this.editArea = editArea;
+        this.textArea = textArea;
 
         forms.add(UIElementNames.HTML_TEXT_FIELD);  // index 1
         forms.add(UIElementNames.HTML_TEXT_AREA);   // index 2
@@ -75,7 +75,7 @@ public class FormComboBox extends JComboBox<String> implements ActionListener {
     }
 
     /**
-     * Inserts a HTML CheckBox replacing the current selection in the <code>editArea</code>.
+     * Inserts a HTML CheckBox replacing the current selection in the <code>textArea</code>.
      */
     private void insertCheckBox() {
         String formatString;
@@ -95,11 +95,11 @@ public class FormComboBox extends JComboBox<String> implements ActionListener {
             checks.append(String.format(formatString, checkInfo.getKey(), checkInfo.getKey(), checkEntry, checkEntry));
         }
 
-        editArea.replaceSelection(checks.toString());
+        textArea.replaceSelection(checks.toString());
     }
 
     /**
-     * Inserts HTML RadioButton items replacing the current selection in the <code>editArea</code>.
+     * Inserts HTML RadioButton items replacing the current selection in the <code>textArea</code>.
      */
     private void insertRadioButton() {
         String formatString;
@@ -119,11 +119,11 @@ public class FormComboBox extends JComboBox<String> implements ActionListener {
             radios.append(String.format(formatString, radioInfo.getKey(), radioInfo.getKey(), radioEntry, radioEntry));
         }
 
-        editArea.replaceSelection(radios.toString());
+        textArea.replaceSelection(radios.toString());
     }
 
     /**
-     * Inserts a HTML ComboBox replacing the current selection in the <code>editArea</code>.
+     * Inserts a HTML ComboBox replacing the current selection in the <code>textArea</code>.
      */
     private void insertComboBox() {
         String formatString;
@@ -143,11 +143,12 @@ public class FormComboBox extends JComboBox<String> implements ActionListener {
         }
 
         formatString = "<select name=\"%s\" id=\"%s\">%s%n</select>";
-        editArea.replaceSelection(String.format(formatString, comboInfo.getKey(), comboInfo.getKey(), combos.toString()));
+        textArea.replaceSelection(
+                String.format(formatString, comboInfo.getKey(), comboInfo.getKey(), combos.toString()));
     }
 
     /**
-     * Inserts HTML List items replacing the current selection in the <code>editArea</code>.
+     * Inserts HTML List items replacing the current selection in the <code>textArea</code>.
      */
     private void insertList() {
         String formatString;
@@ -167,11 +168,11 @@ public class FormComboBox extends JComboBox<String> implements ActionListener {
         }
 
         formatString = "<select name=\"%s\" id=\"%s\" size=\"3\" multiple>%s%n</select>";
-        editArea.replaceSelection(String.format(formatString, listInfo.getKey(), listInfo.getKey(), list.toString()));
+        textArea.replaceSelection(String.format(formatString, listInfo.getKey(), listInfo.getKey(), list.toString()));
     }
 
     /**
-     * Inserts a HTML TextArea replacing the current selection in the <code>editArea</code>.
+     * Inserts a HTML TextArea replacing the current selection in the <code>textArea</code>.
      */
     private void insertTextArea() {
         String formatString;
@@ -184,11 +185,11 @@ public class FormComboBox extends JComboBox<String> implements ActionListener {
         }
 
         formatString = "<textarea name=\"%s\" id=\"%s\" cols=\"50\" rows=\"10\"></textarea>";
-        editArea.replaceSelection(String.format(formatString, textAreaName, textAreaName));
+        textArea.replaceSelection(String.format(formatString, textAreaName, textAreaName));
     }
 
     /**
-     * Inserts a HTML TextField replacing the current selection in the <code>editArea</code>.
+     * Inserts a HTML TextField replacing the current selection in the <code>textArea</code>.
      */
     private void insertTextField() {
         String formatString;
@@ -201,6 +202,6 @@ public class FormComboBox extends JComboBox<String> implements ActionListener {
         }
 
         formatString = "<input type=\"text\" name=\"%s\" id=\"%s\">";
-        editArea.replaceSelection(String.format(formatString, textFieldName, textFieldName));
+        textArea.replaceSelection(String.format(formatString, textFieldName, textFieldName));
     }
 }
