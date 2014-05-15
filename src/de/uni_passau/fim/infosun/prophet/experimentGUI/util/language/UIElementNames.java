@@ -230,7 +230,7 @@ public class UIElementNames {
         MENU_EDIT_FIND = labels.getString("MENU_EDIT_FIND");
 
         MESSAGE_FILE_NOT_FOUND = labels.getString("MESSAGE_FILE_NOT_FOUND");
-        MESSAGE_ERROR = labels.getString("MESSAGE_FILE_NOT_FOUND_TITLE");
+        MESSAGE_ERROR = labels.getString("MESSAGE_ERROR");
         MESSAGE_SAVE_ERROR = labels.getString("MESSAGE_SAVE_ERROR");
         MESSAGE_REPLACE_FILE = labels.getString("MESSAGE_REPLACE_FILE");
         MESSAGE_REPLACE_FILE_TITLE = labels.getString("MESSAGE_REPLACE_FILE_TITLE");
@@ -356,7 +356,7 @@ public class UIElementNames {
         SEARCH_BAR_DEACTIVATE_REGULAR_EXPRESSIONS = labels.getString("SEARCH_BAR_DEACTIVATE_REGULAR_EXPRESSIONS");
         SEARCH_BAR_ACTIVATE_GLOBAL_SEARCH = labels.getString("SEARCH_BAR_ACTIVATE_GLOBAL_SEARCH");
         SEARCH_BAR_MENU_SEARCH = labels.getString("SEARCH_BAR_MENU_SEARCH");
-        SEARCH_BAR_MENU_GLOBAL_SEARCH = labels.getString("SEARCH_BAR_MENU_SEARCH");
+        SEARCH_BAR_MENU_GLOBAL_SEARCH = labels.getString("SEARCH_BAR_MENU_GLOBAL_SEARCH");
 
         //ShowCIDECodePlugin
         CIDE_HIGHLIGHT_SOURCE_CODE = labels.getString("CIDE_HIGHLIGHT_SOURCE_CODE");
