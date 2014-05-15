@@ -10,6 +10,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import javax.swing.*;
+import javax.swing.event.MenuEvent;
+import javax.swing.event.MenuListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentEditor.tabbedPane.ExperimentEditorTabbedPane;
@@ -123,8 +125,6 @@ public class ExperimentEditorMenuBar extends JMenuBar {
     private ActionListener newActionListener = event -> {
         currentFile = null;
         qTreeModel.setRoot(new QTreeNode(null, EXPERIMENT, "Experiment"));
-
-        enableMenuItems();
     };
 
     private ActionListener loadActionListener = event -> {
@@ -145,7 +145,6 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 
         qTreeModel.setRoot(treeRoot);
         owner.setTitle(ExperimentEditor.TITLE + " - " + currentFile.getAbsolutePath());
-        enableMenuItems();
     };
 //    private class LoadActionListener implements ActionListener {
 //
@@ -230,7 +229,6 @@ public class ExperimentEditorMenuBar extends JMenuBar {
         }
 
         owner.setTitle(ExperimentEditor.TITLE + " - " + currentFile.getAbsolutePath());
-        enableMenuItems();
     };
 
 //    private class SaveAsActionListener implements ActionListener {
@@ -373,6 +371,32 @@ public class ExperimentEditorMenuBar extends JMenuBar {
         JMenu fileMenu = new JMenu(UIElementNames.MENU_FILE);
         add(fileMenu);
 
+        fileMenu.addMenuListener(new MenuListener() {
+
+            @Override
+            public void menuSelected(MenuEvent e) {
+                boolean treeExists = qTreeModel.getRoot() != null;
+
+//              if (treeExists) {
+//                  exportCSVMenuItem.setEnabled(currentFile != null);
+//              }
+
+                saveMenuItem.setEnabled(treeExists);
+                saveAsMenuItem.setEnabled(treeExists);
+                nameCheckMenuItem.setEnabled(treeExists);
+            }
+
+            @Override
+            public void menuDeselected(MenuEvent e) {
+
+            }
+
+            @Override
+            public void menuCanceled(MenuEvent e) {
+
+            }
+        });
+
         JMenuItem newMenuItem = new JMenuItem(UIElementNames.MENU_FILE_NEW);
         newMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_MASK));
         fileMenu.add(newMenuItem);
@@ -435,8 +459,6 @@ public class ExperimentEditorMenuBar extends JMenuBar {
         nameCheckMenuItem.addActionListener(nameCheckActionListener);
 
         closeMenuItem.addActionListener(closeActionListener);
-
-        enableMenuItems();
     }
 
 //    /**
@@ -477,19 +499,4 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 //            }
 //        }
 //    }
-
-    /**
-     * Activates or deactivates the menu items depending on the current state of the <code>QTree</code>.
-     */
-    private void enableMenuItems() {
-        boolean treeExists = qTreeModel.getRoot() != null;
-
-//        if (treeExists) {
-//            exportCSVMenuItem.setEnabled(currentFile != null);
-//        }
-
-        saveMenuItem.setEnabled(treeExists);
-        saveAsMenuItem.setEnabled(treeExists);
-        nameCheckMenuItem.setEnabled(treeExists);
-    }
 }
