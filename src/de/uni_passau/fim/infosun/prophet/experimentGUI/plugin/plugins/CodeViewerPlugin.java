@@ -50,7 +50,7 @@ public class CodeViewerPlugin implements Plugin {
         pluginSettings.addSetting(Recorder.getSetting(mainAttribute));
         pluginSettings.addAllSettings(CodeViewerPluginList.getAllSettings(mainAttribute));
 
-        return null;
+        return pluginSettings;
     }
 
     @Override
