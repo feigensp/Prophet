@@ -17,7 +17,6 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode;
  * @author Andreas Hasselberg
  * @author Markus Köppen
  */
-@SuppressWarnings("serial")
 public class ExperimentEditorTabbedPane extends JTabbedPane {
 
     /**
