@@ -1,7 +1,7 @@
 package de.uni_passau.fim.infosun.prophet.experimentGUI.plugin;
 
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Vector;
 import java.util.stream.Collectors;
 
 import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentViewer.ExperimentViewer;
@@ -17,31 +17,25 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.Setting;
  */
 public class PluginList {
 
-    /**
-     * the order of the plugins in this vector assigns the order of the calls
-     */
-    private static Vector<Plugin> plugins = new Vector<Plugin>() {
+    static {
+        add(new InactivityPlugin());
+        add(new ValidSubjectCodePlugin());
+        add(new CodeViewerPlugin());
+        add(new QuestionListPlugin());
+        add(new MailPlugin());
+        add(new MaxTimePlugin());
+        add(new ExternalProgramsPlugin());
+        add(new AnswerRequiredPlugin());
+//		add(new KeyPressedPlugin());
+        add(new PHPExportPlugin());
+    }
 
-        private static final long serialVersionUID = 1L;
-
-        {
-            add(new InactivityPlugin());
-            add(new ValidSubjectCodePlugin());
-            add(new CodeViewerPlugin());
-            add(new QuestionListPlugin());
-            add(new MailPlugin());
-            add(new MaxTimePlugin());
-            add(new ExternalProgramsPlugin());
-            add(new AnswerRequiredPlugin());
-//			add(new KeyPressedPlugin());
-            add(new PHPExportPlugin());
-        }
-    };
+    private static List<Plugin> plugins = new LinkedList<>();
 
     /**
      * @return Vector describing all active plugins
      */
-    public static Vector<Plugin> getPlugins() {
+    public static List<Plugin> getPlugins() {
         return plugins;
     }
 

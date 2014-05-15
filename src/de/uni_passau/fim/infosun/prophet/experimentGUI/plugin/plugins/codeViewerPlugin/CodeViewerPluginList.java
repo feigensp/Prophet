@@ -1,7 +1,7 @@
 package de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin;
 
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Vector;
 import java.util.stream.Collectors;
 
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin.codeViewerPlugins.*;
@@ -11,19 +11,16 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.Setting;
 
 public class CodeViewerPluginList {
 
-    private static Vector<CodeViewerPlugin> plugins = new Vector<CodeViewerPlugin>() {
+    static {
+        add(new EditAndSavePlugin());
+        add(new LineNumbersPlugin());
+        add(new SearchBarPlugin());
+        add(new SyntaxHighlightingPlugin());
+//		add(new ShowCIDECodePlugin());
+        add(new OpenedFromStartPlugin());
+    }
 
-        private static final long serialVersionUID = 1L;
-
-        {
-            add(new EditAndSavePlugin());
-            add(new LineNumbersPlugin());
-            add(new SearchBarPlugin());
-            add(new SyntaxHighlightingPlugin());
-//			add(new ShowCIDECodePlugin());
-            add(new OpenedFromStartPlugin());
-        }
-    };
+    private static List<CodeViewerPlugin> plugins = new LinkedList<>();
 
     public static void add(CodeViewerPlugin plugin) {
         plugins.add(plugin);

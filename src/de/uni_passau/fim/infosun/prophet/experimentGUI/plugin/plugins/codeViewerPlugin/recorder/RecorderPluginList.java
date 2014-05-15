@@ -1,7 +1,7 @@
 package de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin.recorder;
 
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Vector;
 import java.util.stream.Collectors;
 
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin.recorder.recorderPlugins
@@ -13,15 +13,12 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.Setting;
 
 public class RecorderPluginList {
 
-    private static Vector<RecorderPlugin> plugins = new Vector<RecorderPlugin>() {
+    static {
+        add(new ChangePlugin());
+        add(new ScrollingPlugin());
+    }
 
-        private static final long serialVersionUID = 1L;
-
-        {
-            add(new ChangePlugin());
-            add(new ScrollingPlugin());
-        }
-    };
+    private static List<RecorderPlugin> plugins = new LinkedList<>();
 
     /**
      * Returns the settings for all plugins.
@@ -35,7 +32,7 @@ public class RecorderPluginList {
         return plugins.stream().map(p -> p.getSetting(attribute)).filter(s -> s != null).collect(Collectors.toList());
     }
 
-    public static Vector<RecorderPlugin> getPlugins() {
+    public static List<RecorderPlugin> getPlugins() {
         return plugins;
     }
 
