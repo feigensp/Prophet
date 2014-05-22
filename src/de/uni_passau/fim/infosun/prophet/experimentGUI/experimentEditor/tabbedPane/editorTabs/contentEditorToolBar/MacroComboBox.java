@@ -11,6 +11,7 @@ import java.util.Map;
 import javax.swing.JComboBox;
 
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames;
+import org.cdmckay.coffeedom.CoffeeDOMException;
 import org.cdmckay.coffeedom.Document;
 import org.cdmckay.coffeedom.Element;
 import org.cdmckay.coffeedom.input.SAXBuilder;
@@ -28,6 +29,8 @@ import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
  * @author Markus Köppen
  */
 public class MacroComboBox extends JComboBox<String> {
+
+    private static final String MACROS_XML_FILENAME = "macros.xml";
 
     private RSyntaxTextArea textArea;
 
@@ -70,7 +73,7 @@ public class MacroComboBox extends JComboBox<String> {
      * adding descriptions of the macros to this <code>JComboBox</code>.
      */
     private void loadMacros() {
-        File file = new File("macros.xml");
+        File file = new File(MACROS_XML_FILENAME);
 
         if (!file.exists()) {
             return;
@@ -80,7 +83,10 @@ public class MacroComboBox extends JComboBox<String> {
         try {
             document = new SAXBuilder().build(file);
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println("Error reading the " + MACROS_XML_FILENAME + " file. " + e);
+            return;
+        } catch (CoffeeDOMException e) {
+            System.err.println("Could not parse the " + MACROS_XML_FILENAME + " file. " + e);
             return;
         }
 
