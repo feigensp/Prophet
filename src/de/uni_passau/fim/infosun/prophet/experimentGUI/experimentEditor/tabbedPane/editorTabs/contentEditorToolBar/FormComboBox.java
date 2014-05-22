@@ -1,11 +1,13 @@
 package de.uni_passau.fim.infosun.prophet.experimentGUI.experimentEditor.tabbedPane.editorTabs.contentEditorToolBar;
 
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.Pair;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames;
@@ -14,6 +16,7 @@ import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 /**
  * <code>JComboBox</code> for the <code>ContentEditorToolBar</code> to enable adding HTML forms.
  *
+ * @author Georg Seibt
  * @author Andreas Hasselberg
  * @author Markus Köppen
  */
@@ -46,7 +49,7 @@ public class FormComboBox extends JComboBox<String> implements ActionListener {
     }
 
     @Override
-    public void actionPerformed(ActionEvent ae) {
+    public void actionPerformed(ActionEvent event) {
 
         switch (getSelectedIndex()) {
             case 0:
@@ -58,16 +61,16 @@ public class FormComboBox extends JComboBox<String> implements ActionListener {
                 insertTextArea();
                 break;
             case 3: // List
-                insertList();
+                insertList(event);
                 break;
             case 4: // ComboBox
-                insertComboBox();
+                insertComboBox(event);
                 break;
             case 5: // RadioButton
-                insertRadioButton();
+                insertRadioButton(event);
                 break;
             case 6: // CheckBox
-                insertCheckBox();
+                insertCheckBox(event);
                 break;
         }
 
@@ -76,22 +79,24 @@ public class FormComboBox extends JComboBox<String> implements ActionListener {
 
     /**
      * Inserts a HTML CheckBox replacing the current selection in the <code>textArea</code>.
+     *
+     * @param event
+     *         the <code>ActionEvent</code> that caused the insertion
      */
-    private void insertCheckBox() {
+    private void insertCheckBox(ActionEvent event) {
         String formatString;
-        String lineSep = System.getProperty("line.separator");
-        Pair<String, String> checkInfo =
-                MultilineDialogs.showMultilineInputDialog(UIElementNames.DIALOG_DEFINE_LIST_INFORMATION);
+        Component parent = SwingUtilities.getWindowAncestor(((Component) event.getSource()));
+        Pair<String, List<String>> checkInfo = MultilineDialog
+                .showMultiDialog(parent, UIElementNames.DIALOG_DEFINE_LIST_INFORMATION);
 
         if (checkInfo == null) {
             return;
         }
 
-        String[] checkEntries = checkInfo.getValue().split(lineSep);
-        StringBuilder checks = new StringBuilder("");
+        StringBuilder checks = new StringBuilder();
 
         formatString = "<input type=\"checkbox\" name=\"%s\" id=\"%s\" value=\"%s\">%s<br>%n";
-        for (String checkEntry : checkEntries) {
+        for (String checkEntry : checkInfo.getValue()) {
             checks.append(String.format(formatString, checkInfo.getKey(), checkInfo.getKey(), checkEntry, checkEntry));
         }
 
@@ -100,22 +105,24 @@ public class FormComboBox extends JComboBox<String> implements ActionListener {
 
     /**
      * Inserts HTML RadioButton items replacing the current selection in the <code>textArea</code>.
+     *
+     * @param event
+     *         the <code>ActionEvent</code> that caused the insertion
      */
-    private void insertRadioButton() {
+    private void insertRadioButton(ActionEvent event) {
         String formatString;
-        String lineSep = System.getProperty("line.separator");
-        Pair<String, String> radioInfo =
-                MultilineDialogs.showMultilineInputDialog(UIElementNames.DIALOG_DEFINE_LIST_INFORMATION);
+        Component parent = SwingUtilities.getWindowAncestor(((Component) event.getSource()));
+        Pair<String, List<String>> radioInfo = MultilineDialog
+                .showMultiDialog(parent, UIElementNames.DIALOG_DEFINE_LIST_INFORMATION);
 
         if (radioInfo == null) {
             return;
         }
 
-        String[] radioEntries = radioInfo.getValue().split(lineSep);
-        StringBuilder radios = new StringBuilder("");
+        StringBuilder radios = new StringBuilder();
 
         formatString = "<input type=\"radio\" name=\"%s\" id=\"%s\" value=\"%s\">%s<br>%n";
-        for (String radioEntry : radioEntries) {
+        for (String radioEntry : radioInfo.getValue()) {
             radios.append(String.format(formatString, radioInfo.getKey(), radioInfo.getKey(), radioEntry, radioEntry));
         }
 
@@ -124,46 +131,49 @@ public class FormComboBox extends JComboBox<String> implements ActionListener {
 
     /**
      * Inserts a HTML ComboBox replacing the current selection in the <code>textArea</code>.
+     *
+     * @param event
+     *         the <code>ActionEvent</code> that caused the insertion
      */
-    private void insertComboBox() {
+    private void insertComboBox(ActionEvent event) {
         String formatString;
-        String lineSep = System.getProperty("line.separator");
-        Pair<String, String> comboInfo =
-                MultilineDialogs.showMultilineInputDialog(UIElementNames.DIALOG_DEFINE_LIST_INFORMATION);
+        Component parent = SwingUtilities.getWindowAncestor(((Component) event.getSource()));
+        Pair<String, List<String>> comboInfo = MultilineDialog
+                .showMultiDialog(parent, UIElementNames.DIALOG_DEFINE_LIST_INFORMATION);
 
         if (comboInfo == null) {
             return;
         }
 
-        String[] comboEntries = comboInfo.getValue().split(lineSep);
-        StringBuilder combos = new StringBuilder("");
+        StringBuilder combos = new StringBuilder();
 
-        for (String comboEntry : comboEntries) {
+        for (String comboEntry : comboInfo.getValue()) {
             combos.append(String.format("%n<option value=\"%s\">%s</option>", comboEntry, comboEntry));
         }
 
         formatString = "<select name=\"%s\" id=\"%s\">%s%n</select>";
-        textArea.replaceSelection(
-                String.format(formatString, comboInfo.getKey(), comboInfo.getKey(), combos.toString()));
+        textArea.replaceSelection(String.format(formatString, comboInfo.getKey(), comboInfo.getKey(), combos.toString()));
     }
 
     /**
      * Inserts HTML List items replacing the current selection in the <code>textArea</code>.
+     *
+     * @param event
+     *         the <code>ActionEvent</code> that caused the insertion
      */
-    private void insertList() {
+    private void insertList(ActionEvent event) {
         String formatString;
-        String lineSep = System.getProperty("line.separator");
-        Pair<String, String> listInfo =
-                MultilineDialogs.showMultilineInputDialog(UIElementNames.DIALOG_DEFINE_LIST_INFORMATION);
+        Component parent = SwingUtilities.getWindowAncestor(((Component) event.getSource()));
+        Pair<String, List<String>> listInfo = MultilineDialog
+                .showMultiDialog(parent, UIElementNames.DIALOG_DEFINE_LIST_INFORMATION);
 
         if (listInfo == null) {
             return;
         }
 
-        String[] listEntries = listInfo.getValue().split(lineSep);
-        StringBuilder list = new StringBuilder("");
+        StringBuilder list = new StringBuilder();
 
-        for (String listEntry : listEntries) {
+        for (String listEntry : listInfo.getValue()) {
             list.append(String.format("%n<option value=\"%s\">%s</option>", listEntry, listEntry));
         }
 

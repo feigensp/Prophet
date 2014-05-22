@@ -216,6 +216,9 @@ public class UIElementNames {
     public static String SEARCH_BAR_REGULAR_EXPRESSION = "Regular expression";
     public static String SEARCH_BAR_MESSAGE_TEXT_NOT_FOUND = "Text not found";
 
+    //MultilineDialog
+    public static String MULTILINEDIALOG_NAME = "Name";
+
     public static void setUIElements(Locale locale) {
         ResourceBundle labels = ResourceBundle
                 .getBundle("de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.LabelsBundle", locale);
@@ -412,5 +415,8 @@ public class UIElementNames {
         SEARCH_BAR_SEARCH_BACKWARD = labels.getString("SEARCH_BAR_SEARCH_BACKWARD");
         SEARCH_BAR_REGULAR_EXPRESSION = labels.getString("SEARCH_BAR_REGULAR_EXPRESSION");
         SEARCH_BAR_MESSAGE_TEXT_NOT_FOUND = labels.getString("SEARCH_BAR_MESSAGE_TEXT_NOT_FOUND");
+
+        //Multidialog
+        MULTILINEDIALOG_NAME = labels.getString("MULTILINEDIALOG_NAME");
     }
 }
