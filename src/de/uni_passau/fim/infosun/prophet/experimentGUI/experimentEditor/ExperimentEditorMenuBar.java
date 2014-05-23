@@ -18,6 +18,7 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentEditor.tabbedPa
 import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentEditor.tabbedPane.editorTabs.ContentEditorPanel;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.Pair;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.miniEditors.MacroEditor;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTree;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeModel;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode;
@@ -146,30 +147,6 @@ public class ExperimentEditorMenuBar extends JMenuBar {
         qTreeModel.setRoot(treeRoot);
         owner.setTitle(ExperimentEditor.TITLE + " - " + currentFile.getAbsolutePath());
     };
-//    private class LoadActionListener implements ActionListener {
-//
-//        public void actionPerformed(ActionEvent arg0) {
-//            JFileChooser fc = new JFileChooser(currentFile == null ? new File(".") : currentFile);
-//            if (fc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-//                currentFile = fc.getSelectedFile();
-//                try {
-//                    QuestionTreeNode myTree = QuestionTreeXMLHandler.loadXMLTree(currentFile.getAbsolutePath());
-//                    if (myTree != null) {
-//                        experimentEditor.loadTree(myTree);
-//                        experimentEditor.setTitle(ExperimentEditor.TITLE + " - " + currentFile.getAbsolutePath());
-//
-//                        enableMenuItems();
-//                    } else {
-//                        JOptionPane
-//                                .showMessageDialog(experimentEditor, UIElementNames.MESSAGE_NO_VALID_EXPERIMENT_FILE);
-//                    }
-//                } catch (FileNotFoundException e) {
-//                    JOptionPane.showMessageDialog(experimentEditor, UIElementNames.MESSAGE_FILE_NOT_FOUND,
-//                            UIElementNames.MESSAGE_ERROR, JOptionPane.ERROR_MESSAGE);
-//                }
-//            }
-//        }
-//    }
 
     private ActionListener saveActionListener = event -> {
 
@@ -186,20 +163,6 @@ public class ExperimentEditorMenuBar extends JMenuBar {
             saveAsMenuItem.doClick();
         }
     };
-
-//
-//    private class SaveActionListener implements ActionListener {
-//
-//        public void actionPerformed(ActionEvent arg0) {
-//            if (currentFile != null) {
-//                experimentEditor.getTabbedPane().save();
-//                QuestionTreeXMLHandler
-//                        .saveXMLTree(experimentEditor.getTreeComponent().getRoot(), currentFile.getAbsolutePath());
-//            } else {
-//                saveAsMenuItem.doClick();
-//            }
-//        }
-//    }
 
     private ActionListener saveAsActionListener = event -> {
       JFileChooser fileChooser = new JFileChooser(currentFile == null ? new File(".") : currentFile);
@@ -230,33 +193,6 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 
         owner.setTitle(ExperimentEditor.TITLE + " - " + currentFile.getAbsolutePath());
     };
-
-//    private class SaveAsActionListener implements ActionListener {
-//
-//        public void actionPerformed(ActionEvent arg0) {
-//            JFileChooser fc = new JFileChooser(currentFile);
-//
-//            if (fc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
-//                File file = fc.getSelectedFile();
-//
-//                if (file.exists()) {
-//                    int n = JOptionPane.showConfirmDialog(null, file.getName() + UIElementNames.MESSAGE_REPLACE_FILE,
-//                            UIElementNames.MESSAGE_REPLACE_FILE_TITLE, JOptionPane.YES_NO_OPTION);
-//                    if (n == JOptionPane.NO_OPTION) {
-//                        return;
-//                    }
-//                }
-//
-//                currentFile = file;
-//
-//                QuestionTreeNode rootNode = experimentEditor.getTreeComponent().getRoot();
-//                QuestionTreeXMLHandler.saveXMLTree(rootNode, file.getAbsolutePath());
-//
-//                experimentEditor.setTitle(ExperimentEditor.TITLE + " - " + currentFile.getAbsolutePath());
-//                enableMenuItems();
-//            }
-//        }
-//    }
 
 //    private class ExportHTMLFileActionListener implements ActionListener {
 //
@@ -457,6 +393,10 @@ public class ExperimentEditorMenuBar extends JMenuBar {
         nameCheckMenuItem = new JMenuItem(UIElementNames.MENU_ITEM_CHECK_FORM_NAMES);
         extrasMenu.add(nameCheckMenuItem);
         nameCheckMenuItem.addActionListener(nameCheckActionListener);
+
+        JMenuItem macroEd = new JMenuItem(MacroEditor.class.getSimpleName());
+        extrasMenu.add(macroEd);
+        macroEd.addActionListener(event -> MacroEditor.main(null));
 
         closeMenuItem.addActionListener(closeActionListener);
     }
