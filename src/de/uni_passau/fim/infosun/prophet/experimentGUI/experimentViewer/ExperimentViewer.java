@@ -11,7 +11,12 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import javax.swing.*;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextPane;
+import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.html.HTMLEditorKit;
@@ -86,6 +91,7 @@ public class ExperimentViewer extends JFrame {
      * initialized. The first question is showed.
      */
     public ExperimentViewer() {
+        setLayout(new BorderLayout());
         setTitle("Aufgaben");
         setSize(800, 600);
         setLocationRelativeTo(null);
@@ -164,6 +170,7 @@ public class ExperimentViewer extends JFrame {
             }
         });
         contentPane = new JPanel();
+        contentPane.setLayout(new BorderLayout());
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         setContentPane(contentPane);
         PluginList.experimentViewerRun(this);
