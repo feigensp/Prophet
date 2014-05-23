@@ -1,6 +1,7 @@
 package de.uni_passau.fim.infosun.prophet.experimentGUI.experimentEditor.tabbedPane.editorTabs.contentEditorToolBar;
 
 import java.awt.Component;
+import javax.swing.BorderFactory;
 import javax.swing.JToolBar;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
@@ -24,10 +25,14 @@ public class ContentEditorToolBar extends JToolBar {
      */
     public ContentEditorToolBar(RSyntaxTextArea textArea) {
         setFloatable(false);
+        setBorder(BorderFactory.createEmptyBorder(0, 0, 3, 0));
 
         add(new FontStyleComboBox(textArea));
+        addSeparator();
         add(new FontSizeComboBox(textArea));
+        addSeparator();
         add(new FormComboBox(textArea));
+        addSeparator();
         add(new MacroComboBox(textArea));
     }
 
