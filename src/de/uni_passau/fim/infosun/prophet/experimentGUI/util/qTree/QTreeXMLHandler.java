@@ -230,7 +230,7 @@ public class QTreeXMLHandler {
         attributes = element.getChild(TYPE_ATTRIBUTES);
 
         if (attributes != null) {
-            attributeNodes = element.getChildren(TYPE_ATTRIBUTE);
+            attributeNodes = attributes.getChildren(TYPE_ATTRIBUTE);
             attributeNodes.forEach(attElement -> attribute.addSubAttribute(loadOldAttributeNode(attElement)));
         }
 
