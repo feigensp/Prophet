@@ -44,6 +44,7 @@ public class ExperimentEditorMenuBar extends JMenuBar {
     private JMenuItem nameCheckMenuItem;
     private JMenuItem exportCSVMenuItem;
     private JMenu exportMenu;
+    private FileNameExtensionFilter extensionFilter = new FileNameExtensionFilter("Experiment XML", "*.xml");
 
 //    private class XMLToCSVActionListener implements ActionListener {
 //
@@ -130,7 +131,7 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 
     private ActionListener loadActionListener = event -> {
         JFileChooser fileChooser = new JFileChooser(currentFile == null ? new File(".") : currentFile);
-        fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("Experiment XML", "*.xml"));
+        fileChooser.setFileFilter(extensionFilter);
 
         if (fileChooser.showOpenDialog(owner) != JFileChooser.APPROVE_OPTION) {
             return;
@@ -165,13 +166,20 @@ public class ExperimentEditorMenuBar extends JMenuBar {
     };
 
     private ActionListener saveAsActionListener = event -> {
-      JFileChooser fileChooser = new JFileChooser(currentFile == null ? new File(".") : currentFile);
+        JFileChooser fileChooser = new JFileChooser(currentFile == null ? new File(".") : currentFile);
+        fileChooser.setFileFilter(extensionFilter);
 
         if (fileChooser.showSaveDialog(owner) != JFileChooser.APPROVE_OPTION) {
             return;
         }
 
         File chosenFile = fileChooser.getSelectedFile();
+        String path = chosenFile.getPath();
+        String suffix = ".xml";
+
+        if (!path.endsWith(suffix)) {
+            chosenFile = new File(path + suffix);
+        }
 
         if (chosenFile.exists()) {
             int option = JOptionPane.showConfirmDialog(owner, chosenFile.getName() + UIElementNames.MESSAGE_REPLACE_FILE,
