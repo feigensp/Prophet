@@ -59,8 +59,14 @@ public class MacroComboBox extends JComboBox<String> {
 
             @Override
             public void keyReleased(KeyEvent ke) {
+                String macroText;
+
                 if (ke.isControlDown()) {
-                    useMacro(keyCodeMap.get(ke.getKeyCode()));
+                    macroText = keyCodeMap.get(ke.getKeyCode());
+
+                    if (macroText != null) {
+                        useMacro(macroText);
+                    }
                 }
             }
         });
