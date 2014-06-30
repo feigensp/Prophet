@@ -329,7 +329,7 @@ public class ExperimentViewer extends JFrame {
         currentViewPane = textPanes.get(currentNode);
         if (currentViewPane == null) {
             currentViewPane = new QuestionViewPane(currentNode);
-            currentViewPane.setActionListener(myActionListener);
+            currentViewPane.addActionListener(myActionListener);
             textPanes.put(currentNode, currentViewPane);
         }
         contentPane.add(currentViewPane, BorderLayout.CENTER);
