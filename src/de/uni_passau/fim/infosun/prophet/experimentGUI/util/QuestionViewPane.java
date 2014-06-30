@@ -1,9 +1,12 @@
 package de.uni_passau.fim.infosun.prophet.experimentGUI.util;
 
 import java.awt.Desktop;
+import java.awt.Font;
+import java.awt.FontFormatException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -15,11 +18,14 @@ import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
+import javax.swing.UIManager;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.Element;
+import javax.swing.text.MutableAttributeSet;
 import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
 import javax.swing.text.View;
 import javax.swing.text.ViewFactory;
 import javax.swing.text.html.FormView;
@@ -75,6 +81,18 @@ public class QuestionViewPane extends JScrollPane {
 
     private FormView submitButton;
     private boolean doNotFire = false;
+
+    private static Font f;
+
+    static {
+        InputStream fontInput = QuestionViewPane.class.getResourceAsStream("/font/VERDANAB.TTF");
+
+        try {
+            f = Font.createFont(Font.TRUETYPE_FONT, fontInput);
+        } catch (FontFormatException | IOException e) {
+            f = UIManager.getDefaults().getFont("TextPane.font");
+        }
+    }
 
     /**
      * A <code>HyperlinkListener</code> that will try and open links in the systems standard browser.
@@ -169,6 +187,14 @@ public class QuestionViewPane extends JScrollPane {
         ((HTMLDocument) textPane.getDocument()).setBase(trueBase);
 
         textPane.setText(getHTMLString(questionNode));
+
+        MutableAttributeSet attrs = textPane.getInputAttributes();
+        StyleConstants.setFontFamily(attrs, f.getFamily());
+        StyleConstants.setFontSize(attrs, 12);
+
+        StyledDocument styledDocument = textPane.getStyledDocument();
+        styledDocument.setCharacterAttributes(0, styledDocument.getLength() + 1, attrs, false);
+
         textPane.setCaretPosition(0);
     }
 
