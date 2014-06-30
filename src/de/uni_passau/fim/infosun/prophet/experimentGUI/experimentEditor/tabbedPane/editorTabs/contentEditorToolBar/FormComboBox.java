@@ -41,6 +41,7 @@ public class FormComboBox extends JComboBox<String> implements ActionListener {
         forms.add(UIElementNames.HTML_COMBO_BOX);   // index 4
         forms.add(UIElementNames.HTML_RADIO_BUTTON);// index 5
         forms.add(UIElementNames.HTML_CHECK_BOX);   // index 6
+        forms.add(UIElementNames.HTML_TABLE);       // index 7
 
         addItem(UIElementNames.MENU_TAB_EDITOR_FORMS);
         forms.forEach(this::addItem);
@@ -72,9 +73,56 @@ public class FormComboBox extends JComboBox<String> implements ActionListener {
             case 6: // CheckBox
                 insertCheckBox(event);
                 break;
+            case 7: // Table
+                insertTable(event);
+                break;
         }
 
         setSelectedIndex(0);
+    }
+
+    /**
+     * Inserts a HTML Table replacing the current selection in the <code>textArea</code>.
+     *
+     * @param event
+     *         the <code>ActionEvent</code> that caused the insertion
+     */
+    private void insertTable(ActionEvent event) {
+        Component parent = SwingUtilities.getWindowAncestor(((Component) event.getSource()));
+        Pair<String, String[][]> tableInfo = TableDialog.showTableDialog(parent,
+                UIElementNames.DIALOG_DEFINE_TABLE_INFORMATION);
+
+        if (tableInfo == null) {
+            return;
+        }
+
+        String tableFormat = "<table name=\"%s\">%n%s</table>";
+        String rowFormat = "  <tr>%n%s  </tr>%n";
+        String tableHeaderFormat = "    <th>%s</th>%n";
+        String tableDataFormat = "    <td>%s</td>%n";
+        String formatString;
+
+        StringBuilder rowBuilder = new StringBuilder();
+        StringBuilder tableBuilder = new StringBuilder();
+
+        String[][] table = tableInfo.getValue();
+
+        for (int i = 0; i < table.length; i++) {
+            rowBuilder.delete(0, rowBuilder.length());
+
+            if (i == 0) {
+                formatString = tableHeaderFormat;
+            } else {
+                formatString = tableDataFormat;
+            }
+
+            for (String s : table[i]) {
+                rowBuilder.append(String.format(formatString, s));
+            }
+            tableBuilder.append(String.format(rowFormat, rowBuilder.toString()));
+        }
+
+        textArea.replaceSelection(String.format(tableFormat, tableInfo.getKey(), tableBuilder.toString()));
     }
 
     /**
@@ -95,9 +143,9 @@ public class FormComboBox extends JComboBox<String> implements ActionListener {
 
         StringBuilder checks = new StringBuilder();
 
-        formatString = "<input type=\"checkbox\" name=\"%s\" id=\"%s\" value=\"%s\">%s<br>%n";
+        formatString = "<input type=\"checkbox\" name=\"%s\" value=\"%s\">%s<br>%n";
         for (String checkEntry : checkInfo.getValue()) {
-            checks.append(String.format(formatString, checkInfo.getKey(), checkInfo.getKey(), checkEntry, checkEntry));
+            checks.append(String.format(formatString, checkInfo.getKey(), checkEntry, checkEntry));
         }
 
         textArea.replaceSelection(checks.toString());
@@ -121,9 +169,9 @@ public class FormComboBox extends JComboBox<String> implements ActionListener {
 
         StringBuilder radios = new StringBuilder();
 
-        formatString = "<input type=\"radio\" name=\"%s\" id=\"%s\" value=\"%s\">%s<br>%n";
+        formatString = "<input type=\"radio\" name=\"%s\" value=\"%s\">%s<br>%n";
         for (String radioEntry : radioInfo.getValue()) {
-            radios.append(String.format(formatString, radioInfo.getKey(), radioInfo.getKey(), radioEntry, radioEntry));
+            radios.append(String.format(formatString, radioInfo.getKey(), radioEntry, radioEntry));
         }
 
         textArea.replaceSelection(radios.toString());
@@ -151,8 +199,8 @@ public class FormComboBox extends JComboBox<String> implements ActionListener {
             combos.append(String.format("%n<option value=\"%s\">%s</option>", comboEntry, comboEntry));
         }
 
-        formatString = "<select name=\"%s\" id=\"%s\">%s%n</select>";
-        textArea.replaceSelection(String.format(formatString, comboInfo.getKey(), comboInfo.getKey(), combos.toString()));
+        formatString = "<select name=\"%s\">%s%n</select>";
+        textArea.replaceSelection(String.format(formatString, comboInfo.getKey(), combos.toString()));
     }
 
     /**
@@ -177,8 +225,8 @@ public class FormComboBox extends JComboBox<String> implements ActionListener {
             list.append(String.format("%n<option value=\"%s\">%s</option>", listEntry, listEntry));
         }
 
-        formatString = "<select name=\"%s\" id=\"%s\" size=\"3\" multiple>%s%n</select>";
-        textArea.replaceSelection(String.format(formatString, listInfo.getKey(), listInfo.getKey(), list.toString()));
+        formatString = "<select name=\"%s\" size=\"3\" multiple>%s%n</select>";
+        textArea.replaceSelection(String.format(formatString, listInfo.getKey(), list.toString()));
     }
 
     /**
@@ -194,8 +242,8 @@ public class FormComboBox extends JComboBox<String> implements ActionListener {
             return;
         }
 
-        formatString = "<textarea name=\"%s\" id=\"%s\" cols=\"50\" rows=\"10\"></textarea>";
-        textArea.replaceSelection(String.format(formatString, textAreaName, textAreaName));
+        formatString = "<textarea name=\"%s\" cols=\"50\" rows=\"10\"></textarea>";
+        textArea.replaceSelection(String.format(formatString, textAreaName));
     }
 
     /**
@@ -211,7 +259,7 @@ public class FormComboBox extends JComboBox<String> implements ActionListener {
             return;
         }
 
-        formatString = "<input type=\"text\" name=\"%s\" id=\"%s\">";
-        textArea.replaceSelection(String.format(formatString, textFieldName, textFieldName));
+        formatString = "<input type=\"text\" name=\"%s\">";
+        textArea.replaceSelection(String.format(formatString, textFieldName));
     }
 }

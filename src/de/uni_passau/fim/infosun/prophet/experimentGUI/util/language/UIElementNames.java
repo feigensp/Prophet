@@ -65,11 +65,13 @@ public class UIElementNames {
     public static String HTML_COMBO_BOX = "Combo box";
     public static String HTML_RADIO_BUTTON = "Radio button";
     public static String HTML_CHECK_BOX = "Check box";
+    public static String HTML_TABLE = "Table";
 
     public static String MENU_TAB_EDITOR_FORMS = "Forms";
     public static String DIALOG_DEFINE_TEXT_FIELD = "Name of text field";
     public static String DIALOG_DEFINE_TEXT_AREA = "Name of text area";
     public static String DIALOG_DEFINE_LIST_INFORMATION = "List information";
+    public static String DIALOG_DEFINE_TABLE_INFORMATION = "Table information";
     public static String MENU_TAB_EDITOR_MACROS = "Select macro";
     public static String KEYBOARD_CTRL = "Ctrl";
 
