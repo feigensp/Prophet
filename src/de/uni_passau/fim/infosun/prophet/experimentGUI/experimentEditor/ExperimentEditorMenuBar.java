@@ -9,7 +9,14 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import javax.swing.*;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -44,7 +51,7 @@ public class ExperimentEditorMenuBar extends JMenuBar {
     private JMenuItem nameCheckMenuItem;
     private JMenuItem exportCSVMenuItem;
     private JMenu exportMenu;
-    private FileNameExtensionFilter extensionFilter = new FileNameExtensionFilter("Experiment XML", "*.xml");
+    private FileNameExtensionFilter extensionFilter = new FileNameExtensionFilter("Experiment XML", "xml");
 
 //    private class XMLToCSVActionListener implements ActionListener {
 //
