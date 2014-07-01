@@ -1,6 +1,7 @@
 package de.uni_passau.fim.infosun.prophet.experimentGUI.experimentEditor;
 
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
@@ -9,28 +10,24 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.KeyStroke;
-import javax.swing.SwingUtilities;
+import java.util.Map;
+import javax.swing.*;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.tree.TreePath;
 
 import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentEditor.tabbedPane.ExperimentEditorTabbedPane;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentEditor.tabbedPane.editorTabs.ContentEditorPanel;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.Pair;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.miniEditors.MacroEditor;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTree;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeHTMLHandler;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeModel;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeXMLHandler;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTree.QuestionTreeHTMLHandler;
+import org.jsoup.nodes.Element;
+import org.jsoup.parser.Tag;
 
 import static de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode.Type.EXPERIMENT;
 
@@ -162,7 +159,7 @@ public class ExperimentEditorMenuBar extends JMenuBar {
             tabbedPane.save();
 
             try {
-                QTreeXMLHandler.saveExperimentXML((QTreeNode) qTreeModel.getRoot(), currentFile);
+                QTreeXMLHandler.saveExperimentXML(qTreeModel.getRoot(), currentFile);
             } catch (IOException e) {
                 JOptionPane.showMessageDialog(owner, UIElementNames.MESSAGE_SAVE_ERROR,
                         UIElementNames.MESSAGE_ERROR, JOptionPane.ERROR_MESSAGE);
@@ -200,7 +197,7 @@ public class ExperimentEditorMenuBar extends JMenuBar {
         currentFile = chosenFile;
 
         try {
-            QTreeXMLHandler.saveExperimentXML((QTreeNode) qTreeModel.getRoot(), currentFile);
+            QTreeXMLHandler.saveExperimentXML(qTreeModel.getRoot(), currentFile);
         } catch (IOException e) {
             JOptionPane.showMessageDialog(owner, UIElementNames.MESSAGE_SAVE_ERROR, UIElementNames.MESSAGE_ERROR,
                     JOptionPane.ERROR_MESSAGE);
@@ -258,50 +255,48 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 //    }
 
     private ActionListener nameCheckActionListener = event -> {
-        String globalOutput = "";
+        Map<String, List<TreePath>> duplicates = QTreeHTMLHandler.checkNames(qTreeModel.getRoot());
 
-        // get infos
-        QTreeNode root = (QTreeNode) qTreeModel.getRoot();
-        List<Pair<QTreeNode, List<Pair<String, String>>>> formInfos = QuestionTreeHTMLHandler.getForms(root);
+        if (duplicates.isEmpty()) {
+            JOptionPane.showMessageDialog(null, UIElementNames.MESSAGE_DUPLICATE_TITLE_NO_DUPLICATES_EXIST);
+            return;
+        }
 
-        for (Pair<QTreeNode, List<Pair<String, String>>> nodeInfo : formInfos) {
-            String output = "<b>" + nodeInfo.getKey().getName() + ":</b><br>";
-            List<Pair<String, String>> forms = nodeInfo.getValue();
-            boolean add = false;
-            for (int i = 0; i < forms.size() - 1; i++) {
-                Pair<String, String> currentForm = forms.get(i);
-                int appearances = 1;
-                // anzahl der vorkommen des derzeitigen
-                // formularelementes berechnen
-                for (int j = i + 1; j < forms.size(); j++) {
-                    if (currentForm.getKey() != null && currentForm.getKey().equals(forms.get(j).getKey())) {
-                        if ((currentForm.getValue() != null && currentForm.getValue().equals(forms.get(j).getValue()))
-                                || currentForm.getValue() == null && forms.get(j).getValue() == null) {
-                            appearances++;
-                            forms.remove(forms.get(j));
-                            j--;
-                        }
-                    }
+        // build a html table containing the returned duplicates
+        String tableRow = "tr";
+        String tableHeader = "th";
+        String tableData = "td";
+        Element html = new Element(Tag.valueOf("html"), "");
+        Element table = html.appendElement("table");
+        Element header = table.appendElement(tableRow);
+        Element row;
+
+        table.attr("border", "1");
+        header.appendElement(tableHeader).text(UIElementNames.MULTILINEDIALOG_NAME);
+        header.appendElement(tableHeader).text(UIElementNames.MESSAGE_DUPLICATE_APPEARANCE);
+
+        boolean first;
+        for (Map.Entry<String, List<TreePath>> entry : duplicates.entrySet()) {
+
+            first = true;
+            for (TreePath tPath : entry.getValue()) {
+                row = table.appendElement(tableRow);
+
+                if (first) {
+                    row.appendElement(tableData).text(entry.getKey());
+                } else {
+                    row.appendElement(tableData);
                 }
-                if (appearances > 1) {
-                    output += "Name = " + currentForm.getKey() + (currentForm.getValue() != null ? "; Value = "
-                            + currentForm.getValue() : "; " + UIElementNames.MESSAGE_DUPLICATE_NO_VALUE) + "; "
-                            + UIElementNames.MESSAGE_DUPLICATE_APPEARANCE + " = " + appearances + "<br>";
-                    add = true;
-                }
+                row.appendElement(tableData).text(tPath.toString());
+                first = false;
             }
-            globalOutput += add ? output + "<br>" : "";
         }
 
-        String msg;
-        if (globalOutput.length() > 0) {
-            msg = String.format("<html>%s<br><br>%s</html>", UIElementNames.MESSAGE_DUPLICATE_TITLE_DUPLICATES_EXIST,
-                    globalOutput);
-        } else {
-            msg = UIElementNames.MESSAGE_DUPLICATE_TITLE_NO_DUPLICATES_EXIST;
-        }
+        JScrollPane sPane = new JScrollPane(new JLabel(html.toString()));
+        sPane.setPreferredSize(new Dimension(sPane.getPreferredSize().width + 20, 500));
 
-        JOptionPane.showMessageDialog(null, msg);
+        JOptionPane.showMessageDialog(null,sPane,
+                UIElementNames.MESSAGE_DUPLICATE_TITLE_DUPLICATES_EXIST, JOptionPane.INFORMATION_MESSAGE);
     };
 
     /**
@@ -317,12 +312,7 @@ public class ExperimentEditorMenuBar extends JMenuBar {
         this.qTreeModel = (QTreeModel) qTree.getModel();
         this.tabbedPane = tabbedPane;
 
-        //DATEI
-
-        JMenu fileMenu = new JMenu(UIElementNames.MENU_FILE);
-        add(fileMenu);
-
-        fileMenu.addMenuListener(new MenuListener() {
+        MenuListener enableListener = new MenuListener() {
 
             @Override
             public void menuSelected(MenuEvent e) {
@@ -346,7 +336,13 @@ public class ExperimentEditorMenuBar extends JMenuBar {
             public void menuCanceled(MenuEvent e) {
 
             }
-        });
+        };
+
+        //DATEI
+
+        JMenu fileMenu = new JMenu(UIElementNames.MENU_FILE);
+        add(fileMenu);
+        fileMenu.addMenuListener(enableListener);
 
         JMenuItem newMenuItem = new JMenuItem(UIElementNames.MENU_FILE_NEW);
         newMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_MASK));
@@ -404,6 +400,7 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 
         JMenu extrasMenu = new JMenu(UIElementNames.MENU_PLAUSIBILITY_FEATURES);
         add(extrasMenu);
+        extrasMenu.addMenuListener(enableListener);
 
         nameCheckMenuItem = new JMenuItem(UIElementNames.MENU_ITEM_CHECK_FORM_NAMES);
         extrasMenu.add(nameCheckMenuItem);
