@@ -3,41 +3,50 @@ package de.uni_passau.fim.infosun.prophet.experimentGUI.experimentEditor.tabbedP
 import java.awt.Component;
 import javax.swing.JComponent;
 import javax.swing.JTabbedPane;
+import javax.swing.tree.TreePath;
 
 import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentEditor.tabbedPane.editorTabs.ContentEditorPanel;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentEditor.tabbedPane.editorTabs.ContentViewerPanel;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentEditor.tabbedPane.editorTabs.NoteEditorPanel;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentEditor.tabbedPane.editorTabs.SettingsEditorPanel;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTree;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode;
 
 /**
  * The right-side tabbed pane of the Experiment Editor
  *
+ * @author Georg Seibt
  * @author Andreas Hasselberg
  * @author Markus Köppen
  */
 public class ExperimentEditorTabbedPane extends JTabbedPane {
 
-    /**
-     * the currently selected QuestionTreeNode
-     */
-    private QTreeNode selected;
-    /**
-     * the currently open ExperimentEditorTab
-     */
+    private QTreeNode currentNode;
     private ExperimentEditorTab currentTab;
 
     /**
-     * Constructor
+     * Constructs a new <code>ExperimentEditorTabbedPane</code>.
+     *
+     * @param tree
+     *         the <code>QTree</code> used in the <code>ExperimentEditor</code>
      */
-    public ExperimentEditorTabbedPane() {
-        addChangeListener(event -> {
-            if (currentTab != null) {
+    public ExperimentEditorTabbedPane(QTree tree) {
+
+        tree.addTreeSelectionListener(event -> {
+            TreePath selectionPath = tree.getSelectionPath();
+
+            if (selectionPath != null) {
                 save();
+                currentNode = (QTreeNode) selectionPath.getLastPathComponent();
+                currentTab.activate(currentNode);
             }
-            activate();
+        });
+
+        addChangeListener(event -> {
+            save();
             currentTab = (ExperimentEditorTab) getSelectedComponent();
+            currentTab.activate(currentNode);
         });
 
         addEditorPanel(UIElementNames.MENU_TAB_EDITOR, new ContentEditorPanel());
@@ -47,41 +56,24 @@ public class ExperimentEditorTabbedPane extends JTabbedPane {
     }
 
     /**
-     * Adds a new ExperimentEditorTab the the TabbedPane
+     * Adds the given <code>ExperimentEditorTab</code> to this <code>TabbedPane</code>.
      *
      * @param caption
-     *         caption of the new tab
-     * @param panel
-     *         the tab to be added
+     *         the caption for the <code>ExperimentEditorTab</code>
+     * @param tab
+     *         the <code>ExperimentEditorTab</code> to be added
      */
-    public void addEditorPanel(String caption, ExperimentEditorTab panel) {
-        addTab(caption, null, panel, null);
+    private void addEditorPanel(String caption, ExperimentEditorTab tab) {
+        addTab(caption, null, tab, null);
     }
 
     /**
-     * Called upon change in the currently selected QuestionTreeNode. Saves the current tab and then loads the new
-     * node.
-     *
-     * @param selected
-     */
-    public void setSelected(QTreeNode selected) {
-        save();
-        this.selected = selected;
-        activate();
-    }
-
-    /**
-     * Informs the currently active editor tab that a new node might have been opened (reload).
-     */
-    private void activate() {
-        ((ExperimentEditorTab) getSelectedComponent()).activate(selected);
-    }
-
-    /**
-     * saves the current tab
+     * Saves the state of the currently selected tab.
      */
     public void save() {
-        currentTab.save();
+        if (currentTab != null) {
+            currentTab.save();
+        }
     }
 
     /**

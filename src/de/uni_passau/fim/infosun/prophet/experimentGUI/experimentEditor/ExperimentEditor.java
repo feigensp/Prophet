@@ -3,57 +3,44 @@ package de.uni_passau.fim.infosun.prophet.experimentGUI.experimentEditor;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.EventQueue;
 import java.util.Locale;
-import javax.swing.*;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JSplitPane;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.WindowConstants;
 import javax.swing.plaf.basic.BasicSplitPaneDivider;
-import javax.swing.tree.TreePath;
 
 import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentEditor.tabbedPane.ExperimentEditorTabbedPane;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTree;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode;
 
 /**
- * An ExperimentEditor is a frame which allows its user to create and edit
- * experiments usable in the ExperimentViewer
+ * An editor for experiments that can be viewed by experimentees using the <code>ExperimentViewer</code>.
  *
+ * @author Georg Seibt
  * @author Andreas Hasselberg
  * @author Markus Köppen
  */
 public class ExperimentEditor extends JFrame {
 
     /**
-     * The window title for the main frame
-     */
-    public static final String TITLE = "ExperimentEditor";
-
-    /**
-     * JTree component on the left side of the ExperimentEditor
-     */
-    private QTree tree;
-
-    /**
-     * JTabbedPane component on the right side of the ExperimentEditor
-     */
-    private ExperimentEditorTabbedPane questionEditorTabbedPane;
-
-    /**
-     * Main method to launch the ExperimentEditor
+     * Shows the GUI of the <code>ExperimentEditor</code>.
      *
      * @param args
-     *         not used
+     *         command line arguments, ignored by this application
      */
     public static void main(String[] args) {
-        EventQueue.invokeLater(() -> {
+        SwingUtilities.invokeLater(() -> {
+
             try {
-                String laf = UIManager.getSystemLookAndFeelClassName();
-                UIManager.setLookAndFeel(laf);
-                ExperimentEditor frame = new ExperimentEditor();
-                frame.setVisible(true);
+                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
             } catch (Exception e) {
-                e.printStackTrace();
+                System.out.println("Could not set the look and feel to the system look and feel.\n" + e.getMessage());
             }
+
+            new ExperimentEditor().setVisible(true);
         });
     }
 
@@ -75,30 +62,21 @@ public class ExperimentEditor extends JFrame {
         UIElementNames.setUIElements(locale);
 
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        setSize(800, 600);
+        setTitle(getClass().getSimpleName());
         setLocationRelativeTo(null);
-        setTitle(TITLE);
+        setSize(800, 600);
 
         JSplitPane splitPane = new JSplitPane();
         add(splitPane, BorderLayout.CENTER);
 
-        ExperimentEditorTabbedPane tabbedPane = new ExperimentEditorTabbedPane();
-        tabbedPane.setBorder(null); // TODO nötig?
-        splitPane.setRightComponent(tabbedPane);
-
         QTree tree = new QTree();
-        tree.setPreferredSize(new Dimension(175, 10));
-        tree.addTreeSelectionListener(event -> {
-            TreePath selectionPath = tree.getSelectionPath();
-
-            if (selectionPath != null) {
-                tabbedPane.setSelected((QTreeNode) selectionPath.getLastPathComponent());
-            }
-        });
-        tree.setBorder(null); // TODO nötig?
+        tree.setPreferredSize(new Dimension(getSize().width / 5, splitPane.getPreferredSize().height));
         splitPane.setLeftComponent(tree);
 
-        splitPane.setBorder(null); //TODO nötig?
+        ExperimentEditorTabbedPane tabbedPane = new ExperimentEditorTabbedPane(tree);
+        splitPane.setRightComponent(tabbedPane);
+
+        splitPane.setBorder(null);
         for (Component component : splitPane.getComponents()) {
             if (component instanceof BasicSplitPaneDivider) {
                 ((BasicSplitPaneDivider) component).setBorder(null);

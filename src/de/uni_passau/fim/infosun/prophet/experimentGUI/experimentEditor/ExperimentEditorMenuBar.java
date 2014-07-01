@@ -150,7 +150,7 @@ public class ExperimentEditorMenuBar extends JMenuBar {
         }
 
         qTreeModel.setRoot(treeRoot);
-        owner.setTitle(ExperimentEditor.TITLE + " - " + currentFile.getAbsolutePath());
+        owner.setTitle(ExperimentEditor.class.getSimpleName() + " - " + currentFile.getAbsolutePath());
     };
 
     private ActionListener saveActionListener = event -> {
@@ -203,7 +203,7 @@ public class ExperimentEditorMenuBar extends JMenuBar {
                     JOptionPane.ERROR_MESSAGE);
         }
 
-        owner.setTitle(ExperimentEditor.TITLE + " - " + currentFile.getAbsolutePath());
+        owner.setTitle(ExperimentEditor.class.getSimpleName() + " - " + currentFile.getAbsolutePath());
     };
 
 //    private class ExportHTMLFileActionListener implements ActionListener {
