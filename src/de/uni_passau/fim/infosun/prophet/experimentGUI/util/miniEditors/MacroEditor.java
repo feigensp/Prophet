@@ -1,7 +1,15 @@
 package de.uni_passau.fim.infosun.prophet.experimentGUI.util.miniEditors;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.GridLayout;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -82,7 +90,7 @@ public class MacroEditor extends JFrame {
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         setPreferredSize(new Dimension(400, 300));
-        setTitle("MacroEditor");
+        setTitle(getClass().getSimpleName());
         setJMenuBar(createMenuBar());
         addWindowListener(new WindowAdapter() {
 
@@ -147,14 +155,14 @@ public class MacroEditor extends JFrame {
 
             @Override
             public void mouseReleased(MouseEvent e) {
-                if (e.isPopupTrigger()) {
+                if (e.isPopupTrigger() && macroJList.getModel().getSize() != 0) {
                     show(e);
                 }
             }
 
             @Override
             public void mousePressed(MouseEvent e) {
-                if (e.isPopupTrigger()) {
+                if (e.isPopupTrigger() && macroJList.getModel().getSize() != 0) {
                     show(e);
                 }
             }
@@ -188,6 +196,7 @@ public class MacroEditor extends JFrame {
         JPanel textPanel = new JPanel();
         JLabel textLabel = new JLabel("Text:");
         textField = new JTextField();
+        JButton addButton = new JButton("Add");
 
         ActionListener newMacroListener = event -> {
             String name = nameField.getText();
@@ -210,13 +219,24 @@ public class MacroEditor extends JFrame {
                     macro.text = textField.getText();
                     model.set(model.indexOf(macro), macro);
                 }
-            } else {
+            } else if (!event.getSource().equals(addButton)) {
                 Component focusOwner = getFocusOwner();
+                boolean switchFocus = true;
 
-                if (focusOwner.equals(textField)) {
-                    nameField.requestFocus();
-                } else {
-                    focusOwner.transferFocus();
+                if (focusOwner.equals(nameField)) {
+                    switchFocus = !nameField.getText().trim().isEmpty();
+                } else if (focusOwner.equals(keyField)) {
+                    switchFocus = !keyField.getText().trim().isEmpty();
+                } else if (focusOwner.equals(textField)) {
+                    switchFocus = !textField.getText().trim().isEmpty();
+                }
+
+                if (switchFocus) {
+                    if (focusOwner.equals(textField)) {
+                        nameField.requestFocus();
+                    } else {
+                        focusOwner.transferFocus();
+                    }
                 }
             }
         };
@@ -224,6 +244,9 @@ public class MacroEditor extends JFrame {
         nameField.addActionListener(newMacroListener);
         keyField.addActionListener(newMacroListener);
         textField.addActionListener(newMacroListener);
+        addButton.addActionListener(newMacroListener);
+
+        textLabel.setPreferredSize(nameLabel.getPreferredSize());
 
         nameKeyPanel.setLayout(new BoxLayout(nameKeyPanel, BoxLayout.LINE_AXIS));
         nameKeyPanel.add(nameLabel);
@@ -238,6 +261,8 @@ public class MacroEditor extends JFrame {
         textPanel.add(textLabel);
         textPanel.add(Box.createHorizontalStrut(5));
         textPanel.add(textField);
+        textPanel.add(Box.createHorizontalStrut(5));
+        textPanel.add(addButton);
 
         panel.setLayout(new GridLayout(2, 1, 0, 5));
         panel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
@@ -268,6 +293,10 @@ public class MacroEditor extends JFrame {
             }
         });
 
+        closeMenuItem.addActionListener(event -> {
+            processWindowEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+        });
+
         menuBar.add(menu);
         menu.add(saveMenuItem);
         menu.add(closeMenuItem);
@@ -288,7 +317,11 @@ public class MacroEditor extends JFrame {
      * Saves the current macros to the macros.xml file.
      */
     private void saveXMLFile() throws IOException {
-        xStream.toXML(Collections.list(model.elements()), new FileWriter(xmlFile));
+        List<Macro> list = Collections.list(model.elements());
+
+        if (!list.isEmpty()) {
+            xStream.toXML(list, new FileWriter(xmlFile));
+        }
     }
 
     /**
@@ -304,7 +337,7 @@ public class MacroEditor extends JFrame {
     }
 
     /**
-     * Validates whether the given <code>name</code>, <code>key</code>, and <code>text</code> produce a valid macro.
+     * Validates whether the given <code>name</code>, <code>key</code>, and <code>text</code> produce a macro.
      *
      * @param name
      *         the name for the macro
