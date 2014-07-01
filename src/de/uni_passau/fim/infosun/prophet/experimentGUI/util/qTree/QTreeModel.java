@@ -157,19 +157,18 @@ public class QTreeModel implements TreeModel {
     }
 
     /**
-     * Builds an array of Object identifying the path to the parent of the node <code>from</code>, where the first
-     * element of the array is the Object stored at the root node and the last element is the Object stored at the
-     * parent node of <code>from</code>.
+     * Builds an array of <code>QTreeNode</code>s that uniquely identify the path to the given node in the tree.
+     * The elements of the array are ordered with the root as the first element of the array.
      *
      * @param from
      *         the node for which the path is to be built
      * @param includeFrom
-     *         whether to include the <code>QTreeNode</code> <code>from</code>
+     *         whether to include the <code>QTreeNode</code> <code>from</code> as the last element of the array
      *
      * @return the path in the specified format
      */
-    public Object[] buildPath(QTreeNode from, boolean includeFrom) {
-        ArrayList<Object> path = new ArrayList<>();
+    public static QTreeNode[] buildPath(QTreeNode from, boolean includeFrom) {
+        ArrayList<QTreeNode> path = new ArrayList<>();
         QTreeNode node = from.getParent();
 
         if (includeFrom) {
@@ -182,7 +181,7 @@ public class QTreeModel implements TreeModel {
         }
         Collections.reverse(path);
 
-        return path.toArray();
+        return path.toArray(new QTreeNode[path.size()]);
     }
 
     /**
