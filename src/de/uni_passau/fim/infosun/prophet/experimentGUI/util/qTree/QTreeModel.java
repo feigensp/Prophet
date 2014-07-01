@@ -208,12 +208,12 @@ public class QTreeModel implements TreeModel {
     }
 
     @Override
-    public Object getRoot() {
+    public QTreeNode getRoot() {
         return root;
     }
 
     @Override
-    public Object getChild(Object parent, int index) {
+    public QTreeNode getChild(Object parent, int index) {
         return ((QTreeNode) parent).getChild(index);
     }
 
