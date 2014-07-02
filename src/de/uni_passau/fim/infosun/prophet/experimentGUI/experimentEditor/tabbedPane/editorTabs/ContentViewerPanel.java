@@ -7,44 +7,41 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.util.QuestionViewPane;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode;
 
 /**
- * Preview of the Content entered in the ContentEditorPanel
+ * Displays a preview of the rendered HTML of a <code>QTreeNode</code> as it would appear in the
+ * <code>ExperimentViewer</code>.
  *
  * @author Andreas Hasselberg
  * @author Markus Köppen
  */
-@SuppressWarnings("serial")
 public class ContentViewerPanel extends ExperimentEditorTab {
 
-    /**
-     * the pane featuring the preview
-     */
-    private QuestionViewPane viewerPane;
+    private QuestionViewPane previewPane;
 
     /**
-     * Constructor
+     * Constructs a new empty <code>ContentViewerPanel</code>.
      */
     public ContentViewerPanel() {
         setLayout(new BorderLayout());
-        this.setOpaque(false);
+        setOpaque(false);
     }
 
-    /**
-     * loads the current content and displays it appropriately, called by EditorTabbedPane
-     */
     @Override
     public void load(QTreeNode selected) {
-        removeAll();
-        updateUI();
-        if (selected != null) {
-            viewerPane = new QuestionViewPane(selected);
-            add(viewerPane, BorderLayout.CENTER);
+
+        if (previewPane != null) {
+            remove(previewPane);
         }
+
+        if (selected != null) {
+            previewPane = new QuestionViewPane(selected);
+            add(previewPane, BorderLayout.CENTER);
+        }
+
+        repaint();
     }
 
-    /**
-     * saves any changes to the tree, i.e. does nothing, called by EditorTabbedPane
-     */
     @Override
     public void save() {
+        // nothing to save
     }
 }
