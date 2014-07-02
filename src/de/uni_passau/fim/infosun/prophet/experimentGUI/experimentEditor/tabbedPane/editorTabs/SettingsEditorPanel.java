@@ -29,12 +29,16 @@ import static de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNo
  */
 public class SettingsEditorPanel extends ExperimentEditorTab {
 
+    /**
+     * Caches for the various layout components to preserve their state when the user switches between nodes.
+     */
     private Map<QTreeNode, JScrollPane> scrollPanes = new HashMap<>();
     private Map<QTreeNode, List<Setting>> settings = new HashMap<>();
+
     private QTreeNode selected;
 
     /**
-     * Constructs a new <code>SettingsEditorPanel</code>.
+     * Constructs a new empty <code>SettingsEditorPanel</code>.
      */
     public SettingsEditorPanel() {
         setLayout(new BorderLayout());
