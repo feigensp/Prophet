@@ -58,24 +58,24 @@ public class ContentEditorPanel extends ExperimentEditorTab {
      * Called by EditorTabbedPane to indicate a possible node change, (re)loads the panel
      */
     @Override
-    public void activate(QTreeNode s) {
-        selected = s;
+    public void load(QTreeNode selected) {
+        this.selected = selected;
         this.removeAll();
         this.updateUI();
-        if (selected != null) {
-            JPanel editPanel = editPanels.get(s);
+        if (this.selected != null) {
+            JPanel editPanel = editPanels.get(selected);
             if (editPanel == null) {
                 editPanel = new JPanel();
                 editPanel.setLayout(new BorderLayout());
 
                 RSyntaxDocument doc = new RSyntaxDocument(SyntaxConstants.SYNTAX_STYLE_HTML);
                 try {
-                    doc.insertString(0, s.getHtml(), null);
+                    doc.insertString(0, selected.getHtml(), null);
                 } catch (BadLocationException e) {
                     e.printStackTrace();
                 }
                 final RSyntaxTextArea editArea = new ModifiedRSyntaxTextArea(doc);
-                editAreas.put(s, editArea);
+                editAreas.put(selected, editArea);
 
                 editArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_HTML);
                 editArea.addKeyListener(new KeyAdapter() {
@@ -95,11 +95,11 @@ public class ContentEditorPanel extends ExperimentEditorTab {
                 editPanel.add(scrollPane, BorderLayout.CENTER);
                 SearchBar searchBar = new SearchBar(editArea);
                 searchBar.setVisible(false);
-                searchBars.put(selected, searchBar);
+                searchBars.put(this.selected, searchBar);
 
                 editPanel.add(searchBar, BorderLayout.SOUTH);
                 ExperimentEditorTabbedPane.recursiveSetOpaque(editPanel);
-                editPanels.put(s, editPanel);
+                editPanels.put(selected, editPanel);
             }
             add(editPanel, BorderLayout.CENTER);
         }

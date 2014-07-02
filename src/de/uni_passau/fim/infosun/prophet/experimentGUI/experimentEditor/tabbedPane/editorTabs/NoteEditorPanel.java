@@ -40,25 +40,25 @@ public class NoteEditorPanel extends ExperimentEditorTab {
      * loads the notes for a selected node into the tab, called by EditorTabbedPane
      */
     @Override
-    public void activate(final QTreeNode s) {
-        selected = s;
+    public void load(final QTreeNode selected) {
+        this.selected = selected;
         this.removeAll();
         this.updateUI();
-        if (s != null) {
-            RTextScrollPane scrollPane = scrollPanes.get(selected);
+        if (selected != null) {
+            RTextScrollPane scrollPane = scrollPanes.get(this.selected);
             if (scrollPane == null) {
                 RSyntaxDocument doc = new RSyntaxDocument(SyntaxConstants.SYNTAX_STYLE_NONE);
                 try {
-                    doc.insertString(0, s.getAttribute(KEY_NOTES).getValue(), null);
+                    doc.insertString(0, selected.getAttribute(KEY_NOTES).getValue(), null);
                 } catch (BadLocationException e) {
                     e.printStackTrace();
                 }
                 RSyntaxTextArea editArea = new ModifiedRSyntaxTextArea(doc);
-                editAreas.put(s, editArea);
+                editAreas.put(selected, editArea);
                 editArea.setLineWrap(true);
 
                 scrollPane = new RTextScrollPane(editArea);
-                scrollPanes.put(s, scrollPane);
+                scrollPanes.put(selected, scrollPane);
             }
             add(scrollPane, BorderLayout.CENTER);
         }

@@ -39,14 +39,14 @@ public class ExperimentEditorTabbedPane extends JTabbedPane {
             if (selectionPath != null) {
                 save();
                 currentNode = (QTreeNode) selectionPath.getLastPathComponent();
-                currentTab.activate(currentNode);
+                currentTab.load(currentNode);
             }
         });
 
         addChangeListener(event -> {
             save();
             currentTab = (ExperimentEditorTab) getSelectedComponent();
-            currentTab.activate(currentNode);
+            currentTab.load(currentNode);
         });
 
         addTab(UIElementNames.MENU_TAB_EDITOR, null, new ContentEditorPanel(), null);

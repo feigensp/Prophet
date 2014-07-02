@@ -5,7 +5,8 @@ import javax.swing.JPanel;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode;
 
 /**
- * Abstract class representing an ExperimentEditorTab used by the ExperimentEditorTabbedPane
+ * A <code>JPanel</code> used as a tab in the <code>ExperimentEditorTabbedPane</code>.
+ * Adds methods to load/save data from/to a <code>QTreeNode</code>.
  *
  * @author Andreas Hasselberg
  * @author Markus Köppen
@@ -13,15 +14,15 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode;
 public abstract class ExperimentEditorTab extends JPanel {
 
     /**
-     * Informs the Tab that a new node might have been selected (reload)
+     * Loads any data the tab is interested in from the given <code>QTreeNode</code>.
      *
-     * @param sel
-     *         the node that has been opened
+     * @param selected the <code>QTreeNode</code> to load from
      */
-    public abstract void activate(QTreeNode sel);
+    public abstract void load(QTreeNode selected);
 
     /**
-     * advises the tab to save all changes (e.g. before a file save, upon loading a new node, on tab change)
+     * Saves the data in the tab to the last <code>QTreeNode</code> {@link ExperimentEditorTab#load(QTreeNode)}
+     * was called with.
      */
     public abstract void save();
 }
