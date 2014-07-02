@@ -22,13 +22,12 @@ import javax.swing.UIManager;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import javax.swing.text.AttributeSet;
+import javax.swing.text.ComponentView;
 import javax.swing.text.Element;
-import javax.swing.text.MutableAttributeSet;
 import javax.swing.text.StyleConstants;
-import javax.swing.text.StyledDocument;
 import javax.swing.text.View;
 import javax.swing.text.ViewFactory;
-import javax.swing.text.html.FormView;
+import javax.swing.text.html.FormSubmitEvent;
 import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
 
@@ -54,8 +53,19 @@ import static javax.swing.text.html.HTML.Tag.*;
  */
 public class QuestionViewPane extends JScrollPane {
 
+    private static Font f;
+    static {
+        InputStream fontInput = QuestionViewPane.class.getResourceAsStream("/font/VERDANAB.TTF");
+
+        try {
+            f = Font.createFont(Font.TRUETYPE_FONT, fontInput);
+        } catch (FontFormatException | IOException e) {
+            f = UIManager.getDefaults().getFont("TextPane.font");
+        }
+    }
+
     // constants for the html navigation
-    public static final String HTML_START = "<html><body><form>";
+    public static final String HTML_START = "<html><body style=\"font-family: " + f.getFamily() + "\"><form>";
     public static final String HTML_DIVIDER = "<br /><br /><hr /><br /><br />";
     public static final String HTML_TYPE_SUBMIT = "submit";
 
@@ -82,26 +92,31 @@ public class QuestionViewPane extends JScrollPane {
     private QTreeNode questionNode;
     private JTextPane textPane;
 
-    private FormView submitButton;
+    private ComponentView submitButton;
     private boolean doNotFire = false;
 
-    private static Font f;
-    static {
-        InputStream fontInput = QuestionViewPane.class.getResourceAsStream("/font/VERDANAB.TTF");
+    /**
+     * A <code>HyperlinkListener</code> that will react to <code>FormSubmitEvent</code>s by
+     * storing the data the user entered in the <code>questionNode</code> and firing the appropriate event (if any).
+     */
+    private final HyperlinkListener formSubmitListener = event -> {
 
-        try {
-            f = Font.createFont(Font.TRUETYPE_FONT, fontInput);
-        } catch (FontFormatException | IOException e) {
-            f = UIManager.getDefaults().getFont("TextPane.font");
+        if (event instanceof FormSubmitEvent) {
+            FormSubmitEvent fse = (FormSubmitEvent) event;
+
+            String action = saveAnswers(fse.getData());
+            if (action != null) {
+                fireEvent(action);
+            }
         }
-    }
+    };
 
     /**
      * A <code>HyperlinkListener</code> that will try and open links in the systems standard browser.
      */
     private final HyperlinkListener hyperlinkListener = event -> {
 
-        if (!event.getEventType().equals(HyperlinkEvent.EventType.ACTIVATED)) {
+        if (!event.getEventType().equals(HyperlinkEvent.EventType.ACTIVATED) || event instanceof FormSubmitEvent) {
             return;
         }
 
@@ -125,37 +140,29 @@ public class QuestionViewPane extends JScrollPane {
     };
 
     /**
-     * A custom <code>HTMLFactory</code> that creates <code>View</code>s for <code>INPUT</code>, <code>TEXTAREA</code>,
-     * and <code>SELECT</code> elements that intercept the form data when it is submitted.
+     * A custom <code>HTMLEditorKit.HTMLFactory</code> that stores the view produced for the 'nextQuestion'
+     * button in the variable <code>submitButton</code>. The <code>JButton</code> contained in the
+     * <code>ComponentView</code> is later used to submit the HTML form from code.
      */
     private class CustomFactory extends HTMLEditorKit.HTMLFactory {
 
         @Override
         public View create(Element elem) {
+            ComponentView view;
             AttributeSet eAttribs = elem.getAttributes();
             Object elementName = eAttribs.getAttribute(StyleConstants.NameAttribute);
 
             if (INPUT.equals(elementName) || TEXTAREA.equals(elementName) || SELECT.equals(elementName)) {
-
-                FormView formView = new FormView(elem) {
-
-                    @Override
-                    protected void submitData(String data) {
-                        String action = saveAnswers(data);
-                        if (action != null) {
-                            fireEvent(action);
-                        }
-                    }
-                };
+                view = (ComponentView) super.create(elem);
 
                 // if we find a 'nextQuestion' button we save it for use in the clickSubmit and saveAnswers method
                 boolean isForwardButton = Constants.KEY_FORWARD.equals(eAttribs.getAttribute(NAME));
                 boolean isTypeSubmit = HTML_TYPE_SUBMIT.equals(eAttribs.getAttribute(TYPE));
 
                 if (INPUT.equals(elementName) && isForwardButton && isTypeSubmit) {
-                    submitButton = formView;
+                    submitButton = view;
                 }
-                return formView;
+                return view;
             } else {
                 return super.create(elem);
             }
@@ -175,6 +182,7 @@ public class QuestionViewPane extends JScrollPane {
         this.textPane = new JTextPane();
         this.setViewportView(textPane);
 
+        textPane.setContentType("text/html");
         textPane.setEditable(false);
         textPane.setEditorKit(new HTMLEditorKit() {
 
@@ -184,19 +192,13 @@ public class QuestionViewPane extends JScrollPane {
             }
         });
         textPane.addHyperlinkListener(hyperlinkListener);
+        textPane.addHyperlinkListener(formSubmitListener);
+        ((HTMLEditorKit) textPane.getEditorKit()).setAutoFormSubmission(false);
 
         URL trueBase = ClassLoader.getSystemResource(".");
         ((HTMLDocument) textPane.getDocument()).setBase(trueBase);
 
         textPane.setText(getHTMLString(questionNode));
-
-        MutableAttributeSet attrs = textPane.getInputAttributes();
-        StyleConstants.setFontFamily(attrs, f.getFamily());
-        StyleConstants.setFontSize(attrs, 12);
-
-        StyledDocument styledDocument = textPane.getStyledDocument();
-        styledDocument.setCharacterAttributes(0, styledDocument.getLength() + 1, attrs, false);
-
         textPane.setCaretPosition(0);
     }
 
