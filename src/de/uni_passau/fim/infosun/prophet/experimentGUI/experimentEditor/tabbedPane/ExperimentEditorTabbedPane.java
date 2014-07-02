@@ -49,22 +49,10 @@ public class ExperimentEditorTabbedPane extends JTabbedPane {
             currentTab.activate(currentNode);
         });
 
-        addEditorPanel(UIElementNames.MENU_TAB_EDITOR, new ContentEditorPanel());
-        addEditorPanel(UIElementNames.MENU_TAB_PREVIEW, new ContentViewerPanel());
-        addEditorPanel(UIElementNames.MENU_TAB_SETTINGS, new SettingsEditorPanel());
-        addEditorPanel(UIElementNames.MENU_TAB_NOTES, new NoteEditorPanel());
-    }
-
-    /**
-     * Adds the given <code>ExperimentEditorTab</code> to this <code>TabbedPane</code>.
-     *
-     * @param caption
-     *         the caption for the <code>ExperimentEditorTab</code>
-     * @param tab
-     *         the <code>ExperimentEditorTab</code> to be added
-     */
-    private void addEditorPanel(String caption, ExperimentEditorTab tab) {
-        addTab(caption, null, tab, null);
+        addTab(UIElementNames.MENU_TAB_EDITOR, null, new ContentEditorPanel(), null);
+        addTab(UIElementNames.MENU_TAB_PREVIEW, null, new ContentViewerPanel(), null);
+        addTab(UIElementNames.MENU_TAB_SETTINGS, null, new SettingsEditorPanel(), null);
+        addTab(UIElementNames.MENU_TAB_NOTES, null, new NoteEditorPanel(), null);
     }
 
     /**
