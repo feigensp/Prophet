@@ -21,93 +21,90 @@ import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 import org.fife.ui.rtextarea.RTextScrollPane;
 
 /**
- * The main tab for editing the content of a node within the ExperimentEditor
+ * Enables the user to edit the HTML content of a <code>QTreeNode</code>.
  *
  * @author Andreas Hasselberg
  * @author Markus Köppen
  */
-@SuppressWarnings("serial")
 public class ContentEditorPanel extends ExperimentEditorTab {
 
     /**
-     * Storage of all EditorPanels, let the user continue where he left the node/tab
+     * Caches for the various layout components to preserve their state when the user switches between nodes.
      */
     private Map<QTreeNode, JPanel> editPanels = new HashMap<>();
-    /**
-     * Storage of all text editor areas, used to save the current work
-     */
     private Map<QTreeNode, RSyntaxTextArea> editAreas = new HashMap<>();
-    /**
-     * Storage of all search bars, used to delegate the search operation to the correct bar
-     */
     private Map<QTreeNode, SearchBar> searchBars = new HashMap<>();
-    /**
-     * the currently selected node
-     */
+
     private QTreeNode selected;
 
     /**
-     * Constructor
+     * Constructs a new empty <code>ContentEditorPanel</code>.
      */
     public ContentEditorPanel() {
         setLayout(new BorderLayout());
-        this.setOpaque(false);
+        setOpaque(false);
     }
 
-    /**
-     * Called by EditorTabbedPane to indicate a possible node change, (re)loads the panel
-     */
     @Override
     public void load(QTreeNode selected) {
         this.selected = selected;
-        this.removeAll();
-        this.updateUI();
-        if (this.selected != null) {
-            JPanel editPanel = editPanels.get(selected);
-            if (editPanel == null) {
-                editPanel = new JPanel();
-                editPanel.setLayout(new BorderLayout());
 
-                RSyntaxDocument doc = new RSyntaxDocument(SyntaxConstants.SYNTAX_STYLE_HTML);
-                try {
-                    doc.insertString(0, selected.getHtml(), null);
-                } catch (BadLocationException e) {
-                    e.printStackTrace();
-                }
-                final RSyntaxTextArea editArea = new ModifiedRSyntaxTextArea(doc);
-                editAreas.put(selected, editArea);
-
-                editArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_HTML);
-                editArea.addKeyListener(new KeyAdapter() {
-
-                    @Override
-                    public void keyPressed(KeyEvent ke) {
-                        if (ke.isShiftDown() && ke.getKeyCode() == KeyEvent.VK_ENTER) {
-                            editArea.replaceSelection("<br>");
-                        }
-                    }
-                });
-
-                ContentEditorToolBar toolBar = new ContentEditorToolBar(editArea);
-                editPanel.add(toolBar, BorderLayout.NORTH);
-                RTextScrollPane scrollPane = new RTextScrollPane(editArea);
-                editArea.setLineWrap(true);
-                editPanel.add(scrollPane, BorderLayout.CENTER);
-                SearchBar searchBar = new SearchBar(editArea);
-                searchBar.setVisible(false);
-                searchBars.put(this.selected, searchBar);
-
-                editPanel.add(searchBar, BorderLayout.SOUTH);
-                ExperimentEditorTabbedPane.recursiveSetOpaque(editPanel);
-                editPanels.put(selected, editPanel);
-            }
-            add(editPanel, BorderLayout.CENTER);
+        removeAll();
+        if (selected == null) {
+            return;
         }
+
+        JPanel editPanel = editPanels.get(selected);
+        if (editPanel == null) {
+            SearchBar searchBar;
+            RSyntaxDocument doc;
+            RSyntaxTextArea editArea;
+            RTextScrollPane scrollPane;
+            ContentEditorToolBar toolBar;
+
+            editPanel = new JPanel();
+            editPanel.setLayout(new BorderLayout());
+
+            doc = new RSyntaxDocument(SyntaxConstants.SYNTAX_STYLE_HTML);
+            try {
+                doc.insertString(0, selected.getHtml(), null);
+            } catch (BadLocationException e) {
+                System.err.println("Could not display the HTML content of " + selected + ".");
+            }
+
+            editArea = new ModifiedRSyntaxTextArea(doc);
+            editArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_HTML);
+            editArea.setLineWrap(true);
+            editArea.addKeyListener(new KeyAdapter() {
+
+                @Override
+                public void keyPressed(KeyEvent ke) {
+                    if (ke.isShiftDown() && ke.getKeyCode() == KeyEvent.VK_ENTER) {
+                        editArea.replaceSelection("<br>");
+                    }
+                }
+            });
+            editAreas.put(selected, editArea);
+
+            toolBar = new ContentEditorToolBar(editArea);
+            editPanel.add(toolBar, BorderLayout.NORTH);
+
+            scrollPane = new RTextScrollPane(editArea);
+            editPanel.add(scrollPane, BorderLayout.CENTER);
+
+            searchBar = new SearchBar(editArea);
+            searchBar.setVisible(false);
+            searchBars.put(selected, searchBar);
+            editPanel.add(searchBar, BorderLayout.SOUTH);
+
+            ExperimentEditorTabbedPane.recursiveSetOpaque(editPanel);
+            editPanels.put(selected, editPanel);
+        }
+
+        add(editPanel, BorderLayout.CENTER);
+        repaint();
     }
 
-    /**
-     * saves the current changes to the tree, called by EditorTabbedPane
-     */
     @Override
     public void save() {
         if (selected != null) {
@@ -119,10 +116,12 @@ public class ContentEditorPanel extends ExperimentEditorTab {
     }
 
     /**
-     * makes the current search bar visible.
+     * Shows a <code>SearchBar</code> in this <code>ContentEditorPanel</code> enabling the user to search through
+     * the document.
      */
     public void search() {
         SearchBar searchBar = searchBars.get(selected);
+
         if (searchBar != null) {
             searchBar.setVisible(true);
             searchBar.grabFocus();
