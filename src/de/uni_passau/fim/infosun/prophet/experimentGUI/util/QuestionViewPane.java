@@ -44,10 +44,13 @@ import static javax.swing.text.html.HTML.Attribute.TYPE;
 import static javax.swing.text.html.HTML.Tag.*;
 
 /**
- * This class shows the html files (questions) creates the navigation and
- * navigates everything...
+ * Displays the rendered HTML content of a <code>QTreeNode</code>, saves the answers the user input to its
+ * <code>QTreeNode</code> and adds the proper navigation buttons (next, previous, ...) for the node.
+ * <code>ActionListener</code>s for navigation events can be added.
  *
- * @author Markus Köppen, Andreas Hasselberg
+ * @author Georg Seibt
+ * @author Andreas Hasselberg
+ * @author Markus Köppen
  */
 public class QuestionViewPane extends JScrollPane {
 
@@ -83,7 +86,6 @@ public class QuestionViewPane extends JScrollPane {
     private boolean doNotFire = false;
 
     private static Font f;
-
     static {
         InputStream fontInput = QuestionViewPane.class.getResourceAsStream("/font/VERDANAB.TTF");
 
@@ -310,7 +312,7 @@ public class QuestionViewPane extends JScrollPane {
     }
 
     /**
-     * Adds an <code>ActionListener</code> to the <code>QuestionViewPane</code>. It will be notified next/previous
+     * Adds an <code>ActionListener</code> to the <code>QuestionViewPane</code>. It will be notified when next/previous
      * buttons are clicked. The {@link java.awt.event.ActionEvent#getActionCommand()} method will return
      * either {@link Constants#KEY_FORWARD} or {@link Constants#KEY_BACKWARD} thereby indicating which button was
      * clicked.
