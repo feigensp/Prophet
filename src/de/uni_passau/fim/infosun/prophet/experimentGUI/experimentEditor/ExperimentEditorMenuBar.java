@@ -186,8 +186,9 @@ public class ExperimentEditorMenuBar extends JMenuBar {
         }
 
         if (chosenFile.exists()) {
-            int option = JOptionPane.showConfirmDialog(owner, chosenFile.getName() + UIElementNames.MESSAGE_REPLACE_FILE,
-                    UIElementNames.MESSAGE_REPLACE_FILE_TITLE, JOptionPane.YES_NO_OPTION);
+            int option = JOptionPane
+                    .showConfirmDialog(owner, chosenFile.getName() + " " + UIElementNames.MESSAGE_REPLACE_FILE,
+                            UIElementNames.MESSAGE_REPLACE_FILE_TITLE, JOptionPane.YES_NO_OPTION);
 
             if (option == JOptionPane.NO_OPTION) {
                 return;
