@@ -10,7 +10,7 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.util.Pair;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames;
 
 /**
- * Contains methods to show a dialog that requests user input tablular data.
+ * Contains methods to show a dialog that requests user input tabular data.
  */
 public class TableDialog {
 
