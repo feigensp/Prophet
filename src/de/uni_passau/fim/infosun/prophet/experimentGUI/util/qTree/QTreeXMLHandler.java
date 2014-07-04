@@ -1,6 +1,7 @@
 package de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.LinkedList;
@@ -48,7 +49,6 @@ public class QTreeXMLHandler {
         answerStream.omitField(QTreeNode.class, "attributes");
         answerStream.omitField(QTreeNode.class, "parent");
         answerStream.addImplicitCollection(QTreeNode.class, "children", simpleName, QTreeNode.class);
-        answerStream.addImplicitMap(QTreeNode.class, "answers", "answer", String.class, "name");
         answerStream.useAttributeFor(QTreeNode.class, "answerTime");
     }
 
@@ -65,6 +65,7 @@ public class QTreeXMLHandler {
         Objects.requireNonNull(root, "root must not be null!");
         Objects.requireNonNull(saveFile, "saveFile must not be null!");
 
+        checkParent(saveFile);
         answerStream.toXML(root, new FileWriter(saveFile));
     }
 
@@ -78,7 +79,7 @@ public class QTreeXMLHandler {
     public static QTreeNode loadExperimentXML(File xmlFile) {
         Objects.requireNonNull(xmlFile, "xmlFile must not be null!");
 
-        QTreeNode node = null;
+        QTreeNode node;
 
         try {
             node = (QTreeNode) saveLoadStream.fromXML(xmlFile);
@@ -103,7 +104,29 @@ public class QTreeXMLHandler {
         Objects.requireNonNull(root, "root must not be null!");
         Objects.requireNonNull(saveFile, "saveFile must not be null!");
 
+        checkParent(saveFile);
         saveLoadStream.toXML(root, new FileWriter(saveFile));
+    }
+
+    /**
+     * Ensures that the given <code>saveFile</code> has an existing parent directory. <code>FileWriter</code>s will
+     * only create the <code>File</code> they are trying to write to, not the directory structure above it.
+     *
+     *
+     * @param saveFile the file to be checked
+     *
+     * @throws FileNotFoundException if the directory structure can not be created
+     */
+    private static void checkParent(File saveFile) throws FileNotFoundException {
+        File parent = saveFile.getParentFile();
+
+        if (parent == null || parent.exists()) {
+            return;
+        }
+
+        if (!parent.mkdirs()) {
+            throw new FileNotFoundException("Can not create the directory structure for " + saveFile.getAbsolutePath());
+        }
     }
 
     // Code to handle the old-style XML format below.
