@@ -1,6 +1,13 @@
 package de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Queue;
 
 /**
  * A tree where nodes contain data (name and type of the node, HTML content) to be displayed by the
@@ -344,6 +351,30 @@ public class QTreeNode implements Cloneable {
      */
     public  QTreeNode getParent() {
         return parent;
+    }
+
+    /**
+     * Returns the root of the tree this <code>QTreeNode</code> is a part of.
+     *
+     * @return the root node
+     */
+    public QTreeNode getRoot() {
+        QTreeNode root = this;
+
+        while (!root.isRoot()) {
+            root = root.getParent();
+        }
+
+        return root;
+    }
+
+    /**
+     * Returns whether this <code>QTreeNode</code> is the root of its tree.
+     *
+     * @return true iff this node is the root of its tree
+     */
+    public boolean isRoot() {
+        return (parent == null);
     }
 
     /**
