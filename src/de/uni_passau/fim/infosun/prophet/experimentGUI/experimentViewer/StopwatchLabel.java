@@ -1,25 +1,18 @@
 package de.uni_passau.fim.infosun.prophet.experimentGUI.experimentViewer;
 
-import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.util.concurrent.TimeUnit;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 import javax.swing.Timer;
-import javax.swing.WindowConstants;
 
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode;
 
 /**
- * A <code>JLabel</code> displaying 'Caption MM:SS', the elapsed time since the <code>Stopwatch</code> was started.
- * The <code>Stopwatch</code> will save that time in seconds in the <code>QTreeNode</code> given in the
+ * A <code>JLabel</code> displaying 'Caption MM:SS', the elapsed time since the <code>StopwatchLabel</code> was started.
+ * The <code>StopwatchLabel</code> will save that time in seconds in the <code>QTreeNode</code> given in the
  * constructor when it is paused or stopped.
  */
-public class Stopwatch extends JLabel {
+public class StopwatchLabel extends JLabel {
 
     private static final String noCaptionFormat = "%02d:%02d";
     private static final String captionFormat = "%s " + noCaptionFormat;
@@ -34,29 +27,21 @@ public class Stopwatch extends JLabel {
     private long lastUpdateTime;
 
     /**
-     * Constructs a new <code>Stopwatch</code> for the given <code>QTreeNode</code>.
+     * Constructs a new <code>StopwatchLabel</code> for the given <code>QTreeNode</code>.
      * The given <code>caption</code> will be prepended to the time the
-     * <code>Stopwatch</code> displays.
+     * <code>StopwatchLabel</code> displays.
      *
-     * @param node the <code>QTreeNode</code> this <code>Stopwatch</code> saves its time in
+     * @param node the <code>QTreeNode</code> this <code>StopwatchLabel</code> saves its time in or <code>null</code> if
+     *             the time should not be saved
      * @param caption the caption to be prepended to the displayed time or <code>null</code> for no caption
      */
-    public Stopwatch(QTreeNode node, String caption) {
+    public StopwatchLabel(QTreeNode node, String caption) {
         this.node = node;
         this.caption = caption;
         this.timer = new Timer(200, this::update);
         this.timer.setInitialDelay(0);
         this.startTime = 0;
         updateText();
-    }
-
-    /**
-     * Constructs a new <code>Stopwatch</code> with no caption for the given <code>QTreeNode</code>.
-     *
-     * @param node the <code>QTreeNode</code> this <code>Stopwatch</code> saves its time in
-     */
-    public Stopwatch(QTreeNode node) {
-        this(node, null);
     }
 
     /**
@@ -109,7 +94,7 @@ public class Stopwatch extends JLabel {
     }
 
     /**
-     * Starts (or unpauses) the <code>Stopwatch</code>.
+     * Starts (or unpauses) the <code>StopwatchLabel</code>.
      */
     public void start() {
         if (timer.isRunning()) {
@@ -127,7 +112,7 @@ public class Stopwatch extends JLabel {
     }
 
     /**
-     * Stops the <code>Stopwatch</code>.
+     * Stops the <code>StopwatchLabel</code>.
      */
     public void stop() {
         if (!timer.isRunning()) {
@@ -144,7 +129,7 @@ public class Stopwatch extends JLabel {
     }
 
     /**
-     * Pauses the <code>Stopwatch</code>.
+     * Pauses the <code>StopwatchLabel</code>.
      */
     public void pause() {
         if (!timer.isRunning()) {
@@ -158,43 +143,5 @@ public class Stopwatch extends JLabel {
         timer.setInitialDelay((int) TimeUnit.NANOSECONDS.toMillis(now - lastUpdateTime));
 
         pauseTime = now;
-    }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-
-            JFrame frame = new JFrame();
-            JPanel buttonPanel = new JPanel();
-            Stopwatch watch = new Stopwatch(null, "Aktuelle Zeit:");
-
-            frame.setLayout(new BorderLayout());
-            frame.add(watch, BorderLayout.CENTER);
-
-            JButton pauseBtn = new JButton("Pause");
-            JButton startBtn = new JButton("Start");
-            JButton stopBtn = new JButton("Stop");
-
-            buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
-            buttonPanel.add(startBtn);
-            buttonPanel.add(pauseBtn);
-            buttonPanel.add(stopBtn);
-
-            pauseBtn.addActionListener(event -> {
-                watch.pause();
-            });
-
-            startBtn.addActionListener(event -> {
-                watch.start();
-            });
-
-            stopBtn.addActionListener(event -> {
-                watch.stop();
-            });
-
-            frame.add(buttonPanel, BorderLayout.SOUTH);
-            frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-            frame.pack();
-            frame.setVisible(true);
-        });
     }
 }

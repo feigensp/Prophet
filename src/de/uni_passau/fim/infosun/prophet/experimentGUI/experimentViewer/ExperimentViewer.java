@@ -46,8 +46,8 @@ public class ExperimentViewer extends JFrame {
 
     // time objects
     private JPanel timePanel;
-    private Map<QTreeNode, ClockLabel> times;
-    private ClockLabel totalTime;
+    private Map<QTreeNode, StopwatchLabel> times;
+    private StopwatchLabel totalTime;
 
     // nodes of the question tree
     private QTreeNode tree;
@@ -182,7 +182,7 @@ public class ExperimentViewer extends JFrame {
         currentNode = superRoot;
         textPanes = new HashMap<>();
         times = new HashMap<>();
-        totalTime = new ClockLabel("Gesamtzeit");
+        totalTime = new StopwatchLabel(null, "Gesamtzeit");
         timePanel = new JPanel();
         enteredNodes = new HashSet<>();
         nextNode();
@@ -308,7 +308,7 @@ public class ExperimentViewer extends JFrame {
     }
 
     private void pauseClock() {
-        ClockLabel clock = times.get(currentNode);
+        StopwatchLabel clock = times.get(currentNode);
         if (clock != null) {
             clock.pause();
         }
@@ -335,18 +335,17 @@ public class ExperimentViewer extends JFrame {
         contentPane.add(currentViewPane, BorderLayout.CENTER);
 
         timePanel.removeAll();
-        ClockLabel clock = times.get(currentNode);
+        StopwatchLabel clock = times.get(currentNode);
         if (clock == null) {
             if (currentNode.getType() == EXPERIMENT) {
-                clock = new ClockLabel(currentNode, null);
+                clock = new StopwatchLabel(currentNode, null);
             } else {
-                clock = new ClockLabel(currentNode, "Aktuell");
+                clock = new StopwatchLabel(currentNode, "Aktuell");
             }
             times.put(currentNode, clock);
-            clock.start();
-        } else {
-            clock.resume();
         }
+        clock.start();
+
         timePanel.add(clock);
         timePanel.add(totalTime);
         contentPane.add(timePanel, BorderLayout.SOUTH);
