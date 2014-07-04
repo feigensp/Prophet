@@ -45,9 +45,6 @@ public class SettingsEditorPanel extends ExperimentEditorTab {
         setOpaque(false);
     }
 
-    /**
-     * Loads the settings and saved options for the specified node into the tab.
-     */
     @Override
     public void load(QTreeNode selected) {
 
