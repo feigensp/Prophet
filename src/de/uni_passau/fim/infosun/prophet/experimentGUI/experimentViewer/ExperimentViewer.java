@@ -25,7 +25,7 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.Constants;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.PluginList;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.QuestionViewPane;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeXMLHandler;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.xml.QTreeXMLHandler;
 
 import static de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode.Type.EXPERIMENT;
 import static de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode.Type.QUESTION;
