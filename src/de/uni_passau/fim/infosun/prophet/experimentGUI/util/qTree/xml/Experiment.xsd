@@ -24,7 +24,7 @@
                 </xsd:restriction>
             </xsd:simpleType>
         </xsd:attribute>
-        <xsd:attribute name="name" use="required"/>
+        <xsd:attribute name="name" type="xsd:string" use="required"/>
     </xsd:complexType>
 
     <xsd:complexType name="attribute">
@@ -32,8 +32,8 @@
             <xsd:element name="attribute" type="attribute" minOccurs="0" maxOccurs="unbounded" />
         </xsd:sequence>
 
-        <xsd:attribute name="key" use="required"/>
-        <xsd:attribute name="value" use="required"/>
+        <xsd:attribute name="key" type="xsd:string" use="required"/>
+        <xsd:attribute name="value" type="xsd:string" use="required"/>
     </xsd:complexType>
 
     <xsd:complexType name="reference">
