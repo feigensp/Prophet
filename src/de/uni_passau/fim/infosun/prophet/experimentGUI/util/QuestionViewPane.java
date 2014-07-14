@@ -3,6 +3,7 @@ package de.uni_passau.fim.infosun.prophet.experimentGUI.util;
 import java.awt.Desktop;
 import java.awt.Font;
 import java.awt.FontFormatException;
+import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -59,6 +60,7 @@ public class QuestionViewPane extends JScrollPane {
 
         try {
             f = Font.createFont(Font.TRUETYPE_FONT, fontInput);
+            GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(f);
         } catch (FontFormatException | IOException e) {
             f = UIManager.getDefaults().getFont("TextPane.font");
         }
