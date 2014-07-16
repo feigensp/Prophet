@@ -2,8 +2,6 @@ package de.uni_passau.fim.infosun.prophet.experimentGUI.experimentEditor.tabbedP
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -11,10 +9,7 @@ import java.util.Map;
 import javax.swing.JComboBox;
 
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames;
-import org.cdmckay.coffeedom.CoffeeDOMException;
-import org.cdmckay.coffeedom.Document;
-import org.cdmckay.coffeedom.Element;
-import org.cdmckay.coffeedom.input.SAXBuilder;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.miniEditors.MacroEditor;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
 /**
@@ -29,8 +24,6 @@ import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
  * @author Markus Köppen
  */
 public class MacroComboBox extends JComboBox<String> {
-
-    private static final String MACROS_XML_FILENAME = "macros.xml";
 
     private RSyntaxTextArea textArea;
 
@@ -79,48 +72,12 @@ public class MacroComboBox extends JComboBox<String> {
      * adding descriptions of the macros to this <code>JComboBox</code>.
      */
     private void loadMacros() {
-        File file = new File(MACROS_XML_FILENAME);
+        List<MacroEditor.Macro> macros = MacroEditor.loadMacros();
 
-        if (!file.exists()) {
-            return;
-        }
-
-        Document document;
-        try {
-            document = new SAXBuilder().build(file);
-        } catch (IOException e) {
-            System.err.println("Error reading the " + MACROS_XML_FILENAME + " file. " + e);
-            return;
-        } catch (CoffeeDOMException e) {
-            System.err.println("Could not parse the " + MACROS_XML_FILENAME + " file. " + e);
-            return;
-        }
-
-        Element root = document.getRootElement();
-        List<Element> elements = root.getChildren("macro");
-
-        for (Element element : elements) {
-            String macroName = element.getAttributeValue("name", "Unnamed Macro");
-            String macroKey = element.getAttributeValue("key");
-            String macroContent = element.getTextNormalize();
-
-            boolean keyInvalid = macroKey == null || macroKey.length() > 1 || macroKey.trim().isEmpty();
-            boolean contentMissing = macroContent.isEmpty();
-
-            if (keyInvalid || contentMissing) {
-                System.err.println("Ignoring invalid macro " + macroName + ".");
-
-                if (keyInvalid) {
-                    System.err.println("Missing or invalid attribute 'key'. Must be one character exactly.");
-                }
-
-                if (contentMissing) {
-                    System.err.println("Missing content of macro element.");
-                }
-
-                continue;
-            }
-
+        macros.forEach(macro -> {
+            String macroKey = macro.getKey();
+            String macroName = macro.getName();
+            String macroContent = macro.getText();
             int keyCode = KeyEvent.getExtendedKeyCodeForChar(macroKey.charAt(0));
             String keyDescription = KeyEvent.getKeyText(keyCode);
 
@@ -130,7 +87,7 @@ public class MacroComboBox extends JComboBox<String> {
                 keyCodeMap.put(keyCode, macroContent);
                 namesMap.put(macroName, macroContent);
             }
-        }
+        });
 
         namesMap.keySet().forEach(this::addItem);
     }

@@ -15,14 +15,24 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import javax.swing.*;
+import javax.xml.XMLConstants;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import javax.xml.validation.Validator;
 
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.XStreamException;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamConverter;
 import com.thoughtworks.xstream.converters.extended.ToAttributedValueConverter;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames;
+import org.xml.sax.SAXException;
 
 /**
  * An editor that enables the user to create, modify and delete macros stored in the macros.xml.
@@ -30,22 +40,41 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNa
  */
 public class MacroEditor extends JFrame {
 
-    private static final String FILENAME = "macros.xml";
+    private static final String XML_FILENAME = "macros.xml";
+    private static final String XSD_FILENAME = "macros.xsd";
+    private static File xmlFile;
+    private static Validator validator;
+    private static XStream xStream;
 
-    private File xmlFile;
-    private XStream xStream;
+    static {
+        xmlFile = new File(XML_FILENAME);
+
+        try {
+            SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+            Schema schema = factory.newSchema(MacroEditor.class.getResource(XSD_FILENAME));
+            validator = schema.newValidator();
+        } catch (SAXException e) {
+            System.err.println("Could not create a validator for ");
+        }
+
+        xStream = new XStream();
+        xStream.processAnnotations(Macro.class);
+        xStream.alias("root", List.class);
+    }
+
     private JTextField nameField;
     private JTextField keyField;
     private JTextField textField;
     private DefaultListModel<Macro> model;
     private JList<Macro> macroJList;
+    private Set<String> keys;
 
     /**
      * Simple container class for the macro information. Used for serialisation and display purposes.
      */
     @XStreamAlias("macro")
     @XStreamConverter(value = ToAttributedValueConverter.class, strings = {"text"})
-    private static class Macro {
+    public static class Macro {
 
         private String name;
         private String key;
@@ -65,6 +94,33 @@ public class MacroEditor extends JFrame {
             this.name = name;
             this.key = key;
             this.text = text;
+        }
+
+        /**
+         * Returns the macros name.
+         *
+         * @return the name
+         */
+        public String getName() {
+            return name;
+        }
+
+        /**
+         * Returns the macros key (a 1 character String).
+         *
+         * @return the key
+         */
+        public String getKey() {
+            return key;
+        }
+
+        /**
+         * Returns the macros text.
+         *
+         * @return the text
+         */
+        public String getText() {
+            return text;
         }
 
         @Override
@@ -112,8 +168,8 @@ public class MacroEditor extends JFrame {
         content.add(createListView(), BorderLayout.CENTER);
         content.add(createEditPanel(), BorderLayout.SOUTH);
 
-        createXStream();
-        loadXMLFile();
+        loadMacros().forEach(model::addElement);
+        keys = new HashSet<>();
 
         pack();
     }
@@ -209,6 +265,7 @@ public class MacroEditor extends JFrame {
                 if (macro == null) {
                     macro = new Macro(name, key, text);
                     model.addElement(macro);
+                    keys.add(key.toUpperCase());
                     nameField.setText(null);
                     keyField.setText(null);
                     textField.setText(null);
@@ -305,15 +362,6 @@ public class MacroEditor extends JFrame {
     }
 
     /**
-     * Creates the <code>XStream</code> used for saving and loading the macros.xml.
-     */
-    private void createXStream() {
-        xStream = new XStream();
-        xStream.processAnnotations(Macro.class);
-        xStream.alias("root", List.class);
-    }
-
-    /**
      * Saves the current macros to the macros.xml file.
      */
     private void saveXMLFile() throws IOException {
@@ -325,15 +373,30 @@ public class MacroEditor extends JFrame {
     }
 
     /**
-     * Loads the macros.xml file.
+     * Loads the <code>Macro</code>s contained in the 'macros.xml' file. If there is an error deserializing the
+     * file or if the file does not conform to 'macros.xsd' an empty <code>List</code> will be returned.
+     *
+     * @return the loaded <code>Macro</code>s
      */
-    private void loadXMLFile() {
-        xmlFile = new File(FILENAME);
+    public static List<Macro> loadMacros() {
+        List<Macro> macros = new LinkedList<>();
 
         if (xmlFile.exists()) {
-            Collection<Macro> macros = (Collection<Macro>) xStream.fromXML(xmlFile);
-            macros.forEach(model::addElement);
+
+            try {
+                validator.validate(new StreamSource(xmlFile));
+
+                try {
+                    macros.addAll((Collection<Macro>) xStream.fromXML(xmlFile));
+                } catch (XStreamException | ClassCastException e) {
+                    System.err.println(xmlFile.getName() + " could not be deserialised. " + e.getMessage());
+                }
+            } catch (SAXException | IOException e) {
+                System.err.println(xmlFile.getName() + " did not pass validation. " + e.getMessage());
+            }
         }
+
+        return macros;
     }
 
     /**
@@ -350,7 +413,7 @@ public class MacroEditor extends JFrame {
      */
     private boolean macroValidate(String name, String key, String text) {
         boolean nameValid = !name.trim().isEmpty();
-        boolean keyValid = key.trim().length() == 1;
+        boolean keyValid = key.trim().length() == 1 && !keys.contains(key.toUpperCase());
         boolean textValid = !text.isEmpty();
 
         return nameValid && keyValid && textValid;

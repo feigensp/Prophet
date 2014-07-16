@@ -1,0 +1,34 @@
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <xsd:annotation>
+        <xsd:documentation>
+            This XML schema describes the macros.xml file.
+        </xsd:documentation>
+    </xsd:annotation>
+
+    <xsd:element name="root">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="macro" type="macro" maxOccurs="unbounded" />
+            </xsd:sequence>
+        </xsd:complexType>
+        <xsd:unique name="keyUnique">
+            <xsd:selector xpath="macro" />
+            <xsd:field xpath="@key" />
+        </xsd:unique>
+    </xsd:element>
+
+    <xsd:complexType name="macro">
+        <xsd:simpleContent>
+            <xsd:extension base="xsd:string">
+                <xsd:attribute name="name" type="xsd:string" use="required"/>
+                <xsd:attribute name="key" use="required">
+                    <xsd:simpleType>
+                        <xsd:restriction base="xsd:string">
+                            <xsd:length value="1"/>
+                        </xsd:restriction>
+                    </xsd:simpleType>
+                </xsd:attribute>
+            </xsd:extension>
+        </xsd:simpleContent>
+    </xsd:complexType>
+</xsd:schema>
