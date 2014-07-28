@@ -39,7 +39,6 @@ public class QuestionListPlugin implements Plugin {
 
         if (enabled) {
             overview = new QuestionList(experimentNode);
-            //overview.setPreferredSize(new Dimension(150, 2));
             experimentViewer.add(overview, BorderLayout.WEST);
         }
     }
@@ -58,12 +57,12 @@ public class QuestionListPlugin implements Plugin {
 
     @Override
     public String denyNextNode(QTreeNode currentNode) {
-        // TODO Auto-generated method stub
         return null;
     }
 
     @Override
     public void exitNode(QTreeNode node) {
+
     }
 
     @Override
