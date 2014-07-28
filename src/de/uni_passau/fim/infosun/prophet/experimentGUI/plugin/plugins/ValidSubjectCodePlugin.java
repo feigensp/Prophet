@@ -2,6 +2,7 @@ package de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.Scanner;
 
 import de.uni_passau.fim.infosun.prophet.experimentGUI.Constants;
@@ -53,6 +54,7 @@ public class ValidSubjectCodePlugin implements Plugin {
 
     @Override
     public void experimentViewerRun(ExperimentViewer experimentViewer) {
+
     }
 
     @Override
@@ -62,58 +64,71 @@ public class ValidSubjectCodePlugin implements Plugin {
 
     @Override
     public void enterNode(QTreeNode node) {
+
     }
 
     @Override
     public String denyNextNode(QTreeNode currentNode) {
-        if (currentNode.getType() != EXPERIMENT ) {
-            return null;
-        } else if (Boolean.parseBoolean(currentNode.getAttribute(KEY).getValue())) {
-            String subjectCode = currentNode.getAnswer(Constants.KEY_SUBJECT);
-            boolean ignoreCase = Boolean.parseBoolean(currentNode.getAttribute(KEY).getSubAttribute(KEY_IGNORE_CASE).getValue());
-            if (ignoreCase) {
-                subjectCode = subjectCode.toLowerCase();
-            }
+        Attribute mainAttribute = currentNode.getAttribute(KEY);
 
-            String codes = currentNode.getAttribute(KEY).getSubAttribute(KEY_CODES).getValue();
-            if (codes != null && !codes.equals("")) {
-                Scanner sc = new Scanner(codes);
-                while (sc.hasNext()) {
-                    String line = sc.next();
-                    if (ignoreCase) {
-                        line = line.toLowerCase();
-                    }
-                    if (subjectCode.equals(line)) {
-                        return null;
-                    }
-                }
-            }
-
-            String path = currentNode.getAttribute(KEY).getSubAttribute(KEY_PATH).getValue();
-            if (path != null && !path.equals("")) {
-                try {
-                    Scanner sc = new Scanner(new FileReader(path));
-                    while (sc.hasNext()) {
-                        String line = sc.next();
-                        if (ignoreCase) {
-                            line = line.toLowerCase();
-                        }
-                        if (subjectCode.equals(line)) {
-                            return null;
-                        }
-                    }
-                } catch (FileNotFoundException e) {
-                    return UIElementNames.SUBJECT_CODE_MESSAGE_FILE_NOT_FOUND;
-                }
-            }
-            return UIElementNames.SUBJECT_CODE_MESSAGE_CODE_NOT_FOUND;
-        } else {
+        if (currentNode.getType() != EXPERIMENT || !Boolean.parseBoolean(mainAttribute.getValue())) {
             return null;
         }
+
+        String subjectCode = currentNode.getAnswer(Constants.KEY_SUBJECT);
+        boolean ignoreCase = Boolean.parseBoolean(mainAttribute.getSubAttribute(KEY_IGNORE_CASE).getValue());
+
+        //TODO why not just use String::contains in both cases?
+
+        String codes = mainAttribute.getSubAttribute(KEY_CODES).getValue();
+        if (codes != null && !codes.isEmpty()) {
+            if (contains(subjectCode, new Scanner(codes), ignoreCase)) {
+                return null;
+            }
+        }
+
+        String path = mainAttribute.getSubAttribute(KEY_PATH).getValue();
+        if (path != null && !path.isEmpty()) {
+            try (FileReader file = new FileReader(path)) {
+                if (contains(subjectCode, new Scanner(file), ignoreCase)) {
+                    return null;
+                }
+            } catch (FileNotFoundException e) {
+                return UIElementNames.SUBJECT_CODE_MESSAGE_FILE_NOT_FOUND;
+            } catch (IOException e) {
+                // may occur when trying to close the FileReader
+            }
+        }
+
+        return UIElementNames.SUBJECT_CODE_MESSAGE_CODE_NOT_FOUND;
+    }
+
+    /**
+     * Checks whether any <code>String</code> returned by the given <code>Scanner</code> matches the given
+     * <code>subjectCode</code>.
+     *
+     * @param subjectCode the subject code to search for
+     * @param sc the <code>Scanner</code> to search through
+     * @param ignoreCase whether to ignore case considerations
+     * @return true iff the <code>Scanner</code> returned the <code>subjectCode</code>
+     */
+    private boolean contains(String subjectCode, Scanner sc, boolean ignoreCase) {
+
+        while (sc.hasNext()) {
+            String line = sc.next();
+            if (ignoreCase) {
+                if (line.equalsIgnoreCase(subjectCode)) return true;
+            } else {
+                if (line.equals(subjectCode)) return true;
+            }
+        }
+
+        return false;
     }
 
     @Override
     public void exitNode(QTreeNode node) {
+
     }
 
     @Override
