@@ -194,12 +194,16 @@ public class ExperimentViewer extends JFrame {
         }
         pauseClock();
         if (currentNode == tree) {
-            String subject = currentNode.getAnswer(Constants.KEY_SUBJECT);
-            if (subject == null || subject.length() == 0) {
-                JOptionPane.showMessageDialog(this, "Bitte Probanden-Code eingeben!", "Fehler!",
-                        JOptionPane.ERROR_MESSAGE);
+            String[] answers = currentNode.getAnswers(Constants.KEY_SUBJECT);
+            String subject;
+
+            if (answers == null || answers.length < 1) {
+                JOptionPane.showMessageDialog(this, "Bitte Probanden-Code eingeben!", "Fehler!", JOptionPane.ERROR_MESSAGE);
                 return false;
+            } else {
+                subject = answers[0];
             }
+
             String experiment = currentNode.getAttribute(Constants.KEY_EXPERIMENT_CODE).getValue();
             if (experiment == null) {
                 experiment = "default";

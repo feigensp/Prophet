@@ -1,5 +1,6 @@
 package de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins;
 
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -51,12 +52,15 @@ public class AnswerRequiredPlugin implements Plugin {
 
         if (enabled) {
             String requiredAnswers = currentNode.getAttribute(KEY).getSubAttribute(KEY_NAMES).getValue();
-            Map<String, String> answers = currentNode.getAnswers();
+            Map<String, String[]> answers = currentNode.getAnswers();
             Scanner sc = new Scanner(requiredAnswers);
 
             while (sc.hasNext()) {
                 String requiredAnswerKey = sc.next();
-                if (!answers.containsKey(requiredAnswerKey) || answers.get(requiredAnswerKey).equals("")) {
+                boolean missing = !answers.containsKey(requiredAnswerKey);
+                boolean empty = missing || Arrays.stream(answers.get(requiredAnswerKey)).allMatch(String::isEmpty);
+
+                if (missing || empty) {
                     return UIElementNames.MENU_TAB_SETTINGS_MESSAGE_FILL_ALL_FIELDS;
                 }
             }

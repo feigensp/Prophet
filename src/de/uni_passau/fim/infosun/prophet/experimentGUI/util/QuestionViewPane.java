@@ -12,8 +12,11 @@ import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.StringTokenizer;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
@@ -252,7 +255,7 @@ public class QuestionViewPane extends JScrollPane {
         StringTokenizer st = new StringTokenizer(data, "&");
         String result = null;
 
-        System.out.println(data);
+        Map<String, ArrayList<String>> answers = new HashMap<>();
 
         while (st.hasMoreTokens()) {
             String token = st.nextToken();
@@ -269,8 +272,15 @@ public class QuestionViewPane extends JScrollPane {
             if (Constants.KEY_FORWARD.equals(key) || Constants.KEY_BACKWARD.equals(key)) {
                 result = key;
             } else {
-                questionNode.setAnswer(key, value);
+                ArrayList<String> answer = answers.getOrDefault(key, new ArrayList<>());
+                answers.put(key, answer);
+                answer.add(value);
             }
+        }
+
+        for (Map.Entry<String, ArrayList<String>> entry : answers.entrySet()) {
+            ArrayList<String> value = entry.getValue();
+            questionNode.setAnswers(entry.getKey(), value.toArray(new String[value.size()]));
         }
 
         return result;

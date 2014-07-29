@@ -30,7 +30,7 @@ public class QTreeNode implements Cloneable {
     private QTreeNode parent;
     private List<QTreeNode> children;
 
-    private Map<String, String> answers;
+    private Map<String, String[]> answers; // use String[] because there may be multiple answers to a question (checkboxes)
     private long answerTime;
 
     /**
@@ -60,9 +60,9 @@ public class QTreeNode implements Cloneable {
      * Gets the answer for the given <code>key</code> or <code>null</code> if no mapping for the key exists.
      *
      * @param key the key for the answer
-     * @return the answer or <code>null</code>
+     * @return the answers or <code>null</code>
      */
-    public String getAnswer(String key) {
+    public String[] getAnswers(String key) {
         return answers.get(key);
     }
 
@@ -71,18 +71,18 @@ public class QTreeNode implements Cloneable {
      *
      * @return the answer map
      */
-    public Map<String, String> getAnswers() {
+    public Map<String, String[]> getAnswers() {
         return answers;
     }
 
     /**
-     * Sets a mapping from the given <code>key</code> to the given <code>answer</code>.
-     * Neither <code>key</code> nor <code>answer</code> may be <code>null</code>.
+     * Sets a mapping from the given <code>key</code> to the given <code>answers</code>.
+     * Neither <code>key</code> nor <code>answers</code> may be <code>null</code>.
      *
      * @param key the key for the answer
      * @param answer the answer
      */
-    public void setAnswer(String key, String answer) {
+    public void setAnswers(String key, String[] answer) {
         Objects.requireNonNull(key, "key must not be null");
         Objects.requireNonNull(answer, "answer must not be null");
 

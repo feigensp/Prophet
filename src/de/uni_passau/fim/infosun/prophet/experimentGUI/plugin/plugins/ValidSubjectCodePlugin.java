@@ -75,10 +75,14 @@ public class ValidSubjectCodePlugin implements Plugin {
             return null;
         }
 
-        String subjectCode = currentNode.getAnswer(Constants.KEY_SUBJECT);
-        boolean ignoreCase = Boolean.parseBoolean(mainAttribute.getSubAttribute(KEY_IGNORE_CASE).getValue());
+        String[] answers = currentNode.getAnswers(Constants.KEY_SUBJECT);
 
-        //TODO why not just use String::contains in both cases?
+        if (answers == null || answers.length < 1) {
+            return UIElementNames.SUBJECT_CODE_MESSAGE_CODE_NOT_FOUND;
+        }
+
+        String subjectCode = answers[0];
+        boolean ignoreCase = Boolean.parseBoolean(mainAttribute.getSubAttribute(KEY_IGNORE_CASE).getValue());
 
         String codes = mainAttribute.getSubAttribute(KEY_CODES).getValue();
         if (codes != null && !codes.isEmpty()) {
