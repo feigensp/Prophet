@@ -1,0 +1,43 @@
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<xsd:annotation >
+    <xsd:documentation>
+        This XML schema describes the XML format Prophet uses to save its experiments.
+    </xsd:documentation>
+</xsd:annotation>
+
+    <xsd:element name="QTreeNode" type="treeNode" />
+
+    <xsd:complexType name="treeNode">
+        <xsd:sequence>
+            <xsd:element name="html" type="xsd:string" />
+            <xsd:element name="attribute" type="attribute" minOccurs="0" maxOccurs="unbounded" />
+            <xsd:element name="parent" type="reference" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="QTreeNode" type="treeNode" minOccurs="0" maxOccurs="unbounded" />
+        </xsd:sequence>
+
+        <xsd:attribute name="type" use="required" >
+            <xsd:simpleType>
+                <xsd:restriction base="xsd:string" >
+                    <xsd:enumeration value="EXPERIMENT" />
+                    <xsd:enumeration value="CATEGORY" />
+                    <xsd:enumeration value="QUESTION" />
+                </xsd:restriction>
+            </xsd:simpleType>
+        </xsd:attribute>
+        <xsd:attribute name="name" type="xsd:string" use="required"/>
+    </xsd:complexType>
+
+    <xsd:complexType name="attribute">
+        <xsd:sequence>
+            <xsd:element name="attribute" type="attribute" minOccurs="0" maxOccurs="unbounded" />
+        </xsd:sequence>
+
+        <xsd:attribute name="key" type="xsd:string" use="required"/>
+        <xsd:attribute name="value" type="xsd:string" use="required"/>
+    </xsd:complexType>
+
+    <xsd:complexType name="reference">
+        <xsd:attribute name="reference" type="xsd:string" use="required" />
+    </xsd:complexType>
+
+</xsd:schema>

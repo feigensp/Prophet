@@ -25,7 +25,7 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTree;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeHTMLHandler;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeModel;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeXMLHandler;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.xml.QTreeXMLHandler;
 import org.jsoup.nodes.Element;
 import org.jsoup.parser.Tag;
 

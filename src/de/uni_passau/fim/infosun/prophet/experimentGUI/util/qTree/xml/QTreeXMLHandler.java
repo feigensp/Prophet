@@ -1,4 +1,4 @@
-package de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree;
+package de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.xml;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -7,12 +7,19 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
+import javax.xml.XMLConstants;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import javax.xml.validation.Validator;
 
 import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.XStreamException;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.Attribute;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode;
 import org.cdmckay.coffeedom.Document;
 import org.cdmckay.coffeedom.Element;
 import org.cdmckay.coffeedom.input.SAXBuilder;
+import org.xml.sax.SAXException;
 
 /**
  * Handles XML operations for the <code>QTree</code>.
@@ -21,6 +28,8 @@ public class QTreeXMLHandler {
 
     private static final XStream saveLoadStream;
     private static final XStream answerStream;
+    private static Validator legacyValidator;
+    private static Validator validator;
 
     static {
         saveLoadStream = new XStream();
@@ -50,6 +59,21 @@ public class QTreeXMLHandler {
         answerStream.omitField(QTreeNode.class, "parent");
         answerStream.addImplicitCollection(QTreeNode.class, "children", simpleName, QTreeNode.class);
         answerStream.useAttributeFor(QTreeNode.class, "answerTime");
+
+        SchemaFactory factory =  SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+        try {
+            Schema legacySchema = factory.newSchema(QTreeXMLHandler.class.getResource("LegacyExperiment.xsd"));
+            legacyValidator = legacySchema.newValidator();
+        } catch (SAXException e) {
+            System.err.println("Could not create a Validator for the legacy XML format.");
+        }
+
+        try {
+            Schema schema = factory.newSchema(QTreeXMLHandler.class.getResource("Experiment.xsd"));
+            validator = schema.newValidator();
+        } catch (SAXException e) {
+            System.err.println("Could not create a Validator for the XML format.");
+        }
     }
 
     /**
@@ -81,14 +105,39 @@ public class QTreeXMLHandler {
 
         QTreeNode node;
 
-        try {
+        if (isValidXML(validator, xmlFile)) {
             node = (QTreeNode) saveLoadStream.fromXML(xmlFile);
-        } catch (XStreamException | ClassCastException e) {
-            System.err.println(e.getClass().getSimpleName() + " while de-serialising. Falling back to old-style XML.");
+        } else if (isValidXML(legacyValidator, xmlFile)) {
             node = loadOldExperimentXML(xmlFile);
+        } else {
+            node = null;
         }
 
         return node;
+    }
+
+    /**
+     * Checks whether the given XML file conforms to the <code>Validator</code>s schema.
+     * This method will return <code>false</code> if <code>validator</code> or
+     * <code>xmlFile</code> is <code>null</code>.
+     *
+     * @param validator the <code>Validator</code> to use for validation
+     * @param xmlFile the XML file to validate
+     * @return true iff the <code>Validator</code> accepts the <code>xmlFile</code>
+     */
+    private static boolean isValidXML(Validator validator, File xmlFile) {
+
+        if (validator == null || xmlFile == null) {
+            return false;
+        }
+
+        try {
+            validator.validate(new StreamSource(xmlFile));
+        } catch (SAXException | IOException e) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -131,14 +180,14 @@ public class QTreeXMLHandler {
 
     // Code to handle the old-style XML format below.
 
-    public final static String TYPE_EXPERIMENT = "experiment";
-    public final static String TYPE_CATEGORY = "category";
-    public final static String TYPE_QUESTION = "question";
-    public final static String TYPE_ATTRIBUTE = "attribute";
-    public final static String TYPE_ATTRIBUTES = "attributes";
-    public final static String TYPE_CHILDREN = "children";
-    public final static String ATTRIBUTE_NAME = "name";
-    public final static String ATTRIBUTE_VALUE = "value";
+    private final static String TYPE_EXPERIMENT = "experiment";
+    private final static String TYPE_CATEGORY = "category";
+    private final static String TYPE_QUESTION = "question";
+    private final static String TYPE_ATTRIBUTE = "attribute";
+    private final static String TYPE_ATTRIBUTES = "attributes";
+    private final static String TYPE_CHILDREN = "children";
+    private final static String ATTRIBUTE_NAME = "name";
+    private final static String ATTRIBUTE_VALUE = "value";
 
     /**
      * Loads the <code>QTreeNode</code> from an old-style XML file.
@@ -147,7 +196,7 @@ public class QTreeXMLHandler {
      * @param xmlFile the old-style XML file containing a question tree
      * @return the <code>QTreeNode</code> resulting from converting the file or <code>null</code>
      */
-    public static QTreeNode loadOldExperimentXML(File xmlFile) {
+    private static QTreeNode loadOldExperimentXML(File xmlFile) {
         Objects.requireNonNull(xmlFile, "xmlFile must not be null!");
 
         SAXBuilder builder = new SAXBuilder();

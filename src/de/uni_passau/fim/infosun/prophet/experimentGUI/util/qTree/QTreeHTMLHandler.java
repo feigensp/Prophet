@@ -1,9 +1,11 @@
 package de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import javax.swing.tree.TreePath;
 
 import org.jsoup.Jsoup;
@@ -14,6 +16,9 @@ import org.jsoup.nodes.Element;
  * Handles HTML operations for the <code>QTree</code>.
  */
 public class QTreeHTMLHandler {
+
+    public static int highestID = 0;
+    public static Set<String> returnedIDs = new HashSet<>();
 
     /**
      * Checks the HTML contents of all nodes in the tree under <code>root</code> for elements with duplicate names.
@@ -60,5 +65,42 @@ public class QTreeHTMLHandler {
         });
 
         return duplicates;
+    }
+
+    /**
+     * Returns a list of <code>String</code> IDs (numbers) that have not yet been used as an ID in any HTML element
+     * of a node in the tree under <code>root</code> or returned by this <code>QTreeHTMLHandler</code>.
+     *
+     * @param root
+     *         the root of the tree in which the ids should be unique
+     * @param number
+     *         the number of ids to be returned
+     *
+     * @return the ids as <code>String</code>s
+     */
+    public static List<String> getIDs(QTreeNode root, int number) {
+        Set<String> existingIDs = new HashSet<>();
+        List<String> newIDs = new LinkedList<>();
+        String idAttr = "id";
+        String stringID;
+        Document doc;
+
+        for (QTreeNode node : root.preOrder()) {
+            doc = Jsoup.parseBodyFragment(node.getHtml());
+            doc.body().getElementsByAttribute(idAttr).forEach(element -> existingIDs.add(element.attr(idAttr)));
+        }
+        existingIDs.addAll(returnedIDs);
+
+        for (int i = 0; i < number; i++) {
+
+            do {
+                highestID++;
+                stringID = String.valueOf(highestID);
+            } while (existingIDs.contains(stringID));
+            newIDs.add(stringID);
+        }
+        returnedIDs.addAll(newIDs);
+
+        return newIDs;
     }
 }
