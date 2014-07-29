@@ -22,7 +22,12 @@ import org.cdmckay.coffeedom.input.SAXBuilder;
 import org.xml.sax.SAXException;
 
 /**
- * Handles XML operations for the <code>QTree</code>.
+ * Handles XML operations for the <code>QTree</code>. This includes:
+ * <ul>
+ * <li>Checking a file against the XSD Schema for new or legacy XML files</li>
+ * <li>Reading files and extracting the root node (and all the children/attributes)</li>
+ * <li>Saving the root node and all children/attributes to a file</li>
+ * </ul>
  */
 public class QTreeXMLHandler {
 
@@ -60,7 +65,7 @@ public class QTreeXMLHandler {
         answerStream.addImplicitCollection(QTreeNode.class, "children", simpleName, QTreeNode.class);
         answerStream.useAttributeFor(QTreeNode.class, "answerTime");
 
-        SchemaFactory factory =  SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+        SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
         try {
             Schema legacySchema = factory.newSchema(QTreeXMLHandler.class.getResource("LegacyExperiment.xsd"));
             legacyValidator = legacySchema.newValidator();
@@ -81,9 +86,13 @@ public class QTreeXMLHandler {
      * the answers.xml format. This will overwrite <code>saveFile</code>.
      * Neither <code>root</code> nor <code>saveFile</code> may be <code>null</code>.
      *
-     * @param root the root of the tree to save
-     * @param saveFile the file to save the tree to
-     * @throws IOException if the file can not be written to
+     * @param root
+     *         the root of the tree to save
+     * @param saveFile
+     *         the file to save the tree to
+     *
+     * @throws IOException
+     *         if the file can not be written to
      */
     public static void saveAnswerXML(QTreeNode root, File saveFile) throws IOException {
         Objects.requireNonNull(root, "root must not be null!");
@@ -97,7 +106,9 @@ public class QTreeXMLHandler {
      * Loads the <code>QTreeNode</code> from an XML file.
      * If there is an error de-serialising the <code>xmlFile</code> <code>null</code> will be returned.
      *
-     * @param xmlFile the XML file containing a <code>QTreeNode</code>
+     * @param xmlFile
+     *         the XML file containing a <code>QTreeNode</code>
+     *
      * @return the <code>QTreeNode</code> contained in the file or <code>null</code>
      */
     public static QTreeNode loadExperimentXML(File xmlFile) {
@@ -121,8 +132,11 @@ public class QTreeXMLHandler {
      * This method will return <code>false</code> if <code>validator</code> or
      * <code>xmlFile</code> is <code>null</code>.
      *
-     * @param validator the <code>Validator</code> to use for validation
-     * @param xmlFile the XML file to validate
+     * @param validator
+     *         the <code>Validator</code> to use for validation
+     * @param xmlFile
+     *         the XML file to validate
+     *
      * @return true iff the <code>Validator</code> accepts the <code>xmlFile</code>
      */
     private static boolean isValidXML(Validator validator, File xmlFile) {
@@ -145,9 +159,13 @@ public class QTreeXMLHandler {
      * This will overwrite <code>saveFile</code>.
      * Neither <code>root</code> nor <code>saveFile</code> may be <code>null</code>.
      *
-     * @param root the root of the tree to save
-     * @param saveFile the file to save the tree to
-     * @throws IOException if the file can not be written to
+     * @param root
+     *         the root of the tree to save
+     * @param saveFile
+     *         the file to save the tree to
+     *
+     * @throws IOException
+     *         if the file can not be written to
      */
     public static void saveExperimentXML(QTreeNode root, File saveFile) throws IOException {
         Objects.requireNonNull(root, "root must not be null!");
@@ -161,10 +179,11 @@ public class QTreeXMLHandler {
      * Ensures that the given <code>saveFile</code> has an existing parent directory. <code>FileWriter</code>s will
      * only create the <code>File</code> they are trying to write to, not the directory structure above it.
      *
+     * @param saveFile
+     *         the file to be checked
      *
-     * @param saveFile the file to be checked
-     *
-     * @throws FileNotFoundException if the directory structure can not be created
+     * @throws FileNotFoundException
+     *         if the directory structure can not be created
      */
     private static void checkParent(File saveFile) throws FileNotFoundException {
         File parent = saveFile.getParentFile();
@@ -193,7 +212,9 @@ public class QTreeXMLHandler {
      * Loads the <code>QTreeNode</code> from an old-style XML file.
      * If there is an error de-serialising the <code>xmlFile</code> <code>null</code> will be returned.
      *
-     * @param xmlFile the old-style XML file containing a question tree
+     * @param xmlFile
+     *         the old-style XML file containing a question tree
+     *
      * @return the <code>QTreeNode</code> resulting from converting the file or <code>null</code>
      */
     private static QTreeNode loadOldExperimentXML(File xmlFile) {
@@ -206,8 +227,8 @@ public class QTreeXMLHandler {
         try {
             document = builder.build(xmlFile);
         } catch (IOException e) {
-            System.err.println("Could not de-serialise " + xmlFile.getName() + "using old-style XML to a QTreeNode. "
-                     + e);
+            System.err.println(
+                    "Could not de-serialise " + xmlFile.getName() + "using old-style XML to a QTreeNode. " + e);
             return null;
         }
 
@@ -224,8 +245,11 @@ public class QTreeXMLHandler {
     /**
      * Loads a <code>QTreeNode</code> from the given <code>Element</code>.
      *
-     * @param element the <code>Element</code> containing information to be de-serialised to a <code>QTreeNode</code>
-     * @param parent the parent of the resulting <code>QTreeNode</code>
+     * @param element
+     *         the <code>Element</code> containing information to be de-serialised to a <code>QTreeNode</code>
+     * @param parent
+     *         the parent of the resulting <code>QTreeNode</code>
+     *
      * @return the resulting <code>QTreeNode</code>
      */
     private static QTreeNode loadOldTreeNode(Element element, QTreeNode parent) {
@@ -288,7 +312,9 @@ public class QTreeXMLHandler {
     /**
      * Loads an <code>Attribute</code> from the given <code>Element</code>.
      *
-     * @param element the <code>Element</code> containing information to be de-serialised to an <code>Attribute</code>
+     * @param element
+     *         the <code>Element</code> containing information to be de-serialised to an <code>Attribute</code>
+     *
      * @return the resulting <code>Attribute</code>
      */
     private static Attribute loadOldAttributeNode(Element element) {

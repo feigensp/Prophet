@@ -1,11 +1,6 @@
 package de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import javax.swing.tree.TreePath;
 
 import org.jsoup.Jsoup;
@@ -23,10 +18,18 @@ public class QTreeHTMLHandler {
     /**
      * Checks the HTML contents of all nodes in the tree under <code>root</code> for elements with duplicate names.
      * The returned <code>Map</code> contains mappings from the names that occur multiple times to the
-     * <code>TreePath</code>s to where they occur. The index (amongst all named elements in the nodes
-     * HTML content) of the element with the duplicate name will be appended as the last component
-     * (an <code>Integer</code>) of the <code>TreePath</code> making the <code>QTreeNode</code> whose HTML content
-     * contains the element the second to last component of the <code>TreePath</code>.
+     * <code>TreePath</code>s to where they occur.
+     * Each <code>TreePath</code> has the following structure:
+     * Let n be be length of the TreePath. The indices of the TreePath are seperated in two parts:
+     * TreePath[0] to TreePath[n-1] | TreePath[n]
+     * <ul>
+     * <li>Index 0 to n-1 is the TreePath from the root node to the QTreeNode that contains the duplicate name</li>
+     * <li>Index n is an <code>Integer</code> index of the &lt;input&gt; within the QTreeNode that contains the
+     * duplicate name. All elements in the HTML content of a QTreeNode that contain a <code>name</code> attribute are
+     * indexed starting
+     * by zero. The Integer at TreePath[n] gives the index within this "named" elements.
+     * </li>
+     * </ul>
      *
      * @param root
      *         the root of the tree to be checked
@@ -78,7 +81,7 @@ public class QTreeHTMLHandler {
      *
      * @return the ids as <code>String</code>s
      */
-    public static List<String> getIDs(QTreeNode root, int number) {
+    public static List<String> createIDs(QTreeNode root, int number) {
         Set<String> existingIDs = new HashSet<>();
         List<String> newIDs = new LinkedList<>();
         String idAttr = "id";
