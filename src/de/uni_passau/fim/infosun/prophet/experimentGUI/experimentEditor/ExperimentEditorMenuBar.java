@@ -3,10 +3,7 @@ package de.uni_passau.fim.infosun.prophet.experimentGUI.experimentEditor;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.awt.event.ActionListener;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -207,25 +204,29 @@ public class ExperimentEditorMenuBar extends JMenuBar {
         owner.setTitle(ExperimentEditor.class.getSimpleName() + " - " + currentFile.getAbsolutePath());
     };
 
-//    private class ExportHTMLFileActionListener implements ActionListener {
-//
-//        public void actionPerformed(ActionEvent arg0) {
-//            JFileChooser fc = new JFileChooser(currentFile);
-//
-//            if (fc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
-//                File file = fc.getSelectedFile();
-//
-//                if (file.exists()) {
-//                    int n = JOptionPane.showConfirmDialog(null, file.getName() + UIElementNames.MESSAGE_REPLACE_FILE,
-//                            UIElementNames.MESSAGE_REPLACE_FILE_TITLE, JOptionPane.YES_NO_OPTION);
-//                    if (n == JOptionPane.NO_OPTION) {
-//                        return;
-//                    }
-//                }
-//                QuestionTreeHTMLHandler.saveAsHTMLFile(file, experimentEditor.getTreeComponent().getRoot());
-//            }
-//        }
-//    }
+    private class ExportHTMLFileActionListener implements ActionListener {
+
+        public void actionPerformed(ActionEvent arg0) {
+            JFileChooser fc = new JFileChooser(currentFile);
+
+            if (fc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+                File file = fc.getSelectedFile();
+
+                if (!file.getPath().endsWith(".htm") && !file.getPath().endsWith(".html")) {
+                    file = new File(file.getAbsolutePath() + ".html");
+                }
+
+                if (file.exists()) {
+                    int n = JOptionPane.showConfirmDialog(null, file.getName() + UIElementNames.MESSAGE_REPLACE_FILE,
+                            UIElementNames.MESSAGE_REPLACE_FILE_TITLE, JOptionPane.YES_NO_OPTION);
+                    if (n == JOptionPane.NO_OPTION) {
+                        return;
+                    }
+                }
+                QTreeHTMLHandler.saveAsHTMLFile(file, qTreeModel.getRoot());
+            }
+        }
+    }
 
 //    private class ExportCSVActionListener implements ActionListener {
 //
@@ -370,10 +371,10 @@ public class ExperimentEditorMenuBar extends JMenuBar {
         exportMenu = new JMenu(UIElementNames.MENU_EXPORT);
         fileMenu.add(exportMenu);
 
-//        JMenuItem exportHTMLFileMenuItem = new JMenuItem(UIElementNames.MENU_ITEM_HTML_OF_QUESTIONS);
-//        exportMenu.add(exportHTMLFileMenuItem);
-//        exportHTMLFileMenuItem.addActionListener(new ExportHTMLFileActionListener());
-//
+        JMenuItem exportHTMLFileMenuItem = new JMenuItem(UIElementNames.MENU_ITEM_HTML_OF_QUESTIONS);
+        exportMenu.add(exportHTMLFileMenuItem);
+        exportHTMLFileMenuItem.addActionListener(new ExportHTMLFileActionListener());
+
 //        exportCSVMenuItem = new JMenuItem(UIElementNames.MENU_ITEM_CSV_OF_ANSWERS);
 //        exportMenu.add(exportCSVMenuItem);
 //        exportCSVMenuItem.addActionListener(new ExportCSVActionListener());

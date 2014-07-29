@@ -1,8 +1,14 @@
 package de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.*;
 import javax.swing.tree.TreePath;
 
+import de.uni_passau.fim.infosun.prophet.experimentGUI.Constants;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.QuestionViewPane;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -105,5 +111,80 @@ public class QTreeHTMLHandler {
         returnedIDs.addAll(newIDs);
 
         return newIDs;
+    }
+
+    /**
+     * Saves all the forms and text contained in the given tree to a html file.
+     *
+     * @param file
+     *         the file to write the html to
+     * @param rootNode
+     *         the root node of the tree
+     *
+     * @throws java.lang.IllegalArgumentException
+     *         if <code>rootNode</code> was not of type <code>Type.EXPERIMENT</code>
+     */
+    public static void saveAsHTMLFile(File file, QTreeNode rootNode) {
+        Objects.requireNonNull(file, "file must not be null!");
+        Objects.requireNonNull(rootNode, "rootNode must not be null!");
+
+        if (rootNode.getType() == QTreeNode.Type.EXPERIMENT) {
+            String experimentName = rootNode.getName();
+            String experimentCode = rootNode.getAttribute(Constants.KEY_EXPERIMENT_CODE).getValue();
+            String htmlContent = createHTMLContent(new StringBuffer(), rootNode).toString();
+            String newline = System.getProperty("line.separator");
+
+            try (BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
+                String path = file.getAbsolutePath();
+
+                System.out.println("Export HTML to: " + path); // TODO debug
+
+                bw.write("<html>" + newline);
+                bw.write("<head>" + newline);
+                bw.write("<title>" + newline);
+                bw.write(String.format("%s - ExpCode %s%n", experimentName, experimentCode));
+                bw.write("</title>" + newline);
+                bw.write("</head>" + newline);
+                bw.write("<body>" + newline);
+                bw.write(htmlContent + newline);
+                bw.write("</body>" + newline);
+                bw.write("</html>" + newline);
+            } catch (IOException ioe) {
+                ioe.printStackTrace();
+            }
+        } else {
+            throw new IllegalArgumentException("rootNode must be of type Type.EXPERIMENT");
+        }
+    }
+
+    private static StringBuffer createHTMLContent(StringBuffer htmlContent, QTreeNode node) {
+        String nodeName = node.getName();
+        String bottomLine = QuestionViewPane.HTML_DIVIDER;
+        String headline;
+
+        switch (node.getType()) {
+            case EXPERIMENT:
+                bottomLine = String.format("%1$s%2$s%1$s", QuestionViewPane.HTML_DIVIDER,
+                        QuestionViewPane.FOOTER_EXPERIMENT_CODE);
+                headline = String.format("<h1>%s</h1>", nodeName);
+                break;
+            case CATEGORY:
+                headline = String.format("<h2>%s</h2>", nodeName);
+                break;
+            case QUESTION:
+                headline = String.format("<h3>%s</h3>", nodeName);
+                break;
+            default:
+                headline = String.format("<h1>%s</h1>", nodeName);
+                System.err.println("Non-exhausting switch for 'Type' while exporting HTML!");
+        }
+
+        htmlContent.append(String.format("%n%n%s%n<br><br>%n%s%s", headline, node.getHtml(), bottomLine));
+
+        for (QTreeNode child : node.getChildren()) {
+            createHTMLContent(htmlContent, child);
+        }
+
+        return htmlContent;
     }
 }

@@ -19,7 +19,7 @@ public class UIElementNames {
     public static String MENU_EDIT_FIND = "Search";
 
     public static String MENU_EXPORT = "Export";
-    public static String MENU_ITEM_HTML_OF_QUESTIONS = "Html file of questions";
+    public static String MENU_ITEM_HTML_OF_QUESTIONS = "Questions to HTML file";
     public static String MENU_ITEM_CSV_OF_ANSWERS = "CSV file of answers";
     public static String MENU_ITEM_XML_TO_CSV;
     public static String EXPORT_SELECT_TARGET_CSV;
