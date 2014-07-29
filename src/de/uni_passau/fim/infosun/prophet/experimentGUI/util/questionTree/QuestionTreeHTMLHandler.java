@@ -1,6 +1,10 @@
 package de.uni_passau.fim.infosun.prophet.experimentGUI.util.questionTree;
 
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -171,7 +175,7 @@ public class QuestionTreeHTMLHandler {
             switch (level) {
                 case EXPERIMENT_LEVEL:
                     headline = "<h1>" + name + "</h1>";
-                    bottomLine = QuestionViewPane.HTML_DIVIDER + QuestionViewPane.FOOTER_EXPERIMENT_CODE + bottomLine;
+                    bottomLine = QuestionViewPane.HTML_DIVIDER + QuestionViewPane.FOOTER_SUBJECT_CODE + bottomLine;
                     break;
                 case CATEGORY_LEVEL:
                     headline = "<h2>" + name + "</h2>";

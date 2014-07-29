@@ -83,12 +83,14 @@ public class QuestionViewPane extends JScrollPane {
     public static final String FOOTER_END_CATEGORY = String.format("<input name =\"%s\" type=\"%s\" value=\"%s\" />",
             Constants.KEY_FORWARD, HTML_TYPE_SUBMIT, UIElementNames.FOOTER_END_CATEGORY_CAPTION);
 
-    public static final String FOOTER_EXPERIMENT_CODE =
+    public static final String FOOTER_EXPERIMENT_CODE = "<input type=\"hidden\" name=%s value=\"%s\">";
+
+    public static final String FOOTER_SUBJECT_CODE =
             String.format("<table><tr><td>%s</td><td><input name=\"%s\" /></td></tr></table>",
                     UIElementNames.FOOTER_SUBJECT_CODE_CAPTION, Constants.KEY_SUBJECT);
 
     public static final String FOOTER_START_EXPERIMENT =
-            String.format("%s%s<input name =\"%s\" type=\"%s\" value=\"%s\" />", FOOTER_EXPERIMENT_CODE, HTML_DIVIDER,
+            String.format("%s%s<input name =\"%s\" type=\"%s\" value=\"%s\" />", FOOTER_SUBJECT_CODE, HTML_DIVIDER,
                     Constants.KEY_FORWARD, HTML_TYPE_SUBMIT, UIElementNames.FOOTER_START_EXPERIMENT_CAPTION);
 
     public static final String HTML_END = "</form></body></html>";
@@ -229,6 +231,8 @@ public class QuestionViewPane extends JScrollPane {
         }
 
         if (questionNode.getType() == EXPERIMENT) {
+            sBuilder.append(String.format(FOOTER_EXPERIMENT_CODE, Constants.KEY_EXPERIMENT_CODE,
+                    questionNode.getAttribute(Constants.KEY_EXPERIMENT_CODE).getValue()));
             sBuilder.append(FOOTER_START_EXPERIMENT);
         } else {
             if (hasActiveNextNode(questionNode)) {
