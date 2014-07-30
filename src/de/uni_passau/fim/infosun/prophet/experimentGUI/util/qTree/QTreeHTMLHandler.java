@@ -149,8 +149,8 @@ public class QTreeHTMLHandler {
                 bw.write(htmlContent + newline);
                 bw.write("</body>" + newline);
                 bw.write("</html>" + newline);
-            } catch (IOException ioe) {
-                ioe.printStackTrace();
+            } catch (IOException e) {
+                System.err.println("Error while writing questions to HTML file: " + e.getMessage());
             }
         } else {
             throw new IllegalArgumentException("rootNode must be of type Type.EXPERIMENT");
