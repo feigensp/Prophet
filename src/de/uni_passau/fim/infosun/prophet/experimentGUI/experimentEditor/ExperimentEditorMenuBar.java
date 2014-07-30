@@ -1,30 +1,30 @@
 package de.uni_passau.fim.infosun.prophet.experimentGUI.experimentEditor;
 
-import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentEditor.tabbedPane.ExperimentEditorTabbedPane;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentEditor.tabbedPane.editorTabs.ContentEditorPanel;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.miniEditors.MacroEditor;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTree;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeHTMLHandler;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeModel;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.xml.QTreeXMLHandler;
-import org.jsoup.nodes.Element;
-import org.jsoup.parser.Tag;
-
-import javax.swing.*;
-import javax.swing.event.MenuEvent;
-import javax.swing.event.MenuListener;
-import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.swing.tree.TreePath;
-import java.awt.*;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import javax.swing.*;
+import javax.swing.event.MenuEvent;
+import javax.swing.event.MenuListener;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.tree.TreePath;
+
+import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentEditor.tabbedPane.ExperimentEditorTabbedPane;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentEditor.tabbedPane.editorTabs.ContentEditorPanel;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.miniEditors.MacroEditor;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.*;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.xml.QTreeXMLHandler;
+import org.jsoup.nodes.Element;
+import org.jsoup.parser.Tag;
 
 import static de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode.Type.EXPERIMENT;
+import static javax.swing.JFileChooser.APPROVE_OPTION;
 
 /**
  * The menu bar of the ExperimentViewer. Separated to enhance readability.
@@ -45,70 +45,32 @@ public class ExperimentEditorMenuBar extends JMenuBar {
     private JMenu exportMenu;
     private FileNameExtensionFilter extensionFilter = new FileNameExtensionFilter("Experiment XML", "xml");
 
-//    private class XMLToCSVActionListener implements ActionListener {
-//
-//        @Override
-//        public void actionPerformed(ActionEvent e) {
-//            String answersXmlFileName = "answers.xml";
-//            String experimentCode;
-//            QuestionTreeNode root;
-//            List<Document> answerXmlDocuments;
-//            File csvFile;
-//
-//            // Get the dir in which to search for the answer files. Subdirs will be searched, too.
-//            File searchDir = currentFile.getParentFile();
-//
-////            JFileChooser dirChooser = new JFileChooser();
-////            int dirReturnCode;
-////
-////            dirChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-////            dirChooser.setMultiSelectionEnabled(false);
-////            dirReturnCode = dirChooser.showOpenDialog(null);
-////
-////            if (dirReturnCode == JFileChooser.APPROVE_OPTION) {
-////                searchDir = dirChooser.getSelectedFile();
-////            } else {
-////                return;
-////            }
-//
-//            List<File> answerFiles = QuestionTreeXMLHandler.getFilesByName(searchDir, answersXmlFileName);
-//
-////            // Try to find experiment code in path. Look in parent dir of the first answerFile found.
-////            if (answerFiles.size() > 0) {
-////                String folderName = answerFiles.get(0).getParentFile().getName();
-////                String[] parts = folderName.split("_");
-////
-////                if (parts.length > 0) {
-////                    experimentCode = parts[1];
-////                } else {
-////                    experimentCode = "unknown";
-////                }
-////            } else {
-////                return;
-////            }
-//
-//            root = experimentEditor.getTreeComponent().getRoot();
-//            experimentCode = root.getAttributeValue(Constants.KEY_EXPERIMENT_CODE);
-//
-//            answerXmlDocuments = QuestionTreeXMLHandler.getDocuments(answerFiles);
-//
-//            // Get the csv file in which the results are to be stored.
-//            JFileChooser fileChooser = new JFileChooser(searchDir);
-//            int csvReturnCode;
-//
-//            fileChooser.setName(UIElementNames.EXPORT_SELECT_TARGET_CSV);
-//            fileChooser.setFileFilter(new FileNameExtensionFilter("CSV-Dateien", "csv"));
-//            fileChooser.setMultiSelectionEnabled(false);
-//
-//            csvReturnCode = fileChooser.showSaveDialog(null);
-//
-//            if (csvReturnCode == JFileChooser.APPROVE_OPTION) {
-//                csvFile = fileChooser.getSelectedFile();
-//
-//                QuestionTreeXMLHandler.saveAsCSV(root, answerXmlDocuments, csvFile, experimentCode);
-//            }
-//        }
-//    }
+    private class XMLToCSVActionListener implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            JFileChooser dirChooser = new JFileChooser();
+            dirChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+
+            JFileChooser saveFileChooser = new JFileChooser();
+            saveFileChooser.addChoosableFileFilter(new FileNameExtensionFilter("Comma Separated Values", "csv"));
+            saveFileChooser.setFileFilter(saveFileChooser.getChoosableFileFilters()[1]);
+
+            if (dirChooser.showOpenDialog(owner) == APPROVE_OPTION) {
+                File answerDir = dirChooser.getSelectedFile();
+
+                if (saveFileChooser.showSaveDialog(owner) == APPROVE_OPTION) {
+                    File saveFile = saveFileChooser.getSelectedFile();
+
+                    if (saveFile.exists() && !confirmOverwrite(saveFile)) {
+                        return;
+                    }
+
+                    new Thread(() -> QTreeCSVHandler.exportCSV(answerDir, saveFile)).start();
+                }
+            }
+        }
+    }
 
     private ActionListener searchActionListener = event -> {
         Component current = tabbedPane.getSelectedComponent();
@@ -132,7 +94,7 @@ public class ExperimentEditorMenuBar extends JMenuBar {
         JFileChooser fileChooser = new JFileChooser(currentFile == null ? new File(".") : currentFile);
         fileChooser.setFileFilter(extensionFilter);
 
-        if (fileChooser.showOpenDialog(owner) != JFileChooser.APPROVE_OPTION) {
+        if (fileChooser.showOpenDialog(owner) != APPROVE_OPTION) {
             return;
         }
         currentFile = fileChooser.getSelectedFile();
@@ -168,7 +130,7 @@ public class ExperimentEditorMenuBar extends JMenuBar {
         JFileChooser fileChooser = new JFileChooser(currentFile == null ? new File(".") : currentFile);
         fileChooser.setFileFilter(extensionFilter);
 
-        if (fileChooser.showSaveDialog(owner) != JFileChooser.APPROVE_OPTION) {
+        if (fileChooser.showSaveDialog(owner) != APPROVE_OPTION) {
             return;
         }
 
@@ -180,14 +142,8 @@ public class ExperimentEditorMenuBar extends JMenuBar {
             chosenFile = new File(path + suffix);
         }
 
-        if (chosenFile.exists()) {
-            int option = JOptionPane
-                    .showConfirmDialog(owner, chosenFile.getName() + " " + UIElementNames.MESSAGE_REPLACE_FILE,
-                            UIElementNames.MESSAGE_REPLACE_FILE_TITLE, JOptionPane.YES_NO_OPTION);
-
-            if (option == JOptionPane.NO_OPTION) {
-                return;
-            }
+        if (chosenFile.exists() && !confirmOverwrite(chosenFile)) {
+            return;
         }
 
         currentFile = chosenFile;
@@ -207,9 +163,9 @@ public class ExperimentEditorMenuBar extends JMenuBar {
         public void actionPerformed(ActionEvent arg0) {
             JFileChooser fc = new JFileChooser(currentFile);
             fc.addChoosableFileFilter(new FileNameExtensionFilter("HyperText Markup Language", "htm", "html"));
-            fc.setFileFilter(fc.getChoosableFileFilters()[0]);
+            fc.setFileFilter(fc.getChoosableFileFilters()[1]);
 
-            if (fc.showSaveDialog(owner) == JFileChooser.APPROVE_OPTION) {
+            if (fc.showSaveDialog(owner) == APPROVE_OPTION) {
                 File file = fc.getSelectedFile();
 
                 if (!file.getPath().endsWith(".htm") && !file.getPath().endsWith(".html")) {
@@ -227,34 +183,6 @@ public class ExperimentEditorMenuBar extends JMenuBar {
             }
         }
     }
-
-//    private class ExportCSVActionListener implements ActionListener {
-//
-//        public void actionPerformed(ActionEvent arg0) {
-//            try {
-//                QuestionTreeNode experimentNode = experimentEditor.getTreeComponent().getRoot();
-//
-//                ArrayList<Pair<QuestionTreeNode, ArrayList<Pair<String, String>>>> formInfos =
-//                        QuestionTreeHTMLHandler.getForms(experimentNode);
-//
-//                ArrayList<QuestionTreeNode> answerNodes = new ArrayList<>();
-//                String experimentCode = experimentNode.getAttributeValue(Constants.KEY_EXPERIMENT_CODE);
-//
-//                // Antwortdateien ermitteln
-//                String path = currentFile.getCanonicalPath();
-//                int index = path.lastIndexOf(System.getProperty("file.separator"));
-//                path = index != -1 ? path.substring(0, index) : path;
-//                File f = new File(path);
-//
-//                getAnswerFiles(f, answerNodes, experimentCode, true);
-//
-//                // csv Datei erstellen
-//                QuestionTreeXMLHandler.saveAsCSVFile(formInfos, answerNodes, experimentCode, path);
-//            } catch (IOException e) {
-//                JOptionPane.showMessageDialog(null, UIElementNames.MESSAGE_PATH_NOT_FOUND);
-//            }
-//        }
-//    }
 
     private ActionListener nameCheckActionListener = event -> {
         Map<String, List<TreePath>> duplicates = QTreeHTMLHandler.checkNames(qTreeModel.getRoot());
@@ -320,10 +248,6 @@ public class ExperimentEditorMenuBar extends JMenuBar {
             public void menuSelected(MenuEvent e) {
                 boolean treeExists = qTreeModel.getRoot() != null;
 
-//              if (treeExists) {
-//                  exportCSVMenuItem.setEnabled(currentFile != null);
-//              }
-
                 saveMenuItem.setEnabled(treeExists);
                 saveAsMenuItem.setEnabled(treeExists);
                 nameCheckMenuItem.setEnabled(treeExists);
@@ -375,13 +299,9 @@ public class ExperimentEditorMenuBar extends JMenuBar {
         exportMenu.add(exportHTMLFileMenuItem);
         exportHTMLFileMenuItem.addActionListener(new ExportHTMLFileActionListener());
 
-//        exportCSVMenuItem = new JMenuItem(UIElementNames.MENU_ITEM_CSV_OF_ANSWERS);
-//        exportMenu.add(exportCSVMenuItem);
-//        exportCSVMenuItem.addActionListener(new ExportCSVActionListener());
-//
-//        JMenuItem xmlToCsvAllInDir = new JMenuItem(UIElementNames.MENU_ITEM_XML_TO_CSV);
-//        exportMenu.add(xmlToCsvAllInDir);
-//        xmlToCsvAllInDir.addActionListener(new XMLToCSVActionListener());
+        JMenuItem xmlToCsvAllInDir = new JMenuItem(UIElementNames.MENU_ITEM_XML_TO_CSV);
+        exportMenu.add(xmlToCsvAllInDir);
+        xmlToCsvAllInDir.addActionListener(new XMLToCSVActionListener());
 
         fileMenu.addSeparator();
 
@@ -415,42 +335,14 @@ public class ExperimentEditorMenuBar extends JMenuBar {
         closeMenuItem.addActionListener(closeActionListener);
     }
 
-//    /**
-//     * Search for answer.xml files in the directory of file and its subdirectories.
-//     * Loads the Data from this files and saves it to the answerNodes-ArrayList.
-//     * Select directories after name (if the correct experiment code is used)
-//     *
-//     * @param file
-//     *         file or directory in which is searched
-//     * @param answerNodes
-//     *         storage for the data from the answer.xml files
-//     * @param experimentCode
-//     *         used experiment code
-//     * @param search
-//     *         if false the answer.xml files of this directory are not used - but the files of the subdirectories are
-//     *         still used
-//     */
-//    private void getAnswerFiles(File file, ArrayList<QuestionTreeNode> answerNodes, String experimentCode,
-//            boolean search) {
-//        File[] directoryFiles = file.listFiles();
-//        for (File currentFile : directoryFiles) {
-//            if (currentFile.isDirectory()) {
-//                if (currentFile.getName().startsWith(experimentCode + "_")) {
-//                    getAnswerFiles(currentFile, answerNodes, experimentCode, true);
-//                } else {
-//                    getAnswerFiles(currentFile, answerNodes, experimentCode, false);
-//                }
-//            } else if (search && currentFile.getName().equals("answers.xml")) {
-//                try {
-//                    QuestionTreeNode node = QuestionTreeXMLHandler.loadAnswerXMLTree(currentFile.getPath());
-//                    if (node != null) {
-//                        answerNodes.add(node);
-//                    }
-//                } catch (FileNotFoundException e) {
-//                    JOptionPane.showMessageDialog(null,
-//                            UIElementNames.MESSAGE_FILE_NOT_FOUND + ": " + currentFile.getAbsolutePath());
-//                }
-//            }
-//        }
-//    }
+    /**
+     * Displays a YES/NO dialog asking whether the user would like to overwrite an existing file.
+     *
+     * @param saveFile the <code>File</code> that would be overridden
+     * @return true iff the user clicked YES
+     */
+    private boolean confirmOverwrite(File saveFile) {
+        return JOptionPane.showConfirmDialog(owner, saveFile.getName() + " " + UIElementNames.MESSAGE_REPLACE_FILE,
+                UIElementNames.MESSAGE_REPLACE_FILE_TITLE, JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
+    }
 }
