@@ -12,7 +12,6 @@ public class PHPExportPlugin implements Plugin {
 
     @Override
     public Setting getSetting(QTreeNode node) {
-
         if (node.getType() != Type.EXPERIMENT) {
             return null;
         }
@@ -22,7 +21,6 @@ public class PHPExportPlugin implements Plugin {
 
     @Override
     public void experimentViewerRun(ExperimentViewer experimentViewer) {
-
     }
 
     @Override
@@ -32,7 +30,6 @@ public class PHPExportPlugin implements Plugin {
 
     @Override
     public void enterNode(QTreeNode node) {
-
     }
 
     @Override
@@ -42,7 +39,6 @@ public class PHPExportPlugin implements Plugin {
 
     @Override
     public void exitNode(QTreeNode node) {
-
     }
 
     @Override
