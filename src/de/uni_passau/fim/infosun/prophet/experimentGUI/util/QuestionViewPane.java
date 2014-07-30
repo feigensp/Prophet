@@ -228,9 +228,9 @@ public class QuestionViewPane extends JScrollPane {
         }
 
         if (questionNode.getType() == EXPERIMENT) {
+            sBuilder.append(FOOTER_START_EXPERIMENT);
             sBuilder.append(String.format(FOOTER_EXPERIMENT_CODE,
                     questionNode.getAttribute(Constants.KEY_EXPERIMENT_CODE).getValue()));
-            sBuilder.append(FOOTER_START_EXPERIMENT);
         } else {
             if (hasActiveNextNode(questionNode)) {
                 sBuilder.append(FOOTER_FORWARD);
