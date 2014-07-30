@@ -463,6 +463,30 @@ enthält die Struktur des Baums und die Antworten, allerdings nicht die Fragen
 Neue Features
 \end_layout
 
+\begin_layout Subsection
+Plugins
+\end_layout
+
+\begin_layout Description
+PHP
+\begin_inset space ~
+\end_inset
+
+Export Erreichbar unter Settings für den Experiment-Knoten und dann PHPExportPlu
+gint.
+ Für jeden Export wird ein neuer Ordner mit dem aktuellen Datum und der
+ aktuellen Uhrzeit erstellt (YYYY-MM-DD_HH-MM-SS).
+\end_layout
+
+\begin_layout Description
+HTML
+\begin_inset space ~
+\end_inset
+
+Export Liefert eine Übersicht über alle Seiten aus dem aktuellen Experiment.
+ Erreichbar über das Menü im Reiter Export.
+\end_layout
+
 \begin_layout Section
 Neue Architektur
 \end_layout
