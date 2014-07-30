@@ -1,19 +1,5 @@
 package de.uni_passau.fim.infosun.prophet.experimentGUI.experimentEditor;
 
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Toolkit;
-import java.awt.event.*;
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-import javax.swing.*;
-import javax.swing.event.MenuEvent;
-import javax.swing.event.MenuListener;
-import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.swing.tree.TreePath;
-
 import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentEditor.tabbedPane.ExperimentEditorTabbedPane;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentEditor.tabbedPane.editorTabs.ContentEditorPanel;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames;
@@ -25,6 +11,18 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.xml.QTreeXMLHandler;
 import org.jsoup.nodes.Element;
 import org.jsoup.parser.Tag;
+
+import javax.swing.*;
+import javax.swing.event.MenuEvent;
+import javax.swing.event.MenuListener;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.tree.TreePath;
+import java.awt.*;
+import java.awt.event.*;
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 import static de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode.Type.EXPERIMENT;
 
@@ -208,8 +206,10 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 
         public void actionPerformed(ActionEvent arg0) {
             JFileChooser fc = new JFileChooser(currentFile);
+            fc.addChoosableFileFilter(new FileNameExtensionFilter("HyperText Markup Language", "htm", "html"));
+            fc.setFileFilter(fc.getChoosableFileFilters()[0]);
 
-            if (fc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+            if (fc.showSaveDialog(owner) == JFileChooser.APPROVE_OPTION) {
                 File file = fc.getSelectedFile();
 
                 if (!file.getPath().endsWith(".htm") && !file.getPath().endsWith(".html")) {
@@ -217,7 +217,7 @@ public class ExperimentEditorMenuBar extends JMenuBar {
                 }
 
                 if (file.exists()) {
-                    int n = JOptionPane.showConfirmDialog(null, file.getName() + UIElementNames.MESSAGE_REPLACE_FILE,
+                    int n = JOptionPane.showConfirmDialog(owner, file.getName() + UIElementNames.MESSAGE_REPLACE_FILE,
                             UIElementNames.MESSAGE_REPLACE_FILE_TITLE, JOptionPane.YES_NO_OPTION);
                     if (n == JOptionPane.NO_OPTION) {
                         return;
