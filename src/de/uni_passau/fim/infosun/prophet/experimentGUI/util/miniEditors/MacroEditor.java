@@ -363,6 +363,9 @@ public class MacroEditor extends JFrame {
 
     /**
      * Saves the current macros to the macros.xml file.
+     *
+     * @throws IOException
+     *         if there is an error writing to the <code>xmlFile</code>
      */
     private void saveXMLFile() throws IOException {
         List<Macro> list = Collections.list(model.elements());

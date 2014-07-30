@@ -7,7 +7,11 @@ package de.uni_passau.fim.infosun.prophet.experimentGUI.util;
  PERFORMANCE OF THE PROGRAM AND DOCUMENTATION REMAINS WITH THE USER.
  */
 
-import java.awt.*;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.Insets;
+import java.awt.LayoutManager;
 
 /**
  * A vertical layout manager similar to java.awt.FlowLayout.
@@ -16,7 +20,7 @@ import java.awt.*;
  * in which case components are stretched horizontally. Unlike FlowLayout, components will not wrap to form another
  * column if there isn't enough space vertically. VerticalLayout can optionally anchor components to the top or bottom
  * of the display area or center them between the top and bottom.
- * <p/>
+ * <p>
  * Revision date 12th July 2001
  *
  * @author Colin Mummery  e-mail: colin_mummery@yahoo.com Homepage:www.kagi.com/equitysoft -

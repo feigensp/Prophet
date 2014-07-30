@@ -383,7 +383,7 @@ public class QTreeNode implements Cloneable {
      * @param index the index
      * @return the <code>QTreeNode</code> or <code>null</code>
      *
-     * @throws IndexOutOfBoundsException if <code>index</code> is out of range (index < 0 || index >= getChildCount())
+     * @throws IndexOutOfBoundsException if <code>index</code> is out of range {@code (index < 0 || index >= getChildCount())}
      */
     public QTreeNode getChild(int index) {
         return children.get(index);

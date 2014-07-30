@@ -20,7 +20,7 @@ public class Attribute implements Cloneable {
      * @param key the key for the <code>Attribute</code>
      * @param value the value for the <code>Attribute</code>
      *
-     * @throws NullPointerException if key or value is <cod>null</cod>
+     * @throws NullPointerException if key or value is <code>null</code>
      */
     public Attribute(String key, String value) {
         Objects.requireNonNull(key, "key must not be null!");

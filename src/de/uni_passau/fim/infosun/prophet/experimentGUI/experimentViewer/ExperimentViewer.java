@@ -71,7 +71,9 @@ public class ExperimentViewer extends JFrame {
     };
 
     /**
-     * Launch the application.
+     * Launches the <code>ExperimentViewer</code>.
+     *
+     * @param args command line arguments; ignored by this application
      */
     public static void main(String[] args) {
         EventQueue.invokeLater(() -> {

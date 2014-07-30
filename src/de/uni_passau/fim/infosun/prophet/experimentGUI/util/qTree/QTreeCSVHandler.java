@@ -30,6 +30,8 @@ public class QTreeCSVHandler {
      *
      * @param directory
      *         the directory to be searched
+     *@param fileName
+     *         the filename to be searched for
      *
      * @return the list of files
      */
