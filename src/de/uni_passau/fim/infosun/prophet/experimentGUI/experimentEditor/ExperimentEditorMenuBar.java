@@ -118,8 +118,8 @@ public class ExperimentEditorMenuBar extends JMenuBar {
             try {
                 QTreeXMLHandler.saveExperimentXML(qTreeModel.getRoot(), currentFile);
             } catch (IOException e) {
-                JOptionPane.showMessageDialog(owner, UIElementNames.MESSAGE_SAVE_ERROR,
-                        UIElementNames.MESSAGE_ERROR, JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(owner, UIElementNames.MESSAGE_SAVE_ERROR, UIElementNames.MESSAGE_ERROR,
+                        JOptionPane.ERROR_MESSAGE);
             }
         } else {
             saveAsMenuItem.doClick();
@@ -225,8 +225,8 @@ public class ExperimentEditorMenuBar extends JMenuBar {
         JScrollPane sPane = new JScrollPane(new JLabel(html.toString()));
         sPane.setPreferredSize(new Dimension(sPane.getPreferredSize().width + 20, 500));
 
-        JOptionPane.showMessageDialog(null,sPane,
-                UIElementNames.MESSAGE_DUPLICATE_TITLE_DUPLICATES_EXIST, JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(null, sPane, UIElementNames.MESSAGE_DUPLICATE_TITLE_DUPLICATES_EXIST,
+                JOptionPane.INFORMATION_MESSAGE);
     };
 
     /**
@@ -338,7 +338,9 @@ public class ExperimentEditorMenuBar extends JMenuBar {
     /**
      * Displays a YES/NO dialog asking whether the user would like to overwrite an existing file.
      *
-     * @param saveFile the <code>File</code> that would be overridden
+     * @param saveFile
+     *         the <code>File</code> that would be overridden
+     *
      * @return true iff the user clicked YES
      */
     private boolean confirmOverwrite(File saveFile) {
