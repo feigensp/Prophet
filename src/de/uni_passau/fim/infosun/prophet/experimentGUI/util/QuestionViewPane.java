@@ -12,25 +12,11 @@ import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLDecoder;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.StringTokenizer;
-import javax.swing.JButton;
-import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
-import javax.swing.JTextPane;
-import javax.swing.UIManager;
+import java.util.*;
+import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
-import javax.swing.text.AttributeSet;
-import javax.swing.text.ComponentView;
-import javax.swing.text.Element;
-import javax.swing.text.StyleConstants;
-import javax.swing.text.View;
-import javax.swing.text.ViewFactory;
+import javax.swing.text.*;
 import javax.swing.text.html.FormSubmitEvent;
 import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
@@ -40,6 +26,9 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentViewer.Experime
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.Attribute;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 
 import static de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode.Type.*;
 import static javax.swing.text.html.HTML.Attribute.NAME;
@@ -58,6 +47,7 @@ import static javax.swing.text.html.HTML.Tag.*;
 public class QuestionViewPane extends JScrollPane {
 
     private static Font f;
+
     static {
         InputStream fontInput = QuestionViewPane.class.getResourceAsStream("/font/VERDANAB.TTF");
 
@@ -74,16 +64,20 @@ public class QuestionViewPane extends JScrollPane {
     public static final String HTML_DIVIDER = "<br /><br /><hr /><br /><br />";
     public static final String HTML_TYPE_SUBMIT = "submit";
 
-    public static final String FOOTER_FORWARD = String.format("<input name =\"%s\" type=\"%s\" value=\"%s\" />",
-            Constants.KEY_FORWARD, HTML_TYPE_SUBMIT, UIElementNames.FOOTER_FORWARD_CAPTION);
+    public static final String FOOTER_FORWARD =
+            String.format("<input name =\"%s\" type=\"%s\" value=\"%s\" />", Constants.KEY_FORWARD, HTML_TYPE_SUBMIT,
+                    UIElementNames.FOOTER_FORWARD_CAPTION);
 
-    public static final String FOOTER_BACKWARD = String.format("<input name =\"%s\" type=\"%s\" value=\"%s\" />",
-            Constants.KEY_BACKWARD, HTML_TYPE_SUBMIT, UIElementNames.FOOTER_BACKWARD_CAPTION);
+    public static final String FOOTER_BACKWARD =
+            String.format("<input name =\"%s\" type=\"%s\" value=\"%s\" />", Constants.KEY_BACKWARD, HTML_TYPE_SUBMIT,
+                    UIElementNames.FOOTER_BACKWARD_CAPTION);
 
-    public static final String FOOTER_END_CATEGORY = String.format("<input name =\"%s\" type=\"%s\" value=\"%s\" />",
-            Constants.KEY_FORWARD, HTML_TYPE_SUBMIT, UIElementNames.FOOTER_END_CATEGORY_CAPTION);
+    public static final String FOOTER_END_CATEGORY =
+            String.format("<input name =\"%s\" type=\"%s\" value=\"%s\" />", Constants.KEY_FORWARD, HTML_TYPE_SUBMIT,
+                    UIElementNames.FOOTER_END_CATEGORY_CAPTION);
 
-    public static final String FOOTER_EXPERIMENT_CODE = "<input type=\"hidden\" name=%s value=\"%s\">";
+    public static final String FOOTER_EXPERIMENT_CODE =
+            "<input type=\"hidden\" name=" + Constants.KEY_EXPERIMENT_CODE + " value=\"%s\">";
 
     public static final String FOOTER_SUBJECT_CODE =
             String.format("<table><tr><td>%s</td><td><input name=\"%s\" /></td></tr></table>",
@@ -154,7 +148,7 @@ public class QuestionViewPane extends JScrollPane {
     private class CustomFactory extends HTMLEditorKit.HTMLFactory {
 
         @Override
-        public View create(Element elem) {
+        public View create(javax.swing.text.Element elem) {
             ComponentView view;
             AttributeSet eAttribs = elem.getAttributes();
             Object elementName = eAttribs.getAttribute(StyleConstants.NameAttribute);
@@ -180,7 +174,8 @@ public class QuestionViewPane extends JScrollPane {
      * Constructs a new <code>QuestionViewPane</code> displaying the HTML content of the given <code>QTreeNode</code>.
      * The appropriate buttons for navigating between the parts of the experiment will be added.
      *
-     * @param questionNode the <code>QTreeNode</code> whose HTML is to be displayed
+     * @param questionNode
+     *         the <code>QTreeNode</code> whose HTML is to be displayed
      */
     public QuestionViewPane(QTreeNode questionNode) {
         this.actionListeners = new LinkedList<>();
@@ -212,7 +207,9 @@ public class QuestionViewPane extends JScrollPane {
     /**
      * Assembles the HTML content that will be displayed by the <code>textPane</code>.
      *
-     * @param questionNode the <code>QTreeNode</code> whose HTML content will be integrated into the returned HTML
+     * @param questionNode
+     *         the <code>QTreeNode</code> whose HTML content will be integrated into the returned HTML
+     *
      * @return the HTML content for the <code>textPane</code>
      */
     private String getHTMLString(QTreeNode questionNode) {
@@ -231,7 +228,7 @@ public class QuestionViewPane extends JScrollPane {
         }
 
         if (questionNode.getType() == EXPERIMENT) {
-            sBuilder.append(String.format(FOOTER_EXPERIMENT_CODE, Constants.KEY_EXPERIMENT_CODE,
+            sBuilder.append(String.format(FOOTER_EXPERIMENT_CODE,
                     questionNode.getAttribute(Constants.KEY_EXPERIMENT_CODE).getValue()));
             sBuilder.append(FOOTER_START_EXPERIMENT);
         } else {
@@ -252,33 +249,54 @@ public class QuestionViewPane extends JScrollPane {
      * <code>QuestionViewPane</code> displays. Returns the name of the button that was clicked or <code>null</code>
      * if the data submission was not caused by a button click.
      *
-     * @param data the submitted form data
+     * @param data
+     *         the submitted form data
+     *
      * @return {@link Constants#KEY_FORWARD}, {@link Constants#KEY_BACKWARD} or <code>null</code>
      */
     private String saveAnswers(String data) {
+        Map<String, ArrayList<String>> answers = new HashMap<>();
         StringTokenizer st = new StringTokenizer(data, "&");
         String result = null;
 
-        Map<String, ArrayList<String>> answers = new HashMap<>();
+        Document doc = Jsoup.parse(textPane.getText());
+        Element form = doc.body().getElementsByTag("form").first();
+        Set<String> tags = new HashSet<>(Arrays.asList("input", "textarea", "select"));
+        String htmlName = "name";
+
+        for (Element namedElement : form.getElementsByAttribute(htmlName)) {
+            String name = namedElement.attr(htmlName);
+
+            boolean isNotButton = !Constants.KEY_BACKWARD.equals(name) && !Constants.KEY_FORWARD.equals(name);
+
+            if (tags.contains(namedElement.tagName()) && isNotButton) {
+                answers.put(name, new ArrayList<>());
+            }
+        }
+
+        System.out.println(data); // TODO debug
 
         while (st.hasMoreTokens()) {
             String token = st.nextToken();
-            String key = null;
-            String value = null;
+            String key;
+            String value;
 
             try {
                 key = URLDecoder.decode(token.substring(0, token.indexOf("=")), "ISO-8859-1");
-                value = URLDecoder.decode(token.substring(token.indexOf("=") + 1, token.length()), "ISO-8859-1");
-            } catch (UnsupportedEncodingException ex) {
-                ex.printStackTrace();
+                value = URLDecoder.decode(token.substring(token.indexOf("=") + 1, token.length()), "ISO-8859-1").trim();
+            } catch (UnsupportedEncodingException e) {
+                System.err.println("Invalid encoding in HTML form. " + e.getMessage());
+                continue;
             }
 
             if (Constants.KEY_FORWARD.equals(key) || Constants.KEY_BACKWARD.equals(key)) {
                 result = key;
             } else {
-                ArrayList<String> answer = answers.getOrDefault(key, new ArrayList<>());
-                answers.put(key, answer);
-                answer.add(value);
+                ArrayList<String> answer = answers.get(key);
+
+                if (answer != null && !value.isEmpty()) {
+                    answer.add(value);
+                }
             }
         }
 
@@ -294,7 +312,9 @@ public class QuestionViewPane extends JScrollPane {
      * Returns whether the given <code>QTreeNode</code> has an active (meaning a node that may be visited by the
      * <code>ExperimentViewer</code>) that comes after <code>node</code>.
      *
-     * @param node the <code>QTreeNode</code> to be searched from
+     * @param node
+     *         the <code>QTreeNode</code> to be searched from
+     *
      * @return true iff the given <code>QTreeNode</code> has an active next node
      */
     private boolean hasActiveNextNode(QTreeNode node) {
@@ -317,7 +337,9 @@ public class QuestionViewPane extends JScrollPane {
      * Returns whether the given <code>QTreeNode</code> has an active (meaning a node that may be visited by the
      * <code>ExperimentViewer</code>) that comes before <code>node</code>.
      *
-     * @param node the <code>QTreeNode</code> to be searched from
+     * @param node
+     *         the <code>QTreeNode</code> to be searched from
+     *
      * @return true iff the given <code>QTreeNode</code> has an active previous node
      */
     private boolean hasActivePreviousNode(QTreeNode node) {
@@ -335,7 +357,8 @@ public class QuestionViewPane extends JScrollPane {
      * either {@link Constants#KEY_FORWARD} or {@link Constants#KEY_BACKWARD} thereby indicating which button was
      * clicked.
      *
-     * @param listener the <code>ActionListener</code> to be added
+     * @param listener
+     *         the <code>ActionListener</code> to be added
      */
     public void addActionListener(ActionListener listener) {
         actionListeners.add(listener);
@@ -344,7 +367,9 @@ public class QuestionViewPane extends JScrollPane {
     /**
      * Removes the given <code>ActionListener</code> from this <code>QuestionViewPane</code>s listeners.
      *
-     * @param listener the <code>ActionListener</code> to be removed
+     * @param listener
+     *         the <code>ActionListener</code> to be removed
+     *
      * @return true iff the <code>ActionListener</code> was removed
      */
     public boolean removeActionListener(ActionListener listener) {
@@ -355,7 +380,8 @@ public class QuestionViewPane extends JScrollPane {
      * Fires an <code>ActionEvent</code> of type <code>ACTION_PERFORMED</code> for the
      * <code>actionListener</code> if there is one.
      *
-     * @param action the action <code>String</code> to be passed to the <code>ActionListener</code>
+     * @param action
+     *         the action <code>String</code> to be passed to the <code>ActionListener</code>
      */
     private void fireEvent(String action) {
         ActionEvent actionEvent = new ActionEvent(this, ActionEvent.ACTION_PERFORMED, action);

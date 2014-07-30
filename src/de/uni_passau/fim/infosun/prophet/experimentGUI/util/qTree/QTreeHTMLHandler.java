@@ -140,6 +140,7 @@ public class QTreeHTMLHandler {
                 System.out.println("Export HTML to: " + path); // TODO debug
 
                 bw.write("<html>" + newline);
+                bw.write("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">");
                 bw.write("<head>" + newline);
                 bw.write("<title>" + newline);
                 bw.write(String.format("%s - ExpCode %s%n", experimentName, experimentCode));
@@ -164,8 +165,10 @@ public class QTreeHTMLHandler {
 
         switch (node.getType()) {
             case EXPERIMENT:
-                bottomLine = String.format("%1$s%2$s%1$s", QuestionViewPane.HTML_DIVIDER,
-                        QuestionViewPane.FOOTER_EXPERIMENT_CODE);
+                bottomLine = String.format("%1$s%2$s%3$s%1$s", QuestionViewPane.HTML_DIVIDER,
+                        String.format(QuestionViewPane.FOOTER_EXPERIMENT_CODE,
+                                node.getAttribute(Constants.KEY_EXPERIMENT_CODE).getValue()),
+                        QuestionViewPane.FOOTER_SUBJECT_CODE);
                 headline = String.format("<h1>%s</h1>", nodeName);
                 break;
             case CATEGORY:
