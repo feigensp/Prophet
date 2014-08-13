@@ -14,6 +14,7 @@ import java.net.URL;
 import java.net.URLDecoder;
 import java.util.*;
 import javax.swing.*;
+import javax.swing.Timer;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import javax.swing.text.*;
@@ -202,6 +203,37 @@ public class QuestionViewPane extends JScrollPane {
 
         textPane.setText(getHTMLString(questionNode));
         textPane.setCaretPosition(0);
+
+        Timer bTimer = new Timer(0, null);
+        bTimer.addActionListener(new ActionListener() {
+
+            private int times = 0;
+            private String oldText;
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JButton button = ((JButton) submitButton.getComponent());
+                int maxTimes = 5;
+
+                if (times == 0) {
+                    oldText = button.getText();
+                }
+
+                if (times < maxTimes) {
+                    button.setText(String.format("%s (%d)", oldText, maxTimes - times));
+                    button.setEnabled(false);
+                    times++;
+                } else {
+                    button.setText(oldText);
+                    button.setEnabled(true);
+                    bTimer.stop();
+                }
+            }
+        });
+
+        bTimer.setDelay(1000);
+        bTimer.setRepeats(true);
+        bTimer.start();
     }
 
     /**
