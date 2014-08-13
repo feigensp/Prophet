@@ -117,6 +117,7 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 
             try {
                 QTreeXMLHandler.saveExperimentXML(qTreeModel.getRoot(), currentFile);
+                confirmSave();
             } catch (IOException e) {
                 JOptionPane.showMessageDialog(owner, UIElementNames.get("MESSAGE_SAVE_ERROR"), UIElementNames.get("MESSAGE_ERROR"),
                         JOptionPane.ERROR_MESSAGE);
@@ -150,6 +151,7 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 
         try {
             QTreeXMLHandler.saveExperimentXML(qTreeModel.getRoot(), currentFile);
+            confirmSave();
         } catch (IOException e) {
             JOptionPane.showMessageDialog(owner, UIElementNames.get("MESSAGE_SAVE_ERROR"), UIElementNames.get("MESSAGE_ERROR"),
                     JOptionPane.ERROR_MESSAGE);
@@ -333,6 +335,13 @@ public class ExperimentEditorMenuBar extends JMenuBar {
         macroEd.addActionListener(event -> MacroEditor.main(null));
 
         closeMenuItem.addActionListener(closeActionListener);
+    }
+
+    /**
+     * Display a OK dialog confirming that the current experiment was saved.
+     */
+    private void confirmSave() {
+        JOptionPane.showMessageDialog(owner, UIElementNames.get("MESSAGE_SAVE_SUCCESSFUL"), null, JOptionPane.INFORMATION_MESSAGE);
     }
 
     /**
