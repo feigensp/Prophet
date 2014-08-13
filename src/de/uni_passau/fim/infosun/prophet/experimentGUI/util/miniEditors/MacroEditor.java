@@ -369,6 +369,7 @@ public class MacroEditor extends JFrame {
      *
      * @return the loaded <code>Macro</code>s
      */
+    @SuppressWarnings({"unchecked"}) // the macros.xsd ensures that the XML can be deserialised to a Collection<Macro>
     public static List<Macro> loadMacros() {
         List<Macro> macros = new LinkedList<>();
 
