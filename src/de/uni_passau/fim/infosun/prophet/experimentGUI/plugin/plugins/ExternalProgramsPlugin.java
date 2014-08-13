@@ -39,11 +39,11 @@ public class ExternalProgramsPlugin extends Thread implements Plugin {
 
         Attribute mainAttribute = node.getAttribute(KEY);
         PluginSettings pluginSettings = new PluginSettings(mainAttribute, getClass().getSimpleName(), true);
-        pluginSettings.setCaption(UIElementNames.MENU_TAB_SETTINGS_EXTERNAL_PROGRAMS);
+        pluginSettings.setCaption(UIElementNames.get("MENU_TAB_SETTINGS_EXTERNAL_PROGRAMS"));
 
         Attribute subAttribute = mainAttribute.getSubAttribute(KEY_COMMANDS);
         Setting subSetting = new SettingsTextArea(subAttribute, null);
-        subSetting.setCaption(UIElementNames.MENU_TAB_SETTINGS_PATH_OF_EXTERNAL_PROGRAMS);
+        subSetting.setCaption(UIElementNames.get("MENU_TAB_SETTINGS_PATH_OF_EXTERNAL_PROGRAMS"));
         pluginSettings.addSetting(subSetting);
 
         return pluginSettings;
@@ -89,7 +89,7 @@ public class ExternalProgramsPlugin extends Thread implements Plugin {
     }
 
     private void createWindow() {
-        frame = new JFrame(UIElementNames.MENU_TAB_SETTINGS_EXTERNAL_PROGRAMS_TITLE);
+        frame = new JFrame(UIElementNames.get("MENU_TAB_SETTINGS_EXTERNAL_PROGRAMS_TITLE"));
         frame.setLayout(new BorderLayout());
         panel = new JPanel();
         panel.setLayout(new VerticalLayout(0, 0));
@@ -113,12 +113,12 @@ public class ExternalProgramsPlugin extends Thread implements Plugin {
                         p = Runtime.getRuntime().exec(command);
                         processes.add(id, p);
                     } catch (Exception e1) {
-                        JOptionPane.showMessageDialog(null, UIElementNames.MESSAGE_ONLY_ONE_INSTANCE);
+                        JOptionPane.showMessageDialog(null, UIElementNames.get("MESSAGE_ONLY_ONE_INSTANCE"));
                     }
                 }
             } catch (IOException e1) {
                 JOptionPane.showMessageDialog(null,
-                        UIElementNames.MESSAGE_COULD_NOT_START_PROGRAM + ": " + e1.getMessage());
+                        UIElementNames.get("MESSAGE_COULD_NOT_START_PROGRAM") + ": " + e1.getMessage());
             }
         });
         panel.add(button);

@@ -47,30 +47,30 @@ public class PHPExportComponent extends Setting {
     public PHPExportComponent(String borderDesc) {
         super(null, borderDesc);
 
-        setBorder(BorderFactory.createTitledBorder(UIElementNames.PHP_PHP_EXPORT));
+        setBorder(BorderFactory.createTitledBorder(UIElementNames.get("PHP_PHP_EXPORT")));
         setLayout(new VerticalLayout(5, VerticalLayout.LEFT, VerticalLayout.TOP));
 
-        add(new JLabel(UIElementNames.PHP_HOST + ":")); // Server Label
+        add(new JLabel(UIElementNames.get("PHP_HOST") + ":")); // Server Label
 
         final JTextField serverField = new JTextField("localhost", 20);
         add(serverField);
 
-        add(new JLabel(UIElementNames.PHP_NAME_OF_DATABASE + ":")); // DB Label
+        add(new JLabel(UIElementNames.get("PHP_NAME_OF_DATABASE") + ":")); // DB Label
 
         final JTextField dbField = new JTextField(20);
         add(dbField);
 
-        add(new JLabel(UIElementNames.PHP_USER_NAME + ":")); // Username Label
+        add(new JLabel(UIElementNames.get("PHP_USER_NAME") + ":")); // Username Label
 
         final JTextField usernameField = new JTextField(20);
         add(usernameField);
 
-        add(new JLabel(UIElementNames.PHP_PASSWORD + ":")); // Password label
+        add(new JLabel(UIElementNames.get("PHP_PASSWORD") + ":")); // Password label
 
         final JPasswordField passwordField = new JPasswordField(20);
         add(passwordField);
 
-        JButton exportButton = new JButton(UIElementNames.PHP_EXPORT_SCRIPT);
+        JButton exportButton = new JButton(UIElementNames.get("PHP_EXPORT_SCRIPT"));
         add(exportButton);
         exportButton.addActionListener(new ActionListener() {
 
@@ -88,8 +88,8 @@ public class PHPExportComponent extends Setting {
             @Override
             public void actionPerformed(ActionEvent arg0) {
                 int confirm = JOptionPane
-                        .showConfirmDialog(null, UIElementNames.PHP_DIALOG_UNENCRYPTED_PASSWORD_CONTINUE,
-                                UIElementNames.PHP_DIALOG_TITLE_CONFIRM, JOptionPane.YES_NO_OPTION);
+                        .showConfirmDialog(null, UIElementNames.get("PHP_DIALOG_UNENCRYPTED_PASSWORD_CONTINUE"),
+                                UIElementNames.get("PHP_DIALOG_TITLE_CONFIRM"), JOptionPane.YES_NO_OPTION);
                 if (confirm == JOptionPane.NO_OPTION) {
                     return;
                 }
@@ -125,7 +125,7 @@ public class PHPExportComponent extends Setting {
 
                 writeToFile(Paths.get(dirName.toString(), "config.php").toFile(), config.toString().getBytes());
 
-                JOptionPane.showMessageDialog(null, UIElementNames.PHP_MESSAGE_EXPORT_FINISHED);
+                JOptionPane.showMessageDialog(null, UIElementNames.get("PHP_MESSAGE_EXPORT_FINISHED"));
             }
         });
     }

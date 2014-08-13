@@ -33,9 +33,9 @@ public class GlobalSearchBar extends JToolBar implements ActionListener {
     private static final long serialVersionUID = 1L;
 
     public static final String CAPTION_HIDE = "X";
-    public static final String CAPTION_FIND = UIElementNames.GLOBAL_SEARCH_BAR_SEARCH;
-    public static final String CAPTION_REGEX = UIElementNames.GLOBAL_SEARCH_BAR_REGULAR_EXPRESSION;
-    public static final String CAPTION_MATCH_CASE = UIElementNames.GLOBAL_SEARCH_BAR_CASE_SENSITIVE;
+    public static final String CAPTION_FIND = UIElementNames.get("GLOBAL_SEARCH_BAR_SEARCH");
+    public static final String CAPTION_REGEX = UIElementNames.get("GLOBAL_SEARCH_BAR_REGULAR_EXPRESSION");
+    public static final String CAPTION_MATCH_CASE = UIElementNames.get("GLOBAL_SEARCH_BAR_CASE_SENSITIVE");
 
     public static final String ACTION_HIDE = "Hide";
     public static final String ACTION_NEXT = "Global";

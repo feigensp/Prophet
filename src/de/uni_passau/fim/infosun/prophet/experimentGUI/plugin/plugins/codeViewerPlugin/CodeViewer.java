@@ -48,7 +48,7 @@ public class CodeViewer extends JFrame implements FileListener {
     }
 
     public CodeViewer(Attribute selected, File saveDir) {
-        setTitle(UIElementNames.TITLE_CODE_VIEWER);
+        setTitle(UIElementNames.get("TITLE_CODE_VIEWER"));
         setSize(800, 600);
         setLayout(new BorderLayout());
 
@@ -68,7 +68,8 @@ public class CodeViewer extends JFrame implements FileListener {
         showDir = new File(showPath.length() == 0 ? "." : showPath);
         if (!showDir.exists()) {
             JOptionPane
-                    .showMessageDialog(this, UIElementNames.MESSAGE_PATH_DOES_NOT_EXIST, UIElementNames.MESSAGE_ERROR,
+                    .showMessageDialog(this, UIElementNames.get("MESSAGE_PATH_DOES_NOT_EXIST"), UIElementNames.get
+                                    ("MESSAGE_ERROR"),
                             JOptionPane.ERROR_MESSAGE);
         }
 
@@ -76,11 +77,11 @@ public class CodeViewer extends JFrame implements FileListener {
         setJMenuBar(menuBar);
         menuBar.setVisible(false);
 
-        fileMenu = new JMenu(UIElementNames.MENU_FILE);
+        fileMenu = new JMenu(UIElementNames.get("MENU_FILE"));
         menuBar.add(fileMenu);
         fileMenu.setVisible(false);
 
-        editMenu = new JMenu(UIElementNames.MENU_EDIT);
+        editMenu = new JMenu(UIElementNames.get("MENU_EDIT"));
         menuBar.add(editMenu);
         editMenu.setVisible(false);
 

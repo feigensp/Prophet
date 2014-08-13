@@ -25,11 +25,11 @@ public class FontStyleComboBox extends JComboBox<String> {
     public FontStyleComboBox(RSyntaxTextArea textArea) {
         List<Pair<String, String>> fontFaces = new ArrayList<>();
 
-        fontFaces.add(new Pair<>(UIElementNames.FONT_FACE_BOLD, "b"));
-        fontFaces.add(new Pair<>(UIElementNames.FONT_FACE_ITALIC, "i"));
-        fontFaces.add(new Pair<>(UIElementNames.FONT_FACE_UNDERLINE, "u"));
+        fontFaces.add(new Pair<>(UIElementNames.get("FONT_FACE_BOLD"), "b"));
+        fontFaces.add(new Pair<>(UIElementNames.get("FONT_FACE_ITALIC"), "i"));
+        fontFaces.add(new Pair<>(UIElementNames.get("FONT_FACE_UNDERLINE"), "u"));
 
-        addItem(UIElementNames.MENU_TAB_EDITOR_FONT_FACE);
+        addItem(UIElementNames.get("MENU_TAB_EDITOR_FONT_FACE"));
         fontFaces.forEach(pair -> addItem(pair.getKey()));
 
         addActionListener(event -> {

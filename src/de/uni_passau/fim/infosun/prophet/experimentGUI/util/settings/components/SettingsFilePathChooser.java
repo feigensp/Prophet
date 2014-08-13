@@ -27,7 +27,7 @@ public class SettingsFilePathChooser extends Setting {
         textField.setColumns(20);
         add(textField, BorderLayout.CENTER);
 
-        pathButton = new JButton(UIElementNames.BUTTON_LABEL_FIND);
+        pathButton = new JButton(UIElementNames.get("BUTTON_LABEL_FIND"));
         pathButton.addActionListener(arg0 -> {
             File userDir = new File(".");
             JFileChooser fc = new JFileChooser(userDir);
@@ -50,7 +50,7 @@ public class SettingsFilePathChooser extends Setting {
 
                 if (selectedPath.startsWith(currentPath)) {
                     selectedPath = selectedPath.substring(currentPath.length() + 1);
-                    JOptionPane.showMessageDialog(null, UIElementNames.MESSAGE_RELATIVE_PATH_NOTIFICATION);
+                    JOptionPane.showMessageDialog(null, UIElementNames.get("MESSAGE_RELATIVE_PATH_NOTIFICATION"));
                 }
                 textField.setText(selectedPath.replace('\\', '/'));
             }

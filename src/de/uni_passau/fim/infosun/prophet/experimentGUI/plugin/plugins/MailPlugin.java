@@ -88,31 +88,31 @@ public class MailPlugin implements Plugin {
 
         Attribute mainAttribute = node.getAttribute(KEY);
         PluginSettings pluginSettings = new PluginSettings(mainAttribute, getClass().getSimpleName(), true);
-        pluginSettings.setCaption(UIElementNames.MAIL_SEND_MAIL);
+        pluginSettings.setCaption(UIElementNames.get("MAIL_SEND_MAIL"));
 
         Attribute subAttribute = mainAttribute.getSubAttribute(SMTP_SERVER);
         Setting subSetting = new SettingsTextField(subAttribute, null);
-        subSetting.setCaption(UIElementNames.MAIL_SMTP_SERVER + ":");
+        subSetting.setCaption(UIElementNames.get("MAIL_SMTP_SERVER") + ":");
         pluginSettings.addSetting(subSetting);
 
         subAttribute = mainAttribute.getSubAttribute(SMTP_USER);
         subSetting = new SettingsTextField(subAttribute, null);
-        subSetting.setCaption(UIElementNames.MAIL_SMTP_USER + ":");
+        subSetting.setCaption(UIElementNames.get("MAIL_SMTP_USER") + ":");
         pluginSettings.addSetting(subSetting);
 
         subAttribute = mainAttribute.getSubAttribute(SMTP_PASS);
         subSetting = new SettingsPasswordField(subAttribute, null);
-        subSetting.setCaption(UIElementNames.MAIL_SMTP_PASSWORD + ":");
+        subSetting.setCaption(UIElementNames.get("MAIL_SMTP_PASSWORD") + ":");
         pluginSettings.addSetting(subSetting);
 
         subAttribute = mainAttribute.getSubAttribute(SMTP_SENDER);
         subSetting = new SettingsTextField(subAttribute, null);
-        subSetting.setCaption(UIElementNames.MAIL_SMTP_SENDER + ":");
+        subSetting.setCaption(UIElementNames.get("MAIL_SMTP_SENDER") + ":");
         pluginSettings.addSetting(subSetting);
 
         subAttribute = mainAttribute.getSubAttribute(SMTP_RECEIVER);
         subSetting = new SettingsTextField(subAttribute, null);
-        subSetting.setCaption(UIElementNames.MAIL_SMTP_RECIPIENT + ":");
+        subSetting.setCaption(UIElementNames.get("MAIL_SMTP_RECIPIENT") + ":");
         pluginSettings.addSetting(subSetting);
 
         return pluginSettings;
@@ -163,11 +163,11 @@ public class MailPlugin implements Plugin {
                 File attachmentFile = new File(experimentViewer.getSaveDir().getName() + ".zip");
                 ZipFile.zipFiles(experimentViewer.getSaveDir(), attachmentFile);
                 if (!this.sendMail(experimentViewer.getSaveDir().getName(), "", attachmentFile)) {
-                    return UIElementNames.MAIL_MESSAGE_COULD_NOT_SEND_MAIL;
+                    return UIElementNames.get("MAIL_MESSAGE_COULD_NOT_SEND_MAIL");
                 }
             }
         } catch (Exception e) {
-            return UIElementNames.MAIL_MESSAGE_COULD_NOT_SEND_MAIL;
+            return UIElementNames.get("MAIL_MESSAGE_COULD_NOT_SEND_MAIL");
         }
         return null;
     }

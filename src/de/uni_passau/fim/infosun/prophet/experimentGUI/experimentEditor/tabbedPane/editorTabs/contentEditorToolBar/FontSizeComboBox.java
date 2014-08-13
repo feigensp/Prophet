@@ -32,7 +32,7 @@ public class FontSizeComboBox extends JComboBox<String> {
         fontSizes.add(new Pair<>("+2", "+2"));
         fontSizes.add(new Pair<>("+3", "+3"));
 
-        addItem(UIElementNames.MENU_TAB_EDITOR_FONT_SIZE);
+        addItem(UIElementNames.get("MENU_TAB_EDITOR_FONT_SIZE"));
         fontSizes.forEach(pair -> addItem(pair.getKey()));
 
         addActionListener(event -> {

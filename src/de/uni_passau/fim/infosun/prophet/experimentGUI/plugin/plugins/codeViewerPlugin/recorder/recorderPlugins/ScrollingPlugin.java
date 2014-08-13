@@ -53,15 +53,15 @@ public class ScrollingPlugin implements RecorderPlugin {
 
         Attribute rDescAttribute = mainAttribute.getSubAttribute(KEY);
         PluginSettings resultDesc = new PluginSettings(rDescAttribute, getClass().getSimpleName(), true);
-        resultDesc.setCaption(UIElementNames.RECORDER_SCROLL_SCROLLING_BEHAVIOR);
+        resultDesc.setCaption(UIElementNames.get("RECORDER_SCROLL_SCROLLING_BEHAVIOR"));
 
         Attribute joinDescAttribute = rDescAttribute.getSubAttribute(KEY_JOIN);
         PluginSettings joinDesc = new PluginSettings(joinDescAttribute, null, true);
-        joinDesc.setCaption(UIElementNames.RECORDER_SCROLL_SUMMARIZE_SCROLLING);
+        joinDesc.setCaption(UIElementNames.get("RECORDER_SCROLL_SUMMARIZE_SCROLLING"));
 
         Attribute joinTimeDescAttribute = joinDescAttribute.getSubAttribute(KEY_JOIN_TIME);
         Setting joinTimeDesc = new SettingsTextField(joinTimeDescAttribute, null);
-        joinTimeDesc.setCaption(UIElementNames.RECORDER_TIME_INTERVAL_FOR_SUMMARY);
+        joinTimeDesc.setCaption(UIElementNames.get("RECORDER_TIME_INTERVAL_FOR_SUMMARY"));
 
         joinDesc.addSetting(joinTimeDesc);
         resultDesc.addSetting(joinDesc);

@@ -48,8 +48,8 @@ public class EditorTabbedPane extends JTabbedPane {
             myPanel.grabFocus();
         } else {
             JOptionPane.showMessageDialog(this,
-                    UIElementNames.EDITOR_TABBED_PANE_MESSAGE_ERROR_COULD_NOT_OPEN_FILE + ": " + path,
-                    UIElementNames.EDITOR_TABBED_PANE_MESSAGE_TITLE_ERROR, JOptionPane.ERROR_MESSAGE);
+                    UIElementNames.get("EDITOR_TABBED_PANE_MESSAGE_ERROR_COULD_NOT_OPEN_FILE") + ": " + path,
+                    UIElementNames.get("EDITOR_TABBED_PANE_MESSAGE_TITLE_ERROR"), JOptionPane.ERROR_MESSAGE);
         }
     }
 

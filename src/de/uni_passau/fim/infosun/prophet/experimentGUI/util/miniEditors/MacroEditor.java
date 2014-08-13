@@ -1,24 +1,12 @@
 package de.uni_passau.fim.infosun.prophet.experimentGUI.util.miniEditors;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.GridLayout;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.*;
+import java.awt.event.*;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.LinkedList;
+import java.util.*;
 import java.util.List;
-import java.util.Set;
 import javax.swing.*;
 import javax.xml.XMLConstants;
 import javax.xml.transform.stream.StreamSource;
@@ -157,7 +145,7 @@ public class MacroEditor extends JFrame {
                 } catch (IOException e) {
                     System.err.println("Could not save the macros.xml file. " + e);
                     Component parent = SwingUtilities.getWindowAncestor(((Component) event.getSource()));
-                    JOptionPane.showMessageDialog(parent, UIElementNames.MESSAGE_SAVE_ERROR);
+                    JOptionPane.showMessageDialog(parent, UIElementNames.get("MESSAGE_SAVE_ERROR"));
                 }
             }
         });
@@ -203,7 +191,7 @@ public class MacroEditor extends JFrame {
         });
 
         JPopupMenu popupMenu = new JPopupMenu();
-        JMenuItem removeItem = new JMenuItem(UIElementNames.MACRO_EDITOR_DELETE_MACRO);
+        JMenuItem removeItem = new JMenuItem(UIElementNames.get("MACRO_EDITOR_DELETE_MACRO"));
         popupMenu.add(removeItem);
         removeItem.addActionListener(event -> model.remove(macroJList.getSelectedIndex()));
 
@@ -336,9 +324,9 @@ public class MacroEditor extends JFrame {
      */
     private JMenuBar createMenuBar() {
         JMenuBar menuBar = new JMenuBar();
-        JMenu menu = new JMenu(UIElementNames.MENU_FILE);
-        JMenuItem saveMenuItem = new JMenuItem(UIElementNames.MENU_FILE_SAVE);
-        JMenuItem closeMenuItem = new JMenuItem(UIElementNames.MENU_FILE_QUIT);
+        JMenu menu = new JMenu(UIElementNames.get("MENU_FILE"));
+        JMenuItem saveMenuItem = new JMenuItem(UIElementNames.get("MENU_FILE_SAVE"));
+        JMenuItem closeMenuItem = new JMenuItem(UIElementNames.get("MENU_FILE_QUIT"));
 
         saveMenuItem.addActionListener(event -> {
             try {
@@ -346,7 +334,7 @@ public class MacroEditor extends JFrame {
             } catch (IOException e) {
                 System.err.println("Could not save the macros.xml file. " + e);
                 Component parent = SwingUtilities.getWindowAncestor(((Component) event.getSource()));
-                JOptionPane.showMessageDialog(parent, UIElementNames.MESSAGE_SAVE_ERROR);
+                JOptionPane.showMessageDialog(parent, UIElementNames.get("MESSAGE_SAVE_ERROR"));
             }
         });
 

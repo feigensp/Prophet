@@ -35,18 +35,18 @@ public class ValidSubjectCodePlugin implements Plugin {
 
         Attribute mainAttribute = node.getAttribute(KEY);
         PluginSettings pluginSettings = new PluginSettings(mainAttribute, getClass().getSimpleName(), true);
-        pluginSettings.setCaption(UIElementNames.SUBJECT_CODE_CHECK_SUBJECT_CODE);
+        pluginSettings.setCaption(UIElementNames.get("SUBJECT_CODE_CHECK_SUBJECT_CODE"));
 
         SettingsTextArea settingsTextArea = new SettingsTextArea(mainAttribute.getSubAttribute(KEY_CODES), null);
-        settingsTextArea.setCaption(UIElementNames.SUBJECT_CODE_VALID_CODES);
+        settingsTextArea.setCaption(UIElementNames.get("SUBJECT_CODE_VALID_CODES"));
         pluginSettings.addSetting(settingsTextArea);
 
         SettingsFilePathChooser filePathChooser = new SettingsFilePathChooser(mainAttribute.getSubAttribute(KEY_PATH), null);
-        filePathChooser.setCaption(UIElementNames.SUBJECT_CODE_CODE_FILE);
+        filePathChooser.setCaption(UIElementNames.get("SUBJECT_CODE_CODE_FILE"));
         pluginSettings.addSetting(filePathChooser);
 
         SettingsCheckBox settingsCheckBox = new SettingsCheckBox(mainAttribute.getSubAttribute(KEY_IGNORE_CASE), null);
-        settingsCheckBox.setCaption(UIElementNames.SUBJECT_CODE_IGNORE_CASE);
+        settingsCheckBox.setCaption(UIElementNames.get("SUBJECT_CODE_IGNORE_CASE"));
         pluginSettings.addSetting(settingsCheckBox);
 
         return pluginSettings;
@@ -78,7 +78,7 @@ public class ValidSubjectCodePlugin implements Plugin {
         String[] answers = currentNode.getAnswers(Constants.KEY_SUBJECT);
 
         if (answers == null || answers.length < 1) {
-            return UIElementNames.SUBJECT_CODE_MESSAGE_CODE_NOT_FOUND;
+            return UIElementNames.get("SUBJECT_CODE_MESSAGE_CODE_NOT_FOUND");
         }
 
         String subjectCode = answers[0];
@@ -98,13 +98,13 @@ public class ValidSubjectCodePlugin implements Plugin {
                     return null;
                 }
             } catch (FileNotFoundException e) {
-                return UIElementNames.SUBJECT_CODE_MESSAGE_FILE_NOT_FOUND;
+                return UIElementNames.get("SUBJECT_CODE_MESSAGE_FILE_NOT_FOUND");
             } catch (IOException e) {
                 // may occur when trying to close the FileReader
             }
         }
 
-        return UIElementNames.SUBJECT_CODE_MESSAGE_CODE_NOT_FOUND;
+        return UIElementNames.get("SUBJECT_CODE_MESSAGE_CODE_NOT_FOUND");
     }
 
     /**

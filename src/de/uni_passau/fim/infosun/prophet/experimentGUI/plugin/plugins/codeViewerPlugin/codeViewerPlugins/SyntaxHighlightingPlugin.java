@@ -25,7 +25,7 @@ public class SyntaxHighlightingPlugin implements CodeViewerPlugin {
 
         Attribute attribute = mainAttribute.getSubAttribute(KEY);
         Setting setting = new SettingsCheckBox(attribute, getClass().getSimpleName());
-        setting.setCaption(UIElementNames.SYNTAX_HIGHLIGHTING_ENABLE);
+        setting.setCaption(UIElementNames.get("SYNTAX_HIGHLIGHTING_ENABLE"));
 
         return setting;
     }

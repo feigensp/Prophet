@@ -43,16 +43,16 @@ public class SearchBarPlugin implements CodeViewerPlugin {
 
         Attribute attribute = mainAttribute.getSubAttribute(KEY);
         PluginSettings pluginSettings = new PluginSettings(attribute, getClass().getSimpleName(), true);
-        pluginSettings.setCaption(UIElementNames.SEARCH_BAR_ENABLE_SEARCH);
+        pluginSettings.setCaption(UIElementNames.get("SEARCH_BAR_ENABLE_SEARCH"));
 
         Attribute subAttribute = attribute.getSubAttribute(KEY_DISABLE_REGEX);
         Setting subSetting = new SettingsCheckBox(subAttribute, null);
-        subSetting.setCaption(UIElementNames.SEARCH_BAR_DEACTIVATE_REGULAR_EXPRESSIONS);
+        subSetting.setCaption(UIElementNames.get("SEARCH_BAR_DEACTIVATE_REGULAR_EXPRESSIONS"));
         pluginSettings.addSetting(subSetting);
 
         subAttribute = attribute.getSubAttribute(KEY_ENABLE_GLOBAL);
         subSetting = new SettingsCheckBox(subAttribute, null);
-        subSetting.setCaption(UIElementNames.SEARCH_BAR_ACTIVATE_GLOBAL_SEARCH);
+        subSetting.setCaption(UIElementNames.get("SEARCH_BAR_ACTIVATE_GLOBAL_SEARCH"));
         pluginSettings.addSetting(subSetting);
 
         return pluginSettings;
@@ -69,7 +69,7 @@ public class SearchBarPlugin implements CodeViewerPlugin {
         viewer = v;
         if (enabled) {
             map = new HashMap<>();
-            JMenuItem findMenuItem = new JMenuItem(UIElementNames.SEARCH_BAR_MENU_SEARCH);
+            JMenuItem findMenuItem = new JMenuItem(UIElementNames.get("SEARCH_BAR_MENU_SEARCH"));
             findMenuItem.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F, java.awt.Event.CTRL_MASK));
             findMenuItem.addActionListener(e -> {
                 SearchBar curr = map.get(viewer.getTabbedPane().getSelectedComponent());
@@ -100,7 +100,7 @@ public class SearchBarPlugin implements CodeViewerPlugin {
 
                 viewer.add(globalSearchBar, BorderLayout.SOUTH);
 
-                JMenuItem findGlobalMenuItem = new JMenuItem(UIElementNames.SEARCH_BAR_MENU_GLOBAL_SEARCH);
+                JMenuItem findGlobalMenuItem = new JMenuItem(UIElementNames.get("SEARCH_BAR_MENU_GLOBAL_SEARCH"));
                 findGlobalMenuItem
                         .setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_H, java.awt.Event.CTRL_MASK));
                 findGlobalMenuItem.addActionListener(event -> {

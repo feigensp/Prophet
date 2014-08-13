@@ -25,9 +25,9 @@ public class InactivityPlugin implements Plugin {
         Setting setting = new SettingsCheckBox(mainAttribute, getClass().getSimpleName());
 
         if (node.getType() == CATEGORY) {
-            setting.setCaption(UIElementNames.MENU_TAB_SETTINGS_DEACTIVATE_NODES);
+            setting.setCaption(UIElementNames.get("MENU_TAB_SETTINGS_DEACTIVATE_NODES"));
         } else if (node.getType() == QUESTION) {
-            setting.setCaption(UIElementNames.MENU_TAB_SETTINGS_DEACTIVATE_THIS_NODE);
+            setting.setCaption(UIElementNames.get("MENU_TAB_SETTINGS_DEACTIVATE_THIS_NODE"));
         }
 
         return setting;

@@ -71,7 +71,7 @@ public class MultilineDialog {
     public static Pair<String, List<String>> showMultiDialog(Component parent, String title, int columns, int rows) {
         JPanel content = new JPanel();
         JPanel namePanel = new JPanel();
-        JLabel nameLabel = new JLabel(UIElementNames.MULTILINEDIALOG_NAME);
+        JLabel nameLabel = new JLabel(UIElementNames.get("MULTILINEDIALOG_NAME"));
         JTextField nameTextField = new JTextField();
         JTextArea textInputArea = new JTextArea();
 

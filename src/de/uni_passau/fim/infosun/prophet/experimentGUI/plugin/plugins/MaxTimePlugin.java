@@ -133,7 +133,7 @@ public class MaxTimePlugin implements Plugin {
 
         Attribute resultAttribute = node.getAttribute(KEY);
         PluginSettings result = new PluginSettings(resultAttribute, getClass().getSimpleName(), true);
-        result.setCaption(UIElementNames.MENU_TAB_SETTINGS_TIME_OUT);
+        result.setCaption(UIElementNames.get("MENU_TAB_SETTINGS_TIME_OUT"));
 
         Attribute subAttribute = resultAttribute.getSubAttribute(KEY_MAX_TIME);
         Setting subSetting = new SettingsTextField(subAttribute, null);
@@ -141,33 +141,33 @@ public class MaxTimePlugin implements Plugin {
         switch (node.getType()) {
 
             case EXPERIMENT:
-                subSetting.setCaption(UIElementNames.MENU_TAB_SETTINGS_MAX_TIME_EXPERIMENT);
+                subSetting.setCaption(UIElementNames.get("MENU_TAB_SETTINGS_MAX_TIME_EXPERIMENT"));
                 break;
             case CATEGORY:
-                subSetting.setCaption(UIElementNames.MENU_TAB_SETTINGS_MAX_TIME_CATEGORY);
+                subSetting.setCaption(UIElementNames.get("MENU_TAB_SETTINGS_MAX_TIME_CATEGORY"));
                 break;
             case QUESTION:
-                subSetting.setCaption(UIElementNames.MENU_TAB_SETTINGS_MAX_TIME_QUESTION);
+                subSetting.setCaption(UIElementNames.get("MENU_TAB_SETTINGS_MAX_TIME_QUESTION"));
                 break;
         }
         result.addSetting(subSetting);
 
         Attribute hardExitAttribute = resultAttribute.getSubAttribute(KEY_HARD_EXIT);
         PluginSettings hardExit = new PluginSettings(hardExitAttribute, null, true);
-        hardExit.setCaption(UIElementNames.MENU_TAB_SETTINGS_HARD_TIME_OUT);
+        hardExit.setCaption(UIElementNames.get("MENU_TAB_SETTINGS_HARD_TIME_OUT"));
 
         Attribute warningAttribute = hardExitAttribute.getSubAttribute(KEY_HARD_EXIT_WARNING);
         PluginSettings warning = new PluginSettings(warningAttribute, null, true);
-        warning.setCaption(UIElementNames.MENU_TAB_SETTINGS_TIME_OUT_WARN_SUBJECTS);
+        warning.setCaption(UIElementNames.get("MENU_TAB_SETTINGS_TIME_OUT_WARN_SUBJECTS"));
 
         subAttribute = warningAttribute.getSubAttribute(KEY_HARD_EXIT_WARNING_TIME);
         subSetting = new SettingsTextField(subAttribute, null);
-        subSetting.setCaption(UIElementNames.MENU_TAB_SETTINGS_TIME_OUT_WARNING_TIME + ":");
+        subSetting.setCaption(UIElementNames.get("MENU_TAB_SETTINGS_TIME_OUT_WARNING_TIME") + ":");
         warning.addSetting(subSetting);
 
         subAttribute = warningAttribute.getSubAttribute(KEY_HARD_EXIT_WARNING_MESSAGE);
         subSetting = new SettingsTextField(subAttribute, null);
-        subSetting.setCaption(UIElementNames.MENU_TAB_SETTINGS_TIME_OUT_WARNING_MESSAGE + ":");
+        subSetting.setCaption(UIElementNames.get("MENU_TAB_SETTINGS_TIME_OUT_WARNING_MESSAGE") + ":");
         warning.addSetting(subSetting);
 
         hardExit.addSetting(warning);
@@ -175,13 +175,13 @@ public class MaxTimePlugin implements Plugin {
 
         subAttribute = resultAttribute.getSubAttribute(KEY_MESSAGE);
         subSetting = new SettingsTextField(subAttribute, null);
-        subSetting.setCaption(UIElementNames.MENU_TAB_SETTINGS_TIME_OUT_MESSAGE + ":");
+        subSetting.setCaption(UIElementNames.get("MENU_TAB_SETTINGS_TIME_OUT_MESSAGE") + ":");
         result.addSetting(subSetting);
 
         if (node.getType() == CATEGORY) {
             subAttribute = resultAttribute.getSubAttribute(KEY_IGNORE_TIMEOUT);
             subSetting = new SettingsCheckBox(subAttribute, null);
-            subSetting.setCaption(UIElementNames.MENU_TAB_SETTINGS_IGNORE_TIME_OUT);
+            subSetting.setCaption(UIElementNames.get("MENU_TAB_SETTINGS_IGNORE_TIME_OUT"));
             result.addSetting(subSetting);
         }
 

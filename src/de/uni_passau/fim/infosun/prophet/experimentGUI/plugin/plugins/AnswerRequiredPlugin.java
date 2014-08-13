@@ -23,11 +23,11 @@ public class AnswerRequiredPlugin implements Plugin {
 
         Attribute mainAttribute = node.getAttribute(KEY);
         PluginSettings pluginSettings = new PluginSettings(mainAttribute, getClass().getSimpleName(), true);
-        pluginSettings.setCaption(UIElementNames.MENU_TAB_SETTINGS_REQUIRED_ANSWERS);
+        pluginSettings.setCaption(UIElementNames.get("MENU_TAB_SETTINGS_REQUIRED_ANSWERS"));
 
         Attribute subAttribute = mainAttribute.getSubAttribute(KEY_NAMES);
         Setting subSetting = new SettingsTextArea(subAttribute, null);
-        subSetting.setCaption(UIElementNames.MENU_TAB_SETTINGS_REQUIRED_ANSWER_COMPONENTS + ":");
+        subSetting.setCaption(UIElementNames.get("MENU_TAB_SETTINGS_REQUIRED_ANSWER_COMPONENTS") + ":");
         pluginSettings.addSetting(subSetting);
 
         return pluginSettings;
@@ -61,7 +61,7 @@ public class AnswerRequiredPlugin implements Plugin {
                 boolean empty = missing || Arrays.stream(answers.get(requiredAnswerKey)).allMatch(String::isEmpty);
 
                 if (missing || empty) {
-                    return UIElementNames.MENU_TAB_SETTINGS_MESSAGE_FILL_ALL_FIELDS;
+                    return UIElementNames.get("MENU_TAB_SETTINGS_MESSAGE_FILL_ALL_FIELDS");
                 }
             }
         }

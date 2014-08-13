@@ -40,11 +40,11 @@ public class CodeViewerPlugin implements Plugin {
 
         Attribute mainAttribute = node.getAttribute(KEY);
         PluginSettings pluginSettings = new PluginSettings(mainAttribute, getClass().getSimpleName(), true);
-        pluginSettings.setCaption(UIElementNames.MENU_TAB_SETTINGS_ACTIVATE_CODE_VIEWER);
+        pluginSettings.setCaption(UIElementNames.get("MENU_TAB_SETTINGS_ACTIVATE_CODE_VIEWER"));
 
         Attribute subAttribute = mainAttribute.getSubAttribute(CodeViewer.KEY_PATH);
         Setting subSetting = new SettingsDirectoryPathChooser(subAttribute, null);
-        subSetting.setCaption(UIElementNames.MENU_TAB_SETTINGS_SOURCE_CODE_PATH + ":");
+        subSetting.setCaption(UIElementNames.get("MENU_TAB_SETTINGS_SOURCE_CODE_PATH") + ":");
         pluginSettings.addSetting(subSetting);
 
         pluginSettings.addSetting(Recorder.getSetting(mainAttribute));

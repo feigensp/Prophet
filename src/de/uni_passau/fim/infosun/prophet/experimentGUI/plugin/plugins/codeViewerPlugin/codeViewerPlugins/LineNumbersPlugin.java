@@ -18,7 +18,7 @@ public class LineNumbersPlugin implements CodeViewerPlugin {
 
         Attribute attribute = mainAttribute.getSubAttribute(KEY);
         Setting setting = new SettingsCheckBox(attribute, getClass().getSimpleName());
-        setting.setCaption(UIElementNames.LINE_NUMBER_SHOW_LINE_NUMBERS);
+        setting.setCaption(UIElementNames.get("LINE_NUMBER_SHOW_LINE_NUMBERS"));
 
         return setting;
     }

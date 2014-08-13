@@ -99,7 +99,7 @@ public class SettingsEditorPanel extends ExperimentEditorTab {
 
             Attribute attribute = selected.getAttribute(Constants.KEY_EXPERIMENT_CODE);
             Setting setting = new SettingsTextField(attribute, null);
-            setting.setCaption(UIElementNames.EXPERIMENT_CODE + ":");
+            setting.setCaption(UIElementNames.get("EXPERIMENT_CODE") + ":");
 
             componentList.add(setting);
             settingsPanel.add(setting);
@@ -108,14 +108,14 @@ public class SettingsEditorPanel extends ExperimentEditorTab {
         if (selected.getType() == CATEGORY) {
             Attribute attribute = selected.getAttribute(Constants.KEY_DONOTSHOWCONTENT);
             Setting setting = new SettingsCheckBox(attribute, null);
-            setting.setCaption(UIElementNames.MENU_TAB_SETTINGS_DONT_SHOW_CONTENT);
+            setting.setCaption(UIElementNames.get("MENU_TAB_SETTINGS_DONT_SHOW_CONTENT"));
 
             componentList.add(setting);
             settingsPanel.add(setting);
 
             attribute = selected.getAttribute(Constants.KEY_QUESTIONSWITCHING);
             setting = new SettingsCheckBox(attribute, null);
-            setting.setCaption(UIElementNames.MENU_TAB_SETTINGS_ALLOW_BACK_AND_FORTH);
+            setting.setCaption(UIElementNames.get("MENU_TAB_SETTINGS_ALLOW_BACK_AND_FORTH"));
 
             componentList.add(setting);
             settingsPanel.add(setting);

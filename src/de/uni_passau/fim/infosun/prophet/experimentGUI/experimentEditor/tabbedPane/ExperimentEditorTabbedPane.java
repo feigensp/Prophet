@@ -49,10 +49,10 @@ public class ExperimentEditorTabbedPane extends JTabbedPane {
             currentTab.load(currentNode);
         });
 
-        addTab(UIElementNames.MENU_TAB_EDITOR, null, new ContentEditorPanel(), null);
-        addTab(UIElementNames.MENU_TAB_PREVIEW, null, new ContentViewerPanel(), null);
-        addTab(UIElementNames.MENU_TAB_SETTINGS, null, new SettingsEditorPanel(), null);
-        addTab(UIElementNames.MENU_TAB_NOTES, null, new NoteEditorPanel(), null);
+        addTab(UIElementNames.get("MENU_TAB_EDITOR"), null, new ContentEditorPanel(), null);
+        addTab(UIElementNames.get("MENU_TAB_PREVIEW"), null, new ContentViewerPanel(), null);
+        addTab(UIElementNames.get("MENU_TAB_SETTINGS"), null, new SettingsEditorPanel(), null);
+        addTab(UIElementNames.get("MENU_TAB_NOTES"), null, new NoteEditorPanel(), null);
     }
 
     /**
