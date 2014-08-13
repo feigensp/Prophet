@@ -217,11 +217,11 @@ public class QuestionViewPane extends JScrollPane {
 
                 if (times == 0) {
                     oldText = button.getText();
+                    button.setEnabled(false);
                 }
 
                 if (times < maxTimes) {
                     button.setText(String.format("%s (%d)", oldText, maxTimes - times));
-                    button.setEnabled(false);
                     times++;
                 } else {
                     button.setText(oldText);
