@@ -12,6 +12,9 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.components.
 
 import static de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode.Type;
 
+/**
+ * Plugin that modifies the <code>ExperimentViewer</code> by adding a JTree representation of the current experiment.
+ */
 public class QuestionListPlugin implements Plugin {
 
     private final static String KEY = "question_list";

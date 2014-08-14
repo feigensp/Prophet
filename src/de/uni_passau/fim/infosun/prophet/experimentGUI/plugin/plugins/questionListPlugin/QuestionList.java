@@ -56,7 +56,7 @@ public class QuestionList extends JScrollPane {
 //            }
 //        }
 
-        Object[] path = ((QTreeModel) tree.getModel()).buildPath(selectionNode, true);
+        QTreeNode[] path = QTreeModel.buildPath(selectionNode, true);
         tree.setSelectionPath(new TreePath(path));
     }
 }

@@ -13,6 +13,9 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.PluginSetti
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.Setting;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.components.SettingsTextArea;
 
+/**
+ * Plugin that enables the experiment creator to specify the names of answers that are required.
+ */
 public class AnswerRequiredPlugin implements Plugin {
 
     private static final String KEY = "answers_required";
