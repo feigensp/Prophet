@@ -16,10 +16,11 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewer
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin.fileTree.FileTree;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin.fileTree.FileTreeModel;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin.fileTree.FileTreeNode;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rtextarea.SearchContext;
 import org.fife.ui.rtextarea.SearchEngine;
+
+import static de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames.getLocalized;
 
 /**
  * This class adds a JTextPane to a searchbar which is created. With this
@@ -33,9 +34,9 @@ public class GlobalSearchBar extends JToolBar implements ActionListener {
     private static final long serialVersionUID = 1L;
 
     public static final String CAPTION_HIDE = "X";
-    public static final String CAPTION_FIND = UIElementNames.get("GLOBAL_SEARCH_BAR_SEARCH");
-    public static final String CAPTION_REGEX = UIElementNames.get("GLOBAL_SEARCH_BAR_REGULAR_EXPRESSION");
-    public static final String CAPTION_MATCH_CASE = UIElementNames.get("GLOBAL_SEARCH_BAR_CASE_SENSITIVE");
+    public static final String CAPTION_FIND = getLocalized("GLOBAL_SEARCH_BAR_SEARCH");
+    public static final String CAPTION_REGEX = getLocalized("GLOBAL_SEARCH_BAR_REGULAR_EXPRESSION");
+    public static final String CAPTION_MATCH_CASE = getLocalized("GLOBAL_SEARCH_BAR_CASE_SENSITIVE");
 
     public static final String ACTION_HIDE = "Hide";
     public static final String ACTION_NEXT = "Global";

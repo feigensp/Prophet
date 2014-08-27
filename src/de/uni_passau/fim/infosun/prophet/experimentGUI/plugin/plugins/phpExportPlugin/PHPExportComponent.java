@@ -13,8 +13,9 @@ import java.util.Date;
 import javax.swing.*;
 
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.VerticalLayout;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.Setting;
+
+import static de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames.getLocalized;
 
 public class PHPExportComponent extends Setting {
 
@@ -47,30 +48,30 @@ public class PHPExportComponent extends Setting {
     public PHPExportComponent(String borderDesc) {
         super(null, borderDesc);
 
-        setBorder(BorderFactory.createTitledBorder(UIElementNames.get("PHP_PHP_EXPORT")));
+        setBorder(BorderFactory.createTitledBorder(getLocalized("PHP_PHP_EXPORT")));
         setLayout(new VerticalLayout(5, VerticalLayout.LEFT, VerticalLayout.TOP));
 
-        add(new JLabel(UIElementNames.get("PHP_HOST") + ":")); // Server Label
+        add(new JLabel(getLocalized("PHP_HOST") + ":")); // Server Label
 
         final JTextField serverField = new JTextField("localhost", 20);
         add(serverField);
 
-        add(new JLabel(UIElementNames.get("PHP_NAME_OF_DATABASE") + ":")); // DB Label
+        add(new JLabel(getLocalized("PHP_NAME_OF_DATABASE") + ":")); // DB Label
 
         final JTextField dbField = new JTextField(20);
         add(dbField);
 
-        add(new JLabel(UIElementNames.get("PHP_USER_NAME") + ":")); // Username Label
+        add(new JLabel(getLocalized("PHP_USER_NAME") + ":")); // Username Label
 
         final JTextField usernameField = new JTextField(20);
         add(usernameField);
 
-        add(new JLabel(UIElementNames.get("PHP_PASSWORD") + ":")); // Password label
+        add(new JLabel(getLocalized("PHP_PASSWORD") + ":")); // Password label
 
         final JPasswordField passwordField = new JPasswordField(20);
         add(passwordField);
 
-        JButton exportButton = new JButton(UIElementNames.get("PHP_EXPORT_SCRIPT"));
+        JButton exportButton = new JButton(getLocalized("PHP_EXPORT_SCRIPT"));
         add(exportButton);
         exportButton.addActionListener(new ActionListener() {
 
@@ -88,8 +89,8 @@ public class PHPExportComponent extends Setting {
             @Override
             public void actionPerformed(ActionEvent arg0) {
                 int confirm = JOptionPane
-                        .showConfirmDialog(null, UIElementNames.get("PHP_DIALOG_UNENCRYPTED_PASSWORD_CONTINUE"),
-                                UIElementNames.get("PHP_DIALOG_TITLE_CONFIRM"), JOptionPane.YES_NO_OPTION);
+                        .showConfirmDialog(null, getLocalized("PHP_DIALOG_UNENCRYPTED_PASSWORD_CONTINUE"),
+                                getLocalized("PHP_DIALOG_TITLE_CONFIRM"), JOptionPane.YES_NO_OPTION);
                 if (confirm == JOptionPane.NO_OPTION) {
                     return;
                 }
@@ -125,7 +126,7 @@ public class PHPExportComponent extends Setting {
 
                 writeToFile(Paths.get(dirName.toString(), "config.php").toFile(), config.toString().getBytes());
 
-                JOptionPane.showMessageDialog(null, UIElementNames.get("PHP_MESSAGE_EXPORT_FINISHED"));
+                JOptionPane.showMessageDialog(null, getLocalized("PHP_MESSAGE_EXPORT_FINISHED"));
             }
         });
     }

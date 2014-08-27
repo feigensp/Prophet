@@ -28,7 +28,7 @@ public final class UIElementNames {
      * @param key the key for the <code>String</code>
      * @return the localized <code>String</code>
      */
-    public static String get(String key) {
+    public static String getLocalized(String key) {
         return labels.getString(key);
     }
 

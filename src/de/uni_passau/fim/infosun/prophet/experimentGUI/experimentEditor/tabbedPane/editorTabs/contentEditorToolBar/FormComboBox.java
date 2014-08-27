@@ -35,15 +35,15 @@ public class FormComboBox extends JComboBox<String> implements ActionListener {
 
         this.textArea = textArea;
 
-        forms.add(UIElementNames.get("HTML_TEXT_FIELD"));  // index 1
-        forms.add(UIElementNames.get("HTML_TEXT_AREA"));   // index 2
-        forms.add(UIElementNames.get("HTML_LIST"));        // index 3
-        forms.add(UIElementNames.get("HTML_COMBO_BOX"));   // index 4
-        forms.add(UIElementNames.get("HTML_RADIO_BUTTON"));// index 5
-        forms.add(UIElementNames.get("HTML_CHECK_BOX"));   // index 6
-        forms.add(UIElementNames.get("HTML_TABLE"));       // index 7
+        forms.add(UIElementNames.getLocalized("HTML_TEXT_FIELD"));  // index 1
+        forms.add(UIElementNames.getLocalized("HTML_TEXT_AREA"));   // index 2
+        forms.add(UIElementNames.getLocalized("HTML_LIST"));        // index 3
+        forms.add(UIElementNames.getLocalized("HTML_COMBO_BOX"));   // index 4
+        forms.add(UIElementNames.getLocalized("HTML_RADIO_BUTTON"));// index 5
+        forms.add(UIElementNames.getLocalized("HTML_CHECK_BOX"));   // index 6
+        forms.add(UIElementNames.getLocalized("HTML_TABLE"));       // index 7
 
-        addItem(UIElementNames.get("MENU_TAB_EDITOR_FORMS"));
+        addItem(UIElementNames.getLocalized("MENU_TAB_EDITOR_FORMS"));
         forms.forEach(this::addItem);
 
         addActionListener(this);
@@ -90,7 +90,7 @@ public class FormComboBox extends JComboBox<String> implements ActionListener {
     private void insertTable(ActionEvent event) {
         Component parent = SwingUtilities.getWindowAncestor(((Component) event.getSource()));
         Pair<String, String[][]> tableInfo = TableDialog.showTableDialog(parent,
-                UIElementNames.get("DIALOG_DEFINE_TABLE_INFORMATION"));
+                UIElementNames.getLocalized("DIALOG_DEFINE_TABLE_INFORMATION"));
 
         if (tableInfo == null) {
             return;
@@ -135,7 +135,7 @@ public class FormComboBox extends JComboBox<String> implements ActionListener {
         String formatString;
         Component parent = SwingUtilities.getWindowAncestor(((Component) event.getSource()));
         Pair<String, List<String>> checkInfo = MultilineDialog
-                .showMultiDialog(parent, UIElementNames.get("DIALOG_DEFINE_LIST_INFORMATION"));
+                .showMultiDialog(parent, UIElementNames.getLocalized("DIALOG_DEFINE_LIST_INFORMATION"));
 
         if (checkInfo == null) {
             return;
@@ -161,7 +161,7 @@ public class FormComboBox extends JComboBox<String> implements ActionListener {
         String formatString;
         Component parent = SwingUtilities.getWindowAncestor(((Component) event.getSource()));
         Pair<String, List<String>> radioInfo = MultilineDialog
-                .showMultiDialog(parent, UIElementNames.get("DIALOG_DEFINE_LIST_INFORMATION"));
+                .showMultiDialog(parent, UIElementNames.getLocalized("DIALOG_DEFINE_LIST_INFORMATION"));
 
         if (radioInfo == null) {
             return;
@@ -187,7 +187,7 @@ public class FormComboBox extends JComboBox<String> implements ActionListener {
         String formatString;
         Component parent = SwingUtilities.getWindowAncestor(((Component) event.getSource()));
         Pair<String, List<String>> comboInfo = MultilineDialog
-                .showMultiDialog(parent, UIElementNames.get("DIALOG_DEFINE_LIST_INFORMATION"));
+                .showMultiDialog(parent, UIElementNames.getLocalized("DIALOG_DEFINE_LIST_INFORMATION"));
 
         if (comboInfo == null) {
             return;
@@ -213,7 +213,7 @@ public class FormComboBox extends JComboBox<String> implements ActionListener {
         String formatString;
         Component parent = SwingUtilities.getWindowAncestor(((Component) event.getSource()));
         Pair<String, List<String>> listInfo = MultilineDialog
-                .showMultiDialog(parent, UIElementNames.get("DIALOG_DEFINE_LIST_INFORMATION"));
+                .showMultiDialog(parent, UIElementNames.getLocalized("DIALOG_DEFINE_LIST_INFORMATION"));
 
         if (listInfo == null) {
             return;
@@ -235,7 +235,8 @@ public class FormComboBox extends JComboBox<String> implements ActionListener {
     private void insertTextArea() {
         String formatString;
         String textAreaName = JOptionPane
-                .showInputDialog(this, UIElementNames.get("DIALOG_DEFINE_TEXT_AREA") + ":", UIElementNames.get("HTML_TEXT_AREA"),
+                .showInputDialog(this, UIElementNames.getLocalized(
+                        "DIALOG_DEFINE_TEXT_AREA") + ":", UIElementNames.getLocalized("HTML_TEXT_AREA"),
                         JOptionPane.QUESTION_MESSAGE);
 
         if (textAreaName == null) {
@@ -252,7 +253,8 @@ public class FormComboBox extends JComboBox<String> implements ActionListener {
     private void insertTextField() {
         String formatString;
         String textFieldName = JOptionPane
-                .showInputDialog(null, UIElementNames.get("DIALOG_DEFINE_TEXT_FIELD") + ":", UIElementNames.get("HTML_TEXT_FIELD"),
+                .showInputDialog(null, UIElementNames.getLocalized(
+                        "DIALOG_DEFINE_TEXT_FIELD") + ":", UIElementNames.getLocalized("HTML_TEXT_FIELD"),
                         JOptionPane.QUESTION_MESSAGE);
 
         if (textFieldName == null) {

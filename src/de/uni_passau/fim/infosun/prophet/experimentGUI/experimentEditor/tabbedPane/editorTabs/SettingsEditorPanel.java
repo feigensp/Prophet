@@ -14,13 +14,13 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentEditor.tabbedPa
 import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentEditor.tabbedPane.ExperimentEditorTabbedPane;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.PluginList;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.VerticalLayout;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.Attribute;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.Setting;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.components.SettingsCheckBox;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.components.SettingsTextField;
 
+import static de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames.getLocalized;
 import static de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode.Type.CATEGORY;
 import static de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode.Type.EXPERIMENT;
 
@@ -99,7 +99,7 @@ public class SettingsEditorPanel extends ExperimentEditorTab {
 
             Attribute attribute = selected.getAttribute(Constants.KEY_EXPERIMENT_CODE);
             Setting setting = new SettingsTextField(attribute, null);
-            setting.setCaption(UIElementNames.get("EXPERIMENT_CODE") + ":");
+            setting.setCaption(getLocalized("EXPERIMENT_CODE") + ":");
 
             componentList.add(setting);
             settingsPanel.add(setting);
@@ -108,14 +108,14 @@ public class SettingsEditorPanel extends ExperimentEditorTab {
         if (selected.getType() == CATEGORY) {
             Attribute attribute = selected.getAttribute(Constants.KEY_DONOTSHOWCONTENT);
             Setting setting = new SettingsCheckBox(attribute, null);
-            setting.setCaption(UIElementNames.get("MENU_TAB_SETTINGS_DONT_SHOW_CONTENT"));
+            setting.setCaption(getLocalized("MENU_TAB_SETTINGS_DONT_SHOW_CONTENT"));
 
             componentList.add(setting);
             settingsPanel.add(setting);
 
             attribute = selected.getAttribute(Constants.KEY_QUESTIONSWITCHING);
             setting = new SettingsCheckBox(attribute, null);
-            setting.setCaption(UIElementNames.get("MENU_TAB_SETTINGS_ALLOW_BACK_AND_FORTH"));
+            setting.setCaption(getLocalized("MENU_TAB_SETTINGS_ALLOW_BACK_AND_FORTH"));
 
             componentList.add(setting);
             settingsPanel.add(setting);

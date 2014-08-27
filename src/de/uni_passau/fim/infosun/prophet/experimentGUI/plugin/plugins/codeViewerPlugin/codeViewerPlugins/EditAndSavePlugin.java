@@ -19,12 +19,13 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewer
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin.CodeViewerPlugin;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin.tabbedPane.EditorPanel;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin.tabbedPane.EditorTabbedPane;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.Attribute;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.Setting;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.components.SettingsCheckBox;
 import org.fife.ui.rsyntaxtextarea.RSyntaxDocument;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+
+import static de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames.getLocalized;
 
 public class EditAndSavePlugin implements CodeViewerPlugin {
 
@@ -39,7 +40,7 @@ public class EditAndSavePlugin implements CodeViewerPlugin {
 
         Attribute attribute = mainAttribute.getSubAttribute(KEY);
         Setting setting = new SettingsCheckBox(attribute, getClass().getSimpleName());
-        setting.setCaption(UIElementNames.get("EDIT_AND_SAVE_EDITABLE_CODE"));
+        setting.setCaption(getLocalized("EDIT_AND_SAVE_EDITABLE_CODE"));
 
         return setting;
     }
@@ -55,11 +56,11 @@ public class EditAndSavePlugin implements CodeViewerPlugin {
             tabbedPane = viewer.getTabbedPane();
             saveDir = new File(viewer.getSaveDir().getPath() + System.getProperty("file.separator") + "savedFiles");
             isChanged = new HashMap<>();
-            JMenuItem saveMenuItem = new JMenuItem(UIElementNames.get("EDIT_AND_SAVE_SAVE"));
+            JMenuItem saveMenuItem = new JMenuItem(getLocalized("EDIT_AND_SAVE_SAVE"));
             saveMenuItem.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.Event.CTRL_MASK));
             viewer.addMenuItemToFileMenu(saveMenuItem);
             saveMenuItem.addActionListener(e -> saveActiveFile());
-            JMenuItem saveAllMenuItem = new JMenuItem(UIElementNames.get("EDIT_AND_SAVE_SAVE_ALL"));
+            JMenuItem saveAllMenuItem = new JMenuItem(getLocalized("EDIT_AND_SAVE_SAVE_ALL"));
             saveAllMenuItem.setAccelerator(KeyStroke
                     .getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.Event.CTRL_MASK | java.awt.Event.SHIFT_MASK));
             viewer.addMenuItemToFileMenu(saveAllMenuItem);
@@ -167,8 +168,8 @@ public class EditAndSavePlugin implements CodeViewerPlugin {
         if (editable) {
             Boolean changed = isChanged.get(editorPanel);
             if (changed != null && changed) {
-                int n = JOptionPane.showConfirmDialog(null, UIElementNames.get("EDIT_AND_SAVE_DIALOG_SAVE_CHANGES") + "?",
-                        UIElementNames.get("EDIT_AND_SAVE_SAVE") + "?", JOptionPane.YES_NO_OPTION);
+                int n = JOptionPane.showConfirmDialog(null, getLocalized("EDIT_AND_SAVE_DIALOG_SAVE_CHANGES") + "?",
+                        getLocalized("EDIT_AND_SAVE_SAVE") + "?", JOptionPane.YES_NO_OPTION);
                 if (n == JOptionPane.YES_OPTION) {
                     saveEditorPanel(editorPanel);
                 }
@@ -193,8 +194,8 @@ public class EditAndSavePlugin implements CodeViewerPlugin {
                 }
             }
             if (ask) {
-                int n = JOptionPane.showConfirmDialog(null, UIElementNames.get("EDIT_AND_SAVE_DIALOG_SAVE_CHANGES") + "?",
-                        UIElementNames.get("EDIT_AND_SAVE_SAVE") + "?", JOptionPane.YES_NO_OPTION);
+                int n = JOptionPane.showConfirmDialog(null, getLocalized("EDIT_AND_SAVE_DIALOG_SAVE_CHANGES") + "?",
+                        getLocalized("EDIT_AND_SAVE_SAVE") + "?", JOptionPane.YES_NO_OPTION);
                 if (n == JOptionPane.YES_OPTION) {
                     saveAllFiles();
                 }

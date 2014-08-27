@@ -24,16 +24,16 @@ public class SearchBar extends JToolBar implements ActionListener {
     private static final long serialVersionUID = 1L;
 
     public static final String CAPTION_HIDE = "X";
-    public static final String CAPTION_NEXT = UIElementNames.get("SEARCH_BAR_SEARCH_FORWARD");
-    public static final String CAPTION_PREVIOUS = UIElementNames.get("SEARCH_BAR_SEARCH_BACKWARD");
-    public static final String CAPTION_REGEX = UIElementNames.get("SEARCH_BAR_REGULAR_EXPRESSION");
-    public static final String CAPTION_MATCH_CASE = UIElementNames.get("SEARCH_BAR_CASE_SENSITIVE");
+    public static final String CAPTION_NEXT = UIElementNames.getLocalized("SEARCH_BAR_SEARCH_FORWARD");
+    public static final String CAPTION_PREVIOUS = UIElementNames.getLocalized("SEARCH_BAR_SEARCH_BACKWARD");
+    public static final String CAPTION_REGEX = UIElementNames.getLocalized("SEARCH_BAR_REGULAR_EXPRESSION");
+    public static final String CAPTION_MATCH_CASE = UIElementNames.getLocalized("SEARCH_BAR_CASE_SENSITIVE");
 
     public static final String ACTION_HIDE = "Hide";
     public static final String ACTION_NEXT = "FindNext";
     public static final String ACTION_PREVIOUS = "FindPrevious";
 
-    public static final String MESSAGE_NOT_FOUND = UIElementNames.get("SEARCH_BAR_MESSAGE_TEXT_NOT_FOUND");
+    public static final String MESSAGE_NOT_FOUND = UIElementNames.getLocalized("SEARCH_BAR_MESSAGE_TEXT_NOT_FOUND");
 
     private RSyntaxTextArea textArea;
 

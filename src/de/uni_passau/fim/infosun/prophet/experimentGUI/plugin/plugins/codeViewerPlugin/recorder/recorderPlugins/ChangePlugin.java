@@ -10,11 +10,12 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewer
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin.recorder.loggingTreeNode
         .LoggingTreeNode;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin.tabbedPane.EditorPanel;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.Attribute;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.PluginSettings;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.Setting;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.components.SettingsTextField;
+
+import static de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames.getLocalized;
 
 public class ChangePlugin implements RecorderPlugin {
 
@@ -51,15 +52,15 @@ public class ChangePlugin implements RecorderPlugin {
 
         Attribute rDescAttribute = mainAttribute.getSubAttribute(KEY);
         PluginSettings resultDesc = new PluginSettings(rDescAttribute, getClass().getSimpleName(), true);
-        resultDesc.setCaption(UIElementNames.get("RECORDER_CHANGE_SOURCE_CODE_EDITS"));
+        resultDesc.setCaption(getLocalized("RECORDER_CHANGE_SOURCE_CODE_EDITS"));
 
         Attribute joinDescAttribute = rDescAttribute.getSubAttribute(KEY_JOIN);
         PluginSettings joinDesc = new PluginSettings(joinDescAttribute, null, true);
-        joinDesc.setCaption(UIElementNames.get("RECORDER_CHANGE_SUMMARIZE_CHANGES"));
+        joinDesc.setCaption(getLocalized("RECORDER_CHANGE_SUMMARIZE_CHANGES"));
 
         Attribute joinTimeDescAttribute = joinDescAttribute.getSubAttribute(KEY_JOIN_TIME);
         Setting joinTimeDesc = new SettingsTextField(joinTimeDescAttribute, null);
-        joinTimeDesc.setCaption(UIElementNames.get("RECORDER_TIME_INTERVAL_FOR_SUMMARY"));
+        joinTimeDesc.setCaption(getLocalized("RECORDER_TIME_INTERVAL_FOR_SUMMARY"));
 
         joinDesc.addSetting(joinTimeDesc);
         resultDesc.addSetting(joinDesc);

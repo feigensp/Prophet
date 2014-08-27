@@ -5,8 +5,9 @@ import java.util.List;
 import javax.swing.JComboBox;
 
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.Pair;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+
+import static de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames.getLocalized;
 
 /**
  * <code>JComboBox</code> for the <code>ContentEditorToolBar</code> to enable adding HTML tags that change font sizes.
@@ -32,7 +33,7 @@ public class FontSizeComboBox extends JComboBox<String> {
         fontSizes.add(new Pair<>("+2", "+2"));
         fontSizes.add(new Pair<>("+3", "+3"));
 
-        addItem(UIElementNames.get("MENU_TAB_EDITOR_FONT_SIZE"));
+        addItem(getLocalized("MENU_TAB_EDITOR_FONT_SIZE"));
         fontSizes.forEach(pair -> addItem(pair.getKey()));
 
         addActionListener(event -> {

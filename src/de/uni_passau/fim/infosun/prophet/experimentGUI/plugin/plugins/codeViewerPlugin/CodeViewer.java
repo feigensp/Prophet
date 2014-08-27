@@ -12,8 +12,9 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewer
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin.fileTree.FileListener;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin.fileTree.FileTree;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin.tabbedPane.EditorTabbedPane;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.Attribute;
+
+import static de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames.getLocalized;
 
 public class CodeViewer extends JFrame implements FileListener {
 
@@ -48,7 +49,7 @@ public class CodeViewer extends JFrame implements FileListener {
     }
 
     public CodeViewer(Attribute selected, File saveDir) {
-        setTitle(UIElementNames.get("TITLE_CODE_VIEWER"));
+        setTitle(getLocalized("TITLE_CODE_VIEWER"));
         setSize(800, 600);
         setLayout(new BorderLayout());
 
@@ -68,8 +69,7 @@ public class CodeViewer extends JFrame implements FileListener {
         showDir = new File(showPath.length() == 0 ? "." : showPath);
         if (!showDir.exists()) {
             JOptionPane
-                    .showMessageDialog(this, UIElementNames.get("MESSAGE_PATH_DOES_NOT_EXIST"), UIElementNames.get
-                                    ("MESSAGE_ERROR"),
+                    .showMessageDialog(this, getLocalized("MESSAGE_PATH_DOES_NOT_EXIST"), getLocalized("MESSAGE_ERROR"),
                             JOptionPane.ERROR_MESSAGE);
         }
 
@@ -77,11 +77,11 @@ public class CodeViewer extends JFrame implements FileListener {
         setJMenuBar(menuBar);
         menuBar.setVisible(false);
 
-        fileMenu = new JMenu(UIElementNames.get("MENU_FILE"));
+        fileMenu = new JMenu(getLocalized("MENU_FILE"));
         menuBar.add(fileMenu);
         fileMenu.setVisible(false);
 
-        editMenu = new JMenu(UIElementNames.get("MENU_EDIT"));
+        editMenu = new JMenu(getLocalized("MENU_EDIT"));
         menuBar.add(editMenu);
         editMenu.setVisible(false);
 

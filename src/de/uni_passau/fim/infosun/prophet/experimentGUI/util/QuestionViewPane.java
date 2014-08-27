@@ -24,13 +24,13 @@ import javax.swing.text.html.HTMLEditorKit;
 
 import de.uni_passau.fim.infosun.prophet.experimentGUI.Constants;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentViewer.ExperimentViewer;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.Attribute;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
+import static de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames.getLocalized;
 import static de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode.Type.*;
 import static javax.swing.text.html.HTML.Attribute.NAME;
 import static javax.swing.text.html.HTML.Attribute.TYPE;
@@ -67,26 +67,26 @@ public class QuestionViewPane extends JScrollPane {
 
     public static final String FOOTER_FORWARD =
             String.format("<input name =\"%s\" type=\"%s\" value=\"%s\" />", Constants.KEY_FORWARD, HTML_TYPE_SUBMIT,
-                    UIElementNames.get("FOOTER_FORWARD_CAPTION"));
+                    getLocalized("FOOTER_FORWARD_CAPTION"));
 
     public static final String FOOTER_BACKWARD =
             String.format("<input name =\"%s\" type=\"%s\" value=\"%s\" />", Constants.KEY_BACKWARD, HTML_TYPE_SUBMIT,
-                    UIElementNames.get("FOOTER_BACKWARD_CAPTION"));
+                    getLocalized("FOOTER_BACKWARD_CAPTION"));
 
     public static final String FOOTER_END_CATEGORY =
             String.format("<input name =\"%s\" type=\"%s\" value=\"%s\" />", Constants.KEY_FORWARD, HTML_TYPE_SUBMIT,
-                    UIElementNames.get("FOOTER_END_CATEGORY_CAPTION"));
+                    getLocalized("FOOTER_END_CATEGORY_CAPTION"));
 
     public static final String FOOTER_EXPERIMENT_CODE =
             "<input type=\"hidden\" name=" + Constants.KEY_EXPERIMENT_CODE + " value=\"%s\">";
 
     public static final String FOOTER_SUBJECT_CODE =
             String.format("<table><tr><td>%s</td><td><input name=\"%s\" /></td></tr></table>",
-                    UIElementNames.get("FOOTER_SUBJECT_CODE_CAPTION"), Constants.KEY_SUBJECT);
+                    getLocalized("FOOTER_SUBJECT_CODE_CAPTION"), Constants.KEY_SUBJECT);
 
     public static final String FOOTER_START_EXPERIMENT =
             String.format("%s%s<input name =\"%s\" type=\"%s\" value=\"%s\" />", FOOTER_SUBJECT_CODE, HTML_DIVIDER,
-                    Constants.KEY_FORWARD, HTML_TYPE_SUBMIT, UIElementNames.get("FOOTER_START_EXPERIMENT_CAPTION"));
+                    Constants.KEY_FORWARD, HTML_TYPE_SUBMIT, getLocalized("FOOTER_START_EXPERIMENT_CAPTION"));
 
     public static final String HTML_END = "</form></body></html>";
 
@@ -129,15 +129,15 @@ public class QuestionViewPane extends JScrollPane {
                 try {
                     desktop.browse(event.getURL().toURI());
                 } catch (IOException e) {
-                    JOptionPane.showMessageDialog(textPane, UIElementNames.get("MESSAGE_COULD_NOT_START_BROWSER"));
+                    JOptionPane.showMessageDialog(textPane, getLocalized("MESSAGE_COULD_NOT_START_BROWSER"));
                 } catch (URISyntaxException e) {
-                    JOptionPane.showMessageDialog(textPane, UIElementNames.get("MESSAGE_INVALID_URL"));
+                    JOptionPane.showMessageDialog(textPane, getLocalized("MESSAGE_INVALID_URL"));
                 }
             } else {
-                JOptionPane.showMessageDialog(textPane, UIElementNames.get("MESSAGE_COULD_NOT_OPEN_STANDARD_BROWSER"));
+                JOptionPane.showMessageDialog(textPane, getLocalized("MESSAGE_COULD_NOT_OPEN_STANDARD_BROWSER"));
             }
         } else {
-            JOptionPane.showMessageDialog(textPane, UIElementNames.get("MESSAGE_COULD_NOT_OPEN_STANDARD_BROWSER"));
+            JOptionPane.showMessageDialog(textPane, getLocalized("MESSAGE_COULD_NOT_OPEN_STANDARD_BROWSER"));
         }
     };
 

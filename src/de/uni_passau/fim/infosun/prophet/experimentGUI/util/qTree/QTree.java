@@ -11,8 +11,7 @@ import javax.swing.*;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames;
-
+import static de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames.getLocalized;
 import static de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode.Type.*;
 
 /**
@@ -245,64 +244,64 @@ public class QTree extends JTree {
         };
 
         // setup for the experiment popup menu
-        menuItem = new JMenuItem(UIElementNames.get("TREE.POPUP.NEW_CATEGORY"));
+        menuItem = new JMenuItem(getLocalized("TREE.POPUP.NEW_CATEGORY"));
         menuItem.setActionCommand(ACTION_NEW_CATEGORY);
         menuItem.addActionListener(popupListener);
         experimentPopup.add(menuItem);
         experimentPopup.add(new JPopupMenu.Separator());
-        menuItem = new JMenuItem(UIElementNames.get("TREE.POPUP.RENAME"));
+        menuItem = new JMenuItem(getLocalized("TREE.POPUP.RENAME"));
         menuItem.setActionCommand(ACTION_RENAME);
         menuItem.addActionListener(popupListener);
         experimentPopup.add(menuItem);
         experimentPopup.add(new JPopupMenu.Separator());
-        experimentPasteItem = new JMenuItem(UIElementNames.get("TREE.POPUP.PASTE"));
+        experimentPasteItem = new JMenuItem(getLocalized("TREE.POPUP.PASTE"));
         experimentPasteItem.setActionCommand(ACTION_PASTE);
         experimentPasteItem.addActionListener(popupListener);
         experimentPasteItem.setEnabled(false);
         experimentPopup.add(experimentPasteItem);
 
         // setup for the category popup menu
-        menuItem = new JMenuItem(UIElementNames.get("TREE.POPUP.NEW_QUESTION"));
+        menuItem = new JMenuItem(getLocalized("TREE.POPUP.NEW_QUESTION"));
         menuItem.setActionCommand(ACTION_NEW_QUESTION);
         menuItem.addActionListener(popupListener);
         categoryPopup.add(menuItem);
         categoryPopup.add(new JPopupMenu.Separator());
-        menuItem = new JMenuItem(UIElementNames.get("TREE.POPUP.RENAME"));
+        menuItem = new JMenuItem(getLocalized("TREE.POPUP.RENAME"));
         menuItem.setActionCommand(ACTION_RENAME);
         menuItem.addActionListener(popupListener);
         categoryPopup.add(menuItem);
-        menuItem = new JMenuItem(UIElementNames.get("TREE.POPUP.REMOVE"));
+        menuItem = new JMenuItem(getLocalized("TREE.POPUP.REMOVE"));
         menuItem.setActionCommand(ACTION_REMOVE);
         menuItem.addActionListener(popupListener);
         categoryPopup.add(menuItem);
         categoryPopup.add(new JPopupMenu.Separator());
-        menuItem = new JMenuItem(UIElementNames.get("TREE.POPUP.COPY"));
+        menuItem = new JMenuItem(getLocalized("TREE.POPUP.COPY"));
         menuItem.setActionCommand(ACTION_COPY);
         menuItem.addActionListener(popupListener);
         categoryPopup.add(menuItem);
-        categoryPasteItem = new JMenuItem(UIElementNames.get("TREE.POPUP.PASTE"));
+        categoryPasteItem = new JMenuItem(getLocalized("TREE.POPUP.PASTE"));
         categoryPasteItem.setActionCommand(ACTION_PASTE);
         categoryPasteItem.addActionListener(popupListener);
         categoryPasteItem.setEnabled(false);
         categoryPopup.add(categoryPasteItem);
 
         // setup for the question popup menu
-        menuItem = new JMenuItem(UIElementNames.get("TREE.POPUP.RENAME"));
+        menuItem = new JMenuItem(getLocalized("TREE.POPUP.RENAME"));
         menuItem.setActionCommand(ACTION_RENAME);
         menuItem.addActionListener(popupListener);
         questionPopup.add(menuItem);
         questionPopup.add(new JPopupMenu.Separator());
-        menuItem = new JMenuItem(UIElementNames.get("TREE.POPUP.REMOVE"));
+        menuItem = new JMenuItem(getLocalized("TREE.POPUP.REMOVE"));
         menuItem.setActionCommand(ACTION_REMOVE);
         menuItem.addActionListener(popupListener);
         questionPopup.add(menuItem);
         questionPopup.add(new JPopupMenu.Separator());
-        menuItem = new JMenuItem(UIElementNames.get("TREE.POPUP.COPY"));
+        menuItem = new JMenuItem(getLocalized("TREE.POPUP.COPY"));
         menuItem.setActionCommand(ACTION_COPY);
         menuItem.addActionListener(popupListener);
         questionPopup.add(menuItem);
 
-        menuItem = new JMenuItem(UIElementNames.get("TREE.POPUP.NEW_EXPERIMENT"));
+        menuItem = new JMenuItem(getLocalized("TREE.POPUP.NEW_EXPERIMENT"));
         menuItem.setActionCommand(ACTION_NEW_EXPERIMENT);
         menuItem.addActionListener(popupListener);
         treePopup.add(menuItem);
@@ -433,16 +432,16 @@ public class QTree extends JTree {
             try {
                 copy = (QTreeNode) clipboard.clone();
             } catch (CloneNotSupportedException e) {
-                JOptionPane.showMessageDialog(QTree.this, UIElementNames.get("TREE.POPUP.COPY_FAILED"),
-                        UIElementNames.get("TREE.POPUP.ERROR"), JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(QTree.this, getLocalized("TREE.POPUP.COPY_FAILED"),
+                        getLocalized("TREE.POPUP.ERROR"), JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
             copy.setParent(selNode);
             model.addChild(selNode, copy);
         } else {
-            JOptionPane.showMessageDialog(QTree.this, UIElementNames.get("TREE.POPUP.COPY_IMPOSSIBLE"),
-                    UIElementNames.get("TREE.POPUP.ERROR"), JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(QTree.this, getLocalized("TREE.POPUP.COPY_IMPOSSIBLE"),
+                    getLocalized("TREE.POPUP.ERROR"), JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -453,8 +452,8 @@ public class QTree extends JTree {
 
         if (model.getRoot() != null) {
             int choice = JOptionPane
-                    .showOptionDialog(QTree.this, UIElementNames.get("TREE.POPUP.CONFIRM.NEW_EXPERIMENT"),
-                            UIElementNames.get("TREE.POPUP.NEW_EXPERIMENT"), JOptionPane.OK_CANCEL_OPTION,
+                    .showOptionDialog(QTree.this, getLocalized("TREE.POPUP.CONFIRM.NEW_EXPERIMENT"),
+                            getLocalized("TREE.POPUP.NEW_EXPERIMENT"), JOptionPane.OK_CANCEL_OPTION,
                             JOptionPane.WARNING_MESSAGE, null, null, null);
 
             if (choice != JOptionPane.OK_OPTION) {
@@ -462,8 +461,8 @@ public class QTree extends JTree {
             }
         }
 
-        String name = JOptionPane.showInputDialog(QTree.this, UIElementNames.get("TREE.POPUP.NAME"),
-                UIElementNames.get("TREE.POPUP.NEW_EXPERIMENT"), JOptionPane.QUESTION_MESSAGE);
+        String name = JOptionPane.showInputDialog(QTree.this, getLocalized("TREE.POPUP.NAME"),
+                getLocalized("TREE.POPUP.NEW_EXPERIMENT"), JOptionPane.QUESTION_MESSAGE);
 
         if (name == null) {
             return;
@@ -489,8 +488,8 @@ public class QTree extends JTree {
      *         the node to be renamed
      */
     private void rename(QTreeNode selNode) {
-        String name = JOptionPane.showInputDialog(QTree.this, UIElementNames.get("TREE.POPUP.NAME"),
-                UIElementNames.get("TREE.POPUP.RENAME"), JOptionPane.QUESTION_MESSAGE);
+        String name = JOptionPane.showInputDialog(QTree.this, getLocalized("TREE.POPUP.NAME"),
+                getLocalized("TREE.POPUP.RENAME"), JOptionPane.QUESTION_MESSAGE);
 
         if (name == null) {
             return;
@@ -506,8 +505,8 @@ public class QTree extends JTree {
      *         the node to which a new question is to be added
      */
     private void newQuestion(QTreeNode selNode) {
-        String name = JOptionPane.showInputDialog(QTree.this, UIElementNames.get("TREE.POPUP.NAME"),
-                UIElementNames.get("TREE.POPUP.NEW_QUESTION"), JOptionPane.QUESTION_MESSAGE);
+        String name = JOptionPane.showInputDialog(QTree.this, getLocalized("TREE.POPUP.NAME"),
+                getLocalized("TREE.POPUP.NEW_QUESTION"), JOptionPane.QUESTION_MESSAGE);
 
         if (name == null) {
             return;
@@ -524,8 +523,8 @@ public class QTree extends JTree {
      *         the node to which a new category is to be added
      */
     private void newCategory(QTreeNode selNode) {
-        String name = JOptionPane.showInputDialog(QTree.this, UIElementNames.get("TREE.POPUP.NAME"),
-                UIElementNames.get("TREE.POPUP.NEW_CATEGORY"), JOptionPane.QUESTION_MESSAGE);
+        String name = JOptionPane.showInputDialog(QTree.this, getLocalized("TREE.POPUP.NAME"),
+                getLocalized("TREE.POPUP.NEW_CATEGORY"), JOptionPane.QUESTION_MESSAGE);
 
         if (name == null) {
             return;

@@ -30,7 +30,7 @@ public class QuestionListPlugin implements Plugin {
         }
 
         Setting setting = new SettingsCheckBox(node.getAttribute(KEY), getClass().getSimpleName());
-        setting.setCaption(UIElementNames.get("QUESTION_LIST_SHOW_LIST"));
+        setting.setCaption(UIElementNames.getLocalized("QUESTION_LIST_SHOW_LIST"));
 
         return setting;
     }

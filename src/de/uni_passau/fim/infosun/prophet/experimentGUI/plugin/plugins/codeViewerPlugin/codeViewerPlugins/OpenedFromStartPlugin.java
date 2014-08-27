@@ -20,11 +20,11 @@ public class OpenedFromStartPlugin implements CodeViewerPlugin {
 
         Attribute attribute = mainAttribute.getSubAttribute(KEY);
         PluginSettings pluginSettings = new PluginSettings(attribute, getClass().getSimpleName(), true);
-        pluginSettings.setCaption(UIElementNames.get("OPENED_FROM_START_OPEN_FILE_ON_START"));
+        pluginSettings.setCaption(UIElementNames.getLocalized("OPENED_FROM_START_OPEN_FILE_ON_START"));
 
         Attribute subAttribute = attribute.getSubAttribute(KEY_PATH);
         Setting subSetting = new SettingsTextField(subAttribute, null);
-        subSetting.setCaption(UIElementNames.get("OPENED_FROM_START_FILE_TO_OPEN") + ":");
+        subSetting.setCaption(UIElementNames.getLocalized("OPENED_FROM_START_FILE_TO_OPEN") + ":");
         pluginSettings.addSetting(subSetting);
 
         return pluginSettings;

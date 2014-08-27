@@ -39,7 +39,7 @@ public class MacroComboBox extends JComboBox<String> {
     public MacroComboBox(RSyntaxTextArea textArea) {
         this.textArea = textArea;
 
-        addItem(UIElementNames.get("MENU_TAB_EDITOR_MACROS"));
+        addItem(UIElementNames.getLocalized("MENU_TAB_EDITOR_MACROS"));
 
         addActionListener(event -> {
             if (getSelectedIndex() != 0) {
@@ -81,7 +81,7 @@ public class MacroComboBox extends JComboBox<String> {
             int keyCode = KeyEvent.getExtendedKeyCodeForChar(macroKey.charAt(0));
             String keyDescription = KeyEvent.getKeyText(keyCode);
 
-            macroName += String.format("\t [%s + %s]", UIElementNames.get("KEYBOARD_CTRL"), keyDescription);
+            macroName += String.format("\t [%s + %s]", UIElementNames.getLocalized("KEYBOARD_CTRL"), keyDescription);
 
             if (!keyCodeMap.containsKey(keyCode)) {
                 keyCodeMap.put(keyCode, macroContent);

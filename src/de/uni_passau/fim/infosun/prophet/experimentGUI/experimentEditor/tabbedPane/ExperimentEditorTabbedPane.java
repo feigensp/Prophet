@@ -9,9 +9,10 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentEditor.tabbedPa
 import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentEditor.tabbedPane.editorTabs.ContentViewerPanel;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentEditor.tabbedPane.editorTabs.NoteEditorPanel;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentEditor.tabbedPane.editorTabs.SettingsEditorPanel;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTree;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode;
+
+import static de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames.getLocalized;
 
 /**
  * The right-side tabbed pane of the Experiment Editor
@@ -49,10 +50,10 @@ public class ExperimentEditorTabbedPane extends JTabbedPane {
             currentTab.load(currentNode);
         });
 
-        addTab(UIElementNames.get("MENU_TAB_EDITOR"), null, new ContentEditorPanel(), null);
-        addTab(UIElementNames.get("MENU_TAB_PREVIEW"), null, new ContentViewerPanel(), null);
-        addTab(UIElementNames.get("MENU_TAB_SETTINGS"), null, new SettingsEditorPanel(), null);
-        addTab(UIElementNames.get("MENU_TAB_NOTES"), null, new NoteEditorPanel(), null);
+        addTab(getLocalized("MENU_TAB_EDITOR"), null, new ContentEditorPanel(), null);
+        addTab(getLocalized("MENU_TAB_PREVIEW"), null, new ContentViewerPanel(), null);
+        addTab(getLocalized("MENU_TAB_SETTINGS"), null, new SettingsEditorPanel(), null);
+        addTab(getLocalized("MENU_TAB_NOTES"), null, new NoteEditorPanel(), null);
     }
 
     /**

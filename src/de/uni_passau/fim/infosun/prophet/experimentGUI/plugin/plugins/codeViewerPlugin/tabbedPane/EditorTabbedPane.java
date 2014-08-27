@@ -9,7 +9,8 @@ import javax.swing.JTabbedPane;
 
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin.CodeViewerPluginList;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin.Recorder;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames;
+
+import static de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames.getLocalized;
 
 @SuppressWarnings("serial")
 public class EditorTabbedPane extends JTabbedPane {
@@ -48,8 +49,8 @@ public class EditorTabbedPane extends JTabbedPane {
             myPanel.grabFocus();
         } else {
             JOptionPane.showMessageDialog(this,
-                    UIElementNames.get("EDITOR_TABBED_PANE_MESSAGE_ERROR_COULD_NOT_OPEN_FILE") + ": " + path,
-                    UIElementNames.get("EDITOR_TABBED_PANE_MESSAGE_TITLE_ERROR"), JOptionPane.ERROR_MESSAGE);
+                    getLocalized("EDITOR_TABBED_PANE_MESSAGE_ERROR_COULD_NOT_OPEN_FILE") + ": " + path,
+                    getLocalized("EDITOR_TABBED_PANE_MESSAGE_TITLE_ERROR"), JOptionPane.ERROR_MESSAGE);
         }
     }
 

@@ -66,7 +66,7 @@ public class ShowCIDECodePlugin implements CodeViewerPlugin {
 
         Attribute attribute = mainAttribute.getSubAttribute(KEY);
         PluginSettings pluginSettings = new PluginSettings(attribute, getClass().getSimpleName(), true);
-        pluginSettings.setCaption(UIElementNames.get("CIDE_HIGHLIGHT_SOURCE_CODE"));
+        pluginSettings.setCaption(UIElementNames.getLocalized("CIDE_HIGHLIGHT_SOURCE_CODE"));
 
         Attribute subAttribute = attribute.getSubAttribute(CIDE_INFO_PATH);
         Setting subSetting = new SettingsTextField(subAttribute, null);
@@ -159,7 +159,7 @@ public class ShowCIDECodePlugin implements CodeViewerPlugin {
             }
         }
 
-        JFrame colorFrame = new JFrame(UIElementNames.get("CIDE_COLOR_SELECTION"));
+        JFrame colorFrame = new JFrame(UIElementNames.getLocalized("CIDE_COLOR_SELECTION"));
         JPanel contentPane = new JPanel();
         colorFrame.getContentPane().add(contentPane);
         colorFrame.setLocation(x, y);

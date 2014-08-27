@@ -16,13 +16,13 @@ import javax.swing.tree.TreePath;
 
 import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentEditor.tabbedPane.ExperimentEditorTabbedPane;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentEditor.tabbedPane.editorTabs.ContentEditorPanel;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.miniEditors.MacroEditor;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.*;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.xml.QTreeXMLHandler;
 import org.jsoup.nodes.Element;
 import org.jsoup.parser.Tag;
 
+import static de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames.getLocalized;
 import static de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode.Type.EXPERIMENT;
 import static javax.swing.JFileChooser.APPROVE_OPTION;
 
@@ -102,7 +102,7 @@ public class ExperimentEditorMenuBar extends JMenuBar {
         QTreeNode treeRoot = QTreeXMLHandler.loadExperimentXML(currentFile);
 
         if (treeRoot == null) {
-            JOptionPane.showMessageDialog(owner, UIElementNames.get("MESSAGE_NO_VALID_EXPERIMENT_FILE"));
+            JOptionPane.showMessageDialog(owner, getLocalized("MESSAGE_NO_VALID_EXPERIMENT_FILE"));
             return;
         }
 
@@ -119,7 +119,7 @@ public class ExperimentEditorMenuBar extends JMenuBar {
                 QTreeXMLHandler.saveExperimentXML(qTreeModel.getRoot(), currentFile);
                 confirmSave();
             } catch (IOException e) {
-                JOptionPane.showMessageDialog(owner, UIElementNames.get("MESSAGE_SAVE_ERROR"), UIElementNames.get("MESSAGE_ERROR"),
+                JOptionPane.showMessageDialog(owner, getLocalized("MESSAGE_SAVE_ERROR"), getLocalized("MESSAGE_ERROR"),
                         JOptionPane.ERROR_MESSAGE);
             }
         } else {
@@ -153,7 +153,7 @@ public class ExperimentEditorMenuBar extends JMenuBar {
             QTreeXMLHandler.saveExperimentXML(qTreeModel.getRoot(), currentFile);
             confirmSave();
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(owner, UIElementNames.get("MESSAGE_SAVE_ERROR"), UIElementNames.get("MESSAGE_ERROR"),
+            JOptionPane.showMessageDialog(owner, getLocalized("MESSAGE_SAVE_ERROR"), getLocalized("MESSAGE_ERROR"),
                     JOptionPane.ERROR_MESSAGE);
         }
 
@@ -175,8 +175,8 @@ public class ExperimentEditorMenuBar extends JMenuBar {
                 }
 
                 if (file.exists()) {
-                    int n = JOptionPane.showConfirmDialog(owner, file.getName() + UIElementNames.get("MESSAGE_REPLACE_FILE"),
-                            UIElementNames.get("MESSAGE_REPLACE_FILE_TITLE"), JOptionPane.YES_NO_OPTION);
+                    int n = JOptionPane.showConfirmDialog(owner, file.getName() + getLocalized("MESSAGE_REPLACE_FILE"),
+                            getLocalized("MESSAGE_REPLACE_FILE_TITLE"), JOptionPane.YES_NO_OPTION);
                     if (n == JOptionPane.NO_OPTION) {
                         return;
                     }
@@ -190,7 +190,7 @@ public class ExperimentEditorMenuBar extends JMenuBar {
         Map<String, List<TreePath>> duplicates = QTreeHTMLHandler.checkNames(qTreeModel.getRoot());
 
         if (duplicates.isEmpty()) {
-            JOptionPane.showMessageDialog(null, UIElementNames.get("MESSAGE_DUPLICATE_TITLE_NO_DUPLICATES_EXIST"));
+            JOptionPane.showMessageDialog(null, getLocalized("MESSAGE_DUPLICATE_TITLE_NO_DUPLICATES_EXIST"));
             return;
         }
 
@@ -204,8 +204,8 @@ public class ExperimentEditorMenuBar extends JMenuBar {
         Element row;
 
         table.attr("border", "1");
-        header.appendElement(tableHeader).text(UIElementNames.get("MULTILINEDIALOG_NAME"));
-        header.appendElement(tableHeader).text(UIElementNames.get("MESSAGE_DUPLICATE_APPEARANCE"));
+        header.appendElement(tableHeader).text(getLocalized("MULTILINEDIALOG_NAME"));
+        header.appendElement(tableHeader).text(getLocalized("MESSAGE_DUPLICATE_APPEARANCE"));
 
         boolean first;
         for (Map.Entry<String, List<TreePath>> entry : duplicates.entrySet()) {
@@ -227,7 +227,7 @@ public class ExperimentEditorMenuBar extends JMenuBar {
         JScrollPane sPane = new JScrollPane(new JLabel(html.toString()));
         sPane.setPreferredSize(new Dimension(sPane.getPreferredSize().width + 20, 500));
 
-        JOptionPane.showMessageDialog(null, sPane, UIElementNames.get("MESSAGE_DUPLICATE_TITLE_DUPLICATES_EXIST"),
+        JOptionPane.showMessageDialog(null, sPane, getLocalized("MESSAGE_DUPLICATE_TITLE_DUPLICATES_EXIST"),
                 JOptionPane.INFORMATION_MESSAGE);
     };
 
@@ -268,65 +268,65 @@ public class ExperimentEditorMenuBar extends JMenuBar {
 
         //DATEI
 
-        JMenu fileMenu = new JMenu(UIElementNames.get("MENU_FILE"));
+        JMenu fileMenu = new JMenu(getLocalized("MENU_FILE"));
         add(fileMenu);
         fileMenu.addMenuListener(enableListener);
 
-        JMenuItem newMenuItem = new JMenuItem(UIElementNames.get("MENU_FILE_NEW"));
+        JMenuItem newMenuItem = new JMenuItem(getLocalized("MENU_FILE_NEW"));
         newMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_MASK));
         fileMenu.add(newMenuItem);
         newMenuItem.addActionListener(newActionListener);
 
-        JMenuItem loadMenuItem = new JMenuItem(UIElementNames.get("MENU_FILE_OPEN"));
+        JMenuItem loadMenuItem = new JMenuItem(getLocalized("MENU_FILE_OPEN"));
         loadMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_L, InputEvent.CTRL_MASK));
         fileMenu.add(loadMenuItem);
         loadMenuItem.addActionListener(loadActionListener);
 
-        saveMenuItem = new JMenuItem(UIElementNames.get("MENU_FILE_SAVE"));
+        saveMenuItem = new JMenuItem(getLocalized("MENU_FILE_SAVE"));
         saveMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_MASK));
         fileMenu.add(saveMenuItem);
         saveMenuItem.addActionListener(saveActionListener);
 
-        saveAsMenuItem = new JMenuItem(UIElementNames.get("MENU_FILE_SAVE_AS"));
+        saveAsMenuItem = new JMenuItem(getLocalized("MENU_FILE_SAVE_AS"));
         saveAsMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F12, 0));
         fileMenu.add(saveAsMenuItem);
         saveAsMenuItem.addActionListener(saveAsActionListener);
 
         fileMenu.addSeparator();
 
-        exportMenu = new JMenu(UIElementNames.get("MENU_EXPORT"));
+        exportMenu = new JMenu(getLocalized("MENU_EXPORT"));
         fileMenu.add(exportMenu);
 
-        JMenuItem exportHTMLFileMenuItem = new JMenuItem(UIElementNames.get("MENU_ITEM_HTML_OF_QUESTIONS"));
+        JMenuItem exportHTMLFileMenuItem = new JMenuItem(getLocalized("MENU_ITEM_HTML_OF_QUESTIONS"));
         exportMenu.add(exportHTMLFileMenuItem);
         exportHTMLFileMenuItem.addActionListener(new ExportHTMLFileActionListener());
 
-        JMenuItem xmlToCsvAllInDir = new JMenuItem(UIElementNames.get("MENU_ITEM_XML_TO_CSV"));
+        JMenuItem xmlToCsvAllInDir = new JMenuItem(getLocalized("MENU_ITEM_XML_TO_CSV"));
         exportMenu.add(xmlToCsvAllInDir);
         xmlToCsvAllInDir.addActionListener(new XMLToCSVActionListener());
 
         fileMenu.addSeparator();
 
-        JMenuItem closeMenuItem = new JMenuItem(UIElementNames.get("MENU_FILE_QUIT"));
+        JMenuItem closeMenuItem = new JMenuItem(getLocalized("MENU_FILE_QUIT"));
         fileMenu.add(closeMenuItem);
 
         // BEARBEITEN
 
-        JMenu editMenu = new JMenu(UIElementNames.get("MENU_EDIT"));
+        JMenu editMenu = new JMenu(getLocalized("MENU_EDIT"));
         add(editMenu);
 
-        JMenuItem searchMenuItem = new JMenuItem(UIElementNames.get("MENU_EDIT_FIND"));
+        JMenuItem searchMenuItem = new JMenuItem(getLocalized("MENU_EDIT_FIND"));
         searchMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F, InputEvent.CTRL_MASK));
         editMenu.add(searchMenuItem);
         searchMenuItem.addActionListener(searchActionListener);
 
         // EXTRAS
 
-        JMenu extrasMenu = new JMenu(UIElementNames.get("MENU_PLAUSIBILITY_FEATURES"));
+        JMenu extrasMenu = new JMenu(getLocalized("MENU_PLAUSIBILITY_FEATURES"));
         add(extrasMenu);
         extrasMenu.addMenuListener(enableListener);
 
-        nameCheckMenuItem = new JMenuItem(UIElementNames.get("MENU_ITEM_CHECK_FORM_NAMES"));
+        nameCheckMenuItem = new JMenuItem(getLocalized("MENU_ITEM_CHECK_FORM_NAMES"));
         extrasMenu.add(nameCheckMenuItem);
         nameCheckMenuItem.addActionListener(nameCheckActionListener);
 
@@ -341,7 +341,7 @@ public class ExperimentEditorMenuBar extends JMenuBar {
      * Display a OK dialog confirming that the current experiment was saved.
      */
     private void confirmSave() {
-        JOptionPane.showMessageDialog(owner, UIElementNames.get("MESSAGE_SAVE_SUCCESSFUL"), null, JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(owner, getLocalized("MESSAGE_SAVE_SUCCESSFUL"), null, JOptionPane.INFORMATION_MESSAGE);
     }
 
     /**
@@ -354,7 +354,7 @@ public class ExperimentEditorMenuBar extends JMenuBar {
      */
     private boolean confirmOverwrite(File saveFile) {
         return JOptionPane.showConfirmDialog(owner,
-                saveFile.getName() + " " + UIElementNames.get("MESSAGE_REPLACE_FILE"),
-                UIElementNames.get("MESSAGE_REPLACE_FILE_TITLE"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
+                saveFile.getName() + " " + getLocalized("MESSAGE_REPLACE_FILE"),
+                getLocalized("MESSAGE_REPLACE_FILE_TITLE"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
     }
 }

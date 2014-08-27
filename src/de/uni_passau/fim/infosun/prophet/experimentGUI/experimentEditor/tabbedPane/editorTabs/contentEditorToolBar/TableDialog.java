@@ -48,7 +48,7 @@ public class TableDialog {
 
         JPanel configPanel = new JPanel();
 
-        JLabel nameLabel = new JLabel(UIElementNames.get("MULTILINEDIALOG_NAME"));
+        JLabel nameLabel = new JLabel(UIElementNames.getLocalized("MULTILINEDIALOG_NAME"));
         JTextField nameTextField = new JTextField();
 
         SpinnerNumberModel colModel = new SpinnerNumberModel();
