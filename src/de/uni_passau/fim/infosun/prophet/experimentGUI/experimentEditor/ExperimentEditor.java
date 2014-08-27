@@ -30,6 +30,8 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTree;
 public class ExperimentEditor extends JFrame {
 
     private static final String CONFIG_FILENAME = "config";
+    private static final int WIDTH = 800;
+    private static final int HEIGHT = 600;
     private Properties config;
 
     /**
@@ -61,14 +63,13 @@ public class ExperimentEditor extends JFrame {
 
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setTitle(getClass().getSimpleName());
-        setLocationRelativeTo(null);
-        setSize(800, 600);
+        setPreferredSize(new Dimension(WIDTH, HEIGHT));
 
         JSplitPane splitPane = new JSplitPane();
         add(splitPane, BorderLayout.CENTER);
 
         QTree tree = new QTree();
-        tree.setPreferredSize(new Dimension(getSize().width / 5, splitPane.getPreferredSize().height));
+        tree.setPreferredSize(new Dimension(WIDTH / 5, HEIGHT));
         splitPane.setLeftComponent(tree);
 
         ExperimentEditorTabbedPane tabbedPane = new ExperimentEditorTabbedPane(tree);
@@ -83,6 +84,9 @@ public class ExperimentEditor extends JFrame {
 
         ExperimentEditorMenuBar menuBar = new ExperimentEditorMenuBar(tree, tabbedPane);
         setJMenuBar(menuBar);
+
+        pack();
+        setLocationRelativeTo(null);
     }
 
     /**
