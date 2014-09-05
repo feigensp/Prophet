@@ -11,12 +11,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTextPane;
-import javax.swing.UIManager;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.html.HTMLEditorKit;
@@ -276,11 +271,7 @@ public class ExperimentViewer extends JFrame {
     }
 
     private boolean denyEnterNode() {
-        return exitExperiment || denyEnterNode(currentNode);
-    }
-
-    public static boolean denyEnterNode(QTreeNode node) {
-        return PluginList.denyEnterNode(node);
+        return exitExperiment || PluginList.denyEnterNode(currentNode);
     }
 
     private void enterNode() {
@@ -399,17 +390,5 @@ public class ExperimentViewer extends JFrame {
         ignoreDenyNextNode = hard;
         currentViewPane.clickSubmit();
         ignoreDenyNextNode = false;
-    }
-
-    public void saveCurrentAnswers() {
-        currentViewPane.saveCurrentAnswersToNode();
-    }
-
-    public JPanel getContentPanel() {
-        return contentPane;
-    }
-
-    public boolean getExperimentNotRunning() {
-        return experimentNotRunning;
     }
 }

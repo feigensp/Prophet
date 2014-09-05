@@ -23,7 +23,7 @@ import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
 
 import de.uni_passau.fim.infosun.prophet.experimentGUI.Constants;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentViewer.ExperimentViewer;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.PluginList;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.Attribute;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode;
 import org.jsoup.Jsoup;
@@ -351,15 +351,15 @@ public class QuestionViewPane extends JScrollPane {
      */
     private boolean hasActiveNextNode(QTreeNode node) {
         if (node.getType() == EXPERIMENT || node.getType() == CATEGORY) {
-            if (ExperimentViewer.denyEnterNode(node) || node.getChildCount() == 0) {
+            if (PluginList.denyEnterNode(node) || node.getChildCount() == 0) {
                 return false;
             } else {
                 node = node.getChild(0);
-                return !ExperimentViewer.denyEnterNode(node) || hasActiveNextNode(node);
+                return !PluginList.denyEnterNode(node) || hasActiveNextNode(node);
             }
         } else if (node.getType() == QUESTION) {
             node = node.getNextSibling();
-            return node != null && (!ExperimentViewer.denyEnterNode(node) || hasActiveNextNode(node));
+            return node != null && (!PluginList.denyEnterNode(node) || hasActiveNextNode(node));
         } else {
             return false;
         }
@@ -377,7 +377,7 @@ public class QuestionViewPane extends JScrollPane {
     private boolean hasActivePreviousNode(QTreeNode node) {
         if (node.getType() == QUESTION) {
             node = node.getPreviousSibling();
-            return node != null && (!ExperimentViewer.denyEnterNode(node) || hasActivePreviousNode(node));
+            return node != null && (!PluginList.denyEnterNode(node) || hasActivePreviousNode(node));
         } else {
             return false;
         }
