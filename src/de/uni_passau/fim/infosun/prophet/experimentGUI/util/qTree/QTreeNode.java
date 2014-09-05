@@ -1,13 +1,6 @@
 package de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Queue;
+import java.util.*;
 
 /**
  * A tree where nodes contain data (name and type of the node, HTML content) to be displayed by the
@@ -239,7 +232,7 @@ public class QTreeNode implements Cloneable {
         List<QTreeNode> preOrderNodes = new LinkedList<>();
 
         preOrderNodes.add(this);
-        children.parallelStream().map(QTreeNode::preOrder).sequential().forEach(preOrderNodes::addAll);
+        children.stream().map(QTreeNode::preOrder).forEach(preOrderNodes::addAll);
 
         return preOrderNodes;
     }
