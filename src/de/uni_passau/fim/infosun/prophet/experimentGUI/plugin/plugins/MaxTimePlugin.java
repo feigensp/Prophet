@@ -1,7 +1,12 @@
 package de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
+import java.util.Vector;
 import javax.swing.JOptionPane;
 
 import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentViewer.EViewer;
@@ -93,7 +98,7 @@ public class MaxTimePlugin implements Plugin {
             if (node != null && disable) {
                 timeOuts.add(node);
                 if (submit && affected) {
-                    experimentViewer.forceNext(true);
+                    experimentViewer.nextNode(true);
                 }
             }
         }
