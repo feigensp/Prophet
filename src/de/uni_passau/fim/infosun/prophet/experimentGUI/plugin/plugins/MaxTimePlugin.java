@@ -4,7 +4,7 @@ import java.util.*;
 import java.util.Map.Entry;
 import javax.swing.JOptionPane;
 
-import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentViewer.ExperimentViewer;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentViewer.EViewer;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.Plugin;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.Attribute;
@@ -118,7 +118,7 @@ public class MaxTimePlugin implements Plugin {
     private static final String KEY_IGNORE_TIMEOUT = "ignore_timeout";
     private static final String KEY_MESSAGE = "message";
 
-    private ExperimentViewer experimentViewer;
+    private EViewer experimentViewer;
 
     private Map<QTreeNode, String> allMessages = new HashMap<>();
     private Map<QTreeNode, Vector<TimeOut>> allClocks = new HashMap<>();
@@ -189,7 +189,7 @@ public class MaxTimePlugin implements Plugin {
     }
 
     @Override
-    public void experimentViewerRun(ExperimentViewer experimentViewer) {
+    public void experimentViewerRun(EViewer experimentViewer) {
         this.experimentViewer = experimentViewer;
     }
 

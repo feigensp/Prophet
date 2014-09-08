@@ -1,6 +1,6 @@
 package de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins;
 
-import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentViewer.ExperimentViewer;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentViewer.EViewer;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.Plugin;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.phpExportPlugin.PHPExportComponent;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode;
@@ -20,7 +20,7 @@ public class PHPExportPlugin implements Plugin {
     }
 
     @Override
-    public void experimentViewerRun(ExperimentViewer experimentViewer) {
+    public void experimentViewerRun(EViewer experimentViewer) {
     }
 
     @Override

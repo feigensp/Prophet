@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import javax.swing.*;
 
-import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentViewer.ExperimentViewer;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentViewer.EViewer;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.Plugin;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.VerticalLayout;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames;
@@ -27,7 +27,7 @@ public class ExternalProgramsPlugin extends Thread implements Plugin {
     private JPanel panel;
 
     private Point location;
-    private ExperimentViewer experimentViewer;
+    private EViewer experimentViewer;
     private boolean enabled;
 
     @Override
@@ -50,7 +50,7 @@ public class ExternalProgramsPlugin extends Thread implements Plugin {
     }
 
     @Override
-    public void experimentViewerRun(ExperimentViewer experimentViewer) {
+    public void experimentViewerRun(EViewer experimentViewer) {
         this.experimentViewer = experimentViewer;
     }
 

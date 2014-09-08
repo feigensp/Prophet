@@ -4,9 +4,10 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.io.File;
 import java.util.HashMap;
+import java.util.Map;
 import javax.swing.JFrame;
 
-import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentViewer.ExperimentViewer;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentViewer.EViewer;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.Plugin;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin.CodeViewer;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin.CodeViewerPluginList;
@@ -24,10 +25,10 @@ public class CodeViewerPlugin implements Plugin {
 
     public final static String KEY = "codeviewer";
 
-    private ExperimentViewer experimentViewer;
+    private EViewer experimentViewer;
     private int count = 1;
 
-    private HashMap<QTreeNode, CodeViewer> codeViewers;
+    private Map<QTreeNode, CodeViewer> codeViewers;
 
     private Rectangle bounds;
 
@@ -54,9 +55,9 @@ public class CodeViewerPlugin implements Plugin {
     }
 
     @Override
-    public void experimentViewerRun(ExperimentViewer experimentViewer) {
+    public void experimentViewerRun(EViewer experimentViewer) {
         this.experimentViewer = experimentViewer;
-        codeViewers = new HashMap<>();
+        this.codeViewers = new HashMap<>();
     }
 
     @Override

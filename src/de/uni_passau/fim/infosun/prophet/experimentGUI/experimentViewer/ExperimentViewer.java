@@ -170,7 +170,7 @@ public class ExperimentViewer extends JFrame {
         contentPane.setLayout(new BorderLayout());
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         setContentPane(contentPane);
-        PluginList.experimentViewerRun(this);
+     //   PluginList.experimentViewerRun(this);
 
         // Starte Experiment
         QTreeNode superRoot = new QTreeNode(null, EXPERIMENT, ""); // TODO was soll der Quatsch?

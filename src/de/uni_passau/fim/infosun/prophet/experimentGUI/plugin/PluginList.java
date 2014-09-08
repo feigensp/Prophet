@@ -4,16 +4,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentViewer.ExperimentViewer;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.AnswerRequiredPlugin;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.CodeViewerPlugin;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.ExternalProgramsPlugin;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.InactivityPlugin;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.MailPlugin;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.MaxTimePlugin;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.PHPExportPlugin;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.QuestionListPlugin;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.ValidSubjectCodePlugin;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentViewer.EViewer;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.*;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.Setting;
 
@@ -82,13 +74,13 @@ public class PluginList {
     }
 
     /**
-     * Calls {@link Plugin#experimentViewerRun(ExperimentViewer)} of all currently active <code>Plugin</code>s with
+     * Calls {@link Plugin#experimentViewerRun(EViewer)} of all currently active <code>Plugin</code>s with
      * the given <code>ExperimentViewer</code>.
      *
      * @param experimentViewer
      *         the <code>ExperimentViewer</code> that has been started
      */
-    public static void experimentViewerRun(ExperimentViewer experimentViewer) {
+    public static void experimentViewerRun(EViewer experimentViewer) {
         for (Plugin plugin : plugins) {
 
             try {
@@ -100,14 +92,13 @@ public class PluginList {
     }
 
     /**
-     * Calls {@link Plugin#experimentViewerRun(ExperimentViewer)} of all currently active <code>Plugin</code>s with
+     * Calls {@link Plugin#denyEnterNode(QTreeNode)} of all currently active <code>Plugin</code>s with
      * the given <code>QTreeNode</code>.
      *
      * @param node
      *         the node to be entered
      *
-     * @return <b>true</b> if the node may be entered <br> //TODO suspect its the other way around.. check this
-     * <b>false</b> if any plugin denies the entrance
+     * @return <code>true</code> iff any <code>Plugin</code> denies entrance to the given node
      */
     public static boolean denyEnterNode(QTreeNode node) {
         for (Plugin plugin : plugins) {

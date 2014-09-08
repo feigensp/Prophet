@@ -12,10 +12,9 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
-import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentViewer.ExperimentViewer;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentViewer.EViewer;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.Plugin;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.mailPlugin.ZipFile;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.Attribute;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.PluginSettings;
@@ -23,6 +22,7 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.Setting;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.components.SettingsPasswordField;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.components.SettingsTextField;
 
+import static de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames.getLocalized;
 import static de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode.Type.EXPERIMENT;
 
 public class MailPlugin implements Plugin {
@@ -41,7 +41,7 @@ public class MailPlugin implements Plugin {
     private String smtpSender;
     private String smtpReceiver;
 
-    ExperimentViewer experimentViewer;
+    EViewer experimentViewer;
 
     public boolean sendMail(String subject, String text, File attachmentFile) {
         try {
@@ -88,38 +88,38 @@ public class MailPlugin implements Plugin {
 
         Attribute mainAttribute = node.getAttribute(KEY);
         PluginSettings pluginSettings = new PluginSettings(mainAttribute, getClass().getSimpleName(), true);
-        pluginSettings.setCaption(UIElementNames.getLocalized("MAIL_SEND_MAIL"));
+        pluginSettings.setCaption(getLocalized("MAIL_SEND_MAIL"));
 
         Attribute subAttribute = mainAttribute.getSubAttribute(SMTP_SERVER);
         Setting subSetting = new SettingsTextField(subAttribute, null);
-        subSetting.setCaption(UIElementNames.getLocalized("MAIL_SMTP_SERVER") + ":");
+        subSetting.setCaption(getLocalized("MAIL_SMTP_SERVER") + ":");
         pluginSettings.addSetting(subSetting);
 
         subAttribute = mainAttribute.getSubAttribute(SMTP_USER);
         subSetting = new SettingsTextField(subAttribute, null);
-        subSetting.setCaption(UIElementNames.getLocalized("MAIL_SMTP_USER") + ":");
+        subSetting.setCaption(getLocalized("MAIL_SMTP_USER") + ":");
         pluginSettings.addSetting(subSetting);
 
         subAttribute = mainAttribute.getSubAttribute(SMTP_PASS);
         subSetting = new SettingsPasswordField(subAttribute, null);
-        subSetting.setCaption(UIElementNames.getLocalized("MAIL_SMTP_PASSWORD") + ":");
+        subSetting.setCaption(getLocalized("MAIL_SMTP_PASSWORD") + ":");
         pluginSettings.addSetting(subSetting);
 
         subAttribute = mainAttribute.getSubAttribute(SMTP_SENDER);
         subSetting = new SettingsTextField(subAttribute, null);
-        subSetting.setCaption(UIElementNames.getLocalized("MAIL_SMTP_SENDER") + ":");
+        subSetting.setCaption(getLocalized("MAIL_SMTP_SENDER") + ":");
         pluginSettings.addSetting(subSetting);
 
         subAttribute = mainAttribute.getSubAttribute(SMTP_RECEIVER);
         subSetting = new SettingsTextField(subAttribute, null);
-        subSetting.setCaption(UIElementNames.getLocalized("MAIL_SMTP_RECIPIENT") + ":");
+        subSetting.setCaption(getLocalized("MAIL_SMTP_RECIPIENT") + ":");
         pluginSettings.addSetting(subSetting);
 
         return pluginSettings;
     }
 
     @Override
-    public void experimentViewerRun(ExperimentViewer experimentViewer) {
+    public void experimentViewerRun(EViewer experimentViewer) {
         this.experimentViewer = experimentViewer;
     }
 
@@ -163,11 +163,11 @@ public class MailPlugin implements Plugin {
                 File attachmentFile = new File(experimentViewer.getSaveDir().getName() + ".zip");
                 ZipFile.zipFiles(experimentViewer.getSaveDir(), attachmentFile);
                 if (!this.sendMail(experimentViewer.getSaveDir().getName(), "", attachmentFile)) {
-                    return UIElementNames.getLocalized("MAIL_MESSAGE_COULD_NOT_SEND_MAIL");
+                    return getLocalized("MAIL_MESSAGE_COULD_NOT_SEND_MAIL");
                 }
             }
         } catch (Exception e) {
-            return UIElementNames.getLocalized("MAIL_MESSAGE_COULD_NOT_SEND_MAIL");
+            return getLocalized("MAIL_MESSAGE_COULD_NOT_SEND_MAIL");
         }
         return null;
     }

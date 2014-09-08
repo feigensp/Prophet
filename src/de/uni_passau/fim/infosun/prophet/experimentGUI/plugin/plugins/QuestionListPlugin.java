@@ -2,7 +2,7 @@ package de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins;
 
 import java.awt.BorderLayout;
 
-import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentViewer.ExperimentViewer;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentViewer.EViewer;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.Plugin;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.questionListPlugin.QuestionList;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames;
@@ -36,8 +36,8 @@ public class QuestionListPlugin implements Plugin {
     }
 
     @Override
-    public void experimentViewerRun(ExperimentViewer experimentViewer) {
-        QTreeNode experimentNode = experimentViewer.getTree();
+    public void experimentViewerRun(EViewer experimentViewer) {
+        QTreeNode experimentNode = experimentViewer.getExperimentTree();
         enabled = Boolean.parseBoolean(experimentNode.getAttribute(KEY).getValue());
 
         if (enabled) {

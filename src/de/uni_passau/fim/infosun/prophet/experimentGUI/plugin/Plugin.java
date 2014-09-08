@@ -1,6 +1,6 @@
 package de.uni_passau.fim.infosun.prophet.experimentGUI.plugin;
 
-import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentViewer.ExperimentViewer;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentViewer.EViewer;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.Setting;
 
@@ -30,7 +30,7 @@ public interface Plugin {
      * @param experimentViewer
      *         The initialized experiment viewer
      */
-    public void experimentViewerRun(ExperimentViewer experimentViewer);
+    public void experimentViewerRun(EViewer experimentViewer);
 
     /**
      * Called right before a new node is entered. If any plugin denies the currentNode to be entered (e.g. because of a
