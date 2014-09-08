@@ -6,8 +6,17 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.List;
+import java.util.function.IntFunction;
 import java.util.stream.Collectors;
-import javax.swing.*;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.WindowConstants;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import de.uni_passau.fim.infosun.prophet.experimentGUI.Constants;
@@ -28,6 +37,7 @@ public class EViewer extends JFrame {
     private static final int WIDTH = 800;
     private static final int HEIGHT = 600;
     private static final int LOAD_FAIL_EXIT_STATUS = 1;
+    private static final String DEFAULT_EXP_CODE = "default";
 
     private QTreeNode expTreeRoot;
     private List<ViewNode> experiment; // the experiment tree in pre-order
@@ -35,6 +45,8 @@ public class EViewer extends JFrame {
 
     private StopwatchLabel totalTime;
     private JPanel timePanel;
+
+    private File saveDir;
 
     private ActionListener listener = event -> {
         switch (event.getActionCommand()) {
@@ -63,9 +75,6 @@ public class EViewer extends JFrame {
         this.totalTime = new StopwatchLabel(expTreeRoot, getLocalized("STOPWATCHLABEL_TOTAL_TIME"));
         this.timePanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
 
-        pack();
-        setLocationRelativeTo(null);
-
         totalTime.start();
         timePanel.add(totalTime);
 
@@ -76,6 +85,9 @@ public class EViewer extends JFrame {
         add(timePanel, BorderLayout.SOUTH);
 
         PluginList.experimentViewerRun(this);
+
+        pack();
+        setLocationRelativeTo(null);
     }
 
     private void nextNode() {
@@ -129,6 +141,48 @@ public class EViewer extends JFrame {
      */
     public QTreeNode getExperimentTree() {
         return expTreeRoot;
+    }
+
+    /**
+     * Returns the directory in which the <code>EViewer</code> stores the date resulting from the current experiment
+     * run. This method will return <code>null</code> if the experimentee has not yet entered a subject code
+     * and progressed to the next page of the experiment or if the directory could not be created.
+     *
+     * @return the save directory or <code>null</code>
+     */
+    public File getSaveDir() {
+        if (saveDir == null) {
+            final String dirName;
+            String[] subjectCodeAns = expTreeRoot.getAnswers(Constants.KEY_SUBJECT);
+            String experimentCode;
+            String subjectCode;
+
+            if (subjectCodeAns != null && subjectCodeAns.length == 1) {
+                subjectCode = subjectCodeAns[0];
+                experimentCode = expTreeRoot.getAttribute(Constants.KEY_EXPERIMENT_CODE).getValue();
+
+                if (experimentCode == null) {
+                    experimentCode = DEFAULT_EXP_CODE;
+                }
+
+                dirName = experimentCode + "_" + subjectCode;
+                saveDir = new File(dirName);
+
+                if (saveDir.exists()) {
+                    IntFunction<File> mapper = value -> new File(dirName + "_" + value);
+                    Stream<File> dirs = IntStream.rangeClosed(1, Integer.MAX_VALUE).mapToObj(mapper);
+
+                    saveDir = dirs.filter(f -> !f.exists()).findFirst().get();
+                }
+
+                if (!saveDir.mkdirs()) {
+                    System.err.println("Could not create the save directory for the ExperimentViewer.");
+                    saveDir = null;
+                }
+            }
+        }
+
+        return saveDir;
     }
 
     /**
