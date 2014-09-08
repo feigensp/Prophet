@@ -5,7 +5,15 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentViewer.EViewer;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.*;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.AnswerRequiredPlugin;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.CodeViewerPlugin;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.ExternalProgramsPlugin;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.InactivityPlugin;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.MailPlugin;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.MaxTimePlugin;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.PHPExportPlugin;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.QuestionListPlugin;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.ValidSubjectCodePlugin;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.Setting;
 
@@ -137,28 +145,23 @@ public class PluginList {
      * @param currentNode
      *         the node to be exited
      *
-     * @return the resulting <code>String</code> from the first plugin denying exiting the node,
-     * an empty String if a plugin returned an empty String and no real messages were returned,
-     * null if all plugins allow exiting the node
+     * @return the resulting <code>String</code> from the first plugin denying exiting the node or <code>null</code> if
+     * no plugin returned a non empty message
      */
     public static String denyNextNode(QTreeNode currentNode) {
-        String result = null;
 
         for (Plugin plugin : plugins) {
             try {
-                String ret = plugin.denyNextNode(currentNode);
-                if (ret != null) {
-                    result = "";
-                    if (ret.length() > 0) {
-                        return ret;
-                    }
+                String message = plugin.denyNextNode(currentNode);
+                if (message != null && !message.trim().isEmpty()) {
+                    return message;
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
 
-        return result;
+        return null;
     }
 
     /**
