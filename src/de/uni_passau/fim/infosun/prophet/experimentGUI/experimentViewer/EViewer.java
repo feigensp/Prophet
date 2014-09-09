@@ -55,10 +55,10 @@ public class EViewer extends JFrame {
     private ActionListener listener = event -> {
         switch (event.getActionCommand()) {
             case KEY_FORWARD:
-                nextNode(false);
+                nextNode(false, false);
                 break;
             case KEY_BACKWARD:
-                previousNode(false);
+                previousNode(false, false);
                 break;
             default:
                 System.err.println("Unrecognized action command from " + QuestionViewPane.class.getSimpleName() +
@@ -97,12 +97,17 @@ public class EViewer extends JFrame {
         setLocationRelativeTo(null);
     }
 
-    public void nextNode(boolean ignoreDeny) {
-        QTreeNode currentNode = experiment.get(currentIndex).getTreeNode();
-        ViewNode newNode;
+    public void nextNode(boolean saveAnswers, boolean ignoreDeny) {
+        ViewNode currentViewNode = experiment.get(currentIndex);
+        QTreeNode currentNode = currentViewNode.getTreeNode();
+        ViewNode newViewNode;
         String message;
         int newIndex = currentIndex;
         boolean doNotShow;
+
+        if (saveAnswers) {
+            currentViewNode.getViewPane().saveCurrentAnswersToNode();
+        }
 
         if (!ignoreDeny && (message = PluginList.denyNextNode(currentNode)) != null) {
             JOptionPane.showMessageDialog(this, message, null, INFORMATION_MESSAGE);
@@ -125,23 +130,28 @@ public class EViewer extends JFrame {
                 return;
             }
 
-            newNode = experiment.get(newIndex);
-            if (newNode.isEntered()) {
-                PluginList.exitNode(newNode.getTreeNode());
+            newViewNode = experiment.get(newIndex);
+            if (newViewNode.isEntered()) {
+                PluginList.exitNode(newViewNode.getTreeNode());
             }
 
-            doNotShow = Boolean.parseBoolean(newNode.getTreeNode().getAttribute(KEY_DONOTSHOWCONTENT).getValue());
-        } while (doNotShow || PluginList.denyEnterNode(newNode.getTreeNode()));
+            doNotShow = Boolean.parseBoolean(newViewNode.getTreeNode().getAttribute(KEY_DONOTSHOWCONTENT).getValue());
+        } while (doNotShow || PluginList.denyEnterNode(newViewNode.getTreeNode()));
 
         switchNode(newIndex);
     }
 
-    public void previousNode(boolean ignoreDeny) {
-        QTreeNode currentNode = experiment.get(currentIndex).getTreeNode();
-        ViewNode newNode;
+    public void previousNode(boolean saveAnswers, boolean ignoreDeny) {
+        ViewNode currentViewNode = experiment.get(currentIndex);
+        QTreeNode currentNode = currentViewNode.getTreeNode();
+        ViewNode newViewNode;
         String message;
         int newIndex = currentIndex;
         boolean doNotShow;
+
+        if (saveAnswers) {
+            currentViewNode.getViewPane().saveCurrentAnswersToNode();
+        }
 
         if (!ignoreDeny && (message = PluginList.denyNextNode(currentNode)) != null) {
             JOptionPane.showMessageDialog(this, message, null, INFORMATION_MESSAGE);
@@ -153,13 +163,13 @@ public class EViewer extends JFrame {
                 return;
             }
 
-            newNode = experiment.get(newIndex);
-            if (newNode.isEntered()) {
-                PluginList.exitNode(newNode.getTreeNode());
+            newViewNode = experiment.get(newIndex);
+            if (newViewNode.isEntered()) {
+                PluginList.exitNode(newViewNode.getTreeNode());
             }
 
-            doNotShow = Boolean.parseBoolean(newNode.getTreeNode().getAttribute(KEY_DONOTSHOWCONTENT).getValue());
-        } while (doNotShow || PluginList.denyEnterNode(newNode.getTreeNode()));
+            doNotShow = Boolean.parseBoolean(newViewNode.getTreeNode().getAttribute(KEY_DONOTSHOWCONTENT).getValue());
+        } while (doNotShow || PluginList.denyEnterNode(newViewNode.getTreeNode()));
 
         switchNode(newIndex);
     }
@@ -186,6 +196,7 @@ public class EViewer extends JFrame {
         remove(oldNode.getViewPane());
         add(newNode.getViewPane(), BorderLayout.CENTER);
 
+        PluginList.exitNode(oldNode.getTreeNode());
         PluginList.enterNode(newNode.getTreeNode());
         currentIndex = newIndex;
 

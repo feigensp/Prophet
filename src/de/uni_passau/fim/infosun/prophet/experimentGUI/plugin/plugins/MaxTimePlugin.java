@@ -98,7 +98,7 @@ public class MaxTimePlugin implements Plugin {
             if (node != null && disable) {
                 timeOuts.add(node);
                 if (submit && affected) {
-                    experimentViewer.nextNode(true);
+                    experimentViewer.nextNode(true, true);
                 }
             }
         }
