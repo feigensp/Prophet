@@ -4,7 +4,9 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.IntFunction;
@@ -68,7 +70,7 @@ public class EViewer extends JFrame {
      * Constructs a new <code>EViewer</code> and starts the experiment.
      */
     public EViewer() {
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
 
         Function<QTreeNode, ViewNode> mapper = node -> new ViewNode(node, listener);
@@ -192,8 +194,23 @@ public class EViewer extends JFrame {
     }
 
     private void endExperiment() {
-        System.out.println("Its OVER!");
-        dispose();
+        experiment.get(0).getStopwatch().pause();
+        experiment.get(currentIndex).getStopwatch().pause();
+
+        String message = "<html><p>" + getLocalized("EVIEWER_EXPERIMENT_FINISHED") + "</p></html>";
+
+        try {
+            QTreeXMLHandler.saveAnswerXML(expTreeRoot, new File(getSaveDir(), FILE_ANSWERS));
+        } catch (IOException e) {
+            System.err.println("Could not save the answers.xml. " + e);
+        }
+
+        message += PluginList.finishExperiment();
+
+        setEnabled(false);
+        JOptionPane.showMessageDialog(this, message, null, INFORMATION_MESSAGE);
+
+        dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
     }
 
     /**

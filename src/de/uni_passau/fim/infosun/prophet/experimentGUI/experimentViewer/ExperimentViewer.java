@@ -11,7 +11,12 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import javax.swing.*;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextPane;
+import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.html.HTMLEditorKit;
@@ -362,8 +367,6 @@ public class ExperimentViewer extends JFrame {
         output.setEditorKit(new HTMLEditorKit());
         String endMessage = "Befragung beendet.";
         String outputString = "<p>" + endMessage + "</p>";
-//        QuestionTreeXMLHandler.saveXMLAnswerTree(tree,
-//                saveDir.getPath() + System.getProperty("file.separator") + Constants.FILE_ANSWERS);
 
         try {
             QTreeXMLHandler.saveAnswerXML(tree, new File(saveDir, Constants.FILE_ANSWERS));
