@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
@@ -29,8 +30,7 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.xml.QTreeXMLHa
 
 import static de.uni_passau.fim.infosun.prophet.experimentGUI.Constants.*;
 import static de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames.getLocalized;
-import static javax.swing.JOptionPane.ERROR_MESSAGE;
-import static javax.swing.JOptionPane.INFORMATION_MESSAGE;
+import static javax.swing.JOptionPane.*;
 
 /**
  * A viewer for the experiments created with the <code>ExperimentEditor</code>.
@@ -52,6 +52,11 @@ public class EViewer extends JFrame {
 
     private File saveDir;
 
+    /**
+     * An <code>ActionListener</code> that is added to all <code>QuestionViewPane</code> instances created by the
+     * <code>EViewer</code>. Calls the {@link #nextNode(boolean, boolean)} or {@link #previousNode(boolean, boolean)}
+     * methods after there was an appropriate event.
+     */
     private ActionListener listener = event -> {
         switch (event.getActionCommand()) {
             case KEY_FORWARD:
@@ -90,6 +95,18 @@ public class EViewer extends JFrame {
 
         add(expNode.getViewPane(), BorderLayout.CENTER);
         add(timePanel, BorderLayout.SOUTH);
+        addWindowListener(new WindowAdapter() {
+
+            @Override
+            public void windowClosing(WindowEvent e) {
+                String message = getLocalized("EVIEWER_EXPERIMENT_NOT_FINISHED");
+                int choice = JOptionPane.showConfirmDialog(EViewer.this, message, null, JOptionPane.YES_NO_OPTION);
+
+                if (choice == YES_OPTION) {
+                    experiment.get(currentIndex).getViewPane().saveCurrentAnswersToNode();
+                }
+            }
+        });
 
         PluginList.experimentViewerRun(this);
 
@@ -97,6 +114,14 @@ public class EViewer extends JFrame {
         setLocationRelativeTo(null);
     }
 
+    /**
+     * Tries to advance to the next node of the experiment. If this leads to exiting the last visitable node the
+     * experiment will end. Since plugins may disallow exiting the current node or entering other nodes this method
+     * may not advance at all or skip nodes.
+     *
+     * @param saveAnswers whether to save answers of the current node before advancing
+     * @param ignoreDeny whether to ignore plugins denying exiting the current node
+     */
     public void nextNode(boolean saveAnswers, boolean ignoreDeny) {
         ViewNode currentViewNode = experiment.get(currentIndex);
         QTreeNode currentNode = currentViewNode.getTreeNode();
@@ -141,6 +166,14 @@ public class EViewer extends JFrame {
         switchNode(newIndex);
     }
 
+    /**
+     * Tries to regress to the previous node of the experiment. Since plugins may disallow exiting the current node or
+     * entering other nodes this method may not regress at all or skip nodes. Will not regress past the first
+     * visitable node after the experiment root.
+     *
+     * @param saveAnswers whether to save answers of the current node before advancing
+     * @param ignoreDeny whether to ignore plugins denying exiting the current node
+     */
     public void previousNode(boolean saveAnswers, boolean ignoreDeny) {
         ViewNode currentViewNode = experiment.get(currentIndex);
         QTreeNode currentNode = currentViewNode.getTreeNode();
@@ -174,12 +207,20 @@ public class EViewer extends JFrame {
         switchNode(newIndex);
     }
 
+    /**
+     * Switches from displaying the node at <code>currentIndex</code> to <code>newIndex</code>.
+     * This method maintains the <code>StopwatchLabel</code> states and notifies the <code>Plugin</code> instances of
+     * exit from <code>currentIndex</code> and entry into <code>newIndex</code>.
+     *
+     * @param newIndex the index of the new node to display
+     */
     private void switchNode(int newIndex) {
-        setEnabled(false);
 
         if (currentIndex == newIndex) {
             return;
         }
+
+        setEnabled(false);
 
         ViewNode oldNode = experiment.get(currentIndex);
         ViewNode newNode = experiment.get(newIndex);
@@ -204,6 +245,10 @@ public class EViewer extends JFrame {
         setEnabled(true);
     }
 
+    /**
+     * Ends the experiment and shows a dialog containing the <code>Plugin</code> messages.
+     * The Window will then close.
+     */
     private void endExperiment() {
         experiment.get(0).getStopwatch().pause();
         experiment.get(currentIndex).getStopwatch().pause();
@@ -221,7 +266,7 @@ public class EViewer extends JFrame {
         setEnabled(false);
         JOptionPane.showMessageDialog(this, message, null, INFORMATION_MESSAGE);
 
-        dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+        dispose();
     }
 
     /**
