@@ -46,7 +46,6 @@ public class EViewer extends JFrame {
     private List<ViewNode> experiment; // the experiment tree in pre-order
     private int currentIndex; // index into the 'experiment' List
 
-    private StopwatchLabel totalTime;
     private JPanel timePanel;
 
     private File saveDir;
@@ -77,10 +76,10 @@ public class EViewer extends JFrame {
         this.expTreeRoot = loadExperiment();
         this.experiment = expTreeRoot.preOrder().stream().map(mapper).collect(Collectors.toList()); // rtt ArrayList
         this.currentIndex = 0;
-        this.totalTime = new StopwatchLabel(expTreeRoot, getLocalized("STOPWATCHLABEL_TOTAL_TIME"));
         this.timePanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
 
-        this.totalTime.start();
+        StopwatchLabel totalTime = new StopwatchLabel(expTreeRoot, getLocalized("STOPWATCHLABEL_TOTAL_TIME"));
+        totalTime.start();
         this.timePanel.add(totalTime);
 
         ViewNode expNode = experiment.get(currentIndex);
@@ -98,7 +97,10 @@ public class EViewer extends JFrame {
 
     public void nextNode(boolean ignoreDeny) {
         QTreeNode currentNode = experiment.get(currentIndex).getTreeNode();
+        ViewNode newNode;
         String message;
+        int newIndex = currentIndex;
+        boolean doNotShow;
 
         if (!ignoreDeny && (message = PluginList.denyNextNode(currentNode)) != null) {
             JOptionPane.showMessageDialog(this, message, null, INFORMATION_MESSAGE);
@@ -115,12 +117,8 @@ public class EViewer extends JFrame {
             }
         }
 
-        int newIndex = currentIndex;
-        boolean doNotShow;
-        ViewNode newNode;
-
         do {
-            if (++newIndex == experiment.size()) {
+            if (++newIndex >= experiment.size()) {
                 endExperiment();
                 return;
             }
@@ -137,7 +135,31 @@ public class EViewer extends JFrame {
     }
 
     public void previousNode(boolean ignoreDeny) {
+        QTreeNode currentNode = experiment.get(currentIndex).getTreeNode();
+        ViewNode newNode;
+        String message;
+        int newIndex = currentIndex;
+        boolean doNotShow;
 
+        if (!ignoreDeny && (message = PluginList.denyNextNode(currentNode)) != null) {
+            JOptionPane.showMessageDialog(this, message, null, INFORMATION_MESSAGE);
+            return;
+        }
+
+        do {
+            if (--newIndex <= 0) {
+                return;
+            }
+
+            newNode = experiment.get(newIndex);
+            if (newNode.isEntered()) {
+                PluginList.exitNode(newNode.getTreeNode());
+            }
+
+            doNotShow = Boolean.parseBoolean(newNode.getTreeNode().getAttribute(KEY_DONOTSHOWCONTENT).getValue());
+        } while (doNotShow || PluginList.denyEnterNode(newNode.getTreeNode()));
+
+        switchNode(newIndex);
     }
 
     private void switchNode(int newIndex) {
@@ -163,8 +185,8 @@ public class EViewer extends JFrame {
         add(newNode.getViewPane(), BorderLayout.CENTER);
 
         PluginList.enterNode(newNode.getTreeNode());
-
         currentIndex = newIndex;
+
         repaint();
         setEnabled(true);
     }
