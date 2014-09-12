@@ -3,9 +3,13 @@ package de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewe
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.EventQueue;
 import java.io.File;
-import javax.swing.*;
+import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JSplitPane;
 import javax.swing.plaf.basic.BasicSplitPaneDivider;
 
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin.fileTree.FileEvent;
@@ -33,20 +37,6 @@ public class CodeViewer extends JFrame implements FileListener {
     private File saveDir;
 
     private Recorder recorder;
-
-    /**
-     * Launch the application.
-     */
-    public static void main(String[] args) {
-        EventQueue.invokeLater(() -> {
-            try {
-                CodeViewer frame = new CodeViewer(null, null);
-                frame.setVisible(true);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
-    }
 
     public CodeViewer(Attribute selected, File saveDir) {
         setTitle(getLocalized("TITLE_CODE_VIEWER"));
