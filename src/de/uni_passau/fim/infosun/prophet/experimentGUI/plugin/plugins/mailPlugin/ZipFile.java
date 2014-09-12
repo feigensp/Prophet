@@ -18,15 +18,6 @@ public class ZipFile {
     private static File outputFile;
 
     /**
-     * a main method to test the zip-method
-     *
-     * @param args
-     */
-    public static void main(String[] args) {
-        zipFiles(new File("."), new File("cow.zip"));
-    }
-
-    /**
      * zips a file or directory, ignores zip-files
      *
      * @param zipPath
