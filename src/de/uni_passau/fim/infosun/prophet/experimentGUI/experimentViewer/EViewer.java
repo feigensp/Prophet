@@ -8,7 +8,9 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.IntFunction;
 import java.util.stream.Collectors;
@@ -25,6 +27,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.PluginList;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.QuestionViewPane;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.Attribute;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.xml.QTreeXMLHandler;
 
@@ -75,12 +78,36 @@ public class EViewer extends JFrame {
      * Constructs a new <code>EViewer</code> and starts the experiment.
      */
     public EViewer() {
-        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
 
-        Function<QTreeNode, ViewNode> mapper = node -> new ViewNode(node, listener);
-
         this.expTreeRoot = loadExperiment();
+
+        // randomize the children if this is enabled
+        applyToTree(expTreeRoot, node -> {
+            boolean enabled = Boolean.parseBoolean(node.getAttribute(KEY_RANDOMIZE_CHILDREN).getValue());
+
+            if (enabled) {
+                Collections.shuffle(node.getChildren());
+            }
+        });
+
+        // only retain X children of a node if this is enabled
+        applyToTree(expTreeRoot, node -> {
+            Attribute attribute = node.getAttribute(KEY_ONLY_SHOW_X_CHILDREN);
+            boolean enabled = Boolean.parseBoolean(attribute.getValue());
+
+            if (enabled) {
+                int number = Integer.parseInt(attribute.getSubAttribute(KEY_SHOW_NUMBER_OF_CHILDREN).getValue());
+                List<QTreeNode> children = node.getChildren();
+
+                if (children.size() > number) {
+                    children.removeAll(children.subList(number, children.size()));
+                }
+            }
+        });
+
+        Function<QTreeNode, ViewNode> mapper = node -> new ViewNode(node, listener);
         this.experiment = expTreeRoot.preOrder().stream().map(mapper).collect(Collectors.toList()); // rtt ArrayList
         this.currentIndex = 0;
         this.timePanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
@@ -104,6 +131,9 @@ public class EViewer extends JFrame {
 
                 if (choice == YES_OPTION) {
                     experiment.get(currentIndex).getViewPane().saveCurrentAnswersToNode();
+                    dispose();
+                } else {
+                    setVisible(true);
                 }
             }
         });
@@ -112,6 +142,17 @@ public class EViewer extends JFrame {
 
         pack();
         setLocationRelativeTo(null);
+    }
+
+    /**
+     * Applies the given <code>Consumer</code> recursively to every node in the tree with root <code>node</code>.
+     *
+     * @param node the root of the tree the function is to be applied to
+     * @param function the function to be applied
+     */
+    private static void applyToTree(QTreeNode node, Consumer<QTreeNode> function) {
+        function.accept(node);
+        node.getChildren().forEach(n -> applyToTree(n, function));
     }
 
     /**
