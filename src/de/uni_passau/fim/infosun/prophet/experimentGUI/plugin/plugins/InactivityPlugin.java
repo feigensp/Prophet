@@ -10,6 +10,11 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.components.
 
 import static de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode.Type.*;
 
+/**
+ * This <code>Plugin</code> enables the <code>ExperimentEditor</code> to mark nodes as 'inactive'. The
+ * <code>Plugin</code>'s {@link #denyEnterNode(QTreeNode)} will return <code>true</code> for any node marked 'inactive'
+ * and all its children.
+ */
 public class InactivityPlugin implements Plugin {
 
     public static final String KEY = "inactive";
@@ -40,7 +45,17 @@ public class InactivityPlugin implements Plugin {
 
     @Override
     public boolean denyEnterNode(QTreeNode node) {
-        return Boolean.parseBoolean(node.getAttribute(KEY).getValue());
+        QTreeNode currentNode = node;
+
+        do {
+            if (Boolean.parseBoolean(currentNode.getAttribute(KEY).getValue())) {
+                return true;
+            }
+
+            currentNode = currentNode.getParent();
+        } while (currentNode != null);
+
+        return false;
     }
 
     @Override
