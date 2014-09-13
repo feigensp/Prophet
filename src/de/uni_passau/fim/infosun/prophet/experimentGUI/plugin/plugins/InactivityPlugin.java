@@ -35,6 +35,7 @@ public class InactivityPlugin implements Plugin {
 
     @Override
     public void experimentViewerRun(EViewer experimentViewer) {
+
     }
 
     @Override
@@ -44,6 +45,7 @@ public class InactivityPlugin implements Plugin {
 
     @Override
     public void enterNode(QTreeNode node) {
+
     }
 
     @Override
@@ -53,6 +55,7 @@ public class InactivityPlugin implements Plugin {
 
     @Override
     public void exitNode(QTreeNode node) {
+
     }
 
     @Override

@@ -26,6 +26,22 @@ public class Constants {
     public static final String KEY_QUESTIONSWITCHING = "questionswitching";
 
     /**
+     * Attribute key for the setting that determines whether to randomize the direct children of a node
+     * before displaying them.
+     */
+    public static final String KEY_RANDOMIZE_CHILDREN = "randomizeChildren";
+
+    /**
+     * Attribute key for the setting that determines how many children of a node are to be shown.
+     */
+    public static final String KEY_ONLY_SHOW_X_CHILDREN = "onlyShowXChildren";
+
+    /**
+     * SubAttribute key for the setting that determines how many children of a node are to be shown.
+     */
+    public static final String KEY_SHOW_NUMBER_OF_CHILDREN = "showNumberOfChildren";
+
+    /**
      * property name for the experiment code (which is used for online usage)
      */
     public static final String KEY_EXPERIMENT_CODE = "experimentcode";

@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.SpinnerNumberModel;
 
 import de.uni_passau.fim.infosun.prophet.experimentGUI.Constants;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentEditor.tabbedPane.ExperimentEditorTab;
@@ -16,8 +17,10 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.PluginList;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.VerticalLayout;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.Attribute;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.PluginSettings;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.Setting;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.components.SettingsCheckBox;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.components.SettingsSpinner;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.components.SettingsTextField;
 
 import static de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames.getLocalized;
@@ -95,7 +98,8 @@ public class SettingsEditorPanel extends ExperimentEditorTab {
         settings.put(selected, componentList);
 
         // add the standard options for experiments and categories
-        if (selected.getType() == EXPERIMENT) {
+        QTreeNode.Type selectedType = selected.getType();
+        if (selectedType == EXPERIMENT) {
 
             Attribute attribute = selected.getAttribute(Constants.KEY_EXPERIMENT_CODE);
             Setting setting = new SettingsTextField(attribute, null);
@@ -105,8 +109,8 @@ public class SettingsEditorPanel extends ExperimentEditorTab {
             settingsPanel.add(setting);
         }
 
-        if (selected.getType() == CATEGORY) {
-            Attribute attribute = selected.getAttribute(Constants.KEY_DONOTSHOWCONTENT);
+        if (selectedType == CATEGORY) {
+            Attribute attribute = selected.getAttribute(Constants.KEY_DONOTSHOWCONTENT); //TODO apply this setting to all children when saved
             Setting setting = new SettingsCheckBox(attribute, null);
             setting.setCaption(getLocalized("MENU_TAB_SETTINGS_DONT_SHOW_CONTENT"));
 
@@ -116,6 +120,31 @@ public class SettingsEditorPanel extends ExperimentEditorTab {
             attribute = selected.getAttribute(Constants.KEY_QUESTIONSWITCHING);
             setting = new SettingsCheckBox(attribute, null);
             setting.setCaption(getLocalized("MENU_TAB_SETTINGS_ALLOW_BACK_AND_FORTH"));
+
+            componentList.add(setting);
+            settingsPanel.add(setting);
+        }
+
+        if (selectedType == EXPERIMENT || selectedType == CATEGORY) {
+            Attribute attribute = selected.getAttribute(Constants.KEY_ONLY_SHOW_X_CHILDREN);
+            PluginSettings setting = new PluginSettings(attribute, null, true);
+            setting.setCaption(getLocalized("MENU_TAB_SETTINGS_ONLY_SHOW_X_CHILDREN"));
+
+            Attribute subAttribute = attribute.getSubAttribute(Constants.KEY_SHOW_NUMBER_OF_CHILDREN);
+            SpinnerNumberModel model = new SpinnerNumberModel(0, 0, Integer.MAX_VALUE, 1);
+            Setting subSetting = new SettingsSpinner(subAttribute, null, model);
+
+            subSetting.setCaption(getLocalized("MENU_TAB_SETTINGS_SHOW_NUMBER_OF_CHILDREN"));
+            setting.addSetting(subSetting);
+
+            componentList.add(setting);
+            settingsPanel.add(setting);
+        }
+
+        if (selectedType == EXPERIMENT || selectedType == CATEGORY) {
+            Attribute attribute = selected.getAttribute(Constants.KEY_RANDOMIZE_CHILDREN);
+            Setting setting = new SettingsCheckBox(attribute, null);
+            setting.setCaption(getLocalized("MENU_TAB_SETTINGS_RANDOMIZE_CHILDREN"));
 
             componentList.add(setting);
             settingsPanel.add(setting);
