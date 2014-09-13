@@ -130,10 +130,9 @@ public class EViewer extends JFrame {
                 int choice = JOptionPane.showConfirmDialog(EViewer.this, message, null, JOptionPane.YES_NO_OPTION);
 
                 if (choice == YES_OPTION) {
-                    experiment.get(currentIndex).getViewPane().saveCurrentAnswersToNode();
+                    experiment.get(currentIndex).getViewPane().clickSubmit(false);
+                    experiment.get(currentIndex).getStopwatch().stop();
                     dispose();
-                } else {
-                    setVisible(true);
                 }
             }
         });
@@ -172,7 +171,7 @@ public class EViewer extends JFrame {
         boolean doNotShow;
 
         if (saveAnswers) {
-            currentViewNode.getViewPane().saveCurrentAnswersToNode();
+            currentViewNode.getViewPane().clickSubmit(false);
         }
 
         if (!ignoreDeny && (message = PluginList.denyNextNode(currentNode)) != null) {
@@ -224,7 +223,7 @@ public class EViewer extends JFrame {
         boolean doNotShow;
 
         if (saveAnswers) {
-            currentViewNode.getViewPane().saveCurrentAnswersToNode();
+            currentViewNode.getViewPane().clickSubmit(false);
         }
 
         if (!ignoreDeny && (message = PluginList.denyNextNode(currentNode)) != null) {
