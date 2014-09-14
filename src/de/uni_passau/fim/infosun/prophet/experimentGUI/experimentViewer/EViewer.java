@@ -8,6 +8,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
@@ -319,7 +320,8 @@ public class EViewer extends JFrame {
         File experimentFile = new File(DEFAULT_FILE);
 
         if (!experimentFile.exists()) {
-            JFileChooser fileChooser = new JFileChooser();
+            File workingDir = new File(".");
+            JFileChooser fileChooser = new JFileChooser(workingDir);
             fileChooser.addChoosableFileFilter(new FileNameExtensionFilter(getLocalized("EVIEWER_XML_FILES"), "*.xml"));
 
             if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
@@ -329,7 +331,15 @@ public class EViewer extends JFrame {
                 System.exit(LOAD_FAIL_EXIT_STATUS);
             }
 
-            if (!experimentFile.getParentFile().equals(new File("."))) {
+            boolean inWorkingDir = false;
+            try {
+                inWorkingDir = Files.isSameFile(workingDir.toPath(), experimentFile.getParentFile().toPath());
+            } catch (IOException e) {
+                System.err.println("Could not check whether the chosen experiment File is in the working directory.\n" +
+                        e.getMessage());
+            }
+
+            if (!inWorkingDir) {
                 JOptionPane.showMessageDialog(this, getLocalized("EVIEWER_EXPERIMENT_NOT_IN_WORKING_DIR"));
                 System.exit(LOAD_FAIL_EXIT_STATUS);
             }
