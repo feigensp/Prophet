@@ -5,7 +5,11 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.Vector;
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+import javax.swing.JToolBar;
 
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
@@ -127,8 +131,7 @@ public class SearchBar extends JToolBar implements ActionListener {
         searchContext.setWholeWord(wholeWord);
         searchContext.setRegularExpression(regex);
 
-        boolean found = SearchEngine.find(textArea, searchContext);
-        if (!found) {
+        if (!SearchEngine.find(textArea, searchContext).wasFound()) {
             JOptionPane.showMessageDialog(this, MESSAGE_NOT_FOUND);
 
             for (SearchBarListener l : listeners) {

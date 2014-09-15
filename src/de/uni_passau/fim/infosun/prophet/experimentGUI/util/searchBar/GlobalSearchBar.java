@@ -9,7 +9,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.Vector;
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.JToolBar;
 import javax.swing.tree.DefaultTreeModel;
 
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin.CodeViewer;
@@ -158,9 +162,8 @@ public class GlobalSearchBar extends JToolBar implements ActionListener {
                         searchContext.setWholeWord(wholeWord);
                         searchContext.setRegularExpression(regex);
 
-                        boolean found = SearchEngine.find(textArea, searchContext);
-//					    System.out.println("-- found: "+found);
-                        if (!found) {
+                        //					    System.out.println("-- found: "+found);
+                        if (!SearchEngine.find(textArea, searchContext).wasFound()) {
                             delete = current;
                         }
                     } catch (Exception e) {

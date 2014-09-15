@@ -9,13 +9,15 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import au.com.bytecode.opencsv.CSVWriter;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.Constants;
-import org.cdmckay.coffeedom.Document;
-import org.cdmckay.coffeedom.Element;
-import org.cdmckay.coffeedom.input.SAXBuilder;
+import nu.xom.Builder;
+import nu.xom.Document;
+import nu.xom.Element;
+import nu.xom.Elements;
+import nu.xom.ParentNode;
+import nu.xom.ParsingException;
 
 /**
  * Handles CSV operations for the <code>QTree</code>
@@ -30,7 +32,7 @@ public class QTreeCSVHandler {
      *
      * @param directory
      *         the directory to be searched
-     *@param fileName
+     * @param fileName
      *         the filename to be searched for
      *
      * @return the list of files
@@ -68,8 +70,10 @@ public class QTreeCSVHandler {
     /**
      * Exports all files named {@value Constants#FILE_ANSWERS} in CSV format to the specified <code>saveFile</code>.
      *
-     * @param answerDir the directory containing the {@value Constants#FILE_ANSWERS} files; subdirectories will be searched
-     * @param saveFile the file to save the resulting CSV to
+     * @param answerDir
+     *         the directory containing the {@value Constants#FILE_ANSWERS} files; subdirectories will be searched
+     * @param saveFile
+     *         the file to save the resulting CSV to
      */
     public static void exportCSV(File answerDir, File saveFile) {
         List<File> files = getFilesByName(answerDir, Constants.FILE_ANSWERS);
@@ -77,9 +81,8 @@ public class QTreeCSVHandler {
 
         for (File file : files) {
             try {
-            SAXBuilder builder = new SAXBuilder();
-            Document document = builder.build(file);
-
+                Builder builder = new Builder();
+                Document document = builder.build(file);
 
                 if (lines.isEmpty()) {
                     List<String> line = new ArrayList<>();
@@ -92,8 +95,9 @@ public class QTreeCSVHandler {
                 makeLine(line, document.getRootElement(), QTreeCSVHandler::contentFor);
 
                 lines.add(line.toArray(new String[line.size()]));
-            } catch (IOException e) {
-                System.err.println("Could not read " + Constants.FILE_ANSWERS + " file " + file.getAbsolutePath());
+            } catch (IOException | ParsingException e) {
+                System.err.println("Could not parse " + Constants.FILE_ANSWERS + " file " + file.getAbsolutePath());
+                System.err.println(e.getMessage());
             }
         }
 
@@ -101,7 +105,8 @@ public class QTreeCSVHandler {
             CSVWriter csvWriter = new CSVWriter(fileWriter, ';', '"');
             csvWriter.writeAll(lines);
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println("Could not write the CSV export file " + saveFile.getAbsolutePath());
+            System.err.println(e.getMessage());
         }
     }
 
@@ -109,37 +114,42 @@ public class QTreeCSVHandler {
      * Makes one line of the CSV file and stores the generated CSV values in the given <code>List line</code>.
      * Can be configured (using <code>extractor</code>) to generate the header or a content line of the CSV file.
      *
-     * @param line the <code>List</code> to store the line in
-     * @param element the XML <code>Element</code> for whose line is to be created; must be of type QTreeNode
-     * @param extractor a function producing the CSV field value for the element itself and all its answers
+     * @param line
+     *         the <code>List</code> to store the line in
+     * @param element
+     *         the XML <code>Element</code> for whose line is to be created; must be of type QTreeNode
+     * @param extractor
+     *         a function producing the CSV field value for the element itself and all its answers
      */
     private static void makeLine(List<String> line, Element element, Function<Element, String> extractor) {
-        Element answers = element.getChild("answers");
+        Element answers = element.getFirstChildElement("answers");
 
         if (answers != null) {
-            List<Element> answerEntries = answers.getChildren("entry");
+            Elements answerEntries = answers.getChildElements("entry");
 
-            for (Element answerEntry : answerEntries) {
-                line.add(extractor.apply(answerEntry));
+            for (int i = 0; i < answerEntries.size(); i++) {
+                line.add(extractor.apply(answerEntries.get(i)));
             }
         }
-
         line.add(extractor.apply(element));
 
-        List<Element> children = element.getChildren(QTreeNode.class.getSimpleName());
-        for (Element child : children) {
-            makeLine(line, child, extractor);
+        Elements children = element.getChildElements(QTreeNode.class.getSimpleName());
+
+        for (int i = 0; i < children.size(); i++) {
+            makeLine(line, children.get(i), extractor);
         }
     }
 
     /**
      * Produces the header <code>String</code> for the given <code>element</code>.
      *
-     * @param element the <code>Element</code>; must be either 'QTreeNode' or 'entry'
+     * @param element
+     *         the <code>Element</code>; must be either 'QTreeNode' or 'entry'
+     *
      * @return the header or an empty <code>String</code> if the type of the <code>Element</code> is not supported
      */
     private static String headerFor(Element element) {
-        String name = element.getName();
+        String name = element.getLocalName();
 
         if (name.equals(QTreeNode.class.getSimpleName())) {
             List<String> path = pathTo(element);
@@ -150,7 +160,7 @@ public class QTreeCSVHandler {
         } else if (name.equals("entry")) {
             List<String> path = pathTo(element);
             path.add(PATH_SEPARATOR);
-            path.add(element.getChildText("string"));
+            path.add(element.getFirstChildElement("string").getValue());
 
             return path.stream().reduce(String::concat).get();
         } else {
@@ -162,25 +172,31 @@ public class QTreeCSVHandler {
     /**
      * Produces the content <code>String</code> for the given <code>element</code>.
      *
-     * @param element the <code>Element</code>; must be either 'QTreeNode' or 'entry'
+     * @param element
+     *         the <code>Element</code>; must be either 'QTreeNode' or 'entry'
+     *
      * @return the header or an empty <code>String</code> if the type of the <code>Element</code> is not supported
      */
     private static String contentFor(Element element) {
-        String name = element.getName();
+        String name = element.getLocalName();
 
         if (name.equals(QTreeNode.class.getSimpleName())) {
             return element.getAttributeValue("answerTime");
         } else if (name.equals("entry")) {
-            List<Element> answerElements = element.getChild("string-array").getChildren("string");
+            Elements answerElements = element.getFirstChildElement("string-array").getChildElements("string");
 
             if (answerElements.size() == 1) {
-                return answerElements.get(0).getText();
+                return answerElements.get(0).getValue();
             } else {
                 StringWriter csv = new StringWriter();
                 CSVWriter writer = new CSVWriter(csv, ',', '\'', "");
-                List<String> answers = answerElements.stream().map(Element::getText).collect(Collectors.toList());
 
-                writer.writeNext(answers.toArray(new String[answers.size()]));
+                String[] answers = new String[answerElements.size()];
+                for (int i = 0; i < answerElements.size(); i++) {
+                    answers[i] = answerElements.get(i).getValue();
+                }
+                writer.writeNext(answers);
+
                 return csv.toString();
             }
         } else {
@@ -192,26 +208,31 @@ public class QTreeCSVHandler {
     /**
      * Gives the path from the root QTreeNode to the given <code>Element</code> (or the QTreeNode father of the
      * <code>Element</code>) separated by {@value #PATH_SEPARATOR}.
-
-     * @param element the <code>Element</code> whose path is to be constructed
+     *
+     * @param target
+     *         the <code>Element</code> whose path is to be constructed
+     *
      * @return the path
      */
-    private static List<String> pathTo(Element element) {
+    private static List<String> pathTo(Element target) {
         List<String> path = new LinkedList<>();
-        Element parent = element;
+        boolean done = false;
+        Element element = target;
 
-        while (parent != null && !parent.getName().equals(QTreeNode.class.getSimpleName())) {
-            parent = parent.getParentElement();
+        while (!element.getLocalName().equals(QTreeNode.class.getSimpleName())) {
+            element = (Element) element.getParent();
         }
 
-        while (parent != null) {
-            Element parentElement = parent.getParentElement();
+        while (!done) {
+            ParentNode parentNode = element.getParent();
 
-            path.add(0, parent.getAttributeValue("name"));
-            if (parentElement != null) {
+            path.add(0, element.getAttributeValue("name"));
+            if (!(parentNode instanceof Document)) {
                 path.add(0, PATH_SEPARATOR);
+                element = (Element) parentNode;
+            } else {
+                done = true;
             }
-            parent = parentElement;
         }
 
         return path;

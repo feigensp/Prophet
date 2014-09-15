@@ -4,8 +4,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Objects;
 import javax.xml.XMLConstants;
 import javax.xml.transform.stream.StreamSource;
@@ -16,9 +14,11 @@ import javax.xml.validation.Validator;
 import com.thoughtworks.xstream.XStream;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.Attribute;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode;
-import org.cdmckay.coffeedom.Document;
-import org.cdmckay.coffeedom.Element;
-import org.cdmckay.coffeedom.input.SAXBuilder;
+import nu.xom.Builder;
+import nu.xom.Document;
+import nu.xom.Element;
+import nu.xom.Elements;
+import nu.xom.ParsingException;
 import org.xml.sax.SAXException;
 
 /**
@@ -116,9 +116,9 @@ public class QTreeXMLHandler {
 
         QTreeNode node;
 
-        if (isValidXML(validator, xmlFile)) {
+        if (isValidXML(validator, "CurrentValidator" , xmlFile)) {
             node = (QTreeNode) saveLoadStream.fromXML(xmlFile);
-        } else if (isValidXML(legacyValidator, xmlFile)) {
+        } else if (isValidXML(legacyValidator, "LegacyValidator" , xmlFile)) {
             node = loadOldExperimentXML(xmlFile);
         } else {
             node = null;
@@ -130,16 +130,19 @@ public class QTreeXMLHandler {
     /**
      * Checks whether the given XML file conforms to the <code>Validator</code>s schema.
      * This method will return <code>false</code> if <code>validator</code> or
-     * <code>xmlFile</code> is <code>null</code>.
+     * <code>xmlFile</code> is <code>null</code>. The <code>validatorID</code> will be used to identify the
+     * <code>Validator</code> when the cause of the validation failure is printed to <code>System.err</code>.
      *
      * @param validator
      *         the <code>Validator</code> to use for validation
+     * @param validatorID
+     *         a <code>String</code> identifying the <code>Validator</code>
      * @param xmlFile
      *         the XML file to validate
      *
      * @return true iff the <code>Validator</code> accepts the <code>xmlFile</code>
      */
-    private static boolean isValidXML(Validator validator, File xmlFile) {
+    private static boolean isValidXML(Validator validator, String validatorID, File xmlFile) {
 
         if (validator == null || xmlFile == null) {
             return false;
@@ -148,6 +151,9 @@ public class QTreeXMLHandler {
         try {
             validator.validate(new StreamSource(xmlFile));
         } catch (SAXException | IOException e) {
+            System.err.println("The file " + xmlFile.getName() + " is invalid according to " + validatorID);
+            System.err.println("Cause:");
+            System.err.println(e.getMessage());
             return false;
         }
 
@@ -220,26 +226,18 @@ public class QTreeXMLHandler {
     private static QTreeNode loadOldExperimentXML(File xmlFile) {
         Objects.requireNonNull(xmlFile, "xmlFile must not be null!");
 
-        SAXBuilder builder = new SAXBuilder();
+        Builder parser = new Builder();
         Document document;
-        Element element;
 
         try {
-            document = builder.build(xmlFile);
-        } catch (IOException e) {
-            System.err.println(
-                    "Could not de-serialise " + xmlFile.getName() + "using old-style XML to a QTreeNode. " + e);
+            document = parser.build(xmlFile);
+        } catch (ParsingException | IOException e) {
+            System.err.println("Could not parse " + xmlFile.getName());
+            System.err.println(e.getMessage());
             return null;
         }
 
-        element = document.getRootElement();
-
-        if (!element.getName().equals(TYPE_EXPERIMENT)) {
-            System.err.println("Tried to de-serialise an XML file that did not conform to the old-style XML format.");
-            return null;
-        }
-
-        return loadOldTreeNode(element, null);
+        return loadOldTreeNode(document.getRootElement(), null);
     }
 
     /**
@@ -259,10 +257,9 @@ public class QTreeXMLHandler {
         String html;
         Element attributes;
         Element children;
-        List<Element> attributeNodes;
-        List<Element> childNodes;
+        Elements attributeNodes;
 
-        switch (element.getName()) {
+        switch (element.getLocalName()) {
             case TYPE_EXPERIMENT:
                 type = QTreeNode.Type.EXPERIMENT;
                 break;
@@ -273,7 +270,7 @@ public class QTreeXMLHandler {
                 type = QTreeNode.Type.QUESTION;
                 break;
             default:
-                System.err.println("Unknown node type: " + element.getName());
+                System.err.println("Unknown node type: " + element.getLocalName());
                 type = null;
         }
         name = element.getAttributeValue(ATTRIBUTE_NAME);
@@ -282,28 +279,35 @@ public class QTreeXMLHandler {
 
         node.setHtml(html);
 
-        attributes = element.getChild(TYPE_ATTRIBUTES);
-        children = element.getChild(TYPE_CHILDREN);
+        attributes = element.getFirstChildElement(TYPE_ATTRIBUTES);
+        children = element.getFirstChildElement(TYPE_CHILDREN);
 
         if (attributes != null) {
-            attributeNodes = attributes.getChildren(TYPE_ATTRIBUTE);
-            attributeNodes.forEach(attElement -> node.addAttribute(loadOldAttributeNode(attElement)));
+            attributeNodes = attributes.getChildElements(TYPE_ATTRIBUTE);
+
+            for (int i = 0; i < attributeNodes.size(); i++) {
+                node.addAttribute(loadOldAttributeNode(attributeNodes.get(i)));
+            }
         }
 
         if (children != null) {
+            Elements childElements = null;
 
-            childNodes = new LinkedList<>();
             switch (node.getType()) {
 
                 case EXPERIMENT:
-                    childNodes.addAll(children.getChildren(TYPE_CATEGORY));
+                    childElements = children.getChildElements(TYPE_CATEGORY);
                     break;
                 case CATEGORY:
-                    childNodes.addAll(children.getChildren(TYPE_QUESTION));
+                    childElements = children.getChildElements(TYPE_QUESTION);
                     break;
             }
 
-            childNodes.forEach(childElement -> node.addChild(loadOldTreeNode(childElement, node)));
+            if (childElements != null) {
+                for (int i = 0; i < childElements.size(); i++) {
+                    node.addChild(loadOldTreeNode(childElements.get(i), node));
+                }
+            }
         }
 
         return node;
@@ -320,16 +324,19 @@ public class QTreeXMLHandler {
     private static Attribute loadOldAttributeNode(Element element) {
         Attribute attribute;
         Element attributes;
-        List<Element> attributeNodes;
+        Elements attributeNodes;
         String key = element.getAttributeValue(ATTRIBUTE_NAME);
         String value = element.getAttributeValue(ATTRIBUTE_VALUE);
 
         attribute = new Attribute(key, value);
-        attributes = element.getChild(TYPE_ATTRIBUTES);
+        attributes = element.getFirstChildElement(TYPE_ATTRIBUTES);
 
         if (attributes != null) {
-            attributeNodes = attributes.getChildren(TYPE_ATTRIBUTE);
-            attributeNodes.forEach(attElement -> attribute.addSubAttribute(loadOldAttributeNode(attElement)));
+            attributeNodes = attributes.getChildElements(TYPE_ATTRIBUTE);
+
+            for (int i = 0; i < attributeNodes.size(); i++) {
+                attribute.addSubAttribute(loadOldAttributeNode(attributeNodes.get(i)));
+            }
         }
 
         return attribute;
