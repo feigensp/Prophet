@@ -2,15 +2,20 @@ package de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.phpExport
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.nio.file.Files;
+import java.io.InputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Date;
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
 
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.VerticalLayout;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.Setting;
@@ -26,22 +31,39 @@ public class PHPExportComponent extends Setting {
     private static byte[] constants = new byte[0];
     private static byte[] sql = new byte[0];
 
+    private static final String PHP_INDEX_PHP = "/php/index.php";
+    private static final String PHP_ADDEXPERIMENT_PHP = "/php/addexperiment.php";
+    private static final String PHP_CONSTANTS_PHP = "/php/constants.php";
+    private static final String PHP_PREPARATION_SQL = "/php/preparation.sql";
+
     static {
-        File file;
-        try {
-            file = new File(PHPExportComponent.class.getResource("/php/index.php").toURI());
-            index = Files.readAllBytes(file.toPath());
 
-            file = new File(PHPExportComponent.class.getResource("/php/addexperiment.php").toURI());
-            addexperiment = Files.readAllBytes(file.toPath());
+        try (InputStream is = PHPExportComponent.class.getResourceAsStream(PHP_INDEX_PHP)) {
+            index = readAllBytes(is);
+        } catch (IOException e) {
+            System.err.println("Could not read " + PHP_INDEX_PHP);
+            System.err.println(e.getMessage());
+        }
 
-            file = new File(PHPExportComponent.class.getResource("/php/constants.php").toURI());
-            constants = Files.readAllBytes(file.toPath());
+        try (InputStream is = PHPExportComponent.class.getResourceAsStream(PHP_ADDEXPERIMENT_PHP)) {
+            addexperiment = readAllBytes(is);
+        } catch (IOException e) {
+            System.err.println("Could not read " + PHP_ADDEXPERIMENT_PHP);
+            System.err.println(e.getMessage());
+        }
 
-            file = new File(PHPExportComponent.class.getResource("/php/preparation.sql").toURI());
-            sql = Files.readAllBytes(file.toPath());
-        } catch (URISyntaxException | IOException e) {
-            System.err.println("Error while reading php and sql resources for PHP Export: " + e.getMessage());
+        try (InputStream is = PHPExportComponent.class.getResourceAsStream(PHP_CONSTANTS_PHP)) {
+            constants = readAllBytes(is);
+        } catch (IOException e) {
+            System.err.println("Could not read " + PHP_CONSTANTS_PHP);
+            System.err.println(e.getMessage());
+        }
+
+        try (InputStream is = PHPExportComponent.class.getResourceAsStream(PHP_PREPARATION_SQL)) {
+            sql = readAllBytes(is);
+        } catch (IOException e) {
+            System.err.println("Could not read " + PHP_PREPARATION_SQL);
+            System.err.println(e.getMessage());
         }
     }
 
@@ -131,15 +153,43 @@ public class PHPExportComponent extends Setting {
         });
     }
 
+    /**
+     * Reads all available bytes from the given <code>InputStream</code> and returns them as a <code>byte[]</code>.
+     *
+     * @param inputStream
+     *         the <code>InputStream</code> to read from
+     *
+     * @return the read bytes as an array
+     *
+     * @throws IOException
+     *         if an <code>IOException</code> occurs reading from the <code>InputStream</code>
+     */
+    private static byte[] readAllBytes(InputStream inputStream) throws IOException {
+        ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
+
+        int numRead;
+        byte[] buffer = new byte[1024 * 32];
+
+        while ((numRead = inputStream.read(buffer, 0, buffer.length)) != -1) {
+            byteOut.write(buffer, 0, numRead);
+        }
+        byteOut.flush();
+
+        return byteOut.toByteArray();
+    }
+
     @Override
     public void setCaption(String caption) {
+
     }
 
     @Override
     public void loadValue() {
+
     }
 
     @Override
     public void saveValue() {
+
     }
 }

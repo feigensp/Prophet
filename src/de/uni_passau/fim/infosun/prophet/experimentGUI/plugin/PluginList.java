@@ -11,6 +11,7 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.ExternalPr
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.InactivityPlugin;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.MailPlugin;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.MaxTimePlugin;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.PHPExportPlugin;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.QuestionListPlugin;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.ValidSubjectCodePlugin;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode;
@@ -37,7 +38,7 @@ public class PluginList {
         add(new MaxTimePlugin());
         add(new ExternalProgramsPlugin());
         add(new AnswerRequiredPlugin());
-//        add(new PHPExportPlugin());
+        add(new PHPExportPlugin());
     }
 
     /**
