@@ -1,6 +1,13 @@
 package de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Queue;
 
 /**
  * A tree where nodes contain data (name and type of the node, HTML content) to be displayed by the
@@ -224,7 +231,7 @@ public class QTreeNode implements Cloneable {
     }
 
     /**
-     * Returns the tree under this node in preorder.
+     * Returns the sub-tree with this node as root in preorder.
      *
      * @return the subtree in preorder
      */
@@ -335,6 +342,15 @@ public class QTreeNode implements Cloneable {
      */
     public List<QTreeNode> getChildren() {
         return children;
+    }
+
+    /**
+     * Returns whether this node is the last child of its parent. Returns <code>false</code> for a node without parent.
+     *
+     * @return whether this node is the last child of its parent
+     */
+    public boolean isLastChild() {
+        return getParent() != null && getParent().getIndexOfChild(this) == getParent().getChildCount() - 1;
     }
 
     /**

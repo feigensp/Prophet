@@ -197,10 +197,6 @@ public class EViewer extends JFrame {
             }
 
             newViewNode = experiment.get(newIndex);
-            if (newViewNode.isEntered()) {
-                PluginList.exitNode(newViewNode.getTreeNode());
-            }
-
             doNotShow = Boolean.parseBoolean(newViewNode.getTreeNode().getAttribute(KEY_DONOTSHOWCONTENT).getValue());
         } while (doNotShow || PluginList.denyEnterNode(newViewNode.getTreeNode()));
 
@@ -238,10 +234,6 @@ public class EViewer extends JFrame {
             }
 
             newViewNode = experiment.get(newIndex);
-            if (newViewNode.isEntered()) {
-                PluginList.exitNode(newViewNode.getTreeNode());
-            }
-
             doNotShow = Boolean.parseBoolean(newViewNode.getTreeNode().getAttribute(KEY_DONOTSHOWCONTENT).getValue());
         } while (doNotShow || PluginList.denyEnterNode(newViewNode.getTreeNode()));
 
@@ -278,7 +270,14 @@ public class EViewer extends JFrame {
         remove(oldNode.getViewPane());
         add(newNode.getViewPane(), BorderLayout.CENTER);
 
-        PluginList.exitNode(oldNode.getTreeNode());
+        QTreeNode exitNode = oldNode.getTreeNode();
+        PluginList.exitNode(exitNode);
+
+        while (exitNode.isLastChild()) {
+            PluginList.exitNode(exitNode.getParent());
+            exitNode = exitNode.getParent();
+        }
+
         PluginList.enterNode(newNode.getTreeNode());
         currentIndex = newIndex;
 
