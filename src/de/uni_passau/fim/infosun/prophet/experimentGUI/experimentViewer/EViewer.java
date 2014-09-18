@@ -156,32 +156,28 @@ public class EViewer extends JFrame {
     }
 
     /**
-     * Tries to advance to the next node of the experiment. If this leads to exiting the last visitable node the
-     * experiment will end. Since plugins may disallow exiting the current node or entering other nodes this method
-     * may not advance at all or skip nodes.
+     * Advances from one node to the next visitable node in the given direction.
      *
      * @param saveAnswers whether to save answers of the current node before advancing
      * @param ignoreDeny whether to ignore plugins denying exiting the current node
+     * @param forward true for forward, false for backwards
      */
-    public void nextNode(boolean saveAnswers, boolean ignoreDeny) {
-        ViewNode currentViewNode = experiment.get(currentIndex);
-        QTreeNode currentNode = currentViewNode.getTreeNode();
-        ViewNode newViewNode;
-        String message;
-        int newIndex = currentIndex;
-        boolean doNotShow;
+    private void advance(boolean saveAnswers, boolean ignoreDeny, boolean forward) {
+        QuestionViewPane currentViewNode = experiment.get(currentIndex).getViewPane();
+        QTreeNode currentNode = experiment.get(currentIndex).getTreeNode();
 
         if (saveAnswers) {
-            currentViewNode.getViewPane().clickSubmit(false);
+            currentViewNode.clickSubmit(false);
         }
 
+        String message;
         if (!ignoreDeny && (message = PluginList.denyNextNode(currentNode)) != null) {
             JOptionPane.showMessageDialog(this, message, null, INFORMATION_MESSAGE);
             return;
         }
 
-        // make sure that a subject code was entered before leaving the first node
-        if (currentNode.getType() == QTreeNode.Type.EXPERIMENT && currentNode.equals(expTreeRoot)) {
+        // make sure that a subject code was entered before leaving the first node forward
+        if (forward && currentNode.getType() == QTreeNode.Type.EXPERIMENT && currentNode.equals(expTreeRoot)) {
             String[] answers = currentNode.getAnswers(KEY_SUBJECT);
 
             if (answers == null || answers.length < 1) {
@@ -190,10 +186,20 @@ public class EViewer extends JFrame {
             }
         }
 
+        ViewNode newViewNode;
+        boolean doNotShow;
+        int newIndex = currentIndex;
+
         do {
-            if (++newIndex >= experiment.size()) {
-                endExperiment();
-                return;
+            if (forward) {
+                if (++newIndex >= experiment.size()) {
+                    endExperiment();
+                    return;
+                }
+            } else {
+                if (--newIndex <= 0) {
+                    return;
+                }
             }
 
             newViewNode = experiment.get(newIndex);
@@ -201,6 +207,18 @@ public class EViewer extends JFrame {
         } while (doNotShow || PluginList.denyEnterNode(newViewNode.getTreeNode()));
 
         switchNode(newIndex);
+    }
+
+    /**
+     * Tries to advance to the next node of the experiment. If this leads to exiting the last visitable node the
+     * experiment will end. Since plugins may disallow exiting the current node or entering other nodes this method
+     * may not advance at all or skip nodes.
+     *
+     * @param saveAnswers whether to save answers of the current node before advancing
+     * @param ignoreDeny whether to ignore plugins denying exiting the current node
+     */
+    public void nextNode(boolean saveAnswers, boolean ignoreDeny) {
+        advance(saveAnswers, ignoreDeny, true);
     }
 
     /**
@@ -212,32 +230,7 @@ public class EViewer extends JFrame {
      * @param ignoreDeny whether to ignore plugins denying exiting the current node
      */
     public void previousNode(boolean saveAnswers, boolean ignoreDeny) {
-        ViewNode currentViewNode = experiment.get(currentIndex);
-        QTreeNode currentNode = currentViewNode.getTreeNode();
-        ViewNode newViewNode;
-        String message;
-        int newIndex = currentIndex;
-        boolean doNotShow;
-
-        if (saveAnswers) {
-            currentViewNode.getViewPane().clickSubmit(false);
-        }
-
-        if (!ignoreDeny && (message = PluginList.denyNextNode(currentNode)) != null) {
-            JOptionPane.showMessageDialog(this, message, null, INFORMATION_MESSAGE);
-            return;
-        }
-
-        do {
-            if (--newIndex <= 0) {
-                return;
-            }
-
-            newViewNode = experiment.get(newIndex);
-            doNotShow = Boolean.parseBoolean(newViewNode.getTreeNode().getAttribute(KEY_DONOTSHOWCONTENT).getValue());
-        } while (doNotShow || PluginList.denyEnterNode(newViewNode.getTreeNode()));
-
-        switchNode(newIndex);
+        advance(saveAnswers, ignoreDeny, false);
     }
 
     /**
@@ -291,9 +284,14 @@ public class EViewer extends JFrame {
      */
     private void endExperiment() {
         experiment.get(0).getStopwatch().pause();
-        experiment.get(currentIndex).getStopwatch().pause();
+        ViewNode currentNode = experiment.get(currentIndex);
+        QTreeNode exitNode = currentNode.getTreeNode();
 
-        String message = "<html><p>" + getLocalized("EVIEWER_EXPERIMENT_FINISHED") + "</p></html>";
+        currentNode.getStopwatch().pause();
+        do {
+            PluginList.exitNode(exitNode);
+            exitNode = exitNode.getParent();
+        } while (exitNode != null);
 
         try {
             QTreeXMLHandler.saveAnswerXML(expTreeRoot, new File(getSaveDir(), FILE_ANSWERS));
@@ -301,6 +299,7 @@ public class EViewer extends JFrame {
             System.err.println("Could not save the answers.xml. " + e);
         }
 
+        String message = "<html><p>" + getLocalized("EVIEWER_EXPERIMENT_FINISHED") + "</p></html>";
         message += PluginList.finishExperiment();
 
         setEnabled(false);
