@@ -1,6 +1,10 @@
 package de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.questionListPlugin;
 
+import java.awt.Component;
+import javax.swing.Icon;
 import javax.swing.JTree;
+import javax.swing.tree.DefaultTreeCellRenderer;
+import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreePath;
 
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeModel;
@@ -12,6 +16,27 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode;
 public class QuestionList extends JTree {
 
     /**
+     * A <code>TreeCellRenderer</code> that uses a circle as an icon for all cells and enables them regardless of
+     * whether the tree is enabled.
+     */
+    TreeCellRenderer renderer = new DefaultTreeCellRenderer() {
+
+        Icon icon = new ListIcon(ListIcon.CIRCLE);
+
+        @Override
+        public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded,
+                boolean leaf, int row, boolean hasFocus) {
+
+            super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
+
+            setIcon(icon);
+            setEnabled(true);
+
+            return this;
+        }
+    };
+
+    /**
      * Constructs a new <code>QuestionList</code> displaying the experiment tree with the given <code>root</code>.
      *
      * @param root
@@ -21,11 +46,13 @@ public class QuestionList extends JTree {
         super(new QTreeModel(root));
 
         setEnabled(false);
-        setCellRenderer(new SimpleTreeCellRenderer());
+        setCellRenderer(renderer);
 
         for (int i = 0; i < getRowCount(); i++) {
             expandRow(i);
         }
+
+        setSelectionPath(root);
     }
 
     /**
