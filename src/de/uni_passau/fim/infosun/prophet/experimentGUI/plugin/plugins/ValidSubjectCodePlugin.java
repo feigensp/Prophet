@@ -21,7 +21,7 @@ import static de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNo
 
 /**
  * Plugin that is used to check the subject code the user input against a list of valid codes.
- * Will only allow advancing past the first node of the experiment of the code matches one of the valid codes.
+ * Will only allow advancing past the first node of the experiment if the code matches one of the valid codes.
  */
 public class ValidSubjectCodePlugin implements Plugin {
 
