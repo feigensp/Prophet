@@ -1,6 +1,7 @@
 package de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins;
 
 import java.awt.BorderLayout;
+import javax.swing.JScrollPane;
 
 import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentViewer.EViewer;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.Plugin;
@@ -19,8 +20,7 @@ public class QuestionListPlugin implements Plugin {
 
     private final static String KEY = "question_list";
 
-    private QuestionList overview;
-    private boolean enabled;
+    private QuestionList questionList;
 
     @Override
     public Setting getSetting(QTreeNode node) {
@@ -38,11 +38,11 @@ public class QuestionListPlugin implements Plugin {
     @Override
     public void experimentViewerRun(EViewer experimentViewer) {
         QTreeNode experimentNode = experimentViewer.getExperimentTree();
-        enabled = Boolean.parseBoolean(experimentNode.getAttribute(KEY).getValue());
+        boolean enabled = Boolean.parseBoolean(experimentNode.getAttribute(KEY).getValue());
 
         if (enabled) {
-            overview = new QuestionList(experimentNode);
-            experimentViewer.add(overview, BorderLayout.WEST);
+            questionList = new QuestionList(experimentNode);
+            experimentViewer.add(new JScrollPane(questionList), BorderLayout.WEST);
         }
     }
 
@@ -53,8 +53,8 @@ public class QuestionListPlugin implements Plugin {
 
     @Override
     public void enterNode(QTreeNode node) {
-        if (enabled) {
-            overview.visit(node);
+        if (questionList != null) {
+            questionList.setSelectionPath(node);
         }
     }
 
