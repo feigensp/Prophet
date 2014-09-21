@@ -17,13 +17,7 @@ import java.util.function.IntFunction;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-import javax.swing.WindowConstants;
+import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.PluginList;
@@ -139,6 +133,7 @@ public class EViewer extends JFrame {
         });
 
         PluginList.experimentViewerRun(this);
+        PluginList.enterNode(expNode.getTreeNode());
 
         pack();
         setLocationRelativeTo(null);
