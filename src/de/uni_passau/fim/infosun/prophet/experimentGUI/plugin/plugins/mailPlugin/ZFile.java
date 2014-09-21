@@ -1,9 +1,10 @@
 package de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.mailPlugin;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.net.URI;
-import java.nio.ByteBuffer;
-import java.nio.channels.FileChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Optional;
@@ -214,7 +215,7 @@ public class ZFile extends File {
 
                     try {
                         zipOut.putNextEntry(new ZipEntry(name));
-                        copy(path.toFile(), zipOut);
+                        Files.copy(path, zipOut);
                         zipOut.closeEntry();
                     } catch (IOException e) {
                         System.err.println("Could not zip the file " + path);
@@ -235,39 +236,6 @@ public class ZFile extends File {
         }
 
         return Optional.of(archiveFile);
-    }
-
-    /**
-     * Copies the given <code>File</code> to the <code>OutputStream</code>. Does nothing for directories.
-     *
-     * @param file
-     *         the <code>File</code> to be copied
-     * @param outputStream
-     *         the <code>OutputStream</code> to be copied to
-     */
-    private void copy(File file, OutputStream outputStream) {
-        ByteBuffer byteBuffer;
-        FileChannel channel;
-        byte[] buffer;
-        int numRead;
-
-        if (file.isDirectory()) {
-            return;
-        }
-
-        try (FileInputStream fis = new FileInputStream(file)) {
-            channel = fis.getChannel();
-            buffer = new byte[256 * 1024];
-            byteBuffer = ByteBuffer.wrap(buffer);
-
-            while ((numRead = channel.read(byteBuffer)) != -1) {
-                outputStream.write(buffer, 0, numRead);
-                byteBuffer.clear();
-            }
-        } catch (IOException e) {
-            System.err.println("Could not copy " + file.getAbsolutePath() + " to the given OutputStream.");
-            System.err.println(e.getClass().getSimpleName() + ":" + e.getMessage());
-        }
     }
 
     /**
