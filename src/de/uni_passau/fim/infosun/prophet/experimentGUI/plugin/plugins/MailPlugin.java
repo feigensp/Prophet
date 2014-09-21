@@ -130,20 +130,21 @@ public class MailPlugin implements Plugin {
 
     @Override
     public void enterNode(QTreeNode node) {
-        try {
-            if (node.getType() == EXPERIMENT) {
-                enabled = Boolean.parseBoolean(node.getAttribute(KEY).getValue());
-                if (enabled) {
-                    Attribute attributes = node.getAttribute(KEY);
-                    smtpServer = attributes.getSubAttribute(SMTP_SERVER).getValue();
-                    smtpUser = attributes.getSubAttribute(SMTP_USER).getValue();
-                    smtpPass = SettingsPasswordField.decode(attributes.getSubAttribute(SMTP_PASS).getValue());
-                    smtpSender = attributes.getSubAttribute(SMTP_SENDER).getValue();
-                    smtpReceiver = attributes.getSubAttribute(SMTP_RECEIVER).getValue();
-                }
-            }
-        } catch (Exception ignored) {
 
+        if (node.getType() != EXPERIMENT) {
+            return;
+        }
+
+        enabled = Boolean.parseBoolean(node.getAttribute(KEY).getValue());
+
+        if (enabled) {
+            Attribute attributes = node.getAttribute(KEY);
+
+            smtpServer = attributes.getSubAttribute(SMTP_SERVER).getValue();
+            smtpUser = attributes.getSubAttribute(SMTP_USER).getValue();
+            smtpPass = SettingsPasswordField.decode(attributes.getSubAttribute(SMTP_PASS).getValue());
+            smtpSender = attributes.getSubAttribute(SMTP_SENDER).getValue();
+            smtpReceiver = attributes.getSubAttribute(SMTP_RECEIVER).getValue();
         }
     }
 
@@ -154,6 +155,7 @@ public class MailPlugin implements Plugin {
 
     @Override
     public void exitNode(QTreeNode node) {
+
     }
 
     @Override
