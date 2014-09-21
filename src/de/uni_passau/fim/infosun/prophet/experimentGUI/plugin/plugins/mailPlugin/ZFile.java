@@ -6,6 +6,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Optional;
 import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -141,22 +142,17 @@ public class ZFile extends File {
      * The archive will have the same name as this <code>File</code>.
      * This method will do nothing (except print a warning) for files without a parent.
      *
-     * @throws FileNotFoundException
-     *         if a file with the archive name<br>
-     *         <ul>
-     *             <li>exists but is a directory rather than a regular file</li>
-     *             <li>does not exist but cannot be created</li>
-     *             <li>cannot be opened for any other reason</li>
-     *         </ul>
+     * @return optionally the created archive <code>File</code>
      */
-    public void zip() throws FileNotFoundException {
+    public Optional<File> zip() {
         File parent = getParentFile();
 
         if (parent == null) {
             System.err.println("Aborting zip of " + getAbsolutePath());
             System.err.println("Could not find a parent directory to save the archive to. Use zip(toDirectory).");
+            return Optional.empty();
         } else {
-            zip(parent);
+            return zip(parent);
         }
     }
 
@@ -168,23 +164,13 @@ public class ZFile extends File {
      * @param toDirectory
      *         the directory to save the resulting archive in
      *
+     * @return optionally the created archive <code>File</code>
+     *
      * @throws IllegalArgumentException
      *         if <code>toDirectory</code> exists and is not a directory
-     * @throws FileNotFoundException
-     *         <ul>
-     *           <li>
-     *               if a file with the archive name<br>
-     *              <ul>
-     *               <li>exists but is a directory rather than a regular file</li>
-     *               <li>does not exist but cannot be created</li>
-     *               <li>cannot be opened for any other reason</li>
-     *              </ul>
-     *           </li>
-     *           <li>if toDirectory does not exist and can not be created</li>
-     *         </ul>
      */
-    public void zip(File toDirectory) throws FileNotFoundException {
-        zip(toDirectory, checkArchiveName(getName()));
+    public Optional<File> zip(File toDirectory) {
+        return zip(toDirectory, checkArchiveName(getName()));
     }
 
     /**
@@ -196,33 +182,31 @@ public class ZFile extends File {
      * @param withName
      *         the name for the archive (without extension)
      *
+     * @return optionally the created archive <code>File</code>
+     *
      * @throws IllegalArgumentException
      *         if <code>toDirectory</code> exists and is not a directory
-     * @throws FileNotFoundException
-     *         <ul>
-     *           <li>
-     *               if a file with the archive name<br>
-     *              <ul>
-     *               <li>exists but is a directory rather than a regular file</li>
-     *               <li>does not exist but cannot be created</li>
-     *               <li>cannot be opened for any other reason</li>
-     *              </ul>
-     *           </li>
-     *           <li>if toDirectory does not exist and can not be created</li>
-     *         </ul>
      */
-    public void zip(File toDirectory, String withName) throws FileNotFoundException {
+    public Optional<File> zip(File toDirectory, String withName) {
         String archiveName = checkArchiveName(withName);
+
+        if (!exists()) {
+            System.err.println(getAbsolutePath() + " does not exist and can therefore not be zipped.");
+            return Optional.empty();
+        }
 
         if (toDirectory.exists() && !toDirectory.isDirectory()) {
             throw new IllegalArgumentException("toDirectory exists and is not a directory.");
         }
 
         if (!toDirectory.exists() && !toDirectory.mkdirs()) {
-            throw new FileNotFoundException("Could not create the target directory " + toDirectory.getAbsolutePath());
+            System.err.println("Could not create the target directory " + toDirectory.getAbsolutePath());
+            return Optional.empty();
         }
 
-        try (ZipOutputStream zipOut = new ZipOutputStream(new FileOutputStream(new File(toDirectory, archiveName)))) {
+        File archiveFile = new File(toDirectory, archiveName);
+
+        try (ZipOutputStream zipOut = new ZipOutputStream(new FileOutputStream(archiveFile))) {
 
             try (Stream<Path> stream = Files.walk(toPath())) {
                 stream.forEach(path -> {
@@ -234,18 +218,23 @@ public class ZFile extends File {
                         zipOut.closeEntry();
                     } catch (IOException e) {
                         System.err.println("Could not zip the file " + path);
-                        System.err.println(e.getMessage());
+                        System.err.println(e.getClass().getSimpleName() + ":" + e.getMessage());
                     }
                 });
             } catch (IOException e) {
                 System.err.println("Could not walk the file tree under " + getAbsolutePath());
-                System.err.println(e.getMessage());
+                System.err.println(e.getClass().getSimpleName() + ":" + e.getMessage());
+                return Optional.empty();
             }
-        } catch (FileNotFoundException exception) {
-            throw exception;
+        } catch (FileNotFoundException e) {
+            System.err.println("Could not write the archive file " + archiveFile.getAbsolutePath());
+            System.err.println(e.getClass().getSimpleName() + ":" + e.getMessage());
+            return Optional.empty();
         } catch (IOException ignored) {
-            // may occur when closing the stream
+            // may occur when closing the ZipOutputStream
         }
+
+        return Optional.of(archiveFile);
     }
 
     /**
@@ -277,7 +266,7 @@ public class ZFile extends File {
             }
         } catch (IOException e) {
             System.err.println("Could not copy " + file.getAbsolutePath() + " to the given OutputStream.");
-            System.err.println(e.getMessage());
+            System.err.println(e.getClass().getSimpleName() + ":" + e.getMessage());
         }
     }
 
