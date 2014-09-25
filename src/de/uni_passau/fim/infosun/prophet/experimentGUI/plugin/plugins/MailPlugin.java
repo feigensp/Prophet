@@ -158,7 +158,7 @@ public class MailPlugin implements Plugin {
      * @param text
      *         the text for the EMail
      * @param attachmentFile
-     *         the attachement file or <code>null</code> for no attachment file
+     *         the attachment file or <code>null</code> for no attachment file
      *
      * @throws MessagingException
      *         if there is an error creating or sending the EMail
