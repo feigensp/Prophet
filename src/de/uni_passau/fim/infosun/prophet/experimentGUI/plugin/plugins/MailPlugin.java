@@ -174,33 +174,34 @@ public class MailPlugin implements Plugin {
         return null;
     }
 
-    static class MailAuthenticator extends Authenticator {
+    /**
+     * An <code>Authenticator</code> that can be initialized with a username and password and will henceforth
+     * return an instance of <code>PasswordAuthentication</code> containing that information.
+     */
+    private static class MailAuthenticator extends Authenticator {
 
-        private final String user;
-        private final String password;
+        private final PasswordAuthentication auth;
 
         /**
-         * Der Konstruktor erzeugt ein MailAuthenticator Objekt<br>
-         * aus den beiden Parametern user und passwort.
+         * Constructs a new <code>MailAuthenticator</code> that will provide a <code>PasswordAuthentication</code>
+         * containing the given username and password upon request.
          *
-         * @param user
-         *         String, der Username fuer den Mailaccount.
-         * @param password
-         *         String, das Passwort fuer den Mailaccount.
+         * @param userName the username for the authentication
+         * @param password the password for the authentication
          */
-        public MailAuthenticator(String user, String password) {
-            this.user = user;
-            this.password = password;
+        public MailAuthenticator(String userName, String password) {
+            auth = new PasswordAuthentication(userName, password);
         }
 
         /**
-         * Diese Methode gibt ein neues PasswortAuthentication Objekt zurueck.
+         * Returns the <code>PasswordAuthentication</code> constructed from the username and password this instance
+         * of <code>MailAuthenticator</code> was initialized with.
          *
-         * @see javax.mail.Authenticator#getPasswordAuthentication()
+         * @return the <code>PasswordAuthentication</code> containing the username and password
          */
         @Override
         protected PasswordAuthentication getPasswordAuthentication() {
-            return new PasswordAuthentication(this.user, this.password);
+            return auth;
         }
     }
 }
