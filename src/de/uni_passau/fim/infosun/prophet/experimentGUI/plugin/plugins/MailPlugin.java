@@ -25,6 +25,10 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.components.
 import static de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames.getLocalized;
 import static de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode.Type.EXPERIMENT;
 
+/**
+ * A <code>Plugin</code> that can send the folder that results from an experiment run (containing answers.xml and other
+ * files) as an attachment to a predefined Email address.
+ */
 public class MailPlugin implements Plugin {
 
     private final static String KEY = "sendmail";
@@ -41,7 +45,7 @@ public class MailPlugin implements Plugin {
     private String smtpSender;
     private String smtpReceiver;
 
-    EViewer experimentViewer;
+    private EViewer experimentViewer;
 
     public boolean sendMail(String subject, String text, File attachmentFile) {
         try {
