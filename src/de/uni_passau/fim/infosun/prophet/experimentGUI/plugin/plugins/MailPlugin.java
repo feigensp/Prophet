@@ -14,7 +14,7 @@ import javax.mail.internet.MimeMultipart;
 
 import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentViewer.EViewer;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.Plugin;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.mailPlugin.ZipFile;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.mailPlugin.ZFile;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.Attribute;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.PluginSettings;
@@ -46,42 +46,6 @@ public class MailPlugin implements Plugin {
     private String smtpReceiver;
 
     private EViewer experimentViewer;
-
-    public boolean sendMail(String subject, String text, File attachmentFile) {
-        try {
-            MailAuthenticator auth = new MailAuthenticator(smtpUser, smtpPass);
-            Properties properties = new Properties();
-            properties.put("mail.smtp.host", smtpServer);
-            properties.put("mail.smtp.auth", "true");
-
-            Session session = Session.getDefaultInstance(properties, auth);
-            Message msg = new MimeMessage(session);
-
-            MimeMultipart content = new MimeMultipart("alternative");
-            MimeBodyPart message = new MimeBodyPart();
-            message.setText(text);
-            message.setHeader("MIME-Version", "1.0" + "\n");
-            message.setHeader("Content-Type", message.getContentType());
-            content.addBodyPart(message);
-            if (attachmentFile != null) {
-                DataSource fileDataSource = new FileDataSource(attachmentFile);
-                BodyPart messageBodyPart = new MimeBodyPart();
-                messageBodyPart.setDataHandler(new DataHandler(fileDataSource));
-                messageBodyPart.setFileName(attachmentFile.getName());
-                content.addBodyPart(messageBodyPart);
-            }
-            msg.setContent(content);
-            msg.setSentDate(new Date());
-            msg.setFrom(new InternetAddress(smtpSender));
-            msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(smtpReceiver, false));
-            msg.setSubject(subject);
-            Transport.send(msg);
-            return true;
-        } catch (Exception e) {
-            //e.getMessage()
-            return false;
-        }
-    }
 
     @Override
     public Setting getSetting(QTreeNode node) {
@@ -164,18 +128,55 @@ public class MailPlugin implements Plugin {
 
     @Override
     public String finishExperiment() {
-        try {
-            if (enabled) {
-                File attachmentFile = new File(experimentViewer.getSaveDir().getName() + ".zip");
-                ZipFile.zipFiles(experimentViewer.getSaveDir(), attachmentFile);
-                if (!this.sendMail(experimentViewer.getSaveDir().getName(), "", attachmentFile)) {
-                    return getLocalized("MAIL_MESSAGE_COULD_NOT_SEND_MAIL");
-                }
+
+        if (enabled) {
+            ZFile attachment = new ZFile(experimentViewer.getSaveDir().toURI());
+            if (!sendMail(experimentViewer.getSaveDir().getName(), getMailText(), attachment.zip().orElse(null))) {
+                return getLocalized("MAIL_MESSAGE_COULD_NOT_SEND_MAIL");
             }
-        } catch (Exception e) {
-            return getLocalized("MAIL_MESSAGE_COULD_NOT_SEND_MAIL");
         }
+
         return null;
+    }
+
+    private String getMailText() {
+        return "";
+    }
+
+    private boolean sendMail(String subject, String text, File attachmentFile) {
+        try {
+            MailAuthenticator auth = new MailAuthenticator(smtpUser, smtpPass);
+            Properties properties = new Properties();
+            properties.put("mail.smtp.host", smtpServer);
+            properties.put("mail.smtp.auth", "true");
+
+            Session session = Session.getDefaultInstance(properties, auth);
+            Message msg = new MimeMessage(session);
+
+            MimeMultipart content = new MimeMultipart("alternative");
+            MimeBodyPart message = new MimeBodyPart();
+            message.setText(text);
+            message.setHeader("MIME-Version", "1.0" + "\n");
+            message.setHeader("Content-Type", message.getContentType());
+            content.addBodyPart(message);
+            if (attachmentFile != null) {
+                DataSource fileDataSource = new FileDataSource(attachmentFile);
+                BodyPart messageBodyPart = new MimeBodyPart();
+                messageBodyPart.setDataHandler(new DataHandler(fileDataSource));
+                messageBodyPart.setFileName(attachmentFile.getName());
+                content.addBodyPart(messageBodyPart);
+            }
+            msg.setContent(content);
+            msg.setSentDate(new Date());
+            msg.setFrom(new InternetAddress(smtpSender));
+            msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(smtpReceiver, false));
+            msg.setSubject(subject);
+            Transport.send(msg);
+            return true;
+        } catch (Exception e) {
+            //e.getMessage()
+            return false;
+        }
     }
 
     /**
