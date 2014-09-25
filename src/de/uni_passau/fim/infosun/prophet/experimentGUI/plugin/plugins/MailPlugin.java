@@ -131,7 +131,13 @@ public class MailPlugin implements Plugin {
 
         if (enabled) {
             ZFile attachment = new ZFile(experimentViewer.getSaveDir().toURI());
-            if (!sendMail(experimentViewer.getSaveDir().getName(), getMailText(), attachment.zip().orElse(null))) {
+
+            try {
+                sendEMail(experimentViewer.getSaveDir().getName(), getMailText(), attachment.zip().orElse(null));
+            } catch (MessagingException e) {
+                System.err.println("Could not send the EMail containing the zipped experiment results.");
+                System.err.println(e.getMessage());
+
                 return getLocalized("MAIL_MESSAGE_COULD_NOT_SEND_MAIL");
             }
         }
@@ -143,40 +149,53 @@ public class MailPlugin implements Plugin {
         return "";
     }
 
-    private boolean sendMail(String subject, String text, File attachmentFile) {
-        try {
-            MailAuthenticator auth = new MailAuthenticator(smtpUser, smtpPass);
-            Properties properties = new Properties();
-            properties.put("mail.smtp.host", smtpServer);
-            properties.put("mail.smtp.auth", "true");
+    /**
+     * Sends an EMail with the given <code>subject</code>, <code>text</code> and optionally an attachment file to
+     * the address configured via the <code>Plugin</code> settings.
+     *
+     * @param subject
+     *         the subject line for the EMail
+     * @param text
+     *         the text for the EMail
+     * @param attachmentFile
+     *         the attachement file or <code>null</code> for no attachment file
+     *
+     * @throws MessagingException
+     *         if there is an error creating or sending the EMail
+     */
+    private void sendEMail(String subject, String text, File attachmentFile) throws MessagingException {
+        MailAuthenticator auth = new MailAuthenticator(smtpUser, smtpPass);
+        Properties properties = new Properties();
 
-            Session session = Session.getDefaultInstance(properties, auth);
-            Message msg = new MimeMessage(session);
+        properties.put("mail.smtp.host", smtpServer);
+        properties.put("mail.smtp.auth", "true");
 
-            MimeMultipart content = new MimeMultipart("alternative");
-            MimeBodyPart message = new MimeBodyPart();
-            message.setText(text);
-            message.setHeader("MIME-Version", "1.0" + "\n");
-            message.setHeader("Content-Type", message.getContentType());
-            content.addBodyPart(message);
-            if (attachmentFile != null) {
-                DataSource fileDataSource = new FileDataSource(attachmentFile);
-                BodyPart messageBodyPart = new MimeBodyPart();
-                messageBodyPart.setDataHandler(new DataHandler(fileDataSource));
-                messageBodyPart.setFileName(attachmentFile.getName());
-                content.addBodyPart(messageBodyPart);
-            }
-            msg.setContent(content);
-            msg.setSentDate(new Date());
-            msg.setFrom(new InternetAddress(smtpSender));
-            msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(smtpReceiver, false));
-            msg.setSubject(subject);
-            Transport.send(msg);
-            return true;
-        } catch (Exception e) {
-            //e.getMessage()
-            return false;
+        Session session = Session.getDefaultInstance(properties, auth);
+        Message msg = new MimeMessage(session);
+
+        MimeMultipart content = new MimeMultipart("alternative");
+        MimeBodyPart message = new MimeBodyPart();
+
+        message.setText(text);
+        message.setHeader("MIME-Version", "1.0" + "\n");
+        message.setHeader("Content-Type", message.getContentType());
+        content.addBodyPart(message);
+
+        if (attachmentFile != null) {
+            DataSource fileDataSource = new FileDataSource(attachmentFile);
+            BodyPart messageBodyPart = new MimeBodyPart();
+            messageBodyPart.setDataHandler(new DataHandler(fileDataSource));
+            messageBodyPart.setFileName(attachmentFile.getName());
+            content.addBodyPart(messageBodyPart);
         }
+
+        msg.setContent(content);
+        msg.setSentDate(new Date());
+        msg.setFrom(new InternetAddress(smtpSender));
+        msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(smtpReceiver, false));
+        msg.setSubject(subject);
+
+        Transport.send(msg);
     }
 
     /**
