@@ -6,7 +6,12 @@ package de.uni_passau.fim.infosun.prophet.experimentGUI;
  * @author Andreas Hasselberg
  * @author Markus Köppen
  */
-public class Constants {
+public final class Constants {
+
+    /**
+     * Utility class.
+     */
+    private Constants() {}
 
     /**
      * File name of the experiment file opened automatically when program starts

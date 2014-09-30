@@ -29,7 +29,7 @@ import org.xml.sax.SAXException;
  * <li>Saving the root node and all children/attributes to a file</li>
  * </ul>
  */
-public class QTreeXMLHandler {
+public final class QTreeXMLHandler {
 
     private static final XStream saveLoadStream;
     private static final XStream answerStream;
@@ -80,6 +80,11 @@ public class QTreeXMLHandler {
             System.err.println("Could not create a Validator for the XML format.");
         }
     }
+
+    /**
+     * Utility class.
+     */
+    private QTreeXMLHandler() {}
 
     /**
      * Saves the given <code>QTreeNode</code> (and thereby the whole tree under it) to the given file using
