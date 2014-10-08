@@ -104,7 +104,9 @@ public final class QTreeXMLHandler {
         Objects.requireNonNull(saveFile, "saveFile must not be null!");
 
         checkParent(saveFile);
-        answerStream.toXML(root, new FileWriter(saveFile));
+        try (FileWriter out = new FileWriter(saveFile);) {
+            answerStream.toXML(root, out);
+        }
     }
 
     /**
@@ -183,7 +185,9 @@ public final class QTreeXMLHandler {
         Objects.requireNonNull(saveFile, "saveFile must not be null!");
 
         checkParent(saveFile);
-        saveLoadStream.toXML(root, new FileWriter(saveFile));
+        try (FileWriter out = new FileWriter(saveFile)) {
+            saveLoadStream.toXML(root, out);
+        }
     }
 
     /**
