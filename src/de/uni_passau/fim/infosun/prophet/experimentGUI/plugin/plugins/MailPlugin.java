@@ -6,11 +6,18 @@ import java.util.Properties;
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.activation.FileDataSource;
-import javax.mail.*;
+import javax.mail.Authenticator;
+import javax.mail.BodyPart;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+import javax.swing.SpinnerNumberModel;
 
 import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentViewer.EViewer;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.Plugin;
@@ -19,7 +26,9 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.Attribute;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.PluginSettings;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.Setting;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.components.SettingsComboBox;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.components.SettingsPasswordField;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.components.SettingsSpinner;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.components.SettingsTextField;
 
 import static de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames.getLocalized;
@@ -37,6 +46,12 @@ public class MailPlugin implements Plugin {
     private final static String SMTP_PASS = "smtp_pass";
     private final static String SMTP_SENDER = "smtp_sender";
     private final static String SMTP_RECEIVER = "smtp_receiver";
+    private final static String SMTP_SERVER_PORT = "smtp_server_port";
+    private final static String SMTP_SERVER_SEC = "smtp_server_sec";
+
+    private final static String SEC_NONE = "-";
+    private final static String SEC_STARTTLS = "STARTTLS";
+    private final static String SEC_SSL_TLS = "SSL/TLS";
 
     private boolean enabled;
     private String smtpServer;
@@ -44,6 +59,8 @@ public class MailPlugin implements Plugin {
     private String smtpPass;
     private String smtpSender;
     private String smtpReceiver;
+    private String smtpSec;
+    private int smtpPort;
 
     private EViewer experimentViewer;
 
@@ -58,9 +75,29 @@ public class MailPlugin implements Plugin {
         PluginSettings pluginSettings = new PluginSettings(mainAttribute, getClass().getSimpleName(), true);
         pluginSettings.setCaption(getLocalized("MAIL_SEND_MAIL"));
 
-        Attribute subAttribute = mainAttribute.getSubAttribute(SMTP_SERVER);
+        Attribute subAttribute = mainAttribute.getSubAttribute(SMTP_SENDER);
         Setting subSetting = new SettingsTextField(subAttribute, null);
+        subSetting.setCaption(getLocalized("MAIL_SMTP_SENDER") + ":");
+        pluginSettings.addSetting(subSetting);
+
+        subAttribute = mainAttribute.getSubAttribute(SMTP_RECEIVER);
+        subSetting = new SettingsTextField(subAttribute, null);
+        subSetting.setCaption(getLocalized("MAIL_SMTP_RECIPIENT") + ":");
+        pluginSettings.addSetting(subSetting);
+
+        subAttribute = mainAttribute.getSubAttribute(SMTP_SERVER);
+        subSetting = new SettingsTextField(subAttribute, null);
         subSetting.setCaption(getLocalized("MAIL_SMTP_SERVER") + ":");
+        pluginSettings.addSetting(subSetting);
+
+        subAttribute = mainAttribute.getSubAttribute(SMTP_SERVER_PORT);
+        subSetting = new SettingsSpinner(subAttribute, null, new SpinnerNumberModel(587, 0, 65535, 1));
+        subSetting.setCaption(getLocalized("MAIL_SMTP_SERVER_PORT") + ":");
+        pluginSettings.addSetting(subSetting);
+
+        subAttribute = mainAttribute.getSubAttribute(SMTP_SERVER_SEC);
+        subSetting = new SettingsComboBox(subAttribute, null, SEC_NONE, SEC_STARTTLS, SEC_SSL_TLS);
+        subSetting.setCaption(getLocalized("MAIL_SMTP_SECURITY") + ":");
         pluginSettings.addSetting(subSetting);
 
         subAttribute = mainAttribute.getSubAttribute(SMTP_USER);
@@ -71,16 +108,6 @@ public class MailPlugin implements Plugin {
         subAttribute = mainAttribute.getSubAttribute(SMTP_PASS);
         subSetting = new SettingsPasswordField(subAttribute, null);
         subSetting.setCaption(getLocalized("MAIL_SMTP_PASSWORD") + ":");
-        pluginSettings.addSetting(subSetting);
-
-        subAttribute = mainAttribute.getSubAttribute(SMTP_SENDER);
-        subSetting = new SettingsTextField(subAttribute, null);
-        subSetting.setCaption(getLocalized("MAIL_SMTP_SENDER") + ":");
-        pluginSettings.addSetting(subSetting);
-
-        subAttribute = mainAttribute.getSubAttribute(SMTP_RECEIVER);
-        subSetting = new SettingsTextField(subAttribute, null);
-        subSetting.setCaption(getLocalized("MAIL_SMTP_RECIPIENT") + ":");
         pluginSettings.addSetting(subSetting);
 
         return pluginSettings;
@@ -113,6 +140,8 @@ public class MailPlugin implements Plugin {
             smtpPass = SettingsPasswordField.decode(attributes.getSubAttribute(SMTP_PASS).getValue());
             smtpSender = attributes.getSubAttribute(SMTP_SENDER).getValue();
             smtpReceiver = attributes.getSubAttribute(SMTP_RECEIVER).getValue();
+            smtpSec = attributes.getSubAttribute(SMTP_SERVER_SEC).getValue();
+            smtpPort = Integer.parseInt(attributes.getSubAttribute(SMTP_SERVER_PORT).getValue());
         }
     }
 
@@ -168,34 +197,44 @@ public class MailPlugin implements Plugin {
         Properties properties = new Properties();
 
         properties.put("mail.smtp.host", smtpServer);
-        properties.put("mail.smtp.auth", "true");
+        properties.put("mail.smtp.port", String.valueOf(smtpPort));
+
+        if (smtpSec.equals(SEC_STARTTLS) || smtpSec.equals(SEC_SSL_TLS)) {
+            properties.put("mail.smtp.starttls.enable","true");
+            properties.put("mail.smtp.auth", "true");  // If you need to authenticate
+        }
+
+        if (smtpSec.equals(SEC_SSL_TLS)) {
+            properties.put("mail.smtp.socketFactory.port", String.valueOf(smtpPort));
+            properties.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+            properties.put("mail.smtp.socketFactory.fallback", "false");
+        }
 
         Session session = Session.getDefaultInstance(properties, auth);
-        Message msg = new MimeMessage(session);
+        Message message = new MimeMessage(session);
 
-        MimeMultipart content = new MimeMultipart("alternative");
-        MimeBodyPart message = new MimeBodyPart();
+        MimeMultipart content = new MimeMultipart();
+        MimeBodyPart textPart = new MimeBodyPart();
 
-        message.setText(text);
-        message.setHeader("MIME-Version", "1.0" + "\n");
-        message.setHeader("Content-Type", message.getContentType());
-        content.addBodyPart(message);
+        textPart.setText(text);
+        content.addBodyPart(textPart);
 
         if (attachmentFile != null) {
             DataSource fileDataSource = new FileDataSource(attachmentFile);
-            BodyPart messageBodyPart = new MimeBodyPart();
-            messageBodyPart.setDataHandler(new DataHandler(fileDataSource));
-            messageBodyPart.setFileName(attachmentFile.getName());
-            content.addBodyPart(messageBodyPart);
+            BodyPart attachmentPart = new MimeBodyPart();
+
+            attachmentPart.setDataHandler(new DataHandler(fileDataSource));
+            attachmentPart.setFileName(attachmentFile.getName());
+            content.addBodyPart(attachmentPart);
         }
 
-        msg.setContent(content);
-        msg.setSentDate(new Date());
-        msg.setFrom(new InternetAddress(smtpSender));
-        msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(smtpReceiver, false));
-        msg.setSubject(subject);
+        message.setContent(content);
+        message.setSentDate(new Date());
+        message.setFrom(new InternetAddress(smtpSender));
+        message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(smtpReceiver, false));
+        message.setSubject(subject);
 
-        Transport.send(msg);
+        Transport.send(message);
     }
 
     /**
