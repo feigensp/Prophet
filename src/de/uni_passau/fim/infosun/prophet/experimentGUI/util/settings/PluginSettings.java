@@ -4,10 +4,10 @@ import java.awt.BorderLayout;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import javax.swing.BoxLayout;
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.VerticalLayout;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.Attribute;
 
 /**
@@ -34,7 +34,7 @@ public class PluginSettings extends Setting {
         settingsList = new LinkedList<>();
 
         settingsPanel = new JPanel();
-        settingsPanel.setLayout(new VerticalLayout(5, VerticalLayout.LEFT, VerticalLayout.TOP));
+        settingsPanel.setLayout(new BoxLayout(settingsPanel, BoxLayout.Y_AXIS));
         add(settingsPanel, BorderLayout.CENTER);
 
         if (enableable) {

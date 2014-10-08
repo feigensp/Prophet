@@ -1,8 +1,9 @@
 package de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.components;
 
-import java.awt.FlowLayout;
 import java.text.NumberFormat;
 import java.text.ParseException;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
@@ -10,6 +11,9 @@ import javax.swing.SpinnerNumberModel;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.Attribute;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.Setting;
 
+/**
+ * A <code>Setting</code> that uses a <code>JSpinner</code> to set a number value.
+ */
 public class SettingsSpinner extends Setting {
 
     private JLabel caption;
@@ -32,8 +36,9 @@ public class SettingsSpinner extends Setting {
         caption = new JLabel();
         spinner = new JSpinner(model);
 
-        setLayout(new FlowLayout());
+        setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
         add(caption);
+        add(Box.createHorizontalGlue());
         add(spinner);
     }
 
@@ -44,15 +49,26 @@ public class SettingsSpinner extends Setting {
 
     @Override
     public void loadValue() {
-        Number value;
+        String key = attribute.getKey();
+        String value = attribute.getValue();
+        Number numberValue;
 
-        try {
-            value = NumberFormat.getInstance().parse(attribute.getValue());
-        } catch (ParseException e) {
-            value = 0;
+        if (value.isEmpty()) {
+            return;
         }
 
-        spinner.setValue(value);
+        try {
+            NumberFormat numberFormat = NumberFormat.getInstance();
+
+            if (numberFormat != null) {
+                numberValue = numberFormat.parse(value);
+                spinner.setValue(numberValue);
+            } else {
+                System.err.println("Could not get a NumberFormat instance to parse the value for " + key);
+            }
+        } catch (ParseException e) {
+            System.err.printf("Could not parse value \"%s\" for %s to a Number. Setting it to 0.%n", value, key);
+        }
     }
 
     @Override
