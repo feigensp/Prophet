@@ -1,7 +1,9 @@
 package de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Properties;
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
@@ -22,6 +24,7 @@ import javax.swing.SpinnerNumberModel;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentViewer.EViewer;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.Plugin;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.mailPlugin.ZFile;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.Pair;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.Attribute;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.PluginSettings;
@@ -95,8 +98,13 @@ public class MailPlugin implements Plugin {
         subSetting.setCaption(getLocalized("MAIL_SMTP_SERVER_PORT") + ":");
         pluginSettings.addSetting(subSetting);
 
+        List<Pair<String, String>> items = new ArrayList<>();
+        items.add(new Pair<>(SEC_NONE, SEC_NONE));
+        items.add(new Pair<>(SEC_STARTTLS, SEC_STARTTLS));
+        items.add(new Pair<>(SEC_SSL_TLS, SEC_SSL_TLS));
+
         subAttribute = mainAttribute.getSubAttribute(SMTP_SERVER_SEC);
-        subSetting = new SettingsComboBox(subAttribute, null, SEC_NONE, SEC_STARTTLS, SEC_SSL_TLS);
+        subSetting = new SettingsComboBox(subAttribute, null, items);
         subSetting.setCaption(getLocalized("MAIL_SMTP_SECURITY") + ":");
         pluginSettings.addSetting(subSetting);
 
