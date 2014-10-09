@@ -13,7 +13,12 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
-import javax.swing.*;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JSplitPane;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.WindowConstants;
 import javax.swing.plaf.basic.BasicSplitPaneDivider;
 
 import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentEditor.tabbedPane.ExperimentEditorTabbedPane;
@@ -154,8 +159,8 @@ public class ExperimentEditor extends JFrame {
         Object selectedLanguage;
         Object[] values;
 
-        languages.put("German", Locale.forLanguageTag("de"));
-        languages.put("English", Locale.forLanguageTag("en"));
+        languages.put("German", Locale.GERMAN);
+        languages.put("English", Locale.ENGLISH);
 
         values = languages.keySet().toArray();
         selectedLanguage = JOptionPane.showInputDialog(null, message, title, JOptionPane.INFORMATION_MESSAGE, null,
