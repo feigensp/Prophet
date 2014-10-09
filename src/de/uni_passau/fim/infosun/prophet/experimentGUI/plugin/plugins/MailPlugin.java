@@ -198,10 +198,10 @@ public class MailPlugin implements Plugin {
 
         properties.put("mail.smtp.host", smtpServer);
         properties.put("mail.smtp.port", String.valueOf(smtpPort));
+        properties.put("mail.smtp.auth", "true");
 
         if (smtpSec.equals(SEC_STARTTLS) || smtpSec.equals(SEC_SSL_TLS)) {
             properties.put("mail.smtp.starttls.enable","true");
-            properties.put("mail.smtp.auth", "true");  // If you need to authenticate
         }
 
         if (smtpSec.equals(SEC_SSL_TLS)) {
