@@ -21,7 +21,7 @@ public class StopwatchLabel extends JLabel {
     private final String caption;
     private final Timer timer;
 
-    // nanosecond timestamps
+    // millisecond timestamps
     private long startTime;
     private long pauseTime;
     private long lastUpdateTime;
@@ -50,7 +50,7 @@ public class StopwatchLabel extends JLabel {
      * @param event the <code>ActionEvent</code> produced by the <code>timer</code>
      */
     private void update(ActionEvent event) {
-        lastUpdateTime = System.nanoTime();
+        lastUpdateTime = System.currentTimeMillis();
         updateText();
     }
 
@@ -63,11 +63,11 @@ public class StopwatchLabel extends JLabel {
         if (startTime == 0) {
             elapsedTime = 0;
         } else {
-            elapsedTime = System.nanoTime() - startTime;
+            elapsedTime = System.currentTimeMillis() - startTime;
         }
 
-        long minutes = TimeUnit.NANOSECONDS.toMinutes(elapsedTime);
-        long remainingSeconds = TimeUnit.NANOSECONDS.toSeconds(elapsedTime - TimeUnit.MINUTES.toNanos(minutes));
+        long minutes = TimeUnit.MILLISECONDS.toMinutes(elapsedTime);
+        long remainingSeconds = TimeUnit.MILLISECONDS.toSeconds(elapsedTime - TimeUnit.MINUTES.toMillis(minutes));
 
         Object[] formatArgs;
         String formatString;
@@ -85,11 +85,11 @@ public class StopwatchLabel extends JLabel {
     /**
      * Saves the current elapsed time to the <code>node</code> if there is one.
      *
-     * @param now the current elapsed time in nanoseconds
+     * @param now the current elapsed time in milliseconds
      */
     private void saveTime(long now) {
         if (node != null) {
-            node.setAnswerTime(TimeUnit.NANOSECONDS.toSeconds(now - startTime));
+            node.setAnswerTime(TimeUnit.MILLISECONDS.toSeconds(now - startTime));
         }
     }
 
@@ -101,7 +101,7 @@ public class StopwatchLabel extends JLabel {
             return;
         }
 
-        long now = System.nanoTime();
+        long now = System.currentTimeMillis();
         if (startTime == 0) {
             startTime = now;
         } else {
@@ -119,7 +119,7 @@ public class StopwatchLabel extends JLabel {
             return;
         }
 
-        saveTime(System.nanoTime());
+        saveTime(System.currentTimeMillis());
         timer.stop();
         timer.setInitialDelay(0);
 
@@ -136,11 +136,11 @@ public class StopwatchLabel extends JLabel {
             return;
         }
 
-        long now = System.nanoTime();
+        long now = System.currentTimeMillis();
 
         saveTime(now);
         timer.stop();
-        timer.setInitialDelay((int) TimeUnit.NANOSECONDS.toMillis(now - lastUpdateTime));
+        timer.setInitialDelay((int) (now - lastUpdateTime));
 
         pauseTime = now;
     }
