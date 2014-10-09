@@ -50,10 +50,10 @@ public class ExperimentEditorTabbedPane extends JTabbedPane {
             currentTab.load(currentNode);
         });
 
-        addTab(getLocalized("MENU_TAB_EDITOR"), null, new ContentEditorPanel(), null);
-        addTab(getLocalized("MENU_TAB_PREVIEW"), null, new ContentViewerPanel(), null);
-        addTab(getLocalized("MENU_TAB_SETTINGS"), null, new SettingsEditorPanel(), null);
-        addTab(getLocalized("MENU_TAB_NOTES"), null, new NoteEditorPanel(), null);
+        addTab(getLocalized("MENU_TAB_EDITOR"), new ContentEditorPanel());
+        addTab(getLocalized("MENU_TAB_PREVIEW"), new ContentViewerPanel());
+        addTab(getLocalized("MENU_TAB_SETTINGS"), new SettingsEditorPanel());
+        addTab(getLocalized("MENU_TAB_NOTES"), new NoteEditorPanel());
     }
 
     /**
