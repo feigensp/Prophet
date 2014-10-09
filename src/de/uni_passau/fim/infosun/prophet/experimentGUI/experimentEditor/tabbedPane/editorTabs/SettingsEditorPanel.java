@@ -1,9 +1,11 @@
 package de.uni_passau.fim.infosun.prophet.experimentGUI.experimentEditor.tabbedPane.editorTabs;
 
 import java.awt.BorderLayout;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -15,11 +17,13 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.Constants;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentEditor.tabbedPane.ExperimentEditorTab;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentEditor.tabbedPane.ExperimentEditorTabbedPane;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.PluginList;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.Pair;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.Attribute;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.PluginSettings;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.Setting;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.components.SettingsCheckBox;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.components.SettingsComboBox;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.components.SettingsSpinner;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.components.SettingsTextField;
 
@@ -104,6 +108,18 @@ public class SettingsEditorPanel extends ExperimentEditorTab {
             Attribute attribute = selected.getAttribute(Constants.KEY_EXPERIMENT_CODE);
             Setting setting = new SettingsTextField(attribute, null);
             setting.setCaption(getLocalized("EXPERIMENT_CODE") + ":");
+
+            componentList.add(setting);
+            settingsPanel.add(setting);
+
+            List<Pair<String, String>> items = new ArrayList<>();
+            items.add(new Pair<>(Constants.KEY_VIEWER_LANGUAGE_SYSTEM, getLocalized("LANGUAGE_SYSTEM")));
+            items.add(new Pair<>(Locale.GERMAN.toLanguageTag(), getLocalized("LANGUAGE_GERMAN")));
+            items.add(new Pair<>(Locale.ENGLISH.toLanguageTag(), getLocalized("LANGUAGE_ENGLISH")));
+
+            attribute = selected.getAttribute(Constants.KEY_VIEWER_LANGUAGE);
+            setting = new SettingsComboBox(attribute, null, items);
+            setting.setCaption(getLocalized("VIEWER_LANGUAGE"));
 
             componentList.add(setting);
             settingsPanel.add(setting);

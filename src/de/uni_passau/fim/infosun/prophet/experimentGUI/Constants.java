@@ -53,6 +53,17 @@ public final class Constants {
     public static final String KEY_TIMING = "timing";
 
     /**
+     * Attribute key for the setting that determines what language the experiment viewer uses.
+     */
+    public static final String KEY_VIEWER_LANGUAGE = "viewer_language";
+
+    /**
+     * Attribute value for the <code>KEY_VIEWER_LANGUAGE</code> setting specifying that the system language be used
+     * for the viewer.
+     */
+    public static final String KEY_VIEWER_LANGUAGE_SYSTEM = "system_language";
+
+    /**
      * property name for the experiment code (which is used for online usage)
      */
     public static final String KEY_EXPERIMENT_CODE = "experimentcode";

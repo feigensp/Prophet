@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.IntFunction;
@@ -29,6 +30,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.Constants;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.PluginList;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.QuestionViewPane;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.Attribute;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.xml.QTreeXMLHandler;
@@ -86,6 +88,8 @@ public class EViewer extends JFrame {
 
         this.expTreeRoot = loadExperiment();
         this.timingEnabled = Boolean.parseBoolean(expTreeRoot.getAttribute(Constants.KEY_TIMING).getValue());
+
+        initLanguage();
 
         // randomize the children if this is enabled
         applyToTree(expTreeRoot, node -> {
@@ -150,6 +154,17 @@ public class EViewer extends JFrame {
 
         pack();
         setLocationRelativeTo(null);
+    }
+
+    /**
+     * Initialises the language bundle used by the <code>EViewer</code>.
+     */
+    private void initLanguage() {
+        String langTag = expTreeRoot.getAttribute(Constants.KEY_VIEWER_LANGUAGE).getValue();
+
+        if (langTag.equals(Locale.GERMAN.toLanguageTag()) || langTag.equals(Locale.ENGLISH.toLanguageTag())) {
+            UIElementNames.setLocale(Locale.forLanguageTag(langTag));
+        }
     }
 
     /**
