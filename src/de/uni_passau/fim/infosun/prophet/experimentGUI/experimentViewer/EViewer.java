@@ -281,6 +281,7 @@ public class EViewer extends JFrame {
         PluginList.enterNode(newNode.getTreeNode());
         currentIndex = newIndex;
 
+        revalidate();
         repaint();
         setEnabled(true);
     }
