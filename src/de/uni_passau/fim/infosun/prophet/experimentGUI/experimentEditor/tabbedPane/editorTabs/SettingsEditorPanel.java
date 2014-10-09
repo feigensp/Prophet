@@ -107,6 +107,13 @@ public class SettingsEditorPanel extends ExperimentEditorTab {
 
             componentList.add(setting);
             settingsPanel.add(setting);
+
+            attribute = selected.getAttribute(Constants.KEY_TIMING);
+            setting = new SettingsCheckBox(attribute, null);
+            setting.setCaption(getLocalized("STOPWATCH_CAPTION"));
+
+            componentList.add(setting);
+            settingsPanel.add(setting);
         }
 
         if (selectedType == CATEGORY) {

@@ -47,6 +47,12 @@ public final class Constants {
     public static final String KEY_SHOW_NUMBER_OF_CHILDREN = "showNumberOfChildren";
 
     /**
+     * Attribute key for the setting that determines whether the stopwatches that measure the time for every tree node
+     * are enabled.
+     */
+    public static final String KEY_TIMING = "timing";
+
+    /**
      * property name for the experiment code (which is used for online usage)
      */
     public static final String KEY_EXPERIMENT_CODE = "experimentcode";
@@ -65,4 +71,6 @@ public final class Constants {
      * html name for the input field used to enter the subject code
      */
     public static final String KEY_SUBJECT = "subjectcode";
+
+
 }

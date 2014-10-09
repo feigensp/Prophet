@@ -17,9 +17,16 @@ import java.util.function.IntFunction;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
-import javax.swing.*;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.WindowConstants;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import de.uni_passau.fim.infosun.prophet.experimentGUI.Constants;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.PluginList;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.QuestionViewPane;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.Attribute;
@@ -46,6 +53,7 @@ public class EViewer extends JFrame {
     private List<ViewNode> experiment; // the experiment tree in pre-order
     private int currentIndex; // index into the 'experiment' List
 
+    private boolean timingEnabled;
     private JPanel timePanel;
 
     private File saveDir;
@@ -77,6 +85,7 @@ public class EViewer extends JFrame {
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
 
         this.expTreeRoot = loadExperiment();
+        this.timingEnabled = Boolean.parseBoolean(expTreeRoot.getAttribute(Constants.KEY_TIMING).getValue());
 
         // randomize the children if this is enabled
         applyToTree(expTreeRoot, node -> {
@@ -105,18 +114,22 @@ public class EViewer extends JFrame {
         Function<QTreeNode, ViewNode> mapper = node -> new ViewNode(node, listener);
         this.experiment = expTreeRoot.preOrder().stream().map(mapper).collect(Collectors.toList()); // rtt ArrayList
         this.currentIndex = 0;
-        this.timePanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
-
-        StopwatchLabel totalTime = new StopwatchLabel(expTreeRoot, getLocalized("STOPWATCHLABEL_TOTAL_TIME"));
-        totalTime.start();
-        this.timePanel.add(totalTime);
 
         ViewNode expNode = experiment.get(currentIndex);
-        expNode.setStopwatch(totalTime);
         expNode.setEntered(true);
 
+        if (timingEnabled) {
+            StopwatchLabel totalTime = new StopwatchLabel(expTreeRoot, getLocalized("STOPWATCHLABEL_TOTAL_TIME"));
+            totalTime.start();
+            expNode.setStopwatch(totalTime);
+
+            this.timePanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+            this.timePanel.add(totalTime);
+
+            add(timePanel, BorderLayout.SOUTH);
+        }
+
         add(expNode.getViewPane(), BorderLayout.CENTER);
-        add(timePanel, BorderLayout.SOUTH);
         addWindowListener(new WindowAdapter() {
 
             @Override
@@ -126,7 +139,7 @@ public class EViewer extends JFrame {
 
                 if (choice == YES_OPTION) {
                     experiment.get(currentIndex).getViewPane().clickSubmit(false);
-                    experiment.get(currentIndex).getStopwatch().stop();
+                    endExperiment();
                     dispose();
                 }
             }
@@ -246,24 +259,23 @@ public class EViewer extends JFrame {
         ViewNode oldNode = experiment.get(currentIndex);
         ViewNode newNode = experiment.get(newIndex);
 
-        // the root node counts the total time
-        if (currentIndex != 0) {
-            oldNode.getStopwatch().pause();
-            timePanel.remove(oldNode.getStopwatch());
+        if (timingEnabled) {
+            updateStopwatches(oldNode, newNode);
         }
-        newNode.getStopwatch().start();
-        timePanel.add(newNode.getStopwatch());
 
         newNode.setEntered(true);
         remove(oldNode.getViewPane());
         add(newNode.getViewPane(), BorderLayout.CENTER);
 
         QTreeNode exitNode = oldNode.getTreeNode();
-        PluginList.exitNode(exitNode);
 
-        while (exitNode.isLastChild()) {
-            PluginList.exitNode(exitNode.getParent());
-            exitNode = exitNode.getParent();
+        if (exitNode.getChildren().isEmpty()) {
+            PluginList.exitNode(exitNode);
+
+            while (exitNode.isLastChild()) {
+                PluginList.exitNode(exitNode.getParent());
+                exitNode = exitNode.getParent();
+            }
         }
 
         PluginList.enterNode(newNode.getTreeNode());
@@ -271,6 +283,25 @@ public class EViewer extends JFrame {
 
         repaint();
         setEnabled(true);
+    }
+
+    /**
+     * Starts/Stops the stopwatches of <code>oldNode</code> and <code>newNode</code>.
+     *
+     * @param oldNode
+     *         the old selected node
+     * @param newNode
+     *         the new selected node
+     */
+    private void updateStopwatches(ViewNode oldNode, ViewNode newNode) {
+
+        // the root node counts the total time
+        if (currentIndex != 0) {
+            oldNode.getStopwatch().pause();
+            timePanel.remove(oldNode.getStopwatch());
+        }
+        newNode.getStopwatch().start();
+        timePanel.add(newNode.getStopwatch());
     }
 
     /**
