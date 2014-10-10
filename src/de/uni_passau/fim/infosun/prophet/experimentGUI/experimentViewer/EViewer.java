@@ -55,7 +55,7 @@ public class EViewer extends JFrame {
     private List<ViewNode> experiment; // the experiment tree in pre-order
     private int currentIndex; // index into the 'experiment' List
 
-    private boolean timingEnabled;
+    private boolean visibleStopwatches;
     private JPanel timePanel;
 
     private File saveDir;
@@ -87,7 +87,7 @@ public class EViewer extends JFrame {
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
 
         this.expTreeRoot = loadExperiment();
-        this.timingEnabled = Boolean.parseBoolean(expTreeRoot.getAttribute(Constants.KEY_TIMING).getValue());
+        this.visibleStopwatches = Boolean.parseBoolean(expTreeRoot.getAttribute(Constants.KEY_TIMING).getValue());
 
         initLanguage();
 
@@ -122,14 +122,13 @@ public class EViewer extends JFrame {
         ViewNode expNode = experiment.get(currentIndex);
         expNode.setEntered(true);
 
-        if (timingEnabled) {
-            StopwatchLabel totalTime = new StopwatchLabel(expTreeRoot, getLocalized("STOPWATCHLABEL_TOTAL_TIME"));
-            totalTime.start();
-            expNode.setStopwatch(totalTime);
+        StopwatchLabel totalTime = new StopwatchLabel(expTreeRoot, getLocalized("STOPWATCHLABEL_TOTAL_TIME"));
+        totalTime.start();
+        expNode.setStopwatch(totalTime);
 
+        if (visibleStopwatches) {
             this.timePanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
             this.timePanel.add(totalTime);
-
             add(timePanel, BorderLayout.SOUTH);
         }
 
@@ -274,9 +273,7 @@ public class EViewer extends JFrame {
         ViewNode oldNode = experiment.get(currentIndex);
         ViewNode newNode = experiment.get(newIndex);
 
-        if (timingEnabled) {
-            updateStopwatches(oldNode, newNode);
-        }
+        updateStopwatches(oldNode, newNode);
 
         newNode.setEntered(true);
         remove(oldNode.getViewPane());
@@ -302,7 +299,7 @@ public class EViewer extends JFrame {
     }
 
     /**
-     * Starts/Stops the stopwatches of <code>oldNode</code> and <code>newNode</code>.
+     * Stops/Starts the stopwatches of <code>oldNode</code> and <code>newNode</code>.
      *
      * @param oldNode
      *         the old selected node
@@ -314,10 +311,15 @@ public class EViewer extends JFrame {
         // the root node counts the total time
         if (currentIndex != 0) {
             oldNode.getStopwatch().pause();
-            timePanel.remove(oldNode.getStopwatch());
         }
         newNode.getStopwatch().start();
-        timePanel.add(newNode.getStopwatch());
+
+        if (visibleStopwatches) {
+            if (currentIndex != 0) {
+                timePanel.remove(oldNode.getStopwatch());
+            }
+            timePanel.add(newNode.getStopwatch());
+        }
     }
 
     /**

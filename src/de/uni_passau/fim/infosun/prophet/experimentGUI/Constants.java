@@ -48,9 +48,9 @@ public final class Constants {
 
     /**
      * Attribute key for the setting that determines whether the stopwatches that measure the time for every tree node
-     * are enabled.
+     * are visible.
      */
-    public static final String KEY_TIMING = "timing";
+    public static final String KEY_TIMING = "timing_visible";
 
     /**
      * Attribute key for the setting that determines what language the experiment viewer uses.
