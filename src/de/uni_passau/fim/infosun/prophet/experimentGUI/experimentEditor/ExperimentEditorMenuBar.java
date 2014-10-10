@@ -3,7 +3,11 @@ package de.uni_passau.fim.infosun.prophet.experimentGUI.experimentEditor;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -17,7 +21,11 @@ import javax.swing.tree.TreePath;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentEditor.tabbedPane.ExperimentEditorTabbedPane;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentEditor.tabbedPane.editorTabs.ContentEditorPanel;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.miniEditors.MacroEditor;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.*;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTree;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeCSVHandler;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeHTMLHandler;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeModel;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.xml.QTreeXMLHandler;
 import org.jsoup.nodes.Element;
 import org.jsoup.parser.Tag;
@@ -148,16 +156,8 @@ public class ExperimentEditorMenuBar extends JMenuBar {
         }
 
         currentFile = chosenFile;
-
-        try {
-            QTreeXMLHandler.saveExperimentXML(qTreeModel.getRoot(), currentFile);
-            confirmSave();
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(owner, getLocalized("MESSAGE_SAVE_ERROR"), getLocalized("MESSAGE_ERROR"),
-                    JOptionPane.ERROR_MESSAGE);
-        }
-
         owner.setTitle(ExperimentEditor.class.getSimpleName() + " - " + currentFile.getAbsolutePath());
+        saveMenuItem.doClick();
     };
 
     private class ExportHTMLFileActionListener implements ActionListener {
