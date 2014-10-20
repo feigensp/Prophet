@@ -22,11 +22,13 @@ public class PluginSettings extends Setting {
 
     /**
      * Constructs a new <code>PluginSettings</code> object.
-
+     *
      * @param attribute
      *         the <code>Attribute</code> for this <code>Setting</code>
-     * @param pluginName the name of the plugin
-     * @param enableable whether the settings are enableable
+     * @param pluginName
+     *         the name of the plugin
+     * @param enableable
+     *         whether the settings are enableable
      */
     public PluginSettings(Attribute attribute, String pluginName, boolean enableable) {
         super(attribute, pluginName);
@@ -47,7 +49,8 @@ public class PluginSettings extends Setting {
     /**
      * Adds a <code>Setting</code> to this <code>PluginSettings</code> object.
      *
-     * @param setting the <code>Setting</code> to be added
+     * @param setting
+     *         the <code>Setting</code> to be added
      */
     public void addSetting(Setting setting) {
         settingsList.add(setting);
@@ -57,7 +60,8 @@ public class PluginSettings extends Setting {
     /**
      * Adds all given <code>Setting</code> objects to this <code>PluginSettings</code> object.
      *
-     * @param settings the <code>Setting</code> objects to be added
+     * @param settings
+     *         the <code>Setting</code> objects to be added
      */
     public void addAllSettings(Collection<? extends Setting> settings) {
         settingsList.addAll(settings);

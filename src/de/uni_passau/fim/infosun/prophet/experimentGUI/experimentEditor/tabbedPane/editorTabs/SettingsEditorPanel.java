@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.SpinnerNumberModel;
@@ -18,6 +17,7 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentEditor.tabbedPa
 import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentEditor.tabbedPane.ExperimentEditorTabbedPane;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.PluginList;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.Pair;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.VerticalLayout;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.Attribute;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.PluginSettings;
@@ -92,7 +92,7 @@ public class SettingsEditorPanel extends ExperimentEditorTab {
 
         settingsPanel = new JPanel();
         settingsPanel.setBorder(BorderFactory.createEmptyBorder(5, 50, 5, 50));
-        settingsPanel.setLayout(new BoxLayout(settingsPanel, BoxLayout.Y_AXIS));
+        settingsPanel.setLayout(new VerticalLayout(5, VerticalLayout.BOTH, VerticalLayout.TOP));
 
         scrollPane = new JScrollPane(settingsPanel);
         scrollPane.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
