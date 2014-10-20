@@ -16,7 +16,8 @@ public abstract class ExperimentEditorTab extends JPanel {
     /**
      * Loads any data the tab is interested in from the given <code>QTreeNode</code>.
      *
-     * @param selected the <code>QTreeNode</code> to load from
+     * @param selected
+     *         the <code>QTreeNode</code> to load from
      */
     public abstract void load(QTreeNode selected);
 
