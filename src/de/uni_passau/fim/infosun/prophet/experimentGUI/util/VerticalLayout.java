@@ -7,6 +7,7 @@
 
 package de.uni_passau.fim.infosun.prophet.experimentGUI.util;
 
+import java.awt.AWTError;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -90,7 +91,7 @@ public class VerticalLayout implements LayoutManager {
      * @param vgap
      *        the vertical spacing between components in pixels
      * @param alignment
-     *        the horizontal alignment, should be one of {@link #LEFT}, {@link #RIGHT}, {@link #CENTER},
+     *        the horizontal alignment, must be one of {@link #LEFT}, {@link #RIGHT}, {@link #CENTER},
      *        {@link #STRETCH}
      */
     public VerticalLayout(int vgap, int alignment) {
@@ -104,83 +105,114 @@ public class VerticalLayout implements LayoutManager {
      * @param vgap
      *        the vertical spacing between components in pixels
      * @param alignment
-     *        the horizontal alignment, should be one of {@link #LEFT}, {@link #RIGHT}, {@link #CENTER} or
+     *        the horizontal alignment, must be one of {@link #LEFT}, {@link #RIGHT}, {@link #CENTER} or
      *        {@link #STRETCH}
      * @param anchor
-     *        the anchor for the layed out components, should be one of {@link #TOP}, {@link #BOTTOM} or {@link #CENTER}
+     *        the anchor for the laid out components, must be one of {@link #TOP}, {@link #BOTTOM} or {@link #CENTER}
      */
     public VerticalLayout(int vgap, int alignment, int anchor) {
+
+        if (!(alignment == LEFT || alignment == RIGHT || alignment == CENTER || alignment == STRETCH)) {
+            throw new AWTError("Invalid alignment.");
+        }
+
+        if (!(anchor == TOP || anchor == BOTTOM || anchor == CENTER)) {
+            throw new AWTError("Invalid anchor.");
+        }
+
         this.vgap = vgap;
         this.alignment = alignment;
         this.anchor = anchor;
     }
 
+    /**
+     * Calculates the minimum or preferred size dimensions for the specified container, given the components it
+     * contains.
+     *
+     * @param parent
+     *         the component to be laid out
+     * @param minimum
+     *         true for minimum size, false for preferred size
+     *
+     * @see #preferredLayoutSize(java.awt.Container)
+     * @see #minimumLayoutSize(java.awt.Container)
+     */
     private Dimension layoutSize(Container parent, boolean minimum) {
-        Dimension dim = new Dimension(0, 0);
-        Dimension d;
+        Dimension size = new Dimension();
+        Dimension componentSize;
+        Component[] components;
+        Component component;
+
         synchronized (parent.getTreeLock()) {
-            int n = parent.getComponentCount();
-            for (int i = 0; i < n; i++) {
-                Component c = parent.getComponent(i);
-                if (c.isVisible()) {
-                    d = minimum ? c.getMinimumSize() : c.getPreferredSize();
-                    dim.width = Math.max(dim.width, d.width);
-                    dim.height += d.height;
-                    if (i > 0) {
-                        dim.height += vgap;
+            components = parent.getComponents();
+
+            for (int i = 0; i < components.length; i++) {
+                component = components[i];
+
+                if (component.isVisible()) {
+                    componentSize = minimum ? component.getMinimumSize() : component.getPreferredSize();
+                    size.width = Math.max(size.width, componentSize.width);
+                    size.height += componentSize.height;
+
+                    if (i < components.length - 1) {
+                        size.height += vgap;
                     }
                 }
             }
         }
-        Insets insets = parent.getInsets();
-        dim.width += insets.left + insets.right;
-        dim.height += insets.top + insets.bottom + vgap + vgap;
-        return dim;
+
+        Insets parentInsets = parent.getInsets();
+
+        size.width += parentInsets.left + parentInsets.right;
+        size.height += parentInsets.top + parentInsets.bottom + vgap + vgap;
+
+        return size;
     }
 
     @Override
     public void layoutContainer(Container parent) {
 
         synchronized (parent.getTreeLock()) {
-            Insets insets = parent.getInsets();
-            Dimension pd = parent.getSize();
-            int n = parent.getComponentCount();
+            Insets parentInsets = parent.getInsets();
+            Dimension parentDimension = parent.getSize();
+            Component[] components = parent.getComponents();
+            Dimension componentDimension;
             int y = 0;
 
-            //work out the total size
-            for (int i = 0; i < n; i++) {
-                Component c = parent.getComponent(i);
-                Dimension d = c.getPreferredSize();
-                y += d.height + vgap;
+            for (Component component : components) {
+                componentDimension = component.getPreferredSize();
+                y += componentDimension.height + vgap;
             }
-            y -= vgap; //otherwise there's a vgap too many
+            y -= vgap; //otherwise there is a vgap too many
 
-            //Work out the anchor paint
+            // modify y to fit the chosen anchor
             if (anchor == TOP) {
-                y = insets.top;
+                y = parentInsets.top;
             } else if (anchor == CENTER) {
-                y = (pd.height - y) / 2;
+                y = (parentDimension.height - y) / 2;
             } else {
-                y = pd.height - y - insets.bottom;
+                y = parentDimension.height - y - parentInsets.bottom;
             }
 
-            //do layout
-            for (int i = 0; i < n; i++) {
-                Component c = parent.getComponent(i);
-                Dimension d = c.getPreferredSize();
-                int x = insets.left;
-                int wid = d.width;
+            int x;
+            int width;
+
+            // do the layout
+            for (Component component : components) {
+                componentDimension = component.getPreferredSize();
+                x = parentInsets.left;
+                width = componentDimension.width;
 
                 if (alignment == CENTER) {
-                    x = (pd.width - d.width) / 2;
+                    x = (parentDimension.width - componentDimension.width) / 2;
                 } else if (alignment == RIGHT) {
-                    x = pd.width - d.width - insets.right;
+                    x = parentDimension.width - componentDimension.width - parentInsets.right;
                 } else if (alignment == STRETCH) {
-                    wid = pd.width - insets.left - insets.right;
+                    width = parentDimension.width - parentInsets.left - parentInsets.right;
                 }
 
-                c.setBounds(x, y, wid, d.height);
-                y += d.height + vgap;
+                component.setBounds(x, y, width, componentDimension.height);
+                y += componentDimension.height + vgap;
             }
         }
     }
@@ -214,17 +246,17 @@ public class VerticalLayout implements LayoutManager {
     }
 
     /**
-     * Returns a description (the variable name) for one of the static constants used by this class.
+     * Returns a description (the variable name) for one of the (magic) static constants used by this class.
      *
-     * @param i
+     * @param constant
      *         the constant
      *
      * @return the description
      */
-    private String toString(int i) {
+    private String toString(int constant) {
         String result;
 
-        switch (i) {
+        switch (constant) {
             case CENTER:
                 result = "CENTER";
                 break;
