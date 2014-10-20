@@ -5,6 +5,7 @@ package de.uni_passau.fim.infosun.prophet.experimentGUI;
  *
  * @author Andreas Hasselberg
  * @author Markus Köppen
+ * @author Georg Seibt
  */
 public final class Constants {
 
@@ -82,6 +83,4 @@ public final class Constants {
      * html name for the input field used to enter the subject code
      */
     public static final String KEY_SUBJECT = "subjectcode";
-
-
 }
