@@ -23,10 +23,11 @@ public class SettingsComboBox extends Setting {
     private String[] representations;
 
     /**
-     * Constructs a new <code>Setting</code> for the given Attribute. If <code>borderDesc</code> is not
-     * <code>null</code> this <code>JPanel</code> will be surrounded by a titled border with the given title.
+     * Constructs a new <code>SettingsComboBox</code> for the given <code>Attribute</code>. If <code>borderDesc</code>
+     * is not <code>null</code> this <code>JPanel</code> will be surrounded by a titled border with the given title.
      * <code>itemMappings</code> contains mappings from <code>String</code> values that will be stored in the given
-     * attribute to a <code>String</code> that will be used to represent them in the <code>JComboBox</code>.
+     * attribute to a <code>String</code> that will be used to represent them in the <code>JComboBox</code>. This
+     * feature may be used for localizing the descriptions.
      *
      * @param attribute
      *         the <code>Attribute</code> for this <code>Setting</code>

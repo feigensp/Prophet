@@ -9,7 +9,7 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.Attribute;
 /**
  * Implementations of this class represent a value setting (e.g. for a <code>Plugin</code>) that is stored in an
  * <code>Attribute</code> attached to a <code>QTreeNode</code>.
- *
+ * <p>
  * Depending on the type of attribute implementing classes should choose an appropriate graphical representation and
  * controls that enable editing the value.
  */
@@ -18,7 +18,7 @@ public abstract class Setting extends JPanel {
     protected Attribute attribute;
 
     /**
-     * Constructs a new <code>Setting</code> for the given Attribute. If <code>borderDesc</code> is not
+     * Constructs a new <code>Setting</code> for the given <code>Attribute</code>. If <code>borderDesc</code> is not
      * <code>null</code> this <code>JPanel</code> will be surrounded by a titled border with the given title.
      *
      * @param attribute

@@ -7,12 +7,23 @@ import javax.swing.JTextField;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.Attribute;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.Setting;
 
-@SuppressWarnings("serial")
+/**
+ * A <code>Setting</code> that uses a <code>JTextField</code> to get user input.
+ */
 public class SettingsTextField extends Setting {
 
     private JLabel caption;
     private JTextField textField;
 
+    /**
+     * Constructs a new <code>SettingsTextField</code> for the given <code>Attribute</code>. If <code>borderDesc</code>
+     * is not <code>null</code> this <code>JPanel</code> will be surrounded by a titled border with the given title.
+     *
+     * @param attribute
+     *         the <code>Attribute</code> for this <code>Setting</code>
+     * @param borderDesc
+     *         the title for the border or <code>null</code> for no border
+     */
     public SettingsTextField(Attribute attribute, String borderDesc) {
         super(attribute, borderDesc);
 

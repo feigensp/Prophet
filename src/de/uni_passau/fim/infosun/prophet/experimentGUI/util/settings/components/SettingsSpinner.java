@@ -20,7 +20,7 @@ public class SettingsSpinner extends Setting {
     private JSpinner spinner;
 
     /**
-     * Constructs a new <code>Setting</code> for the given Attribute. If <code>borderDesc</code> is not
+     * Constructs a new <code>SettingsSpinner</code> for the given Attribute. If <code>borderDesc</code> is not
      * <code>null</code> this <code>JPanel</code> will be surrounded by a titled border with the given title.
      *
      * @param attribute
@@ -28,7 +28,7 @@ public class SettingsSpinner extends Setting {
      * @param borderDesc
      *         the title for the border or <code>null</code> for no border
      * @param model
-     *         the model for the <code>JSpinner</code> this <code>SettingsSpinner</code> displays
+     *         the model for the <code>JSpinner</code> this <code>SettingsSpinner</code> uses
      */
     public SettingsSpinner(Attribute attribute, String borderDesc, SpinnerNumberModel model) {
         super(attribute, borderDesc);
@@ -67,7 +67,7 @@ public class SettingsSpinner extends Setting {
                 System.err.println("Could not get a NumberFormat instance to parse the value for " + key);
             }
         } catch (ParseException e) {
-            System.err.printf("Could not parse value \"%s\" for %s to a Number. Setting it to 0.%n", value, key);
+            System.err.printf("Could not parse value \"%s\" for %s to a Number.%n", value, key);
         }
     }
 
