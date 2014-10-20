@@ -14,7 +14,7 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.PluginSettings;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.Setting;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.components.SettingsCheckBox;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.components.SettingsFilePathChooser;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.components.SettingsPathChooser;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.components.SettingsTextArea;
 
 import static de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode.Type.EXPERIMENT;
@@ -45,7 +45,7 @@ public class ValidSubjectCodePlugin implements Plugin {
         settingsTextArea.setCaption(UIElementNames.getLocalized("SUBJECT_CODE_VALID_CODES"));
         pluginSettings.addSetting(settingsTextArea);
 
-        SettingsFilePathChooser filePathChooser = new SettingsFilePathChooser(mainAttribute.getSubAttribute(KEY_PATH), null);
+        SettingsPathChooser filePathChooser = new SettingsPathChooser(mainAttribute.getSubAttribute(KEY_PATH), null);
         filePathChooser.setCaption(UIElementNames.getLocalized("SUBJECT_CODE_CODE_FILE"));
         pluginSettings.addSetting(filePathChooser);
 
