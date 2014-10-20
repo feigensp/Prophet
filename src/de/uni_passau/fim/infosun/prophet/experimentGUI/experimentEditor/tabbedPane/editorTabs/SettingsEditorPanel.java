@@ -92,7 +92,7 @@ public class SettingsEditorPanel extends ExperimentEditorTab {
 
         settingsPanel = new JPanel();
         settingsPanel.setBorder(BorderFactory.createEmptyBorder(5, 50, 5, 50));
-        settingsPanel.setLayout(new VerticalLayout(5, VerticalLayout.BOTH, VerticalLayout.TOP));
+        settingsPanel.setLayout(new VerticalLayout(5, VerticalLayout.STRETCH, VerticalLayout.TOP));
 
         scrollPane = new JScrollPane(settingsPanel);
         scrollPane.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
