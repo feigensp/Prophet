@@ -5,8 +5,8 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.Setting;
 
 /**
- * Interface for all plugins to be used immediately within the product. It represents methods called on special
- * occasions.
+ * Plugins for PROPHET implement this interface. The <code>Plugin</code> methods will be called by the
+ * <code>EViewer</code> as specified in the method documentation.
  *
  * @author Andreas Hasselberg
  * @author Markus Köppen
@@ -14,70 +14,69 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.Setting;
 public interface Plugin {
 
     /**
-     * Returns the <code>Setting</code> object of this <code>Plugin</code> for the given <code>Node</code>
+     * Returns the <code>Setting</code> object of the <code>Plugin</code> for the given <code>Node</code>.
      *
      * @param node
-     *         the currently active node within the experiment viewer
+     *         the node to get the <code>Setting</code> for
      *
-     * @return a <code>Setting</code> object representing the settings of the plugin or null if there are
-     * none
+     * @return a <code>Setting</code> object representing the settings of the plugin or <code>null</code> if there are
+     *         none
      */
     public Setting getSetting(QTreeNode node);
 
     /**
-     * Called once when the experiment viewer is initialized. May be used to manipulate the viewer.
+     * Called after the <code>EViewer</code> has been initialized but before the first node is entered. The
+     * <code>Plugin</code> may modify the <code>EViewer</code> in this method.
      *
      * @param experimentViewer
-     *         The initialized experiment viewer
+     *         the initialized experiment viewer
      */
     public void experimentViewerRun(EViewer experimentViewer);
 
     /**
-     * Called right before a new node is entered. If any plugin denies the currentNode to be entered (e.g. because of a
-     * timeout), it will just be skipped.
+     * Called before a new node is entered. The <code>Plugin</code> may request that this node be skipped by returning
+     * <code>true</code>.
      *
      * @param node
-     *         The node to be entered
+     *         the node to be entered
      *
-     * @return true if the node shall not be visited<br>
-     * false if it might be visited
+     * @return true iff this <code>Plugin</code> denies entry to the given <code>node</code>
      */
     public boolean denyEnterNode(QTreeNode node);
 
     /**
-     * Called when a node is entered, at the beginning of categories or questions. Is not called if a plugin denied the
-     * entrance of that node.
+     * Called when a node is entered.
      *
      * @param node
-     *         The node entered
+     *         the entered node
      */
     public void enterNode(QTreeNode node);
 
     /**
-     * Called right before a new node is opened in the ExperimentViewer. If any plugin denies the currentNode to be
-     * finished (for example because needed answers are missing) the next Node won't be opened.
+     * Called before a node is exited. The <code>Plugin</code> may indicate that the <code>currentNode</code>
+     * should not be exited by returning a non-null <code>String</code> (the reason why). This <code>String</code>
+     * will be shown to the user in an alert message box.
      *
      * @param currentNode
-     *         The node to be finished
+     *         the node to be exited
      *
-     * @return A message shown to the subject to indicate what needs to be done to accept finishing this node (e.g.
-     * enter a needed answer)
+     * @return <code>null</code> if the node may be exited, otherwise a reason for denying the exit
      */
     public String denyNextNode(QTreeNode currentNode);
 
     /**
-     * Called when a node is exited, i.e. after a question, after all active questions of a category are exited, when
-     * the Experiment is finished (but before finishExperiment()). Is not called if node was not entered previously.
+     * Called when all children of a node have been exited. This means that the <code>exitNode(node)</code> call for the
+     * root of the experiment tree will be made last. Nodes will only be exited if they have been entered previously.
      *
      * @param node
-     *         The node to be exited
+     *         the exited node
      */
     public void exitNode(QTreeNode node);
 
     /**
-     * Called after all nodes have been visited. Allows the plugin to do last steps upon finishing the experiment
+     * Called after the experiment is finished. The <code>Plugin</code> may provide a message to be shown to the user.
      *
-     * @return A message shown to the subject at experiment's end
+     * @return a message shown to the user
      */
     public String finishExperiment();
 }
