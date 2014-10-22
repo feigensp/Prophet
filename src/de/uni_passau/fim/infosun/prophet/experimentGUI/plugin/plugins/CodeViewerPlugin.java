@@ -32,6 +32,13 @@ public class CodeViewerPlugin implements Plugin {
 
     private Rectangle bounds;
 
+    /**
+     * Constructs a new <code>CodeViewerPlugin</code>.
+     */
+    public CodeViewerPlugin() {
+        this.codeViewers = new HashMap<>();
+    }
+
     @Override
     public Setting getSetting(QTreeNode node) {
 
@@ -57,7 +64,6 @@ public class CodeViewerPlugin implements Plugin {
     @Override
     public void experimentViewerRun(EViewer experimentViewer) {
         this.experimentViewer = experimentViewer;
-        this.codeViewers = new HashMap<>();
     }
 
     @Override
@@ -69,21 +75,26 @@ public class CodeViewerPlugin implements Plugin {
     public void enterNode(QTreeNode node) {
         boolean enabled = Boolean.parseBoolean(node.getAttribute(KEY).getValue());
 
-        if (enabled) {
-            String savePath =
-                    experimentViewer.getSaveDir().getPath() + System.getProperty("file.separator") + (count++) + "_"
-                            + node.getName() + "_codeviewer";
-            CodeViewer cv = new CodeViewer(node.getAttribute(KEY), new File(savePath));
-            if (bounds == null) {
-                Point location = experimentViewer.getLocation();
-                cv.setLocation(new Point(location.x + 20, location.y + 20));
-            } else {
-                cv.setBounds(bounds);
-            }
-            cv.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-            cv.setVisible(true);
-            codeViewers.put(node, cv);
+        if (!enabled) {
+            return;
         }
+
+        File eViewerSaveDir = experimentViewer.getSaveDir();
+        File saveDir = new File(eViewerSaveDir, String.format("%d_%s_codeviewer", count++, node.getName()));
+
+        CodeViewer cv = new CodeViewer(node.getAttribute(KEY), saveDir);
+
+        if (bounds == null) {
+            Point location = experimentViewer.getLocation();
+            cv.setLocation(new Point(location.x + 20, location.y + 20));
+        } else {
+            cv.setBounds(bounds);
+        }
+
+        codeViewers.put(node, cv);
+
+        cv.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        cv.setVisible(true);
     }
 
     @Override
@@ -94,11 +105,14 @@ public class CodeViewerPlugin implements Plugin {
     @Override
     public void exitNode(QTreeNode node) {
         CodeViewer cv = codeViewers.get(node);
+
         if (cv != null) {
             CodeViewerPluginList.onClose();
             cv.getRecorder().onClose();
+
             bounds = cv.getBounds();
             cv.dispose();
+
             codeViewers.remove(node);
         }
     }
