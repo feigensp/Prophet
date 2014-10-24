@@ -2,6 +2,8 @@ package de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins;
 
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
@@ -30,7 +32,7 @@ public class CodeViewerPlugin implements Plugin {
 
     private Map<QTreeNode, CodeViewer> codeViewers;
 
-    private Rectangle bounds;
+    private Point eViewerLocation;
 
     /**
      * Constructs a new <code>CodeViewerPlugin</code>.
@@ -64,6 +66,17 @@ public class CodeViewerPlugin implements Plugin {
     @Override
     public void experimentViewerRun(EViewer experimentViewer) {
         this.experimentViewer = experimentViewer;
+        this.eViewerLocation = experimentViewer.getLocation();
+
+        this.experimentViewer.addComponentListener(new ComponentAdapter() {
+
+            @Override
+            public void componentMoved(ComponentEvent e) {
+                super.componentMoved(e);
+
+                eViewerLocation.setLocation(e.getComponent().getLocation());
+            }
+        });
     }
 
     @Override
@@ -84,12 +97,10 @@ public class CodeViewerPlugin implements Plugin {
 
         CodeViewer cv = new CodeViewer(node.getAttribute(KEY), saveDir);
 
-        if (bounds == null) {
-            Point location = experimentViewer.getLocation();
-            cv.setLocation(new Point(location.x + 20, location.y + 20));
-        } else {
-            cv.setBounds(bounds);
-        }
+        cv.pack();
+
+        Rectangle cvDim = cv.getBounds();
+        cv.setLocation(eViewerLocation.x - (cvDim.width + 10), eViewerLocation.y);
 
         codeViewers.put(node, cv);
 
@@ -109,8 +120,6 @@ public class CodeViewerPlugin implements Plugin {
         if (cv != null) {
             CodeViewerPluginList.onClose();
             cv.getRecorder().onClose();
-
-            bounds = cv.getBounds();
             cv.dispose();
 
             codeViewers.remove(node);
