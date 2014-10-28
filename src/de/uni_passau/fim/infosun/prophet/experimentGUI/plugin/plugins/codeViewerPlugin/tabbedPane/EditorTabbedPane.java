@@ -28,7 +28,7 @@ public class EditorTabbedPane extends JTabbedPane {
         this.recorder = recorder;
     }
 
-    public void openFile(String path) {
+    public void openFile(String path) { //TODO change this to take a Path
         if (!path.startsWith(System.getProperty("file.separator"))) {
             path = System.getProperty("file.separator") + path;
         }
@@ -38,9 +38,9 @@ public class EditorTabbedPane extends JTabbedPane {
             e.grabFocus();
             return;
         }
-        File file = new File(showDir.getPath() + path);
+        File file = new File(showDir.getPath() + path); //TODO if path is a Path path.toFile should be sufficient
         if (file.exists()) {
-            EditorPanel myPanel = new EditorPanel(file, path);
+            EditorPanel myPanel = new EditorPanel(file);
             recorder.onEditorPanelCreate(myPanel);
             CodeViewerPluginList.onEditorPanelCreate(myPanel);
             add(file.getName(), myPanel);

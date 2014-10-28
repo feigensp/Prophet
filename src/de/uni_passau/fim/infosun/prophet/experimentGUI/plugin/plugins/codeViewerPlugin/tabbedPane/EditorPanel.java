@@ -27,7 +27,7 @@ public class EditorPanel extends JPanel {
     private RSyntaxTextArea textArea;
     private RTextScrollPane scrollPane;
 
-    public EditorPanel(File file, String path) {
+    public EditorPanel(File file) {
         this.path = path;
         this.textArea = new ModifiedRSyntaxTextArea();
         this.scrollPane = new RTextScrollPane(textArea);
