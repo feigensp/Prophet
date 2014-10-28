@@ -60,7 +60,7 @@ public class Recorder {
                     currentNode = new LoggingTreeNode(LoggingTreeNode.TYPE_NOFILE);
                 } else {
                     currentNode = new LoggingTreeNode(LoggingTreeNode.TYPE_FILE);
-                    currentNode.setAttribute(ATTRIBUTE_PATH, currentTab.getFilePath());
+                    currentNode.setAttribute(ATTRIBUTE_PATH, currentTab.getPath());
                 }
                 rootNode.add(currentNode);
                 //Plugins aktualisieren
@@ -77,13 +77,13 @@ public class Recorder {
 
     public void onEditorPanelCreate(EditorPanel editorPanel) {
         LoggingTreeNode openedNode = new LoggingTreeNode(TYPE_OPENED);
-        openedNode.setAttribute(ATTRIBUTE_PATH, editorPanel.getFilePath());
+        openedNode.setAttribute(ATTRIBUTE_PATH, editorPanel.getPath());
         currentNode.add(openedNode);
     }
 
     public void onEditorPanelClose(EditorPanel editorPanel) {
         LoggingTreeNode closedNode = new LoggingTreeNode(TYPE_CLOSED);
-        closedNode.setAttribute(ATTRIBUTE_PATH, editorPanel.getFilePath());
+        closedNode.setAttribute(ATTRIBUTE_PATH, editorPanel.getPath());
         currentNode.add(closedNode);
     }
 
