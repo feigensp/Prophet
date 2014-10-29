@@ -85,7 +85,7 @@ public class EditAndSavePlugin implements CodeViewerPlugin {
     }
 
     private void saveEditorPanel(EditorPanel editorPanel) {
-        File file = new File(saveDir.getPath() + editorPanel.getPath());
+        File file = new File(saveDir.getPath() + editorPanel.getFile().getName());
         FileWriter fileWriter = null;
         try {
             file.getParentFile().mkdirs();
@@ -103,7 +103,7 @@ public class EditAndSavePlugin implements CodeViewerPlugin {
     public void onEditorPanelCreate(final EditorPanel editorPanel) {
         if (editable) {
             RSyntaxTextArea textArea = editorPanel.getTextArea();
-            File savedFile = new File(saveDir.getPath() + editorPanel.getPath());
+            File savedFile = new File(saveDir.getPath() + editorPanel.getFile().getName());
             if (savedFile.exists()) {
                 Document doc = textArea.getDocument();
                 DocumentListener[] listeners = removeDocumentListener((RSyntaxDocument) doc);

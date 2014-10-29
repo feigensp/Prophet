@@ -23,12 +23,17 @@ public class EditorPanel extends JPanel {
 
     private static final Font FONT = new Font("monospaced", Font.PLAIN, 12);
 
-    private String path;
+    private final File file;
     private RSyntaxTextArea textArea;
     private RTextScrollPane scrollPane;
 
+    /**
+     * Constructs a new <code>EditorPanel</code> displaying the text content of the given <code>File</code>.
+     *
+     * @param file the <code>File</code> to display
+     */
     public EditorPanel(File file) {
-        this.path = path;
+        this.file = file;
         this.textArea = new ModifiedRSyntaxTextArea();
         this.scrollPane = new RTextScrollPane(textArea);
 
@@ -55,15 +60,30 @@ public class EditorPanel extends JPanel {
         textArea.grabFocus();
     }
 
+    /**
+     * Returns the <code>RSyntaxTextArea</code> this <code>EditorPanel</code> uses.
+     *
+     * @return the <code>RSyntaxTextArea</code>
+     */
     public RSyntaxTextArea getTextArea() {
         return textArea;
     }
 
+    /**
+     * Returns the <code>RTextScrollPane</code> this <code>EditorPanel</code> uses.
+     *
+     * @return the <code>RTextScrollPane</code>
+     */
     public RTextScrollPane getScrollPane() {
         return scrollPane;
     }
 
-    public String getPath() {
-        return path;
+    /**
+     * Returns the <code>File</code> this <code>EditorPanel</code> is displaying.
+     *
+     * @return the <code>File</code>
+     */
+    public File getFile() {
+        return file;
     }
 }

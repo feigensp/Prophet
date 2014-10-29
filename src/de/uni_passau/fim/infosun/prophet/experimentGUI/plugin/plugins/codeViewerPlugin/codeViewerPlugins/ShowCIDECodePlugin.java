@@ -107,7 +107,7 @@ public class ShowCIDECodePlugin implements CodeViewerPlugin {
             DefaultHighlightPainter painterYellow = new DefaultHighlighter.DefaultHighlightPainter(Color.RED);
             editorPanel.getTextArea().setHighlighter(hilit);
             ArrayList<Triple<Integer, Integer, ArrayList<String>>> fileColoringInfos =
-                    coloringInfos.get(editorPanel.getPath());
+                    coloringInfos.get(editorPanel.getFile().getName());
             //wenn infos existieren, nutze sie
             if (fileColoringInfos != null) {
                 //anzahl der meisten features die gleichzeitig vorhanden sind holen

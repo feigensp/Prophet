@@ -69,7 +69,7 @@ public class EditorTabbedPane extends JTabbedPane {
     public EditorPanel getEditorPanel(String path) {
         for (int i = 0; i < getTabCount(); i++) {
             Component myComp = getComponentAt(i);
-            if ((myComp instanceof EditorPanel) && ((EditorPanel) myComp).getPath().equals(path)) {
+            if ((myComp instanceof EditorPanel) && ((EditorPanel) myComp).getFile().getName().equals(path)) {
                 return (EditorPanel) myComp;
             }
         }
