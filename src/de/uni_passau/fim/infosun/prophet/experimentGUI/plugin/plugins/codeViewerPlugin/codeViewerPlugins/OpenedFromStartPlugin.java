@@ -39,9 +39,8 @@ public class OpenedFromStartPlugin implements CodeViewerPlugin {
     public void onFrameCreate(CodeViewer viewer) {
         if (Boolean.parseBoolean(selected.getSubAttribute(KEY).getValue())) {
             Attribute attributes = selected.getSubAttribute(KEY);
-            String path =
-                    attributes.getSubAttribute(KEY_PATH).getValue().replace('/',
-                            System.getProperty("file.separator").charAt(0));
+            String path = attributes.getSubAttribute(KEY_PATH).getValue();
+
             viewer.getTabbedPane().openFile(path);
             viewer.getFileTree().selectFile(path);
         }
@@ -49,13 +48,16 @@ public class OpenedFromStartPlugin implements CodeViewerPlugin {
 
     @Override
     public void onEditorPanelCreate(EditorPanel editorPanel) {
+
     }
 
     @Override
     public void onEditorPanelClose(EditorPanel editorPanel) {
+
     }
 
     @Override
     public void onClose() {
+
     }
 }
