@@ -12,7 +12,6 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewer
 
 import static de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames.getLocalized;
 
-@SuppressWarnings("serial")
 public class EditorTabbedPane extends JTabbedPane {
 
     private File showDir;
@@ -74,9 +73,5 @@ public class EditorTabbedPane extends JTabbedPane {
             }
         }
         return null;
-    }
-
-    public File getShowDir() {
-        return showDir;
     }
 }
