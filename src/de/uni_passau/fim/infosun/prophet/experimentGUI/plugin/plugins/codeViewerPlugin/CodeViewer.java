@@ -86,7 +86,7 @@ public class CodeViewer extends JFrame implements FileListener {
 
         recorder = new Recorder(selected);
 
-        tabbedPane = new EditorTabbedPane(showDir, recorder);
+        tabbedPane = new EditorTabbedPane(recorder);
         tabbedPane.setBorder(null);
         splitPane.setRightComponent(tabbedPane);
 
@@ -106,8 +106,9 @@ public class CodeViewer extends JFrame implements FileListener {
 
     @Override
     public void fileEventOccurred(FileEvent event) {
+
         if (event.getID() == FileEvent.FILE_OPENED) {
-            tabbedPane.openFile(event.getFilePath());
+            tabbedPane.openFile(event.getFile());
         }
     }
 

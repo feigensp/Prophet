@@ -7,7 +7,12 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.util.Vector;
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+import javax.swing.JToolBar;
 import javax.swing.tree.DefaultTreeModel;
 
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin.CodeViewer;
@@ -88,7 +93,7 @@ public class GlobalSearchBar extends JToolBar implements ActionListener {
         forwardButton.addActionListener(this);
 
         tree = new FileTree(null);
-        tree.addFileListener(event -> viewer.getTabbedPane().openFile(event.getFilePath()));
+        tree.addFileListener(event -> viewer.getTabbedPane().openFile(event.getFile()));
         this.file = file;
 
         northPanel.add(forwardButton);

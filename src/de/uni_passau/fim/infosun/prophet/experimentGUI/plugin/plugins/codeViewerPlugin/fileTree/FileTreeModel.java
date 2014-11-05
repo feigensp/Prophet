@@ -1,5 +1,10 @@
 package de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin.fileTree;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
@@ -72,5 +77,31 @@ public class FileTreeModel implements TreeModel {
     @Override
     public void removeTreeModelListener(TreeModelListener l) {
         // no events fired by this model
+    }
+
+    public FileTreeNode[] buildPath(File file) {
+
+        if (root == null) {
+            return null;
+        }
+
+        List<FileTreeNode> path = new ArrayList<>();
+        FileTreeNode searchNode = root;
+
+        //TODO implement building the path
+
+        return path.isEmpty() ? null : path.toArray(new FileTreeNode[path.size()]);
+    }
+
+    private boolean isSameFile(File first, File second) {
+        try {
+            return Files.isSameFile(first.toPath(), second.toPath());
+        } catch (IOException e) {
+            return false;
+        }
+    }
+
+    private boolean isChild(File child, File parent) {
+        return child.toPath().startsWith(parent.toPath().toAbsolutePath());
     }
 }

@@ -1,5 +1,7 @@
 package de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin.codeViewerPlugins;
 
+import java.io.File;
+
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin.CodeViewer;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin.CodeViewerPlugin;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin.tabbedPane.EditorPanel;
@@ -40,9 +42,10 @@ public class OpenedFromStartPlugin implements CodeViewerPlugin {
         if (Boolean.parseBoolean(selected.getSubAttribute(KEY).getValue())) {
             Attribute attributes = selected.getSubAttribute(KEY);
             String path = attributes.getSubAttribute(KEY_PATH).getValue();
+            File file = new File(path);
 
-            viewer.getTabbedPane().openFile(path);
-            viewer.getFileTree().selectFile(path);
+            viewer.getTabbedPane().openFile(file);
+            viewer.getFileTree().selectFile(file);
         }
     }
 
