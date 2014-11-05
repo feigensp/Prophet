@@ -95,7 +95,7 @@ public class GlobalSearchBar extends JToolBar implements ActionListener {
         northPanel.add(regexCB);
         northPanel.add(matchCaseCB);
         mainPanel.add(northPanel, BorderLayout.NORTH);
-        mainPanel.add(tree, BorderLayout.CENTER);
+        mainPanel.add(new JScrollPane(tree), BorderLayout.CENTER);
         add(mainPanel);
     }
 
@@ -118,7 +118,7 @@ public class GlobalSearchBar extends JToolBar implements ActionListener {
         if (file.exists()) {
             root = new FileTreeNode(file);
         } else {
-            tree.getTree().setModel(new DefaultTreeModel(null));
+            tree.setModel(new DefaultTreeModel(null));
             return;
         }
 
@@ -178,7 +178,7 @@ public class GlobalSearchBar extends JToolBar implements ActionListener {
 //            }
 //        }
 
-        tree.getTree().setModel(new FileTreeModel(root));
+        tree.setModel(new FileTreeModel(root));
 
         for (SearchBarListener l : listeners) {
             l.searched(command, text, root.getChildCount() > 0);

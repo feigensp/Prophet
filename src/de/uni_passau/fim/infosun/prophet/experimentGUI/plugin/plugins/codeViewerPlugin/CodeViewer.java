@@ -4,12 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.io.File;
-import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JSplitPane;
+import javax.swing.*;
 import javax.swing.plaf.basic.BasicSplitPaneDivider;
 
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin.fileTree.FileEvent;
@@ -81,7 +76,7 @@ public class CodeViewer extends JFrame implements FileListener {
         myTree.setBorder(null);
         myTree.setPreferredSize(new Dimension(200, 400));
         myTree.addFileListener(this);
-        splitPane.setLeftComponent(myTree);
+        splitPane.setLeftComponent(new JScrollPane(myTree));
 
         recorder = new Recorder(selected);
 
