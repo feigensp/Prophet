@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -127,6 +128,15 @@ public class FileTreeNode {
      */
     public int getChildCount() {
         return children.size();
+    }
+
+    /**
+     * Returns an unmodifiable view of the children of this <code>FileTreeNode</code>.
+     *
+     * @return the children of this node
+     */
+    public List<FileTreeNode> getChildren() {
+        return Collections.unmodifiableList(children);
     }
 
     /**
