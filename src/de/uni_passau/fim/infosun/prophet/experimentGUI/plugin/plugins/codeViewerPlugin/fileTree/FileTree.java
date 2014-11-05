@@ -86,7 +86,7 @@ public class FileTree extends JTree { //TODO remove all the String paths, use ca
     private void fireFileOpenedEvent(String filePath) {
         FileEvent event = new FileEvent(this, FileEvent.FILE_OPENED, filePath);
 
-        fileListeners.forEach(listener -> listener.fileEventOccured(event));
+        fileListeners.forEach(listener -> listener.fileEventOccurred(event));
     }
 
     /**

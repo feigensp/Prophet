@@ -4,7 +4,13 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.io.File;
-import javax.swing.*;
+import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
 import javax.swing.plaf.basic.BasicSplitPaneDivider;
 
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin.fileTree.FileEvent;
@@ -99,9 +105,9 @@ public class CodeViewer extends JFrame implements FileListener {
     }
 
     @Override
-    public void fileEventOccured(FileEvent arg0) {
-        if (arg0.getID() == FileEvent.FILE_OPENED) {
-            tabbedPane.openFile(arg0.getFilePath());
+    public void fileEventOccurred(FileEvent event) {
+        if (event.getID() == FileEvent.FILE_OPENED) {
+            tabbedPane.openFile(event.getFilePath());
         }
     }
 
