@@ -4,14 +4,11 @@ import java.awt.Dimension;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Vector;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
@@ -29,15 +26,15 @@ public class FileTree extends JScrollPane {
 
     private FileTreeNode root;
 
-    public FileTree(File dir) {
-        rootDir = dir;
-//		FileTreeNode treeNode;
-        try {
-            root = new FileTreeNode(rootDir);
-            tree = new JTree(new FileTreeModel(root));
-        } catch (FileNotFoundException e1) {
-            tree = new JTree(new DefaultTreeModel(new DefaultMutableTreeNode()));
+    public FileTree(File rootDir) {
+        this.rootDir = rootDir;
+
+        if (rootDir.exists()) {
+            this.root = new FileTreeNode(rootDir);
         }
+
+        this.tree = new JTree(new FileTreeModel(root));
+
         this.setMinimumSize(new Dimension(150, 0));
         tree.addMouseListener(new MouseAdapter() {
 
@@ -99,8 +96,8 @@ public class FileTree extends JScrollPane {
             FileTreeNode currentNode = root;
             for (String pathElement : pathElements) {
                 for (int j = 0; j < currentNode.getChildCount(); j++) {
-                    if (currentNode.getChildAt(j).toString().equals(pathElement)) {
-                        currentNode = (FileTreeNode) currentNode.getChildAt(j);
+                    if (currentNode.getChild(j).toString().equals(pathElement)) {
+                        currentNode = currentNode.getChild(j);
                         treePathList.add(currentNode);
                         break;
                     }
