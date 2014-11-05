@@ -1,6 +1,7 @@
 package de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin.fileTree;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -39,7 +40,6 @@ public class FileTreeNode {
      *
      * @param file
      *         the <code>File</code> to create a <code>FileTreeNode</code> structure for
-     *
      * @param parent
      *         the parent <code>FileTreeNode</code> for this node, <code>null</code> for the root node of a tree
      *
@@ -57,8 +57,14 @@ public class FileTreeNode {
         }
 
         this.parent = parent;
-        this.file = file;
         this.children = new ArrayList<>();
+
+        try {
+            this.file = file.getCanonicalFile();
+        } catch (IOException e) {
+            System.err.println("Could not convert " + file + " to a canonical file. Using absolute file instead.");
+            this.file = file.getAbsoluteFile();
+        }
 
         if (!file.isFile()) {
 
@@ -83,12 +89,14 @@ public class FileTreeNode {
     }
 
     /**
-     * Equivalent to .getFile().getPath().
+     * Returns the <code>File</code> this <code>FileTreeNode</code> represents. This <code>File</code> is not
+     * guaranteed to be canonical (though it will be if there is no IOException when trying to canonicalize it) but
+     * it will always be an absolute <code>File</code>.
      *
-     * @return the path of the file this <code>FileTreeNode</code> represents
+     * @return the canonical <code>File</code>
      */
-    public String getFilePath() { // TODO replace this methods usages by .getFile().getPath()/.getName()
-        return file.getPath();
+    public File getFile() {
+        return file;
     }
 
     /**
@@ -103,7 +111,9 @@ public class FileTreeNode {
     /**
      * Returns the index of the given <code>child</code> in this <code>FileTreeNode</code>s children list.
      *
-     * @param child the child the get the index for
+     * @param child
+     *         the child the get the index for
+     *
      * @return the index, possibly -1 if <code>child</code> is not a child of this node
      */
     public int getIndexOfChild(FileTreeNode child) {
@@ -122,7 +132,9 @@ public class FileTreeNode {
     /**
      * Returns the child at the given index or <code>null</code> if the index is invalid.
      *
-     * @param index the index of the child
+     * @param index
+     *         the index of the child
+     *
      * @return the child <code>FileTreeNode</code> or <code>null</code>
      */
     public FileTreeNode getChild(int index) {
