@@ -6,23 +6,14 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.util.Vector;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.JToolBar;
+import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;
 
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin.CodeViewer;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin.fileTree.FileTree;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin.fileTree.FileTreeModel;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin.fileTree.FileTreeNode;
-import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
-import org.fife.ui.rtextarea.SearchContext;
-import org.fife.ui.rtextarea.SearchEngine;
 
 import static de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames.getLocalized;
 
@@ -123,70 +114,69 @@ public class GlobalSearchBar extends JToolBar implements ActionListener {
         }
 
         FileTreeNode root;
-        try {
+
+        if (file.exists()) {
             root = new FileTreeNode(file);
-        } catch (FileNotFoundException e1) {
+        } else {
             tree.getTree().setModel(new DefaultTreeModel(null));
             return;
         }
 
-        if (getNextLeaf(root) == null) {
-            root.removeAllChildren();
-        } else {
-            boolean forward = true;
-            boolean matchCase = matchCaseCB.isSelected();
-            boolean wholeWord = false;
-            boolean regex = regexCB.isSelected();
-
-            FileTreeNode current = getNextLeaf(root);
-            FileTreeNode delete = null;
-
-            RSyntaxTextArea textArea = new RSyntaxTextArea();
-
-            while (current != null) {
-//				System.out.println("CURR: "+current.getFilePath());
-                if (current.isFile()) {
-                    try {
-                        String path = file.getPath() + current.getFilePath();
-                        File currentFile = new File(path);
-                        byte[] buffer = new byte[(int) (currentFile).length()];
-                        FileInputStream fileStream = new FileInputStream(currentFile);
-                        fileStream.read(buffer);
-                        textArea.setText(new String(buffer));
-                        textArea.setCaretPosition(0);
-
-                        SearchContext searchContext = new SearchContext();
-                        searchContext.setSearchFor(text);
-                        searchContext.setSearchForward(forward);
-                        searchContext.setMatchCase(matchCase);
-                        searchContext.setWholeWord(wholeWord);
-                        searchContext.setRegularExpression(regex);
-
-                        //					    System.out.println("-- found: "+found);
-                        if (!SearchEngine.find(textArea, searchContext).wasFound()) {
-                            delete = current;
-                        }
-                    } catch (Exception e) {
-//						System.out.println("-- exception");
-                        delete = current;
-                    }
-                } else {
-//					System.out.println("-- no file");
-                    delete = current;
-                }
-                current = getNextLeaf(current);
-                while (delete != null) {
-                    FileTreeNode parent = (FileTreeNode) delete.getParent();
-//					System.out.println("-- DEL: "+delete.getFilePath());
-                    delete.removeFromParent();
-                    if (parent != null && parent.getChildCount() == 0) {
-                        delete = parent;
-                    } else {
-                        delete = null;
-                    }
-                }
-            }
-        }
+//        if (getNextLeaf(root) == null) {
+//            root.removeAllChildren();
+//        } else {
+//            boolean forward = true;
+//            boolean matchCase = matchCaseCB.isSelected();
+//            boolean wholeWord = false;
+//            boolean regex = regexCB.isSelected();
+//
+//            FileTreeNode current = getNextLeaf(root);
+//            FileTreeNode delete = null;
+//
+//            RSyntaxTextArea textArea = new RSyntaxTextArea();
+//
+//            while (current != null) {
+//
+//                if (current.isFile()) {
+//                    try {
+//                        String path = file.getPath() + current.getFilePath();
+//                        File currentFile = new File(path);
+//                        byte[] buffer = new byte[(int) (currentFile).length()];
+//                        FileInputStream fileStream = new FileInputStream(currentFile);
+//                        fileStream.read(buffer);
+//                        textArea.setText(new String(buffer));
+//                        textArea.setCaretPosition(0);
+//
+//                        SearchContext searchContext = new SearchContext();
+//                        searchContext.setSearchFor(text);
+//                        searchContext.setSearchForward(forward);
+//                        searchContext.setMatchCase(matchCase);
+//                        searchContext.setWholeWord(wholeWord);
+//                        searchContext.setRegularExpression(regex);
+//
+//                        if (!SearchEngine.find(textArea, searchContext).wasFound()) {
+//                            delete = current;
+//                        }
+//                    } catch (Exception e) {
+//                        delete = current;
+//                    }
+//                } else {
+//                    delete = current;
+//                }
+//
+//                current = getNextLeaf(current);
+//                while (delete != null) {
+//                    FileTreeNode parent = delete.getParent();
+//
+//                    delete.removeFromParent();
+//                    if (parent != null && parent.getChildCount() == 0) {
+//                        delete = parent;
+//                    } else {
+//                        delete = null;
+//                    }
+//                }
+//            }
+//        }
 
         tree.getTree().setModel(new FileTreeModel(root));
 
@@ -219,10 +209,10 @@ public class GlobalSearchBar extends JToolBar implements ActionListener {
         return tree;
     }
 
-    private FileTreeNode getNextLeaf(FileTreeNode node) {
-        do {
-            node = (FileTreeNode) node.getNextNode();
-        } while (node != null && !node.isLeaf());
-        return node;
-    }
+//    private FileTreeNode getNextLeaf(FileTreeNode node) {
+//        do {
+//            node = node.getNextNode();
+//        } while (node != null && !node.isFile());
+//        return node;
+//    }
 }
