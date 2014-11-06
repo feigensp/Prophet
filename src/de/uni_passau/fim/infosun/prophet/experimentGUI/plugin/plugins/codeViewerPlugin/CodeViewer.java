@@ -4,13 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.io.File;
-import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
+import javax.swing.*;
 import javax.swing.plaf.basic.BasicSplitPaneDivider;
 
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin.fileTree.FileEvent;
@@ -23,15 +17,17 @@ import static de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIEl
 
 public class CodeViewer extends JFrame implements FileListener {
 
-    public final static String KEY_PATH = "path";
-    public final static String KEY_EDITABLE = "editable";
+    public static final String KEY_PATH = "path";
+    public static final String KEY_EDITABLE = "editable";
+
+    public static final int WIDTH = 400;
+    public static final int HEIGHT = 300;
 
     private JMenuBar menuBar;
     private JMenu fileMenu;
     private JMenu editMenu;
 
-    private JSplitPane splitPane;
-    private FileTree myTree;
+    private FileTree fileTree;
     private EditorTabbedPane tabbedPane;
 
     private File showDir;
@@ -41,7 +37,8 @@ public class CodeViewer extends JFrame implements FileListener {
 
     public CodeViewer(Attribute selected, File saveDir) {
         setTitle(getLocalized("TITLE_CODE_VIEWER"));
-        setSize(800, 600);
+        setPreferredSize(new Dimension(WIDTH, HEIGHT));
+        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         setLayout(new BorderLayout());
 
         if (selected == null) {
@@ -65,24 +62,23 @@ public class CodeViewer extends JFrame implements FileListener {
         }
 
         menuBar = new JMenuBar();
-        setJMenuBar(menuBar);
         menuBar.setVisible(false);
+        setJMenuBar(menuBar);
 
         fileMenu = new JMenu(getLocalized("MENU_FILE"));
-        menuBar.add(fileMenu);
         fileMenu.setVisible(false);
+        menuBar.add(fileMenu);
 
         editMenu = new JMenu(getLocalized("MENU_EDIT"));
-        menuBar.add(editMenu);
         editMenu.setVisible(false);
+        menuBar.add(editMenu);
 
-        splitPane = new JSplitPane();
+        JSplitPane splitPane = new JSplitPane();
 
-        myTree = new FileTree(showDir);
-        myTree.setBorder(null);
-        myTree.setPreferredSize(new Dimension(200, 400));
-        myTree.addFileListener(this);
-        splitPane.setLeftComponent(new JScrollPane(myTree));
+        fileTree = new FileTree(showDir);
+        fileTree.setBorder(null);
+        fileTree.addFileListener(this);
+        splitPane.setLeftComponent(new JScrollPane(fileTree));
 
         recorder = new Recorder(selected);
 
@@ -102,6 +98,8 @@ public class CodeViewer extends JFrame implements FileListener {
         CodeViewerPluginList.init(selected);
         recorder.onFrameCreate(this);
         CodeViewerPluginList.onFrameCreate(this);
+
+        pack();
     }
 
     @Override
@@ -116,12 +114,8 @@ public class CodeViewer extends JFrame implements FileListener {
         return recorder;
     }
 
-    public JSplitPane getSplitPane() {
-        return splitPane;
-    }
-
     public FileTree getFileTree() {
-        return myTree;
+        return fileTree;
     }
 
     public EditorTabbedPane getTabbedPane() {
@@ -136,17 +130,33 @@ public class CodeViewer extends JFrame implements FileListener {
         return saveDir;
     }
 
+    /**
+     * Adds a <code>JMenu</code> to the <code>JMenuBar</code> this <code>CodeViewer</code> uses.
+     *
+     * @param menu the <code>JMenu</code> to add
+     */
     public void addMenu(JMenu menu) {
         menuBar.add(menu);
         menuBar.setVisible(true);
     }
 
+    /**
+     * Adds a <code>JMenuItem</code> to the 'File' menu of the <code>JMenuBar</code> this <code>CodeViewer</code> uses.
+     *
+     * @param item the <code>JMenuItem</code> to add
+     */
     public void addMenuItemToFileMenu(JMenuItem item) {
         fileMenu.add(item);
         fileMenu.setVisible(true);
         menuBar.setVisible(true);
     }
 
+    /**
+     * Adds a <code>JMenuItem</code> to the 'Edit' menu of the <code>JMenuBar</code> this <code>CodeViewer</code> uses.
+     *
+     * @param item
+     *         the <code>JMenuItem</code> to add
+     */
     public void addMenuItemToEditMenu(JMenuItem item) {
         editMenu.add(item);
         editMenu.setVisible(true);
