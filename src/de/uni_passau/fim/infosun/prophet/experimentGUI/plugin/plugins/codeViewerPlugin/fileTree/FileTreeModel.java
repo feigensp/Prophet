@@ -79,20 +79,43 @@ public class FileTreeModel implements TreeModel {
         // no events fired by this model
     }
 
+    /**
+     * Builds a <code>FileTreeNode[]</code> representing the path to take through the tree to arrive at a
+     * <code>FileTreeNode</code> representing the given <code>File</code>. Returns <code>null</code> if there is no such
+     * node in the tree.
+     *
+     * @param file the file to build the path to
+     * @return the path
+     */
     public FileTreeNode[] buildPath(File file) {
 
-        if (root == null) {
+        if (root == null || !isChild(root.getFile(), file)) {
             return null;
         }
 
         List<FileTreeNode> path = new ArrayList<>();
         FileTreeNode searchNode = root;
 
-        //TODO implement building the path
+        do {
+            path.add(searchNode);
+            searchNode = searchNode.getChildren().stream().filter(node -> isChild(node.getFile(), file)).findFirst().orElse(null);
+        } while (searchNode != null);
 
-        return path.isEmpty() ? null : path.toArray(new FileTreeNode[path.size()]);
+        if (!path.isEmpty() && isSameFile(path.get(path.size() - 1).getFile(), file)) {
+            return path.toArray(new FileTreeNode[path.size()]);
+        } else {
+            return null;
+        }
     }
 
+    /**
+     * Checks whether two <code>File</code> instances represent the same file. Will return <code>false</code> if
+     * there is an <code>IOException</code> trying to determine this.
+     *
+     * @param first the first <code>File</code>
+     * @param second the second <code>File</code>
+     * @return true iff the two <code>File</code> represent the same file
+     */
     private boolean isSameFile(File first, File second) {
         try {
             return Files.isSameFile(first.toPath(), second.toPath());
@@ -101,7 +124,15 @@ public class FileTreeModel implements TreeModel {
         }
     }
 
-    private boolean isChild(File child, File parent) {
-        return child.toPath().startsWith(parent.toPath().toAbsolutePath());
+    /**
+     * Checks whether the given <code>file</code> is a child (in the file system directory structure) of the
+     * <code>File</code> <code>parent</code>.
+     *
+     * @param parent the parent <code>File</code> to check against
+     * @param file the file to check
+     * @return true iff <code>file</code> is a child of <code>parent</code>
+     */
+    private boolean isChild(File parent, File file) {
+        return file.toPath().toAbsolutePath().startsWith(parent.toPath().toAbsolutePath());
     }
 }
