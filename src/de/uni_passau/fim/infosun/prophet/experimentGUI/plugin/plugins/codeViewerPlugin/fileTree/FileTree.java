@@ -6,6 +6,7 @@ import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 import javax.swing.JTree;
+import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
@@ -102,6 +103,28 @@ public class FileTree extends JTree {
 
             setSelectionPath(treePath);
             makeVisible(treePath);
+        }
+    }
+
+    /**
+     * Sets the <code>TreeModel</code> that will provide the data. <code>FileTree</code> only accepts non-null models
+     * of type <code>FileTreeModel</code>.
+     * <p>
+     * This is a bound property.
+     *
+     * @param newModel
+     *         the <code>TreeModel</code> that is to provide the data
+     * @throws IllegalArgumentException
+     *         if <code>newModel</code> is not of type <code>FileTreeModel</code>
+     */
+    @Override
+    public void setModel(TreeModel newModel) {
+
+        if (newModel instanceof FileTreeModel) {
+            model = (FileTreeModel) newModel;
+            super.setModel(newModel);
+        } else {
+            throw new IllegalArgumentException("newModel must be of type " + FileTreeModel.class.getSimpleName());
         }
     }
 }
