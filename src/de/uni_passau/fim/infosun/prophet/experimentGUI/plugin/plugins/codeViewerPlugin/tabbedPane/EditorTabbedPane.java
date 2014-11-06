@@ -12,11 +12,21 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewer
 
 import static de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames.getLocalized;
 
+/**
+ * The right-side <code>JTabbedPane</code> of the <code>CodeViewer</code>. Displays tabs containing
+ * <code>EditorPanel</code> instances.
+ */
 public class EditorTabbedPane extends JTabbedPane {
 
     private Recorder recorder;
     private Map<File, EditorPanel> panels;
 
+    /**
+     * Constructs a new <code>EditorTabbedPane</code> using the given <code>Recorder</code>.
+     *
+     * @param recorder
+     *         the <code>Recorder</code> of the <code>CodeViewer</code> containing this <code>EditorTabbedPane</code>
+     */
     public EditorTabbedPane(Recorder recorder) {
         super(JTabbedPane.TOP);
 
@@ -26,6 +36,13 @@ public class EditorTabbedPane extends JTabbedPane {
         this.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
     }
 
+    /**
+     * Opens a new <code>EditorPanel</code> tab displaying the text content of the given <code>File</code>. If a
+     * tab for <code>file</code> is already open it will be selected.
+     *
+     * @param file
+     *         the <code>File</code> to display
+     */
     public void openFile(File file) {
         EditorPanel panel;
 
@@ -53,10 +70,23 @@ public class EditorTabbedPane extends JTabbedPane {
         }
     }
 
+    /**
+     * Closes the tab displaying <code>file</code> if there is one.
+     *
+     * @param file
+     *         the <code>File</code> whose tab is to be closed
+     */
     public void closeFile(File file) {
         closeEditorPanel(panels.get(file));
     }
 
+    /**
+     * Closes the given <code>EditorPanel</code> if it is currently being displayed in a tab by this
+     * <code>EditorTabbedPane</code>.
+     *
+     * @param panel
+     *         the <code>EditorPanel</code> to close
+     */
     public void closeEditorPanel(EditorPanel panel) {
         boolean panelFound;
 
