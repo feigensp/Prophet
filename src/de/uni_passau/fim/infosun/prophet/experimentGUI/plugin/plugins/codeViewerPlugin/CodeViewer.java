@@ -4,7 +4,13 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.io.File;
-import javax.swing.*;
+import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
 import javax.swing.plaf.basic.BasicSplitPaneDivider;
 
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin.fileTree.FileEvent;
@@ -15,6 +21,9 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.Attribute;
 
 import static de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames.getLocalized;
 
+/**
+ * A <code>JFrame</code> implementing the GUI for the <code>CodeViewerPlugin</code>.
+ */
 public class CodeViewer extends JFrame implements FileListener {
 
     public static final String KEY_PATH = "path";
@@ -35,30 +44,40 @@ public class CodeViewer extends JFrame implements FileListener {
 
     private Recorder recorder;
 
-    public CodeViewer(Attribute selected, File saveDir) {
+    /**
+     * Constructs a new <code>CodeViewer</code> taking its settings from the sub-attributes of th given
+     * <code>Attribute</code>.
+     *
+     * @param cvAttributes
+     *         the <code>Attribute</code> obtained from the currently selected <code>QTreeNode</code> by
+     *         the <code>CodeViewerPlugin</code>
+     * @param saveDir
+     *         the directory in which data produced by this <code>CodeViewer</code> should be saved
+     *
+     * @throws NullPointerException
+     *         if <code>cvAttributes</code> or <code>saveDir</code> is <code>null</code>
+     */
+    public CodeViewer(Attribute cvAttributes, File saveDir) {
+
+        if (cvAttributes == null || saveDir == null) {
+            throw new NullPointerException("Neither cvAttributes nor saveDir may be null.");
+        }
+
         setTitle(getLocalized("TITLE_CODE_VIEWER"));
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         setLayout(new BorderLayout());
 
-        if (selected == null) {
-            selected = new Attribute("", ""); //TODO does this ever happen?
-        }
-
-        if (saveDir == null) {
-            saveDir = new File(".");
-        }
         this.saveDir = saveDir;
 
-        //read settings, store in variables
+        if (cvAttributes.containsSubAttribute(KEY_PATH)) {
+            showDir = new File(cvAttributes.getSubAttribute(KEY_PATH).getValue());
 
-        String showPath = selected.getSubAttribute(KEY_PATH).getValue()
-                .replace('/', System.getProperty("file.separator").charAt(0));
-        showDir = new File(showPath.length() == 0 ? "." : showPath);
-        if (!showDir.exists()) {
-            JOptionPane
-                    .showMessageDialog(this, getLocalized("MESSAGE_PATH_DOES_NOT_EXIST"), getLocalized("MESSAGE_ERROR"),
-                            JOptionPane.ERROR_MESSAGE);
+            if (!showDir.exists()) {
+                String message = getLocalized("MESSAGE_PATH_DOES_NOT_EXIST");
+                String title = getLocalized("MESSAGE_ERROR");
+                JOptionPane.showMessageDialog(this, message, title, JOptionPane.ERROR_MESSAGE);
+            }
         }
 
         menuBar = new JMenuBar();
@@ -80,7 +99,7 @@ public class CodeViewer extends JFrame implements FileListener {
         fileTree.addFileListener(this);
         splitPane.setLeftComponent(new JScrollPane(fileTree));
 
-        recorder = new Recorder(selected);
+        recorder = new Recorder(cvAttributes);
 
         tabbedPane = new EditorTabbedPane(recorder);
         tabbedPane.setBorder(null);
@@ -95,7 +114,7 @@ public class CodeViewer extends JFrame implements FileListener {
 
         add(splitPane, BorderLayout.CENTER);
 
-        CodeViewerPluginList.init(selected);
+        CodeViewerPluginList.init(cvAttributes);
         recorder.onFrameCreate(this);
         CodeViewerPluginList.onFrameCreate(this);
 
@@ -110,22 +129,49 @@ public class CodeViewer extends JFrame implements FileListener {
         }
     }
 
+    /**
+     * Returns the <code>Recorder</code> used by this <code>CodeViewer</code>.
+     *
+     * @return the <code>Recorder</code>
+     */
     public Recorder getRecorder() {
         return recorder;
     }
 
+    /**
+     * Returns the <code>FileTree</code> that is the left hand side of the <code>CodeViewer</code>.
+     *
+     * @return the <code>FileTree</code>
+     */
     public FileTree getFileTree() {
         return fileTree;
     }
 
+    /**
+     * Returns the <code>EditorTabbedPane</code> that is the right hand side of the <code>CodeViewer</code>.
+     *
+     * @return the <code>EditorTabbedPane</code>
+     */
     public EditorTabbedPane getTabbedPane() {
         return tabbedPane;
     }
 
+    /**
+     * Returns the <code>File</code> representing the directory whose contents are being displayed in this
+     * <code>CodeViewer</code>s <code>FileTree</code>.
+     *
+     * @return the shown directory
+     */
     public File getShowDir() {
         return showDir;
     }
 
+    /**
+     * Returns the <code>File</code> representing the directory in which this <code>CodeViewer</code> saves the data
+     * it produces.
+     *
+     * @return the save directory
+     */
     public File getSaveDir() {
         return saveDir;
     }
@@ -133,7 +179,8 @@ public class CodeViewer extends JFrame implements FileListener {
     /**
      * Adds a <code>JMenu</code> to the <code>JMenuBar</code> this <code>CodeViewer</code> uses.
      *
-     * @param menu the <code>JMenu</code> to add
+     * @param menu
+     *         the <code>JMenu</code> to add
      */
     public void addMenu(JMenu menu) {
         menuBar.add(menu);
@@ -143,7 +190,8 @@ public class CodeViewer extends JFrame implements FileListener {
     /**
      * Adds a <code>JMenuItem</code> to the 'File' menu of the <code>JMenuBar</code> this <code>CodeViewer</code> uses.
      *
-     * @param item the <code>JMenuItem</code> to add
+     * @param item
+     *         the <code>JMenuItem</code> to add
      */
     public void addMenuItemToFileMenu(JMenuItem item) {
         fileMenu.add(item);
