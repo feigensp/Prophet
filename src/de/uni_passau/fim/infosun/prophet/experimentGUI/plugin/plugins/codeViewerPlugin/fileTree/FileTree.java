@@ -1,118 +1,130 @@
 package de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin.fileTree;
 
-import java.awt.Dimension;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.Vector;
-import javax.swing.JScrollPane;
+import java.util.LinkedList;
+import java.util.List;
 import javax.swing.JTree;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
 /**
- * Display a file system in a JTree view
+ * A <code>JTree</code> displaying the filesystem directory structure under a given <code>File</code>.
+ * Fires <code>FileEvent</code>s when files are double clicked.
  *
- * @author Andreas Hasselberg, Markus Koeppen
+ * @author Georg Seibt
+ * @author Andreas Hasselberg
+ * @author Markus Koeppen
  */
-@SuppressWarnings("serial")
-public class FileTree extends JScrollPane {
+public class FileTree extends JTree {
 
-    private JTree tree;
-    private File rootDir;
-    private Vector<FileListener> fileListeners;
+    private List<FileListener> fileListeners;
 
-    private FileTreeNode root;
+    private FileTreeModel model;
 
-    public FileTree(File dir) {
-        rootDir = dir;
-//		FileTreeNode treeNode;
-        try {
-            root = new FileTreeNode(rootDir);
-            tree = new JTree(new FileTreeModel(root));
-        } catch (FileNotFoundException e1) {
-            tree = new JTree(new DefaultTreeModel(new DefaultMutableTreeNode()));
-        }
-        this.setMinimumSize(new Dimension(150, 0));
-        tree.addMouseListener(new MouseAdapter() {
+    /**
+     * Constructs a new <code>FileTree</code> displaying the directory structure under <code>rootDir</code>.
+     *
+     * @param rootDir
+     *         the root directory for the <code>FileTree</code>
+     */
+    public FileTree(File rootDir) {
+        super(new FileTreeModel((rootDir != null && rootDir.exists()) ? new FileTreeNode(rootDir) : null));
+
+        this.fileListeners = new LinkedList<>();
+        this.model = (FileTreeModel) getModel();
+
+        addMouseListener(new MouseAdapter() {
 
             @Override
             public void mousePressed(MouseEvent e) {
-                TreePath selPath = tree.getPathForLocation(e.getX(), e.getY());
-                if ((e.getClickCount() == 2) && (selPath != null) && ((FileTreeNode) selPath.getLastPathComponent())
-                        .isFile()) {
-                    fireFileEvent(((FileTreeNode) selPath.getLastPathComponent()).getFilePath());
-                }
-            }
-        });
-        tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
-        setViewportView(tree);
-    }
+                TreePath selPath = getPathForLocation(e.getX(), e.getY());
 
-    /*
-     * Vorbereitungen zum Casten eines ActionEvents
-     */
-    public void addFileListener(FileListener l) {
-        if (fileListeners == null) {
-            fileListeners = new Vector<>();
-        }
-        fileListeners.addElement(l);
-    }
+                if ((e.getClickCount() == 2) && (selPath != null)) {
+                    FileTreeNode lastPathComponent = (FileTreeNode) selPath.getLastPathComponent();
 
-    public void removeFileListener(FileListener l) {
-        if (fileListeners != null) {
-            fileListeners.removeElement(l);
-        }
-    }
-
-    public void fireFileEvent(String filePath) {
-        if (fileListeners == null) {
-            return;
-        }
-        FileEvent event = new FileEvent(this, FileEvent.FILE_OPENED, filePath);
-        for (Enumeration<FileListener> e = fileListeners.elements(); e.hasMoreElements(); ) {
-            e.nextElement().fileEventOccured(event);
-        }
-    }
-
-    public void selectFile(String path) {
-        if (path.startsWith(System.getProperty("file.separator"))) {
-            path = path.substring(System.getProperty("file.separator").length());
-        }
-        ArrayList<String> pathElements = new ArrayList<>();
-        if (root != null) {
-            pathElements.add(root.toString());
-            int pos = path.indexOf(System.getProperty("file.separator"));
-            while (pos != -1) {
-                pathElements.add(path.substring(0, pos));
-                path = path.substring(pos + 1);
-                pos = path.indexOf(System.getProperty("file.separator"));
-            }
-            pathElements.add(path);
-            ArrayList<Object> treePathList = new ArrayList<>();
-            treePathList.add(root);
-            FileTreeNode currentNode = root;
-            for (String pathElement : pathElements) {
-                for (int j = 0; j < currentNode.getChildCount(); j++) {
-                    if (currentNode.getChildAt(j).toString().equals(pathElement)) {
-                        currentNode = (FileTreeNode) currentNode.getChildAt(j);
-                        treePathList.add(currentNode);
-                        break;
+                    if (lastPathComponent.isFile()) {
+                        fireFileOpenedEvent(lastPathComponent.getFile());
                     }
                 }
             }
-            TreePath selection = new TreePath(treePathList.toArray());
-            tree.expandPath(selection);
-            tree.setSelectionPath(selection);
+        });
+
+        getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+    }
+
+    /**
+     * Adds the given <code>FileListener</code> to this <code>FileTree</code>s listeners.
+     *
+     * @param listener
+     *         the <code>FileListener</code> to add
+     */
+    public void addFileListener(FileListener listener) {
+        fileListeners.add(listener);
+    }
+
+    /**
+     * Removes the given <code>FileListener</code> from this <code>FileTree</code>s listeners.
+     *
+     * @param listener
+     *         the <code>FileListener</code> to remove
+     */
+    public void removeFileListener(FileListener listener) {
+        fileListeners.remove(listener);
+    }
+
+    /**
+     * Fires a <code>FileEvent</code> indicating that the given <code>File</code> was opened.
+     *
+     * @param file
+     *         the <code>File</code> that was opened
+     */
+    private void fireFileOpenedEvent(File file) {
+        FileEvent event = new FileEvent(this, FileEvent.FILE_OPENED, file);
+
+        fileListeners.forEach(listener -> listener.fileEventOccurred(event));
+    }
+
+    /**
+     * Selects the tree node representing the given <code>File</code> if it is in the directory structure that is
+     * currently being displayed.
+     *
+     * @param file
+     *         the file to be selected
+     */
+    public void selectFile(File file) {
+        FileTreeNode[] path = model.buildPath(file);
+        TreePath treePath;
+
+        if (path != null) {
+            treePath = new TreePath(path);
+
+            setSelectionPath(treePath);
+            makeVisible(treePath);
         }
     }
 
-    public JTree getTree() {
-        return tree;
+    /**
+     * Sets the <code>TreeModel</code> that will provide the data. <code>FileTree</code> only accepts non-null models
+     * of type <code>FileTreeModel</code>.
+     * <p>
+     * This is a bound property.
+     *
+     * @param newModel
+     *         the <code>TreeModel</code> that is to provide the data
+     * @throws IllegalArgumentException
+     *         if <code>newModel</code> is not of type <code>FileTreeModel</code>
+     */
+    @Override
+    public void setModel(TreeModel newModel) {
+
+        if (newModel instanceof FileTreeModel) {
+            model = (FileTreeModel) newModel;
+            super.setModel(newModel);
+        } else {
+            throw new IllegalArgumentException("newModel must be of type " + FileTreeModel.class.getSimpleName());
+        }
     }
 }

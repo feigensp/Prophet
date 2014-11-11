@@ -4,14 +4,21 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import javax.swing.tree.TreePath;
 
 import de.uni_passau.fim.infosun.prophet.experimentGUI.Constants;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.QuestionViewPane;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+
+import static de.uni_passau.fim.infosun.prophet.experimentGUI.util.QuestionViewPane.*;
 
 /**
  * Handles HTML operations for the <code>QTree</code>.
@@ -160,17 +167,17 @@ public class QTreeHTMLHandler {
 
     private static StringBuffer createHTMLContent(StringBuffer htmlContent, QTreeNode node) {
         String nodeName = node.getName();
-        String bottomLine = QuestionViewPane.HTML_DIVIDER;
+        String bottomLine = HTML_DIVIDER;
         String headline;
 
         switch (node.getType()) {
-            case EXPERIMENT:
-                bottomLine = String.format("%1$s%2$s%3$s%1$s", QuestionViewPane.HTML_DIVIDER,
-                        String.format(QuestionViewPane.FOOTER_EXPERIMENT_CODE,
-                                node.getAttribute(Constants.KEY_EXPERIMENT_CODE).getValue()),
-                        QuestionViewPane.FOOTER_SUBJECT_CODE);
+            case EXPERIMENT: {
+                String expCode = node.getAttribute(Constants.KEY_EXPERIMENT_CODE).getValue();
+                String footerExpCode = String.format(FOOTER_EXPERIMENT_CODE, expCode);
+
+                bottomLine = String.format("%1$s%2$s%3$s%1$s", HTML_DIVIDER, footerExpCode, FOOTER_SUBJECT_CODE);
                 headline = String.format("<h1>%s</h1>", nodeName);
-                break;
+            }   break;
             case CATEGORY:
                 headline = String.format("<h2>%s</h2>", nodeName);
                 break;

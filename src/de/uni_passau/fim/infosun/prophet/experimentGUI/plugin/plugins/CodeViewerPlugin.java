@@ -7,7 +7,6 @@ import java.awt.event.ComponentEvent;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
-import javax.swing.JFrame;
 
 import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentViewer.EViewer;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.Plugin;
@@ -31,7 +30,6 @@ public class CodeViewerPlugin implements Plugin {
     private int count = 1;
 
     private Map<QTreeNode, CodeViewer> codeViewers;
-
     private Point eViewerLocation;
 
     /**
@@ -97,14 +95,10 @@ public class CodeViewerPlugin implements Plugin {
 
         CodeViewer cv = new CodeViewer(node.getAttribute(KEY), saveDir);
 
-        cv.pack();
-
         Rectangle cvDim = cv.getBounds();
         cv.setLocation(eViewerLocation.x - (cvDim.width + 10), eViewerLocation.y);
 
         codeViewers.put(node, cv);
-
-        cv.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         cv.setVisible(true);
     }
 

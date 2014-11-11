@@ -1,9 +1,9 @@
 package de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewerPlugin.tabbedPane;
 
-import java.awt.Component;
 import java.io.File;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
 
@@ -12,71 +12,96 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.codeViewer
 
 import static de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames.getLocalized;
 
-@SuppressWarnings("serial")
+/**
+ * The right-side <code>JTabbedPane</code> of the <code>CodeViewer</code>. Displays tabs containing
+ * <code>EditorPanel</code> instances.
+ */
 public class EditorTabbedPane extends JTabbedPane {
 
-    private File showDir;
     private Recorder recorder;
-    Set<EditorPanel> editorPanels;
+    private Map<File, EditorPanel> panels;
 
-    public EditorTabbedPane(File showDir, Recorder recorder) {
+    /**
+     * Constructs a new <code>EditorTabbedPane</code> using the given <code>Recorder</code>.
+     *
+     * @param recorder
+     *         the <code>Recorder</code> of the <code>CodeViewer</code> containing this <code>EditorTabbedPane</code>
+     */
+    public EditorTabbedPane(Recorder recorder) {
         super(JTabbedPane.TOP);
 
-        this.showDir = showDir;
-        this.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
-        this.editorPanels = new HashSet<>();
         this.recorder = recorder;
+        this.panels = new HashMap<>();
+
+        this.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
     }
 
-    public void openFile(String path) {
-        if (!path.startsWith(System.getProperty("file.separator"))) {
-            path = System.getProperty("file.separator") + path;
-        }
-        EditorPanel e = getEditorPanel(path);
-        if (e != null) {
-            this.setSelectedComponent(e);
-            e.grabFocus();
-            return;
-        }
-        File file = new File(showDir.getPath() + path);
+    /**
+     * Opens a new <code>EditorPanel</code> tab displaying the text content of the given <code>File</code>. If a
+     * tab for <code>file</code> is already open it will be selected.
+     *
+     * @param file
+     *         the <code>File</code> to display
+     */
+    public void openFile(File file) {
+        EditorPanel panel;
+
         if (file.exists()) {
-            EditorPanel myPanel = new EditorPanel(file, path);
-            recorder.onEditorPanelCreate(myPanel);
-            CodeViewerPluginList.onEditorPanelCreate(myPanel);
-            add(file.getName(), myPanel);
-            this.setTabComponentAt(this.getTabCount() - 1, new ButtonTabComponent(this, myPanel));
-            this.setSelectedComponent(myPanel);
-            myPanel.grabFocus();
+            panel = panels.get(file);
+
+            if (panel == null) {
+                panel = new EditorPanel(file);
+
+                recorder.onEditorPanelCreate(panel);
+                CodeViewerPluginList.onEditorPanelCreate(panel);
+
+                panels.put(file, panel);
+                add(file.getName(), panel);
+                setTabComponentAt(indexOfComponent(panel), new ButtonTabComponent(this, panel));
+            }
+
+            setSelectedComponent(panel);
+            panel.grabFocus();
         } else {
-            JOptionPane.showMessageDialog(this,
-                    getLocalized("EDITOR_TABBED_PANE_MESSAGE_ERROR_COULD_NOT_OPEN_FILE") + ": " + path,
-                    getLocalized("EDITOR_TABBED_PANE_MESSAGE_TITLE_ERROR"), JOptionPane.ERROR_MESSAGE);
+            String msg = getLocalized("EDITOR_TABBED_PANE_MESSAGE_ERROR_COULD_NOT_OPEN_FILE") + " : " + file.getPath();
+            String title = getLocalized("EDITOR_TABBED_PANE_MESSAGE_TITLE_ERROR");
+
+            JOptionPane.showMessageDialog(this, msg, title, JOptionPane.ERROR_MESSAGE);
         }
     }
 
-    public void closeFile(String path) {
-        closeEditorPanel(getEditorPanel(path));
+    /**
+     * Closes the tab displaying <code>file</code> if there is one.
+     *
+     * @param file
+     *         the <code>File</code> whose tab is to be closed
+     */
+    public void closeFile(File file) {
+        closeEditorPanel(panels.get(file));
     }
 
-    public void closeEditorPanel(EditorPanel editorPanel) {
-        if (editorPanel != null) {
-            CodeViewerPluginList.onEditorPanelClose(editorPanel);
-            recorder.onEditorPanelClose(editorPanel);
-            this.remove(editorPanel);
-        }
-    }
+    /**
+     * Closes the given <code>EditorPanel</code> if it is currently being displayed in a tab by this
+     * <code>EditorTabbedPane</code>.
+     *
+     * @param panel
+     *         the <code>EditorPanel</code> to close
+     */
+    public void closeEditorPanel(EditorPanel panel) {
+        boolean panelFound;
 
-    public EditorPanel getEditorPanel(String path) {
-        for (int i = 0; i < getTabCount(); i++) {
-            Component myComp = getComponentAt(i);
-            if ((myComp instanceof EditorPanel) && ((EditorPanel) myComp).getFilePath().equals(path)) {
-                return (EditorPanel) myComp;
+        if (panel != null) {
+            synchronized (getTreeLock()) {
+                panelFound = Arrays.asList(getComponents()).contains(panel);
+            }
+
+            if (panelFound) {
+                CodeViewerPluginList.onEditorPanelClose(panel);
+                recorder.onEditorPanelClose(panel);
+
+                panels.remove(panel.getFile());
+                remove(panel);
             }
         }
-        return null;
-    }
-
-    public File getShowDir() {
-        return showDir;
     }
 }

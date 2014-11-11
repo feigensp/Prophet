@@ -66,7 +66,7 @@ public class SyntaxHighlightingPlugin implements CodeViewerPlugin {
     @Override
     public void onEditorPanelCreate(EditorPanel editorPanel) {
         if (enabled) {
-            String fileName = editorPanel.getFilePath().toLowerCase();
+            String fileName = editorPanel.getFile().getName().toLowerCase();
             String fileExtension = fileName.substring(fileName.lastIndexOf('.') == -1 ? 0 : fileName.lastIndexOf('.'));
             String mimeType = extensionMap.get(fileExtension);
             if (mimeType == null) {
