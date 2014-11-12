@@ -5,15 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentViewer.EViewer;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.AnswerRequiredPlugin;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.CodeViewerPlugin;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.ExternalProgramsPlugin;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.InactivityPlugin;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.MailPlugin;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.MaxTimePlugin;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.PHPExportPlugin;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.QuestionListPlugin;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.ValidSubjectCodePlugin;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.plugin.plugins.*;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.settings.Setting;
 
@@ -30,6 +22,7 @@ public class PluginList {
     private static List<Plugin> plugins = new LinkedList<>();
 
     static {
+        add(new ExperimentExportPlugin());
         add(new InactivityPlugin());
         add(new ValidSubjectCodePlugin());
         add(new CodeViewerPlugin());
