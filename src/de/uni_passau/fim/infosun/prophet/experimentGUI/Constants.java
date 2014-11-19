@@ -93,4 +93,10 @@ public final class Constants {
      * Value for the 'name' attribute of the HTML input element that accepts the subject code input.
      */
     public static final String KEY_SUBJECT_CODE = "subjectcode";
+
+    /**
+     * Key for the <code>Attribute</code> that determines via its value the caption to the left of the
+     * input element that takes the subject code input.
+     */
+    public static final String KEY_SUBJECT_CODE_CAP = "subjectcode_caption";
 }

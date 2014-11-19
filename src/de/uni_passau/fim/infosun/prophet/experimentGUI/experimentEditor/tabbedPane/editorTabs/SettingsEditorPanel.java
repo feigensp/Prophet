@@ -1,12 +1,7 @@
 package de.uni_passau.fim.infosun.prophet.experimentGUI.experimentEditor.tabbedPane.editorTabs;
 
 import java.awt.BorderLayout;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -108,6 +103,19 @@ public class SettingsEditorPanel extends ExperimentEditorTab {
             Attribute attribute = selected.getAttribute(Constants.KEY_EXPERIMENT_CODE);
             Setting setting = new SettingsTextField(attribute, null);
             setting.setCaption(getLocalized("EXPERIMENT_CODE") + ":");
+
+            componentList.add(setting);
+            settingsPanel.add(setting);
+
+            boolean initial = !selected.containsAttribute(Constants.KEY_SUBJECT_CODE_CAP);
+            attribute = selected.getAttribute(Constants.KEY_SUBJECT_CODE_CAP);
+
+            if (initial) {
+                attribute.setValue(getLocalized("FOOTER_SUBJECT_CODE_CAPTION"));
+            }
+
+            setting = new SettingsTextField(attribute, null);
+            setting.setCaption(getLocalized("SETTING_SUBJECT_CODE"));
 
             componentList.add(setting);
             settingsPanel.add(setting);
