@@ -122,6 +122,21 @@ public final class QTreeHTMLHandler extends QTreeFormatHandler {
         return newIDs;
     }
 
+    /**
+     * Saves the given <code>QTreeNode</code> (and thereby the whole tree under it) as a single HTML page to the given
+     * file. This will overwrite <code>saveFile</code>. Neither <code>root</code> nor <code>saveFile</code> may
+     * be <code>null</code>. <code>root</code> must be of type {@link QTreeNode.Type#EXPERIMENT}.
+     *
+     * @param root
+     *         the root of the tree to save
+     * @param saveFile
+     *         the file to save the html to
+     *
+     * @throws IOException
+     *         if the file can not be written to
+     * @throws IllegalArgumentException
+     *         if root is not of type {@link QTreeNode.Type#EXPERIMENT}
+     */
     public static void saveExperimentHTML(QTreeNode root, File saveFile) throws IOException {
         Objects.requireNonNull(root);
         Objects.requireNonNull(saveFile);
@@ -143,11 +158,17 @@ public final class QTreeHTMLHandler extends QTreeFormatHandler {
 
         Element body = doc.body();
         for (QTreeNode node : root.preOrder()) {
-            body.appendElement("h" + (node.getType().ordinal() + 1)).text(node.getName());
+            body.appendElement("h" + (Math.max(node.getType().ordinal() + 1, 6))).text(node.getName());
             body.append("<br>").append(node.getHtml());
 
             if (node.getType() == QTreeNode.Type.EXPERIMENT) {
-                String subjCodeDesc = UIElementNames.getLocalized("FOOTER_SUBJECT_CODE_CAPTION"); // TODO make this customizable (using an Attribute of the root node)
+                String subjCodeDesc;
+
+                if (!node.containsAttribute(Constants.KEY_SUBJECT_CODE_CAP)) {
+                    subjCodeDesc = UIElementNames.getLocalized("FOOTER_SUBJECT_CODE_CAPTION");
+                } else {
+                    subjCodeDesc = node.getAttribute(Constants.KEY_SUBJECT_CODE_CAP).getValue();
+                }
 
                 body.appendChild(input("hidden", Constants.KEY_EXPERIMENT_CODE, experimentCode));
                 body.appendChild(table(null, new Object[] {subjCodeDesc, input(null, Constants.KEY_SUBJECT_CODE, null)}));
@@ -155,8 +176,6 @@ public final class QTreeHTMLHandler extends QTreeFormatHandler {
 
             body.append(divider);
         }
-
-        System.out.println(doc.outerHtml()); // TODO debug
 
         try (FileWriter out = new FileWriter(saveFile)) {
             out.write(doc.outerHtml());
@@ -166,7 +185,8 @@ public final class QTreeHTMLHandler extends QTreeFormatHandler {
     /**
      * Creates a 'table' <code>Element</code> (using {@link Object#toString()} from the given data.
      * Any <code>null</code> values in <code>header</code> or <code>rows</code> (and its sub-arrays) will be ignored.
-     * Any cells of the table that should be interpreted as HTML must be given as <code>Node</code> instances.
+     * Any cells of the table that should be interpreted as HTML must be given as <code>Node</code> instances. Otherwise
+     * HTML in the <code>String</code> returned by {@link Object#toString()} will be escaped.
      *
      * @param header the optional header for the table
      * @param rows the rows for the table
