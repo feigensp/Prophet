@@ -79,7 +79,7 @@ public class ValidSubjectCodePlugin implements Plugin {
             return null;
         }
 
-        String[] answers = currentNode.getAnswers(Constants.KEY_SUBJECT);
+        String[] answers = currentNode.getAnswers(Constants.KEY_SUBJECT_CODE);
 
         if (answers == null || answers.length < 1) {
             return UIElementNames.getLocalized("SUBJECT_CODE_MESSAGE_CODE_NOT_FOUND");

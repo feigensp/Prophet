@@ -92,5 +92,5 @@ public final class Constants {
     /**
      * Value for the 'name' attribute of the HTML input element that accepts the subject code input.
      */
-    public static final String KEY_SUBJECT = "subjectcode";
+    public static final String KEY_SUBJECT_CODE = "subjectcode";
 }

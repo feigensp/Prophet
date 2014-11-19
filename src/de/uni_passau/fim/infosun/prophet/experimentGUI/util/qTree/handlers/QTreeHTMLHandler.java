@@ -3,13 +3,7 @@ package de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.handlers;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import javax.swing.tree.TreePath;
 
 import de.uni_passau.fim.infosun.prophet.experimentGUI.Constants;
@@ -156,7 +150,7 @@ public final class QTreeHTMLHandler extends QTreeFormatHandler {
                 String subjCodeDesc = UIElementNames.getLocalized("FOOTER_SUBJECT_CODE_CAPTION"); // TODO make this customizable (using an Attribute of the root node)
 
                 body.appendChild(input("hidden", Constants.KEY_EXPERIMENT_CODE, experimentCode));
-                body.appendChild(table(null, new Object[] {subjCodeDesc, input(null, Constants.KEY_SUBJECT, null)}));
+                body.appendChild(table(null, new Object[] {subjCodeDesc, input(null, Constants.KEY_SUBJECT_CODE, null)}));
             }
 
             body.append(divider);
