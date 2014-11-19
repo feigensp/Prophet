@@ -22,7 +22,9 @@ import nu.xom.ParsingException;
 /**
  * Handles CSV operations for the <code>QTree</code>
  */
-public class QTreeCSVHandler {
+public final class QTreeCSVHandler extends QTreeFormatHandler {
+
+    private QTreeCSVHandler() {}
 
     private static final String PATH_SEPARATOR = ":";
 
