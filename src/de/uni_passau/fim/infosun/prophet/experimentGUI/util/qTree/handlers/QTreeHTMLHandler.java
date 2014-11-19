@@ -1,6 +1,5 @@
 package de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.handlers;
 
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -22,8 +21,6 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 import org.jsoup.parser.Tag;
-
-import static de.uni_passau.fim.infosun.prophet.experimentGUI.util.QuestionViewPane.*;
 
 /**
  * Handles HTML operations for the <code>QTree</code>.
@@ -256,84 +253,5 @@ public final class QTreeHTMLHandler extends QTreeFormatHandler {
         }
 
         return element;
-    }
-
-    /**
-     * Saves all the forms and text contained in the given tree to a html file.
-     *
-     * @param file
-     *         the file to write the html to
-     * @param rootNode
-     *         the root node of the tree
-     *
-     * @throws java.lang.IllegalArgumentException
-     *         if <code>rootNode</code> was not of type <code>Type.EXPERIMENT</code>
-     */
-    public static void saveAsHTMLFile(File file, QTreeNode rootNode) {
-        Objects.requireNonNull(file, "file must not be null!");
-        Objects.requireNonNull(rootNode, "rootNode must not be null!");
-
-        if (rootNode.getType() == QTreeNode.Type.EXPERIMENT) {
-            String experimentName = rootNode.getName();
-            String experimentCode = rootNode.getAttribute(Constants.KEY_EXPERIMENT_CODE).getValue();
-            String htmlContent = createHTMLContent(new StringBuffer(), rootNode).toString();
-            String newline = System.getProperty("line.separator");
-
-            try (BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
-                String path = file.getAbsolutePath();
-
-                System.out.println("Export HTML to: " + path); // TODO debug
-
-                bw.write("<html>" + newline);
-                bw.write("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">");
-                bw.write("<head>" + newline);
-                bw.write("<title>" + newline);
-                bw.write(String.format("%s - ExpCode %s%n", experimentName, experimentCode));
-                bw.write("</title>" + newline);
-                bw.write("</head>" + newline);
-                bw.write("<body>" + newline);
-                bw.write(htmlContent + newline);
-                bw.write("</body>" + newline);
-                bw.write("</html>" + newline);
-            } catch (IOException e) {
-                System.err.println("Error while writing questions to HTML file: " + e.getMessage());
-            }
-        } else {
-            throw new IllegalArgumentException("rootNode must be of type Type.EXPERIMENT");
-        }
-    }
-
-    private static StringBuffer createHTMLContent(StringBuffer htmlContent, QTreeNode node) {
-        String nodeName = node.getName();
-        String bottomLine = HTML_DIVIDER;
-        String headline;
-
-        switch (node.getType()) {
-            case EXPERIMENT: {
-                String expCode = node.getAttribute(Constants.KEY_EXPERIMENT_CODE).getValue();
-                String footerExpCode = String.format(FOOTER_EXPERIMENT_CODE, expCode);
-
-                bottomLine = String.format("%1$s%2$s%3$s%1$s", HTML_DIVIDER, footerExpCode, FOOTER_SUBJECT_CODE);
-                headline = String.format("<h1>%s</h1>", nodeName);
-            }
-            break;
-            case CATEGORY:
-                headline = String.format("<h2>%s</h2>", nodeName);
-                break;
-            case QUESTION:
-                headline = String.format("<h3>%s</h3>", nodeName);
-                break;
-            default:
-                headline = String.format("<h1>%s</h1>", nodeName);
-                System.err.println("Non-exhausting switch for 'Type' while exporting HTML!");
-        }
-
-        htmlContent.append(String.format("%n%n%s%n<br><br>%n%s%s", headline, node.getHtml(), bottomLine));
-
-        for (QTreeNode child : node.getChildren()) {
-            createHTMLContent(htmlContent, child);
-        }
-
-        return htmlContent;
     }
 }

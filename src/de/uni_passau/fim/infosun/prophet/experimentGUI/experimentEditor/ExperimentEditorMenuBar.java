@@ -181,7 +181,13 @@ public class ExperimentEditorMenuBar extends JMenuBar {
                         return;
                     }
                 }
-                QTreeHTMLHandler.saveAsHTMLFile(file, qTreeModel.getRoot());
+
+                try {
+                    QTreeHTMLHandler.saveExperimentHTML(qTreeModel.getRoot(), file);
+                } catch (IOException e) {
+                    JOptionPane.showMessageDialog(owner, getLocalized("MESSAGE_SAVE_ERROR"),
+                            getLocalized("MESSAGE_ERROR"), JOptionPane.ERROR_MESSAGE);
+                }
             }
         }
     }
