@@ -1,7 +1,10 @@
 package de.uni_passau.fim.infosun.prophet.experimentGUI;
 
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.handlers.QTreeXMLHandler;
+
 /**
- * Class used to store constants used throughout the code
+ * This class contains constants used throughout the code.
  *
  * @author Andreas Hasselberg
  * @author Markus Köppen
@@ -15,19 +18,25 @@ public final class Constants {
     private Constants() {}
 
     /**
-     * File name of the experiment file opened automatically when program starts
+     * A <code>File</code> with this name will be opened automatically (if it exists) when the <code>EViewer</code>
+     * starts.
      */
     public static final String DEFAULT_FILE = "default.xml";
+
     /**
-     * File name of the file answers are saved in
+     * The answers resulting from an <code>EViewer</code> run will be saved in a file with this name using
+     * {@link QTreeXMLHandler#saveAnswerXML(QTreeNode, java.io.File)}
      */
     public static final String FILE_ANSWERS = "answers.xml";
+
     /**
-     * property name for categories whose content isn't shown and the first question within is started immediately
+     * Attribute key for the setting that marks nodes whose content is not to be shown.
      */
     public static final String KEY_DONOTSHOWCONTENT = "donotshowcontent";
+
     /**
-     * property name for categories, determines if subjects may go back to previous questions within that category
+     * Attribute key for the setting that enables/disables switching between questions of a category during an
+     * <code>EViewer</code> run.
      */
     public static final String KEY_QUESTIONSWITCHING = "questionswitching";
 
@@ -65,22 +74,23 @@ public final class Constants {
     public static final String KEY_VIEWER_LANGUAGE_SYSTEM = "system_language";
 
     /**
-     * property name for the experiment code (which is used for online usage)
+     * Key for the <code>Attribute</code> that stores the experiment code as its value. Also used as the name of hidden
+     * HTML 'input' elements storing the same information.
      */
     public static final String KEY_EXPERIMENT_CODE = "experimentcode";
 
-    //constants for names in html-files - DO NOT USE
     /**
-     * html name for the button to the next question
+     * Value for the 'name' attribute of the HTML button that advances the experiment to the next node.
      */
     public static final String KEY_FORWARD = "nextQuestion";
+
     /**
-     * html name for the button to the previous question (only shown if allowed)
+     * Value for the 'name' attribute of the HTML button that regresses the experiment to the previous node.
      */
     public static final String KEY_BACKWARD = "previousQuestion";
 
     /**
-     * html name for the input field used to enter the subject code
+     * Value for the 'name' attribute of the HTML input element that accepts the subject code input.
      */
     public static final String KEY_SUBJECT = "subjectcode";
 }
