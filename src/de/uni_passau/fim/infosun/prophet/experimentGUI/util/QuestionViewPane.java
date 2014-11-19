@@ -67,7 +67,7 @@ public class QuestionViewPane extends JScrollPane {
     private static Font f;
 
     static {
-        InputStream fontInput = QuestionViewPane.class.getResourceAsStream("/font/VERDANAB.TTF");
+        InputStream fontInput = QuestionViewPane.class.getResourceAsStream("VERDANAB.TTF");
 
         try {
             f = Font.createFont(Font.TRUETYPE_FONT, fontInput);
