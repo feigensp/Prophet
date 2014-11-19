@@ -31,10 +31,10 @@ public class PHPExportComponent extends Setting {
     private static byte[] constants = new byte[0];
     private static byte[] sql = new byte[0];
 
-    private static final String PHP_INDEX_PHP = "/php/index.php";
-    private static final String PHP_ADDEXPERIMENT_PHP = "/php/addexperiment.php";
-    private static final String PHP_CONSTANTS_PHP = "/php/constants.php";
-    private static final String PHP_PREPARATION_SQL = "/php/preparation.sql";
+    private static final String PHP_INDEX_PHP = "index.php";
+    private static final String PHP_ADDEXPERIMENT_PHP = "addexperiment.php";
+    private static final String PHP_CONSTANTS_PHP = "constants.php";
+    private static final String PHP_PREPARATION_SQL = "preparation.sql";
 
     static {
 
