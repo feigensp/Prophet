@@ -1,4 +1,4 @@
-package de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree;
+package de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.handlers;
 
 import java.io.File;
 import java.io.FileNotFoundException;

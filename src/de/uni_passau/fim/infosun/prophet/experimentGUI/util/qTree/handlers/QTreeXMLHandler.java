@@ -1,4 +1,4 @@
-package de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.xml;
+package de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.handlers;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -12,9 +12,12 @@ import javax.xml.validation.Validator;
 
 import com.thoughtworks.xstream.XStream;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.Attribute;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeFormatHandler;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode;
-import nu.xom.*;
+import nu.xom.Builder;
+import nu.xom.Document;
+import nu.xom.Element;
+import nu.xom.Elements;
+import nu.xom.ParsingException;
 import org.xml.sax.SAXException;
 
 /**

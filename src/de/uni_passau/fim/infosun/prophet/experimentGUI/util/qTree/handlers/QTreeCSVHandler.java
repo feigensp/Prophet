@@ -1,4 +1,4 @@
-package de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree;
+package de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.handlers;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -12,6 +12,7 @@ import java.util.function.Function;
 
 import au.com.bytecode.opencsv.CSVWriter;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.Constants;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode;
 import nu.xom.Builder;
 import nu.xom.Document;
 import nu.xom.Element;

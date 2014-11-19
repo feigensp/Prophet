@@ -22,11 +22,11 @@ import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentEditor.tabbedPa
 import de.uni_passau.fim.infosun.prophet.experimentGUI.experimentEditor.tabbedPane.editorTabs.ContentEditorPanel;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.miniEditors.MacroEditor;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTree;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeCSVHandler;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeHTMLHandler;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeModel;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode;
-import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.xml.QTreeXMLHandler;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.handlers.QTreeCSVHandler;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.handlers.QTreeHTMLHandler;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.handlers.QTreeXMLHandler;
 import org.jsoup.nodes.Element;
 import org.jsoup.parser.Tag;
 
