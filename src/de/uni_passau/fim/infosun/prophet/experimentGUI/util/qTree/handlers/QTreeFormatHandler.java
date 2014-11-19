@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 
 /**
- * Contains methods used by both <code>QTreeXMLHandler</code> and <code>QTreeHTMLHandler</code>.
+ * Superclass of all <code>QTree</code> handler classes.
  */
 public class QTreeFormatHandler {
 
