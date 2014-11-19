@@ -4,26 +4,29 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import javax.swing.tree.TreePath;
 
 import de.uni_passau.fim.infosun.prophet.experimentGUI.Constants;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.UIElementNames;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Node;
+import org.jsoup.parser.Tag;
 
 import static de.uni_passau.fim.infosun.prophet.experimentGUI.util.QuestionViewPane.*;
 
 /**
  * Handles HTML operations for the <code>QTree</code>.
  */
-public class QTreeHTMLHandler {
+public final class QTreeHTMLHandler extends QTreeFormatHandler {
+
+    /**
+     * Utility class.
+     */
+    private QTreeHTMLHandler() {
+    }
 
     public static int highestID = 0;
     public static Set<String> returnedIDs = new HashSet<>();
@@ -120,6 +123,133 @@ public class QTreeHTMLHandler {
         return newIDs;
     }
 
+    public static void saveExperimentHTML(QTreeNode root, File saveFile) throws IOException {
+        Objects.requireNonNull(root);
+        Objects.requireNonNull(saveFile);
+
+        if (root.getType() != QTreeNode.Type.EXPERIMENT) {
+            throw new IllegalArgumentException("root must be of type EXPERIMENT");
+        }
+
+        String divider = "<hr>";
+
+        checkParent(saveFile);
+
+        String experimentName = root.getName();
+        String experimentCode = root.getAttribute(Constants.KEY_EXPERIMENT_CODE).getValue();
+
+        Document doc = Document.createShell("");
+        doc.head().appendElement("meta").attr("content", "text/html; charset=utf-8");
+        doc.title(String.format("%s - ExpCode %s", experimentName, experimentCode));
+
+        Element body = doc.body();
+        for (QTreeNode node : root.preOrder()) {
+            body.appendElement("h" + (node.getType().ordinal() + 1)).text(node.getName());
+            body.append("<br>").append(node.getHtml());
+
+            if (node.getType() == QTreeNode.Type.EXPERIMENT) {
+                String subjCodeDesc = UIElementNames.getLocalized("FOOTER_SUBJECT_CODE_CAPTION"); // TODO make this customizable (using an Attribute of the root node)
+
+                body.appendChild(input("hidden", Constants.KEY_EXPERIMENT_CODE, experimentCode));
+                body.appendChild(table(null, new Object[] {subjCodeDesc, input(null, Constants.KEY_SUBJECT, null)}));
+            }
+
+            body.append(divider);
+        }
+
+        System.out.println(doc.outerHtml()); // TODO debug
+
+        try (FileWriter out = new FileWriter(saveFile)) {
+            out.write(doc.outerHtml());
+        }
+    }
+
+    /**
+     * Creates a 'table' <code>Element</code> (using {@link Object#toString()} from the given data.
+     * Any <code>null</code> values in <code>header</code> or <code>rows</code> (and its sub-arrays) will be ignored.
+     * Any cells of the table that should be interpreted as HTML must be given as <code>Node</code> instances.
+     *
+     * @param header the optional header for the table
+     * @param rows the rows for the table
+     * @return the 'table' <code>Element</code>
+     */
+    public static Element table(Object[] header, Object[]... rows) {
+        Element table = new Element(Tag.valueOf("table"), "");
+
+        if (header != null) {
+            Element headerRowEl = table.appendElement("tr");
+            Element headerColEl;
+
+            for (Object headerData : header) {
+                if (headerData == null) {
+                    continue;
+                }
+
+                headerColEl = headerRowEl.appendElement("th");
+
+                if (headerData instanceof Node) {
+                    headerColEl.appendChild((Node) headerData);
+                } else {
+                    headerColEl.text(headerData.toString());
+                }
+            }
+        }
+
+        if (rows != null) {
+            Element rowEl;
+            Element colEl;
+
+            for (Object[] row : rows) {
+                if (row == null) {
+                    continue;
+                }
+
+                rowEl = table.appendElement("tr");
+                for (Object rowData : row) {
+                    if (rowData == null) {
+                        continue;
+                    }
+
+                    colEl = rowEl.appendElement("td");
+
+                    if (rowData instanceof Node) {
+                        colEl.appendChild((Node) rowData);
+                    } else {
+                        colEl.text(rowData.toString());
+                    }
+                }
+            }
+        }
+
+        return table;
+    }
+
+    /**
+     * Creates an 'input' <code>Element</code> with the given (optional) attributes.
+     *
+     * @param type the value for the attribute 'type'
+     * @param name the value for the attribute 'name'
+     * @param value the value for the attribute 'value'
+     * @return an 'input' <code>Element</code>
+     */
+    public static Element input(String type, String name, String value) {
+        Element element = new Element(Tag.valueOf("input"), "");
+
+        if (type != null) {
+            element.attr("type", type);
+        }
+
+        if (name != null) {
+            element.attr("name", name);
+        }
+
+        if (value != null) {
+            element.attr("value", value);
+        }
+
+        return element;
+    }
+
     /**
      * Saves all the forms and text contained in the given tree to a html file.
      *
@@ -177,7 +307,8 @@ public class QTreeHTMLHandler {
 
                 bottomLine = String.format("%1$s%2$s%3$s%1$s", HTML_DIVIDER, footerExpCode, FOOTER_SUBJECT_CODE);
                 headline = String.format("<h1>%s</h1>", nodeName);
-            }   break;
+            }
+            break;
             case CATEGORY:
                 headline = String.format("<h2>%s</h2>", nodeName);
                 break;

@@ -1,7 +1,6 @@
 package de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.xml;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Objects;
@@ -13,12 +12,9 @@ import javax.xml.validation.Validator;
 
 import com.thoughtworks.xstream.XStream;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.Attribute;
+import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeFormatHandler;
 import de.uni_passau.fim.infosun.prophet.experimentGUI.util.qTree.QTreeNode;
-import nu.xom.Builder;
-import nu.xom.Document;
-import nu.xom.Element;
-import nu.xom.Elements;
-import nu.xom.ParsingException;
+import nu.xom.*;
 import org.xml.sax.SAXException;
 
 /**
@@ -29,7 +25,7 @@ import org.xml.sax.SAXException;
  * <li>Saving the root node and all children/attributes to a file</li>
  * </ul>
  */
-public final class QTreeXMLHandler {
+public final class QTreeXMLHandler extends QTreeFormatHandler {
 
     private static final XStream saveLoadStream;
     private static final XStream answerStream;
@@ -187,28 +183,6 @@ public final class QTreeXMLHandler {
         checkParent(saveFile);
         try (FileWriter out = new FileWriter(saveFile)) {
             saveLoadStream.toXML(root, out);
-        }
-    }
-
-    /**
-     * Ensures that the given <code>saveFile</code> has an existing parent directory. <code>FileWriter</code>s will
-     * only create the <code>File</code> they are trying to write to, not the directory structure above it.
-     *
-     * @param saveFile
-     *         the file to be checked
-     *
-     * @throws FileNotFoundException
-     *         if the directory structure can not be created
-     */
-    private static void checkParent(File saveFile) throws FileNotFoundException {
-        File parent = saveFile.getParentFile();
-
-        if (parent == null || parent.exists()) {
-            return;
-        }
-
-        if (!parent.mkdirs()) {
-            throw new FileNotFoundException("Can not create the directory structure for " + saveFile.getAbsolutePath());
         }
     }
 
