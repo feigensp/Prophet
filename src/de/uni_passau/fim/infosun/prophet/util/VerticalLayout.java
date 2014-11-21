@@ -13,6 +13,9 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Insets;
 import java.awt.LayoutManager;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A vertical layout manager similar to <code>FlowLayout</code>.
@@ -60,6 +63,23 @@ public class VerticalLayout implements LayoutManager {
      * The anchoring constant that designates anchoring to the bottom of the display area
      */
     public static final int BOTTOM = 5;
+
+    /**
+     * A read-only map containing <code>String</code> representations of the magic constants used by this class.
+     */
+    private static final Map<Integer, String> constantReps;
+
+    static {
+        Map<Integer, String> reps = new HashMap<>();
+        reps.put(CENTER, "CENTER");
+        reps.put(RIGHT, "RIGHT");
+        reps.put(LEFT, "LEFT");
+        reps.put(STRETCH, "STRETCH");
+        reps.put(TOP, "TOP");
+        reps.put(BOTTOM, "BOTTOM");
+
+        constantReps = Collections.unmodifiableMap(reps);
+    }
 
     private int vgap; // the vertical gap between components ... defaults to 5
     private int alignment; // LEFT, RIGHT, CENTER or STRETCH ... how the components are justified
@@ -239,47 +259,11 @@ public class VerticalLayout implements LayoutManager {
 
     @Override
     public String toString() {
-        String anchor = toString(this.anchor);
-        String alignment = toString(this.alignment);
+        String unknown = "Unknown";
+        String anchor = (constantReps.containsKey(this.anchor)) ? constantReps.get(this.anchor) : unknown;
+        String alignment = (constantReps.containsKey(this.alignment)) ? constantReps.get(this.alignment) : unknown;
 
         return String.format("%s[vgap=%dpx align=%s anchor=%s]", getClass().getName(), vgap, alignment, anchor);
-    }
-
-    /**
-     * Returns a description (the variable name) for one of the (magic) static constants used by this class.
-     *
-     * @param constant
-     *         the constant
-     *
-     * @return the description
-     */
-    private String toString(int constant) {
-        String result;
-
-        switch (constant) {
-            case CENTER:
-                result = "CENTER";
-                break;
-            case RIGHT:
-                result = "RIGHT";
-                break;
-            case LEFT:
-                result = "LEFT";
-                break;
-            case STRETCH:
-                result = "STRETCH";
-                break;
-            case TOP:
-                result = "TOP";
-                break;
-            case BOTTOM:
-                result = "BOTTOM";
-                break;
-            default:
-                result = "Unknown constant.";
-        }
-
-        return result;
     }
 }
 
