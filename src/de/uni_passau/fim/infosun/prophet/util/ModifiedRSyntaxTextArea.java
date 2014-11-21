@@ -1,7 +1,8 @@
 package de.uni_passau.fim.infosun.prophet.util;
 
+import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import javax.swing.AbstractAction;
 import javax.swing.KeyStroke;
 import javax.swing.UIManager;
 import javax.swing.text.BadLocationException;
@@ -10,83 +11,139 @@ import javax.swing.text.Utilities;
 import org.fife.ui.rsyntaxtextarea.RSyntaxDocument;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
+/**
+ * An <code>RSyntaxTextArea</code> that adds an Strg + Del <code>Action</code> that deletes the word at the caret.
+ */
 public class ModifiedRSyntaxTextArea extends RSyntaxTextArea {
 
-    private static final long serialVersionUID = 1L;
-
+    /**
+     * Creates a new <code>RSyntaxTextArea</code>.
+     */
     public ModifiedRSyntaxTextArea() {
-        super();
         overrideCtrlDel();
     }
 
-    public ModifiedRSyntaxTextArea(int textMode) {
-        super(textMode);
-        overrideCtrlDel();
-    }
-
-    public ModifiedRSyntaxTextArea(int rows, int cols) {
-        super(rows, cols);
-        overrideCtrlDel();
-    }
-
+    /**
+     * Creates a new <code>RSyntaxTextArea</code>.
+     *
+     * @param doc
+     *         The document for the editor.
+     */
     public ModifiedRSyntaxTextArea(RSyntaxDocument doc) {
         super(doc);
         overrideCtrlDel();
     }
 
-    public ModifiedRSyntaxTextArea(RSyntaxDocument doc, java.lang.String text, int rows, int cols) {
-        super(doc, text, rows, cols);
-        overrideCtrlDel();
-    }
-
-    public ModifiedRSyntaxTextArea(java.lang.String text) {
+    /**
+     * Creates a new <code>RSyntaxTextArea</code>.
+     *
+     * @param text
+     *         The initial text to display.
+     */
+    public ModifiedRSyntaxTextArea(String text) {
         super(text);
         overrideCtrlDel();
     }
 
-    public ModifiedRSyntaxTextArea(java.lang.String text, int rows, int cols) {
+    /**
+     * Creates a new <code>RSyntaxTextArea</code>.
+     *
+     * @param rows
+     *         The number of rows to display.
+     * @param cols
+     *         The number of columns to display.
+     *
+     * @throws IllegalArgumentException
+     *         If either <code>rows</code> or
+     *         <code>cols</code> is negative.
+     */
+    public ModifiedRSyntaxTextArea(int rows, int cols) {
+        super(rows, cols);
+        overrideCtrlDel();
+    }
+
+    /**
+     * Creates a new <code>RSyntaxTextArea</code>.
+     *
+     * @param text
+     *         The initial text to display.
+     * @param rows
+     *         The number of rows to display.
+     * @param cols
+     *         The number of columns to display.
+     *
+     * @throws IllegalArgumentException
+     *         If either <code>rows</code> or
+     *         <code>cols</code> is negative.
+     */
+    public ModifiedRSyntaxTextArea(String text, int rows, int cols) {
         super(text, rows, cols);
+        overrideCtrlDel();
+    }
+
+    /**
+     * Creates a new <code>RSyntaxTextArea</code>.
+     *
+     * @param doc
+     *         The document for the editor.
+     * @param text
+     *         The initial text to display.
+     * @param rows
+     *         The number of rows to display.
+     * @param cols
+     *         The number of columns to display.
+     *
+     * @throws IllegalArgumentException
+     *         If either <code>rows</code> or
+     *         <code>cols</code> is negative.
+     */
+    public ModifiedRSyntaxTextArea(RSyntaxDocument doc, String text, int rows, int cols) {
+        super(doc, text, rows, cols);
+        overrideCtrlDel();
+    }
+
+    /**
+     * Creates a new <code>RSyntaxTextArea</code>.
+     *
+     * @param textMode
+     *         Either <code>INSERT_MODE</code> or
+     *         <code>OVERWRITE_MODE</code>.
+     */
+    public ModifiedRSyntaxTextArea(int textMode) {
+        super(textMode);
         overrideCtrlDel();
     }
 
     private void overrideCtrlDel() {
         final KeyStroke stroke = KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, KeyEvent.CTRL_MASK);
-        this.getInputMap().put(stroke, "");
-        final ModifiedRSyntaxTextArea textArea = this;
-        this.addKeyListener(new KeyListener() {
+        final String actionName = "delWord";
+
+        getInputMap().put(stroke, actionName);
+        getActionMap().put(actionName, new AbstractAction() {
 
             @Override
-            public void keyPressed(KeyEvent arg0) {
-                if (arg0.isControlDown() && arg0.getKeyCode() == KeyEvent.VK_DELETE) {
-                    if (!textArea.isEditable() || !textArea.isEnabled()) {
-                        UIManager.getLookAndFeel().provideErrorFeedback(textArea);
-                        return;
-                    }
-                    try {
-                        int start = textArea.getSelectionEnd();
-                        int end;
-                        try {
-                            end = Utilities.getNextWord(textArea, start);
-                        } catch (BadLocationException e) {
-                            end = textArea.getDocument().getLength();
-                        }
-                        if (end > start) {
-                            textArea.getDocument().remove(start, end - start);
-                        }
-                    } catch (Exception ex) {
-                        UIManager.getLookAndFeel().provideErrorFeedback(textArea);
-                    }
+            public void actionPerformed(ActionEvent event) {
+                ModifiedRSyntaxTextArea textArea = ModifiedRSyntaxTextArea.this;
+
+                if (!textArea.isEditable() || !textArea.isEnabled()) {
+                    UIManager.getLookAndFeel().provideErrorFeedback(textArea);
+                    return;
                 }
-            }
 
-            @Override
-            public void keyReleased(KeyEvent arg0) {
-
-            }
-
-            @Override
-            public void keyTyped(KeyEvent arg0) {
-
+                try {
+                    int start = textArea.getSelectionEnd();
+                    int end;
+                    try {
+                        end = Utilities.getNextWord(textArea, start);
+                    } catch (BadLocationException ex) {
+                        end = textArea.getDocument().getLength();
+                    }
+                    if (end > start) {
+                        textArea.getDocument().remove(start, end - start);
+                    }
+                } catch (Exception ex) {
+                    UIManager.getLookAndFeel().provideErrorFeedback(textArea);
+                }
             }
         });
     }
