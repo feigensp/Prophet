@@ -8,7 +8,7 @@ import java.util.ResourceBundle;
  */
 public final class UIElementNames {
 
-    private static final String baseName = "de.uni_passau.fim.infosun.prophet.experimentGUI.util.language.LabelsBundle";
+    private static final String baseName = "de.uni_passau.fim.infosun.prophet.util.language.LabelsBundle";
     private static ResourceBundle labels = ResourceBundle.getBundle(baseName);
 
     private UIElementNames() {}
