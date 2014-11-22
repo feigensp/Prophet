@@ -26,7 +26,7 @@ import de.uni_passau.fim.infosun.prophet.util.language.UIElementNames;
 import de.uni_passau.fim.infosun.prophet.util.qTree.QTree;
 
 /**
- * An editor for experiments that can be viewed by experimentees using the <code>ExperimentViewer</code>.
+ * An editor for experiments that can be viewed by experimentees using the <code>EViewer</code>.
  *
  * @author Georg Seibt
  * @author Andreas Hasselberg
