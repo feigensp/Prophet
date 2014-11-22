@@ -11,6 +11,9 @@ public final class UIElementNames {
     private static final String baseName = "de.uni_passau.fim.infosun.prophet.util.language.LabelsBundle";
     private static ResourceBundle labels = ResourceBundle.getBundle(baseName);
 
+    /**
+     * Utility class.
+     */
     private UIElementNames() {}
 
     /**
