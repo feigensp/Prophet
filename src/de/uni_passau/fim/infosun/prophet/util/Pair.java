@@ -1,22 +1,24 @@
 package de.uni_passau.fim.infosun.prophet.util;
 
 /**
- * This class represents a generic data structure version of a pair
+ * A type generic pair of two values.
  *
  * @param <K>
- *         type of the key
+ *         the type of the key
  * @param <V>
- *         type of the value
+ *         the type of the value
  *
- * @author Markus Köppen, Andreas Hasselberg
+ * @author Markus Köppen
+ * @author Andreas Hasselberg
+ * @author Georg Seibt
  */
 public class Pair<K, V> {
 
-    K key;
-    V value;
+    private K key;
+    private V value;
 
     /**
-     * Constructor which initialize key and value with null
+     * Constructs a new <code>Pair</code> with both <code>key</code> and <code>value</code> set to <code>null</code>.
      */
     public Pair() {
         key = null;
@@ -24,12 +26,12 @@ public class Pair<K, V> {
     }
 
     /**
-     * Constructor which initialize key and value with specific content
+     * Constructs a new <code>Pair</code> containing the given values.
      *
      * @param key
-     *         value of the key
+     *        the key of the pair
      * @param value
-     *         value of the value
+     *        the value of the pair
      */
     public Pair(K key, V value) {
         this.key = key;
@@ -37,49 +39,45 @@ public class Pair<K, V> {
     }
 
     /**
-     * returns a String representation of the pair
-     */
-    public String toString() {
-        String keyOutput = key == null ? null : key.toString();
-        String valueOutput = value == null ? null : value.toString();
-        return keyOutput + ":" + valueOutput;
-    }
-
-    /**
-     * returns the key
+     * Returns the key of the <code>Pair</code>.
      *
-     * @return key
+     * @return the key
      */
     public K getKey() {
         return key;
     }
 
     /**
-     * sets the key
+     * Sets the key to <code>key</code>.
      *
      * @param key
-     *         new key
+     *         the new key
      */
     public void setKey(K key) {
         this.key = key;
     }
 
     /**
-     * returns the value
+     * Returns the value of the <code>Pair</code>.
      *
-     * @return value
+     * @return the value
      */
     public V getValue() {
         return value;
     }
 
     /**
-     * sets the value
+     * Sets the value to <code>value</code>.
      *
      * @param value
      *         new value
      */
     public void setValue(V value) {
         this.value = value;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Pair{key=%s, value=%s}", key, value);
     }
 }
