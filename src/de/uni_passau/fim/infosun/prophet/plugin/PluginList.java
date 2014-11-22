@@ -8,6 +8,8 @@ import de.uni_passau.fim.infosun.prophet.experimentViewer.EViewer;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.*;
 import de.uni_passau.fim.infosun.prophet.util.qTree.QTreeNode;
 import de.uni_passau.fim.infosun.prophet.util.settings.Setting;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 
 /**
  * A <code>Plugin</code> repository. Allows adding and removing <code>Plugin</code>s as well as calling the methods
@@ -82,8 +84,8 @@ public class PluginList {
      *         the <code>ExperimentViewer</code> that has been started
      */
     public static void experimentViewerRun(EViewer experimentViewer) {
-        for (Plugin plugin : plugins) {
 
+        for (Plugin plugin : plugins) {
             try {
                 plugin.experimentViewerRun(experimentViewer);
             } catch (Exception e) {
@@ -102,6 +104,7 @@ public class PluginList {
      * @return <code>true</code> iff any <code>Plugin</code> denies entrance to the given node
      */
     public static boolean denyEnterNode(QTreeNode node) {
+
         for (Plugin plugin : plugins) {
             try {
                 if (plugin.denyEnterNode(node)) {
@@ -111,6 +114,7 @@ public class PluginList {
                 e.printStackTrace();
             }
         }
+
         return false;
     }
 
@@ -122,6 +126,7 @@ public class PluginList {
      *         the node to be entered
      */
     public static void enterNode(QTreeNode node) {
+
         for (Plugin plugin : plugins) {
             try {
                 plugin.enterNode(node);
@@ -165,6 +170,7 @@ public class PluginList {
      *         the node to be exited
      */
     public static void exitNode(QTreeNode node) {
+
         for (Plugin plugin : plugins) {
             try {
                 plugin.exitNode(node);
@@ -177,20 +183,24 @@ public class PluginList {
     /**
      * Calls {@link Plugin#exitNode(QTreeNode)} of all currently active <code>Plugin</code>s.
      *
-     * @return The finishing messages of all plugins in HTML coding, with an own p-tag for every plugin.
+     * @return an HTML string comprised of 'p' tags containing the messages returned by the <code>Plugin</code>s
      */
     public static String finishExperiment() {
-        String result = "";
+        Document document = new Document("");
+        Element element = document.appendElement("html");
+
         for (Plugin plugin : plugins) {
             try {
-                String ret = plugin.finishExperiment();
-                if (ret != null && ret.length() > 0) {
-                    result += "<p>" + ret + "</p>";
+                String pluginMessage = plugin.finishExperiment();
+
+                if (pluginMessage != null && pluginMessage.length() > 0) {
+                    element.appendElement("p").text(pluginMessage);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        return result;
+
+        return document.outerHtml();
     }
 }
