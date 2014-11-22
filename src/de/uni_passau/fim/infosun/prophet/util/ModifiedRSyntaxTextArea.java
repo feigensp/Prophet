@@ -4,8 +4,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import javax.swing.AbstractAction;
 import javax.swing.KeyStroke;
-import javax.swing.UIManager;
-import javax.swing.text.BadLocationException;
 import javax.swing.text.Utilities;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxDocument;
@@ -126,23 +124,19 @@ public class ModifiedRSyntaxTextArea extends RSyntaxTextArea {
                 ModifiedRSyntaxTextArea textArea = ModifiedRSyntaxTextArea.this;
 
                 if (!textArea.isEditable() || !textArea.isEnabled()) {
-                    UIManager.getLookAndFeel().provideErrorFeedback(textArea);
                     return;
                 }
 
                 try {
-                    int start = textArea.getSelectionEnd();
-                    int end;
-                    try {
-                        end = Utilities.getNextWord(textArea, start);
-                    } catch (BadLocationException ex) {
-                        end = textArea.getDocument().getLength();
-                    }
-                    if (end > start) {
+                    int caret = textArea.getCaretPosition();
+                    int start = Utilities.getPreviousWord(textArea, caret);
+                    int end = Utilities.getWordEnd(textArea, start);
+
+                    if ((start <= caret) && (caret < end)) {
                         textArea.getDocument().remove(start, end - start);
                     }
-                } catch (Exception ex) {
-                    UIManager.getLookAndFeel().provideErrorFeedback(textArea);
+                } catch (Exception ignored) {
+                    // occurs when there are no 'words' in the textArea
                 }
             }
         });
