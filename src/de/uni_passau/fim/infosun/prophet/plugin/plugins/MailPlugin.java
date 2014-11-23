@@ -170,7 +170,7 @@ public class MailPlugin implements Plugin {
             ZFile attachment = new ZFile(experimentViewer.getSaveDir().toURI());
 
             try {
-                sendEMail(experimentViewer.getSaveDir().getName(), getMailText(), attachment.zip().orElse(null));
+                sendEMail(experimentViewer.getSaveDir().getName(), "", attachment.zip().orElse(null));
             } catch (MessagingException e) {
                 System.err.println("Could not send the EMail containing the zipped experiment results.");
                 System.err.println(e.getMessage());
@@ -180,10 +180,6 @@ public class MailPlugin implements Plugin {
         }
 
         return null;
-    }
-
-    private String getMailText() {
-        return "";
     }
 
     /**
