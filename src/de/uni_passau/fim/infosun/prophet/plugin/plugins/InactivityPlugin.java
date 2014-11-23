@@ -48,7 +48,7 @@ public class InactivityPlugin implements Plugin {
         QTreeNode currentNode = node;
 
         do {
-            if (Boolean.parseBoolean(currentNode.getAttribute(KEY).getValue())) {
+            if (currentNode.containsAttribute(KEY) && Boolean.parseBoolean(currentNode.getAttribute(KEY).getValue())) {
                 return true;
             }
 
