@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Point;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -22,17 +23,25 @@ import de.uni_passau.fim.infosun.prophet.util.settings.components.SettingsTextAr
 
 import static de.uni_passau.fim.infosun.prophet.util.qTree.QTreeNode.Type.CATEGORY;
 
-public class ExternalProgramsPlugin extends Thread implements Plugin {
+public class ExternalProgramsPlugin implements Plugin {
 
     private static final String KEY = "start_external_progs";
     private static final String KEY_COMMANDS = "commands";
-    private ArrayList<Process> processes = new ArrayList<>();
+
+    private List<Process> processes;
     private JFrame frame;
     private JPanel panel;
 
     private Point location;
     private EViewer experimentViewer;
     private boolean enabled;
+
+    /**
+     * Constructs a new <code>ExternalProgramsPlugin</code>.
+     */
+    public ExternalProgramsPlugin() {
+        processes = new ArrayList<>();
+    }
 
     @Override
     public Setting getSetting(QTreeNode node) {
