@@ -1,5 +1,6 @@
 package de.uni_passau.fim.infosun.prophet.plugin.plugins;
 
+import java.awt.BorderLayout;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ActionListener;
@@ -10,9 +11,12 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.border.Border;
 
 import de.uni_passau.fim.infosun.prophet.experimentViewer.EViewer;
 import de.uni_passau.fim.infosun.prophet.plugin.Plugin;
@@ -25,10 +29,13 @@ import de.uni_passau.fim.infosun.prophet.util.settings.components.SettingsTextAr
 
 import static de.uni_passau.fim.infosun.prophet.util.language.UIElementNames.getLocalized;
 import static de.uni_passau.fim.infosun.prophet.util.qTree.QTreeNode.Type.CATEGORY;
+import static javax.swing.border.TitledBorder.ABOVE_TOP;
+import static javax.swing.border.TitledBorder.CENTER;
 
 /**
- * This <code>Plugin</code> displays a list of <code>JButton</code>s in a separate <code>JFrame</code>. Clicking a
- * button will execute one of the predefined commands on the command line.
+ * This <code>Plugin</code> enables the experiment editor to define a list commands to be executed on the command
+ * line. The commands will be represented as buttons in a separate <code>JFrame</code> the <code>Plugin</code> displays.
+ * Clicking one of the buttons will execute the associated command.
  */
 public class ExternalProgramsPlugin implements Plugin {
 
@@ -39,20 +46,27 @@ public class ExternalProgramsPlugin implements Plugin {
      * A <code>JFrame</code> that displays a column of <code>JButton</code>s that start external programs on the
      * command line when clicked.
      */
-    private static class ProgramList extends JFrame {
+    public static class ProgramList extends JFrame {
 
         private final Map<File, Process> processes;
         private final Map<JButton, File> programs;
         private final ActionListener listener;
+
+        private JPanel list;
 
         /**
          * Constructs a new <code>ProgramList</code>.
          */
         public ProgramList() {
             setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-            setTitle(getLocalized("MENU_TAB_SETTINGS_EXTERNAL_PROGRAMS_TITLE"));
 
-            setLayout(new VerticalLayout(5, VerticalLayout.STRETCH, VerticalLayout.TOP));
+            String title = getLocalized("MENU_TAB_SETTINGS_EXTERNAL_PROGRAMS_TITLE");
+            Border emptyBorder = BorderFactory.createEmptyBorder(10, 20, 0, 20);
+
+            list = new JPanel();
+            list.setBorder(BorderFactory.createTitledBorder(emptyBorder, title, CENTER, ABOVE_TOP));
+            list.setLayout(new VerticalLayout(5, VerticalLayout.STRETCH, VerticalLayout.TOP));
+            add(list, BorderLayout.CENTER);
 
             processes = new HashMap<>();
             programs = new HashMap<>();
@@ -84,12 +98,12 @@ public class ExternalProgramsPlugin implements Plugin {
 
         /**
          * Removes all buttons from this <code>ProgramList</code> and destroys all running sub-processes started
-         * previously. The layout of this <code>JFrame</code> must be revalidated after this method was called.
+         * previously. The layout of this <code>JFrame</code> must be validated after this method was called.
          */
         public void clear() {
-            removeAll();
+            list.removeAll();
             programs.clear();
-            processes.values().forEach(Process::destroy);
+            processes.values().stream().filter(p -> p != null).forEach(Process::destroy);
             processes.clear();
         }
 
@@ -98,7 +112,8 @@ public class ExternalProgramsPlugin implements Plugin {
          * The programs (<code>String</code>s to be executed on the command line) are separated by line breaks.
          * The size of the <code>ProgramList</code> will be adjusted to fit the new number of buttons.
          *
-         * @param attribute the <code>Attribute</code> to load from
+         * @param attribute
+         *         the <code>Attribute</code> to load from
          */
         public void load(Attribute attribute) {
             Scanner scanner = new Scanner(attribute.getValue());
@@ -115,10 +130,9 @@ public class ExternalProgramsPlugin implements Plugin {
                 programs.put(button, program);
                 processes.put(program, null);
 
-                add(button);
+                list.add(button);
             }
 
-            revalidate();
             pack();
         }
     }
