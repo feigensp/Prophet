@@ -1,15 +1,16 @@
 package de.uni_passau.fim.infosun.prophet.plugin.plugins;
 
-import java.awt.BorderLayout;
 import java.awt.Point;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.awt.Rectangle;
+import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 
 import de.uni_passau.fim.infosun.prophet.experimentViewer.EViewer;
 import de.uni_passau.fim.infosun.prophet.plugin.Plugin;
@@ -28,19 +29,69 @@ public class ExternalProgramsPlugin implements Plugin {
     private static final String KEY = "start_external_progs";
     private static final String KEY_COMMANDS = "commands";
 
-    private List<Process> processes;
-    private JFrame frame;
-    private JPanel panel;
+    private static class ProgramList extends JFrame {
 
-    private Point location;
-    private EViewer experimentViewer;
-    private boolean enabled;
+        private final Map<File, Process> programs;
+        private final Map<JButton, File> buttons;
+
+        private final ActionListener listener;
+
+        /**
+         * Constructs a new <code>ProgramList</code>.
+         */
+        public ProgramList() {
+            setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+            setTitle(UIElementNames.getLocalized("MENU_TAB_SETTINGS_EXTERNAL_PROGRAMS_TITLE"));
+
+            setLayout(new VerticalLayout(5, VerticalLayout.STRETCH, VerticalLayout.TOP));
+
+            programs = new HashMap<>();
+            buttons = new HashMap<>();
+
+            listener = event -> {
+                System.out.println(buttons.get(event.getSource()));
+            };
+        }
+
+        public void clear() {
+
+            buttons.clear();
+            programs.clear();
+        }
+
+        public void load(Attribute attribute) {
+            Scanner scanner = new Scanner(attribute.getValue());
+            JButton button;
+            File program;
+
+            clear();
+
+            while (scanner.hasNextLine()) {
+                program = new File(scanner.nextLine());
+                button = new JButton(program.getName());
+                button.addActionListener(listener);
+
+                buttons.put(button, program);
+                programs.put(program, null);
+
+                add(button);
+            }
+
+            revalidate();
+            pack();
+        }
+    }
+
+    private ProgramList pList;
+
+    private EViewer eViewer;
+    private Point eViewerLoc;
 
     /**
      * Constructs a new <code>ExternalProgramsPlugin</code>.
      */
     public ExternalProgramsPlugin() {
-        processes = new ArrayList<>();
+        pList = new ProgramList();
     }
 
     @Override
@@ -64,7 +115,18 @@ public class ExternalProgramsPlugin implements Plugin {
 
     @Override
     public void experimentViewerRun(EViewer experimentViewer) {
-        this.experimentViewer = experimentViewer;
+        this.eViewer = experimentViewer;
+        this.eViewerLoc = experimentViewer.getLocation();
+
+        this.eViewer.addComponentListener(new ComponentAdapter() {
+
+            @Override
+            public void componentMoved(ComponentEvent e) {
+                super.componentMoved(e);
+
+                eViewerLoc.setLocation(e.getComponent().getLocation());
+            }
+        });
     }
 
     @Override
@@ -75,66 +137,42 @@ public class ExternalProgramsPlugin implements Plugin {
     @Override
     public void enterNode(QTreeNode node) {
 
-        if (node.getType() == CATEGORY) {
-            enabled = Boolean.parseBoolean(node.getAttribute(KEY).getValue());
-            if (enabled) {
-                Attribute attributes = node.getAttribute(KEY);
-                String[] commands = attributes.getSubAttribute(KEY_COMMANDS).getValue().split("\n");
-                createWindow();
-                for (int i = 0; i < commands.length; i++) {
-                    if (!commands[i].equals("")) {
-                        int lastSep = commands[i].lastIndexOf(System.getProperty("file.separator"));
-                        String caption = commands[i];
-                        if (lastSep != -1) {
-                            caption = caption.substring(lastSep + 1);
-                        }
-                        addButton(caption, commands[i], i);
-                    }
-                }
-                frame.pack();
-                if (location == null) {
-                    frame.setLocationRelativeTo(experimentViewer);
-                } else {
-                    frame.setLocation(location);
-                }
-            }
+        if (!enabled(node)) {
+            return;
         }
-    }
 
-    private void createWindow() {
-        frame = new JFrame(UIElementNames.getLocalized("MENU_TAB_SETTINGS_EXTERNAL_PROGRAMS_TITLE"));
-        frame.setLayout(new BorderLayout());
-        panel = new JPanel();
-        panel.setLayout(new VerticalLayout(0, 0));
-        frame.add(new JScrollPane(panel), BorderLayout.CENTER);
-        frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-        frame.setVisible(true);
+        pList.load(node.getAttribute(KEY).getSubAttribute(KEY_COMMANDS));
+
+        Rectangle eViewerDim = eViewer.getBounds();
+
+        pList.setLocation(eViewerLoc.x + eViewerDim.width + 10, eViewerLoc.y);
+        pList.setVisible(true);
     }
 
     private void addButton(String caption, final String command, final int id) {
-        processes.add(id, null);
-        JButton button = new JButton(caption);
-        button.addActionListener(event -> {
-            Process p = processes.get(id);
-            try {
-                if (p == null) {
-                    p = Runtime.getRuntime().exec(command);
-                    processes.add(id, p);
-                } else {
-                    try {
-                        p.exitValue();
-                        p = Runtime.getRuntime().exec(command);
-                        processes.add(id, p);
-                    } catch (Exception e1) {
-                        JOptionPane.showMessageDialog(null, UIElementNames.getLocalized("MESSAGE_ONLY_ONE_INSTANCE"));
-                    }
-                }
-            } catch (IOException e1) {
-                JOptionPane.showMessageDialog(null,
-                        UIElementNames.getLocalized("MESSAGE_COULD_NOT_START_PROGRAM") + ": " + e1.getMessage());
-            }
-        });
-        panel.add(button);
+//        processes.add(id, null);
+//        JButton button = new JButton(caption);
+//        button.addActionListener(event -> {
+//            Process p = processes.get(id);
+//            try {
+//                if (p == null) {
+//                    p = Runtime.getRuntime().exec(command);
+//                    processes.add(id, p);
+//                } else {
+//                    try {
+//                        p.exitValue();
+//                        p = Runtime.getRuntime().exec(command);
+//                        processes.add(id, p);
+//                    } catch (Exception e1) {
+//                        JOptionPane.showMessageDialog(null, UIElementNames.getLocalized("MESSAGE_ONLY_ONE_INSTANCE"));
+//                    }
+//                }
+//            } catch (IOException e1) {
+//                JOptionPane.showMessageDialog(null,
+//                        UIElementNames.getLocalized("MESSAGE_COULD_NOT_START_PROGRAM") + ": " + e1.getMessage());
+//            }
+//        });
+//        panel.add(button);
     }
 
     @Override
@@ -144,20 +182,40 @@ public class ExternalProgramsPlugin implements Plugin {
 
     @Override
     public void exitNode(QTreeNode node) {
-        if (enabled) {
-            location = frame.getLocation();
-            frame.setVisible(false);
-            frame.dispose();
-            if (node.getType() == CATEGORY) {
-                processes.stream().filter(process -> process != null).forEach(Process::destroy);
-                processes.clear();
-            }
-        }
-        enabled = false;
+//
+//        if (enabled) {
+//            location = frame.getLocation();
+//            frame.setVisible(false);
+//            frame.dispose();
+//
+//            if (node.getType() == CATEGORY) {
+//                processes.stream().filter(process -> process != null).forEach(Process::destroy);
+//                processes.clear();
+//            }
+//        }
+//
+//        enabled = false;
     }
 
     @Override
     public String finishExperiment() {
         return null;
+    }
+
+    /**
+     * Returns whether this <code>Plugin</code> is enabled for the given <code>node</code>.
+     *
+     * @param node
+     *         the <code>QTreeNode</code> to check
+     *
+     * @return <code>true</code> iff this <code>Plugin</code> is enabled for <code>node</code>
+     */
+    private boolean enabled(QTreeNode node) {
+
+        if (node.getType() != CATEGORY) {
+            return false;
+        }
+
+        return node.containsAttribute(KEY) && Boolean.parseBoolean(node.getAttribute(KEY).getValue());
     }
 }
