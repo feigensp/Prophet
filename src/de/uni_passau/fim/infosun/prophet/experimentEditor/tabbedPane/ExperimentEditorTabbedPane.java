@@ -15,7 +15,7 @@ import de.uni_passau.fim.infosun.prophet.util.qTree.QTreeNode;
 import static de.uni_passau.fim.infosun.prophet.util.language.UIElementNames.getLocalized;
 
 /**
- * The right-side tabbed pane of the Experiment Editor
+ * The right-side tabbed pane of the <code>ExperimentEditor</code>.
  *
  * @author Georg Seibt
  * @author Andreas Hasselberg

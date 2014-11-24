@@ -35,7 +35,7 @@ import static de.uni_passau.fim.infosun.prophet.util.qTree.QTreeNode.Type.EXPERI
 import static javax.swing.JFileChooser.APPROVE_OPTION;
 
 /**
- * The menu bar of the ExperimentViewer. Separated to enhance readability.
+ * The menu bar used by the <code>ExperimentEditor</code>.
  *
  * @author Andreas Hasselberg
  * @author Markus Köppen
