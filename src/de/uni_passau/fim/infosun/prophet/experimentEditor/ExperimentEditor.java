@@ -53,8 +53,7 @@ public class ExperimentEditor extends JFrame {
     }
 
     /**
-     * Constructor of the ExperimentEditor, called by the main() method;<br>
-     * sets some basic settings and adds used components
+     * Constructs a new <code>ExperimentEditor</code>.
      */
     public ExperimentEditor() {
 
