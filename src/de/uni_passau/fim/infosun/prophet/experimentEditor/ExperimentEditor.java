@@ -13,12 +13,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JSplitPane;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-import javax.swing.WindowConstants;
+import javax.swing.*;
 import javax.swing.plaf.basic.BasicSplitPaneDivider;
 
 import de.uni_passau.fim.infosun.prophet.experimentEditor.tabbedPane.ExperimentEditorTabbedPane;
@@ -74,8 +69,11 @@ public class ExperimentEditor extends JFrame {
         add(splitPane, BorderLayout.CENTER);
 
         QTree tree = new QTree();
-        tree.setPreferredSize(new Dimension(WIDTH / 5, HEIGHT));
-        splitPane.setLeftComponent(tree);
+
+        JScrollPane treeScrollPane = new JScrollPane(tree);
+        treeScrollPane.setBorder(BorderFactory.createEmptyBorder());
+
+        splitPane.setLeftComponent(treeScrollPane);
 
         ExperimentEditorTabbedPane tabbedPane = new ExperimentEditorTabbedPane(tree);
         splitPane.setRightComponent(tabbedPane);
@@ -91,6 +89,7 @@ public class ExperimentEditor extends JFrame {
         setJMenuBar(menuBar);
 
         pack();
+        splitPane.setDividerLocation(0.15);
         setLocationRelativeTo(null);
     }
 

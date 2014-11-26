@@ -1,7 +1,6 @@
 package de.uni_passau.fim.infosun.prophet.util.settings.components;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -29,12 +28,10 @@ public class SettingsTextArea extends Setting {
     public SettingsTextArea(Attribute attribute, String borderDesc) {
         super(attribute, borderDesc);
 
-        setPreferredSize(new Dimension(500, 150));
-
         caption = new JLabel();
         add(caption, BorderLayout.NORTH);
 
-        textArea = new JTextArea();
+        textArea = new JTextArea(5, Integer.MAX_VALUE);
         add(new JScrollPane(textArea), BorderLayout.CENTER);
     }
 
