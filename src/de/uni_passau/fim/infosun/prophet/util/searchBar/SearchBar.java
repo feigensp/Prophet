@@ -19,7 +19,7 @@ import org.fife.ui.rtextarea.SearchContext;
 import org.fife.ui.rtextarea.SearchEngine;
 
 /**
- * A <code>JToolBar</code> containing a controls to enable searching for strings or regular expressions in a
+ * A <code>JToolBar</code> containing controls to enable searching for strings or regular expressions in a
  * given <code>RSyntaxTextArea</code>.
  *
  * @author Robert Futrell
@@ -61,23 +61,24 @@ public class SearchBar extends JToolBar implements ActionListener {
         this.textArea = textArea;
         this.listeners = new ArrayList<>();
 
+        Dimension sepDim = new Dimension(5, 0);
+        
         hideButton = new JButton(CAPTION_HIDE);
         hideButton.setActionCommand(ACTION_HIDE);
         hideButton.addActionListener(this);
         add(hideButton);
-        addSeparator(new Dimension(5, 0));
 
         nextButton = new JButton(CAPTION_NEXT);
         nextButton.setActionCommand(ACTION_NEXT);
         nextButton.addActionListener(this);
         add(nextButton);
-        addSeparator(new Dimension(5, 0));
+        addSeparator(sepDim);
 
         previousButton = new JButton(CAPTION_PREVIOUS);
         previousButton.setActionCommand(ACTION_PREVIOUS);
         previousButton.addActionListener(this);
         add(previousButton);
-        addSeparator(new Dimension(5, 0));
+        addSeparator(sepDim);
 
         searchField = new JTextField(30);
         searchField.addKeyListener(new KeyAdapter() {
@@ -90,14 +91,15 @@ public class SearchBar extends JToolBar implements ActionListener {
             }
         });
         add(searchField);
-        addSeparator(new Dimension(5, 0));
+        addSeparator(sepDim);
 
         regexCB = new JCheckBox(CAPTION_REGEX);
         add(regexCB);
-        addSeparator(new Dimension(5, 0));
+        addSeparator(sepDim);
 
         matchCaseCB = new JCheckBox(CAPTION_MATCH_CASE);
         add(matchCaseCB);
+        addSeparator(sepDim);
     }
 
     /**

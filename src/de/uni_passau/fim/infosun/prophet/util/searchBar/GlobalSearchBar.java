@@ -35,10 +35,14 @@ import org.fife.ui.rtextarea.SearchEngine;
 import static de.uni_passau.fim.infosun.prophet.util.language.UIElementNames.getLocalized;
 
 /**
- * This class adds a JTextPane to a searchbar which is created. With this
- * searchBar the user can search through the text in the JTextPane User
- *
- * @author Robert Futrell, Markus Köppen, Andreas Hasselberg
+ * A <code>JToolBar</code> containing controls to enable searching for strings or regular expressions globally in every
+ * <code>File</code> displayed by the <code>FileTree</code> of a given <code>CodeViewer</code>. After a search
+ * all nodes in which the search expression was found will be highlighted and made visible in the <code>FileTree</code>. 
+ * 
+ * @author Robert Futrell
+ * @author Markus Köppen
+ * @author Andreas Hasselberg
+ * @author Georg Seibt
  */
 public class GlobalSearchBar extends JToolBar implements ActionListener {
 
@@ -51,14 +55,13 @@ public class GlobalSearchBar extends JToolBar implements ActionListener {
     public static final String ACTION_FIND = "Global";
 
     private JButton hideButton;
-    private JTextField searchField;
     private JButton findButton;
     private JCheckBox regexCB;
     private JCheckBox matchCaseCB;
+    private JTextField searchField;
 
     private CodeViewer codeViewer;
     private List<SearchBarListener> listeners;
-
     private TreeCellRenderer oldRenderer;
 
     private static class Highlighter extends DefaultTreeCellRenderer {
@@ -88,18 +91,19 @@ public class GlobalSearchBar extends JToolBar implements ActionListener {
 
         this.codeViewer = codeViewer;
         this.listeners = new ArrayList<>();
+        
+        Dimension sepDim = new Dimension(5, 0);
 
         hideButton = new JButton(CAPTION_HIDE);
         hideButton.setActionCommand(ACTION_HIDE);
         hideButton.addActionListener(this);
         add(hideButton);
-        addSeparator(new Dimension(5, 0));
         
         findButton = new JButton(CAPTION_FIND);
         findButton.setActionCommand(ACTION_FIND);
         findButton.addActionListener(this);
         add(findButton);
-        addSeparator(new Dimension(5, 0));
+        addSeparator(sepDim);
 
         searchField = new JTextField(30);
         searchField.addKeyListener(new KeyAdapter() {
@@ -112,14 +116,15 @@ public class GlobalSearchBar extends JToolBar implements ActionListener {
             }
         });
         add(searchField);
-        addSeparator(new Dimension(5, 0));
+        addSeparator(sepDim);
         
         regexCB = new JCheckBox(CAPTION_REGEX);
         add(regexCB);
-        addSeparator(new Dimension(5, 0));
+        addSeparator(sepDim);
 
         matchCaseCB = new JCheckBox(CAPTION_MATCH_CASE);
         add(matchCaseCB);
+        addSeparator(sepDim);
     }
 
     /**
@@ -182,7 +187,7 @@ public class GlobalSearchBar extends JToolBar implements ActionListener {
         Set<FileTreeNode> foundNodes = fileNodes.filter(textFilter).collect(Collectors.toSet());
 
         if (!foundNodes.isEmpty()) {
-            if (oldRenderer != null) {
+            if (oldRenderer == null) {
                 oldRenderer = fileTree.getCellRenderer();
             }
 
