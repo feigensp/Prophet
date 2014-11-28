@@ -75,8 +75,8 @@ public class SearchBar extends JToolBar implements ActionListener {
         searchField.addKeyListener(new KeyAdapter() {
 
             @Override
-            public void keyPressed(KeyEvent arg0) {
-                if (arg0.getKeyCode() == KeyEvent.VK_ENTER) {
+            public void keyPressed(KeyEvent event) {
+                if (event.getKeyCode() == KeyEvent.VK_ENTER) {
                     nextButton.doClick();
                 }
             }
