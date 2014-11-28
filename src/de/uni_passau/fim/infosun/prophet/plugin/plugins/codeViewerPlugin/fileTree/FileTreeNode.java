@@ -2,10 +2,7 @@ package de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.fileTr
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * A <code>DefaultMutableTreeNode</code> to be used in a <code>JTree</code> that displays a file system directory
@@ -181,6 +178,20 @@ public class FileTreeNode {
             parent.children.remove(this);
             parent = null;
         }
+    }
+
+    /**
+     * Returns the sub-tree with this node as root in preorder.
+     *
+     * @return the subtree in preorder
+     */
+    public List<FileTreeNode> preOrder() {
+        List<FileTreeNode> preOrderNodes = new LinkedList<>();
+
+        preOrderNodes.add(this);
+        children.stream().map(FileTreeNode::preOrder).forEach(preOrderNodes::addAll);
+
+        return preOrderNodes;
     }
 
     @Override

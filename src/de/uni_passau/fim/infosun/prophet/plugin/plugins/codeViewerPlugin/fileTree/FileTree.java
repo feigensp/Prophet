@@ -21,7 +21,6 @@ import javax.swing.tree.TreeSelectionModel;
 public class FileTree extends JTree {
 
     private List<FileListener> fileListeners;
-
     private FileTreeModel model;
 
     /**
@@ -126,5 +125,10 @@ public class FileTree extends JTree {
         } else {
             throw new IllegalArgumentException("newModel must be of type " + FileTreeModel.class.getSimpleName());
         }
+    }
+
+    @Override
+    public FileTreeModel getModel() {
+        return (FileTreeModel) super.getModel();
     }
 }
