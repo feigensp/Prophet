@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.Map;
 import javax.swing.JComboBox;
 
+import de.uni_passau.fim.infosun.prophet.experimentEditor.macroEditor.MacroEditor;
 import de.uni_passau.fim.infosun.prophet.util.language.UIElementNames;
-import de.uni_passau.fim.infosun.prophet.util.miniEditors.MacroEditor;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
 /**
