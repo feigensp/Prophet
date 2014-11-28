@@ -64,10 +64,20 @@ public class GlobalSearchBar extends JToolBar implements ActionListener {
     private List<SearchBarListener> listeners;
     private TreeCellRenderer oldRenderer;
 
+    /**
+     * A <code>DefaultTreeCellRenderer</code> highlights cells if the their nodes are in a given <code>Set</code>.
+     * It will be used with the <code>FileTree</code> that is part of a <code>CodeViewer</code> and therefore 
+     * accepts sets of <code>FileTreeNode</code>s.
+     */
     private static class Highlighter extends DefaultTreeCellRenderer {
 
-        Set<FileTreeNode> highlightedNodes;
+        private Set<FileTreeNode> highlightedNodes;
 
+        /**
+         * Constructs a new <code>Highlighter</code> highlighting the nodes in the given set.
+         * 
+         * @param highlightedNodes the nodes to highlight
+         */
         public Highlighter(Set<FileTreeNode> highlightedNodes) {
             this.highlightedNodes = highlightedNodes;
         }
@@ -86,6 +96,12 @@ public class GlobalSearchBar extends JToolBar implements ActionListener {
         }
     }
 
+    /**
+     * Constructs a new <code>GlobalSearchBar</code> searching through the files displayed by the given
+     * <code>CodeViewer</code>.
+     * 
+     * @param codeViewer the <code>CodeViewer</code> whose nodes are to be searched through
+     */
     public GlobalSearchBar(CodeViewer codeViewer) {
         setFloatable(false);
 
@@ -183,7 +199,7 @@ public class GlobalSearchBar extends JToolBar implements ActionListener {
 
         FileTreeNode treeRoot = fileTree.getModel().getRoot();
         Stream<FileTreeNode> fileNodes = treeRoot.preOrder().stream().filter(FileTreeNode::isFile);
-        Predicate<FileTreeNode> textFilter = node -> containsText(node, searchContext);
+        Predicate<FileTreeNode> textFilter = node -> contains(node, searchContext);
         Set<FileTreeNode> foundNodes = fileNodes.filter(textFilter).collect(Collectors.toSet());
 
         if (!foundNodes.isEmpty()) {
@@ -206,7 +222,15 @@ public class GlobalSearchBar extends JToolBar implements ActionListener {
         }
     }
 
-    private boolean containsText(FileTreeNode node, SearchContext context) {
+    /**
+     * Checks whether using the given <code>context</code> on the text of the file represented by <code>node</code>
+     * yields a result.
+     * 
+     * @param node the node whose text content is to be searched through
+     * @param context the <code>SearchContext</code> to pass to the <code>SearchContext</code>
+     * @return <code>true</code> iff <code>SearchEngine</code> finds a result in the <code>FileTreeNode</code>s text
+     */
+    private boolean contains(FileTreeNode node, SearchContext context) {
 
         if (!node.isFile()) {
             return false;
@@ -225,6 +249,11 @@ public class GlobalSearchBar extends JToolBar implements ActionListener {
         return SearchEngine.find(textArea, context).wasFound();
     }
 
+    /**
+     * Returns the <code>JCheckBox</code> determining whether to use regular expressions when searching.
+     * 
+     * @return the <code>JCheckBox</code>
+     */
     public JCheckBox getRegexCB() {
         return regexCB;
     }
