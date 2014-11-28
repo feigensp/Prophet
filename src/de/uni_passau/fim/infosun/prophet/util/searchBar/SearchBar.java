@@ -1,5 +1,6 @@
 package de.uni_passau.fim.infosun.prophet.util.searchBar;
 
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -64,16 +65,19 @@ public class SearchBar extends JToolBar implements ActionListener {
         hideButton.setActionCommand(ACTION_HIDE);
         hideButton.addActionListener(this);
         add(hideButton);
+        addSeparator(new Dimension(5, 0));
 
         nextButton = new JButton(CAPTION_NEXT);
         nextButton.setActionCommand(ACTION_NEXT);
         nextButton.addActionListener(this);
         add(nextButton);
+        addSeparator(new Dimension(5, 0));
 
         previousButton = new JButton(CAPTION_PREVIOUS);
         previousButton.setActionCommand(ACTION_PREVIOUS);
         previousButton.addActionListener(this);
         add(previousButton);
+        addSeparator(new Dimension(5, 0));
 
         searchField = new JTextField(30);
         searchField.addKeyListener(new KeyAdapter() {
@@ -86,9 +90,11 @@ public class SearchBar extends JToolBar implements ActionListener {
             }
         });
         add(searchField);
+        addSeparator(new Dimension(5, 0));
 
         regexCB = new JCheckBox(CAPTION_REGEX);
         add(regexCB);
+        addSeparator(new Dimension(5, 0));
 
         matchCaseCB = new JCheckBox(CAPTION_MATCH_CASE);
         add(matchCaseCB);
