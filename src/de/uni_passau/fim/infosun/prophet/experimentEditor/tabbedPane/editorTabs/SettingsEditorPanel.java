@@ -32,7 +32,7 @@ import static de.uni_passau.fim.infosun.prophet.util.qTree.QTreeNode.Type.CATEGO
 import static de.uni_passau.fim.infosun.prophet.util.qTree.QTreeNode.Type.EXPERIMENT;
 
 /**
- * Displays a list of <code>Setting/code>s. There are both default settings and settings contributed by
+ * Displays a list of <code>Setting</code>s. There are both default settings and settings contributed by
  * <code>Plugin</code>s.
  */
 public class SettingsEditorPanel extends ExperimentEditorTab {

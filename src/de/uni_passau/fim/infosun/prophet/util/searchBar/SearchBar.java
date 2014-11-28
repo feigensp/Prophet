@@ -6,7 +6,11 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+import javax.swing.JToolBar;
 
 import de.uni_passau.fim.infosun.prophet.util.language.UIElementNames;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
@@ -111,22 +115,20 @@ public class SearchBar extends JToolBar implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent event) {
         String command = event.getActionCommand();
+        String text = searchField.getText();
 
         if (command.equals(ACTION_HIDE)) {
             setVisible(false);
             return;
         }
 
-        String text = searchField.getText();
-        if (text.length() == 0) {
+        if (text.isEmpty()) {
             return;
         }
 
         boolean matchCase = matchCaseCB.isSelected();
-        boolean wholeWord = false;
         boolean regex = regexCB.isSelected();
-
-        boolean forward = false;
+        boolean forward;
 
         switch (command) {
             case ACTION_NEXT:
@@ -143,19 +145,17 @@ public class SearchBar extends JToolBar implements ActionListener {
         searchContext.setSearchFor(text);
         searchContext.setSearchForward(forward);
         searchContext.setMatchCase(matchCase);
-        searchContext.setWholeWord(wholeWord);
+        searchContext.setWholeWord(false);
         searchContext.setRegularExpression(regex);
 
-        if (!SearchEngine.find(textArea, searchContext).wasFound()) {
-            JOptionPane.showMessageDialog(this, MESSAGE_NOT_FOUND);
+        boolean found = SearchEngine.find(textArea, searchContext).wasFound();
 
-            for (SearchBarListener listener : listeners) {
-                listener.searched(command, text, false);
-            }
-        } else {
-            for (SearchBarListener listener : listeners) {
-                listener.searched(command, text, true);
-            }
+        if (!found) {
+            JOptionPane.showMessageDialog(this, MESSAGE_NOT_FOUND);
+        }
+
+        for (SearchBarListener listener : listeners) {
+            listener.searched(command, text, found);
         }
     }
 

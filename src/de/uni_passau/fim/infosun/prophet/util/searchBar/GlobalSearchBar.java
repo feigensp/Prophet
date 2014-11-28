@@ -6,7 +6,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.File;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
@@ -28,10 +29,7 @@ import static de.uni_passau.fim.infosun.prophet.util.language.UIElementNames.get
  *
  * @author Robert Futrell, Markus Köppen, Andreas Hasselberg
  */
-
 public class GlobalSearchBar extends JToolBar implements ActionListener {
-
-    private static final long serialVersionUID = 1L;
 
     public static final String CAPTION_HIDE = "X";
     public static final String CAPTION_FIND = getLocalized("GLOBAL_SEARCH_BAR_SEARCH");
@@ -41,67 +39,87 @@ public class GlobalSearchBar extends JToolBar implements ActionListener {
     public static final String ACTION_HIDE = "Hide";
     public static final String ACTION_NEXT = "Global";
 
-    private JButton hideButton = new JButton(CAPTION_HIDE);
-    private JTextField searchField = new JTextField(30);
-    private JButton forwardButton = new JButton(CAPTION_FIND);
-    private JCheckBox regexCB = new JCheckBox(CAPTION_REGEX);
-    private JCheckBox matchCaseCB = new JCheckBox(CAPTION_MATCH_CASE);
+    private JButton hideButton;
+    private JTextField searchField;
+    private JButton forwardButton;
+    private JCheckBox regexCB;
+    private JCheckBox matchCaseCB;
 
     private File file;
     private FileTree tree;
-    private CodeViewer viewer;
+    private CodeViewer codeViewer;
 
-    private Vector<SearchBarListener> listeners = new Vector<>();
+    private List<SearchBarListener> listeners;
 
-    public void addSearchBarListener(SearchBarListener l) {
-        listeners.add(l);
-    }
+    public GlobalSearchBar(File file, CodeViewer codeViewer) {
+        setFloatable(false);
 
-    public void removeSearchBarListener(SearchBarListener l) {
-        listeners.remove(l);
-    }
+        this.file = file;
+        this.codeViewer = codeViewer;
+        this.listeners = new ArrayList<>();
 
-    /**
-     * Grabs the focus
-     */
-    @Override
-    public void grabFocus() {
-        searchField.grabFocus();
-    }
+        this.tree = new FileTree(null);
+        this.tree.addFileListener(event -> this.codeViewer.getTabbedPane().openFile(event.getFile()));
 
-    public GlobalSearchBar(File file, CodeViewer v) {
-        viewer = v;
-        this.setFloatable(false);
-        JPanel mainPanel = new JPanel();
-        mainPanel.setLayout(new BorderLayout());
-        JPanel northPanel = new JPanel();
-        // Create a toolbar with searching options.
+        hideButton = new JButton(CAPTION_HIDE);
         hideButton.setActionCommand(ACTION_HIDE);
         hideButton.addActionListener(this);
         add(hideButton);
+
+        searchField = new JTextField(30);
         searchField.addKeyListener(new KeyAdapter() {
 
             @Override
-            public void keyPressed(KeyEvent arg0) {
-                if (arg0.getKeyCode() == KeyEvent.VK_ENTER) {
+            public void keyPressed(KeyEvent event) {
+                if (event.getKeyCode() == KeyEvent.VK_ENTER) {
                     forwardButton.doClick();
                 }
             }
         });
+
+        JPanel northPanel = new JPanel();
         northPanel.add(searchField);
+
+        forwardButton = new JButton(CAPTION_FIND);
         forwardButton.setActionCommand(ACTION_NEXT);
         forwardButton.addActionListener(this);
-
-        tree = new FileTree(null);
-        tree.addFileListener(event -> viewer.getTabbedPane().openFile(event.getFile()));
-        this.file = file;
-
         northPanel.add(forwardButton);
+
+        regexCB = new JCheckBox(CAPTION_REGEX);
         northPanel.add(regexCB);
+
+        matchCaseCB = new JCheckBox(CAPTION_MATCH_CASE);
         northPanel.add(matchCaseCB);
+
+        JPanel mainPanel = new JPanel();
+        mainPanel.setLayout(new BorderLayout());
+
         mainPanel.add(northPanel, BorderLayout.NORTH);
         mainPanel.add(new JScrollPane(tree), BorderLayout.CENTER);
         add(mainPanel);
+    }
+
+    /**
+     * Adds a <code>SearchBarListener</code> to this <code>GlobalSearchBar</code>.
+     *
+     * @param listener the <code>SearchBarListener</code> to add
+     */
+    public void addSearchBarListener(SearchBarListener listener) {
+        listeners.add(listener);
+    }
+
+    /**
+     * Removes a <code>SearchBarListener</code> from this <code>GlobalSearchBar</code>.
+     *
+     * @param listener the <code>SearchBarListener</code> to remove
+     */
+    public void removeSearchBarListener(SearchBarListener listener) {
+        listeners.remove(listener);
+    }
+
+    @Override
+    public void grabFocus() {
+        searchField.grabFocus();
     }
 
     @Override
@@ -190,28 +208,8 @@ public class GlobalSearchBar extends JToolBar implements ActionListener {
         }
     }
 
-    public JButton getHideButton() {
-        return hideButton;
-    }
-
-    public JTextField getSearchField() {
-        return searchField;
-    }
-
-    public JButton getForwardButton() {
-        return forwardButton;
-    }
-
     public JCheckBox getRegexCB() {
         return regexCB;
-    }
-
-    public JCheckBox getMatchCaseCB() {
-        return matchCaseCB;
-    }
-
-    public FileTree getTree() {
-        return tree;
     }
 
 //    private FileTreeNode getNextLeaf(FileTreeNode node) {
