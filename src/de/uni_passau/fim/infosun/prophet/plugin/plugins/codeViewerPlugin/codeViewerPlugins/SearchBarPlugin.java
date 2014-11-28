@@ -82,7 +82,7 @@ public class SearchBarPlugin implements CodeViewerPlugin {
             boolean activateGlobal =
                     Boolean.parseBoolean(selected.getSubAttribute(KEY).getSubAttribute(KEY_ENABLE_GLOBAL).getValue());
             if (activateGlobal) {
-                globalSearchBar = new GlobalSearchBar(viewer.getShowDir(), v);
+                globalSearchBar = new GlobalSearchBar(v);
                 globalSearchBar.setVisible(false);
 
                 globalSearchBar.addSearchBarListener((action, query, success) -> {

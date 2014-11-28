@@ -1,25 +1,30 @@
 package de.uni_passau.fim.infosun.prophet.util.searchBar;
 
-import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
-import javax.swing.JToolBar;
-import javax.swing.tree.DefaultTreeModel;
+import java.util.Set;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import javax.swing.*;
+import javax.swing.tree.DefaultTreeCellRenderer;
+import javax.swing.tree.TreeCellRenderer;
+import javax.swing.tree.TreePath;
 
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.CodeViewer;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.fileTree.FileTree;
-import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.fileTree.FileTreeModel;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.fileTree.FileTreeNode;
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+import org.fife.ui.rtextarea.SearchContext;
+import org.fife.ui.rtextarea.SearchEngine;
 
 import static de.uni_passau.fim.infosun.prophet.util.language.UIElementNames.getLocalized;
 
@@ -37,34 +42,56 @@ public class GlobalSearchBar extends JToolBar implements ActionListener {
     public static final String CAPTION_MATCH_CASE = getLocalized("GLOBAL_SEARCH_BAR_CASE_SENSITIVE");
 
     public static final String ACTION_HIDE = "Hide";
-    public static final String ACTION_NEXT = "Global";
+    public static final String ACTION_FIND = "Global";
 
     private JButton hideButton;
     private JTextField searchField;
-    private JButton forwardButton;
+    private JButton findButton;
     private JCheckBox regexCB;
     private JCheckBox matchCaseCB;
 
-    private File file;
-    private FileTree tree;
     private CodeViewer codeViewer;
-
     private List<SearchBarListener> listeners;
 
-    public GlobalSearchBar(File file, CodeViewer codeViewer) {
+    private TreeCellRenderer oldRenderer;
+
+    private static class Highlighter extends DefaultTreeCellRenderer {
+
+        Set<FileTreeNode> highlightedNodes;
+
+        public Highlighter(Set<FileTreeNode> highlightedNodes) {
+            this.highlightedNodes = highlightedNodes;
+        }
+
+        @Override
+        public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded,
+                boolean leaf, int row, boolean hasFocus) {
+
+            super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
+
+            if (value instanceof FileTreeNode && highlightedNodes.contains(value)) {
+                setForeground(Color.red);
+            }
+
+            return this;
+        }
+    }
+
+    public GlobalSearchBar(CodeViewer codeViewer) {
         setFloatable(false);
 
-        this.file = file;
         this.codeViewer = codeViewer;
         this.listeners = new ArrayList<>();
-
-        this.tree = new FileTree(null);
-        this.tree.addFileListener(event -> this.codeViewer.getTabbedPane().openFile(event.getFile()));
 
         hideButton = new JButton(CAPTION_HIDE);
         hideButton.setActionCommand(ACTION_HIDE);
         hideButton.addActionListener(this);
         add(hideButton);
+
+        findButton = new JButton(CAPTION_FIND);
+        findButton.setActionCommand(ACTION_FIND);
+        findButton.addActionListener(this);
+        add(findButton);
 
         searchField = new JTextField(30);
         searchField.addKeyListener(new KeyAdapter() {
@@ -72,37 +99,24 @@ public class GlobalSearchBar extends JToolBar implements ActionListener {
             @Override
             public void keyPressed(KeyEvent event) {
                 if (event.getKeyCode() == KeyEvent.VK_ENTER) {
-                    forwardButton.doClick();
+                    findButton.doClick();
                 }
             }
         });
-
-        JPanel northPanel = new JPanel();
-        northPanel.add(searchField);
-
-        forwardButton = new JButton(CAPTION_FIND);
-        forwardButton.setActionCommand(ACTION_NEXT);
-        forwardButton.addActionListener(this);
-        northPanel.add(forwardButton);
+        add(searchField);
 
         regexCB = new JCheckBox(CAPTION_REGEX);
-        northPanel.add(regexCB);
+        add(regexCB);
 
         matchCaseCB = new JCheckBox(CAPTION_MATCH_CASE);
-        northPanel.add(matchCaseCB);
-
-        JPanel mainPanel = new JPanel();
-        mainPanel.setLayout(new BorderLayout());
-
-        mainPanel.add(northPanel, BorderLayout.NORTH);
-        mainPanel.add(new JScrollPane(tree), BorderLayout.CENTER);
-        add(mainPanel);
+        add(matchCaseCB);
     }
 
     /**
      * Adds a <code>SearchBarListener</code> to this <code>GlobalSearchBar</code>.
      *
-     * @param listener the <code>SearchBarListener</code> to add
+     * @param listener
+     *         the <code>SearchBarListener</code> to add
      */
     public void addSearchBarListener(SearchBarListener listener) {
         listeners.add(listener);
@@ -111,7 +125,8 @@ public class GlobalSearchBar extends JToolBar implements ActionListener {
     /**
      * Removes a <code>SearchBarListener</code> from this <code>GlobalSearchBar</code>.
      *
-     * @param listener the <code>SearchBarListener</code> to remove
+     * @param listener
+     *         the <code>SearchBarListener</code> to remove
      */
     public void removeSearchBarListener(SearchBarListener listener) {
         listeners.remove(listener);
@@ -125,97 +140,77 @@ public class GlobalSearchBar extends JToolBar implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent action) {
         String command = action.getActionCommand();
+        FileTree fileTree = codeViewer.getFileTree();
 
         if (command.equals(ACTION_HIDE)) {
+
+            if (oldRenderer != null) {
+                fileTree.setCellRenderer(oldRenderer);
+                fileTree.repaint();
+                oldRenderer = null;
+            }
+
             setVisible(false);
             return;
         }
 
         String text = searchField.getText();
-        if (text.length() == 0) {
+        if (text.isEmpty()) {
             return;
         }
 
-        FileTreeNode root;
+        SearchContext searchContext = new SearchContext();
+        searchContext.setSearchFor(text);
+        searchContext.setSearchForward(true);
+        searchContext.setMatchCase(matchCaseCB.isSelected());
+        searchContext.setWholeWord(false);
+        searchContext.setRegularExpression(regexCB.isSelected());
 
-        if (file.exists()) {
-            root = new FileTreeNode(file);
-        } else {
-            tree.setModel(new DefaultTreeModel(null));
-            return;
+        FileTreeNode treeRoot = fileTree.getModel().getRoot();
+        Stream<FileTreeNode> fileNodes = treeRoot.preOrder().stream().filter(FileTreeNode::isFile);
+        Predicate<FileTreeNode> textFilter = node -> containsText(node, searchContext);
+        Set<FileTreeNode> foundNodes = fileNodes.filter(textFilter).collect(Collectors.toSet());
+
+        if (!foundNodes.isEmpty()) {
+            if (oldRenderer != null) {
+                oldRenderer = fileTree.getCellRenderer();
+            }
+
+            fileTree.setCellRenderer(new Highlighter(foundNodes));
+            fileTree.repaint();
+
+            FileTreeNode[] path;
+            for (FileTreeNode node : foundNodes) {
+                path = fileTree.getModel().buildPath(node.getFile());
+                fileTree.makeVisible(new TreePath(path));
+            }
         }
 
-//        if (getNextLeaf(root) == null) {
-//            root.removeAllChildren();
-//        } else {
-//            boolean forward = true;
-//            boolean matchCase = matchCaseCB.isSelected();
-//            boolean wholeWord = false;
-//            boolean regex = regexCB.isSelected();
-//
-//            FileTreeNode current = getNextLeaf(root);
-//            FileTreeNode delete = null;
-//
-//            RSyntaxTextArea textArea = new RSyntaxTextArea();
-//
-//            while (current != null) {
-//
-//                if (current.isFile()) {
-//                    try {
-//                        String path = file.getPath() + current.getFilePath();
-//                        File currentFile = new File(path);
-//                        byte[] buffer = new byte[(int) (currentFile).length()];
-//                        FileInputStream fileStream = new FileInputStream(currentFile);
-//                        fileStream.read(buffer);
-//                        textArea.setText(new String(buffer));
-//                        textArea.setCaretPosition(0);
-//
-//                        SearchContext searchContext = new SearchContext();
-//                        searchContext.setSearchFor(text);
-//                        searchContext.setSearchForward(forward);
-//                        searchContext.setMatchCase(matchCase);
-//                        searchContext.setWholeWord(wholeWord);
-//                        searchContext.setRegularExpression(regex);
-//
-//                        if (!SearchEngine.find(textArea, searchContext).wasFound()) {
-//                            delete = current;
-//                        }
-//                    } catch (Exception e) {
-//                        delete = current;
-//                    }
-//                } else {
-//                    delete = current;
-//                }
-//
-//                current = getNextLeaf(current);
-//                while (delete != null) {
-//                    FileTreeNode parent = delete.getParent();
-//
-//                    delete.removeFromParent();
-//                    if (parent != null && parent.getChildCount() == 0) {
-//                        delete = parent;
-//                    } else {
-//                        delete = null;
-//                    }
-//                }
-//            }
-//        }
-
-        tree.setModel(new FileTreeModel(root));
-
-        for (SearchBarListener l : listeners) {
-            l.searched(command, text, root.getChildCount() > 0);
+        for (SearchBarListener listener : listeners) {
+            listener.searched(command, text, !foundNodes.isEmpty());
         }
+    }
+
+    private boolean containsText(FileTreeNode node, SearchContext context) {
+
+        if (!node.isFile()) {
+            return false;
+        }
+
+        JTextArea textArea;
+
+        try {
+            textArea = new RSyntaxTextArea(new String(Files.readAllBytes(node.getFile().toPath())));
+            textArea.setCaretPosition(0);
+        } catch (IOException e) {
+            System.err.println("Could not search through the contents of " + node.getFile().getName());
+            return false;
+        }
+
+        return SearchEngine.find(textArea, context).wasFound();
     }
 
     public JCheckBox getRegexCB() {
         return regexCB;
     }
-
-//    private FileTreeNode getNextLeaf(FileTreeNode node) {
-//        do {
-//            node = node.getNextNode();
-//        } while (node != null && !node.isFile());
-//        return node;
-//    }
 }
