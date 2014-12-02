@@ -33,7 +33,7 @@ public class FileTree extends JTree {
         super(new FileTreeModel((rootDir != null && rootDir.exists()) ? new FileTreeNode(rootDir) : null));
 
         this.fileListeners = new LinkedList<>();
-        this.model = (FileTreeModel) getModel();
+        this.model = getModel();
 
         addMouseListener(new MouseAdapter() {
 

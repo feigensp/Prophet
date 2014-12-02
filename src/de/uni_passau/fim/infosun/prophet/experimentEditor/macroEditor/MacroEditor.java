@@ -339,9 +339,7 @@ public class MacroEditor extends JFrame {
             }
         });
 
-        closeMenuItem.addActionListener(event -> {
-            processWindowEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
-        });
+        closeMenuItem.addActionListener(event -> processWindowEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING)));
 
         menuBar.add(menu);
         menu.add(saveMenuItem);

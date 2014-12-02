@@ -13,11 +13,7 @@ import javax.xml.validation.Validator;
 import com.thoughtworks.xstream.XStream;
 import de.uni_passau.fim.infosun.prophet.util.qTree.Attribute;
 import de.uni_passau.fim.infosun.prophet.util.qTree.QTreeNode;
-import nu.xom.Builder;
-import nu.xom.Document;
-import nu.xom.Element;
-import nu.xom.Elements;
-import nu.xom.ParsingException;
+import nu.xom.*;
 import org.xml.sax.SAXException;
 
 /**
@@ -103,7 +99,7 @@ public final class QTreeXMLHandler extends QTreeFormatHandler {
         Objects.requireNonNull(saveFile, "saveFile must not be null!");
 
         checkParent(saveFile);
-        try (FileWriter out = new FileWriter(saveFile);) {
+        try (FileWriter out = new FileWriter(saveFile)) {
             answerStream.toXML(root, out);
         }
     }
