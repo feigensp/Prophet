@@ -1,9 +1,17 @@
 package de.uni_passau.fim.infosun.prophet.util.qTree.handlers;
 
 import java.io.File;
-import java.io.FileWriter;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.Reader;
 import java.io.StringWriter;
+import java.io.Writer;
+import java.nio.charset.CharsetDecoder;
+import java.nio.charset.CharsetEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -81,11 +89,14 @@ public final class QTreeCSVHandler extends QTreeFormatHandler {
     public static void exportCSV(File answerDir, File saveFile) {
         List<File> files = getFilesByName(answerDir, Constants.FILE_ANSWERS);
         List<String[]> lines = new LinkedList<>();
-
+        CharsetDecoder utf8decoder;    
+        
         for (File file : files) {
-            try {
+            utf8decoder = StandardCharsets.UTF_8.newDecoder();
+            
+            try (Reader reader = new InputStreamReader(new FileInputStream(file), utf8decoder)) {
                 Builder builder = new Builder();
-                Document document = builder.build(file);
+                Document document = builder.build(reader);
 
                 if (lines.isEmpty()) {
                     List<String> line = new ArrayList<>();
@@ -104,8 +115,10 @@ public final class QTreeCSVHandler extends QTreeFormatHandler {
             }
         }
 
-        try (FileWriter fileWriter = new FileWriter(saveFile)) {
-            CSVWriter csvWriter = new CSVWriter(fileWriter, ';', '"');
+        CharsetEncoder utf8encoder = StandardCharsets.UTF_8.newEncoder();
+        
+        try (Writer writer = new OutputStreamWriter(new FileOutputStream(saveFile), utf8encoder)) {
+            CSVWriter csvWriter = new CSVWriter(writer, ';', '"');
             csvWriter.writeAll(lines);
         } catch (IOException e) {
             System.err.println("Could not write the CSV export file " + saveFile.getAbsolutePath());
