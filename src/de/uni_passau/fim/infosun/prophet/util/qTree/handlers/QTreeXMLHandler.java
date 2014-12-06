@@ -1,8 +1,16 @@
 package de.uni_passau.fim.infosun.prophet.util.qTree.handlers;
 
 import java.io.File;
-import java.io.FileWriter;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.Reader;
+import java.io.Writer;
+import java.nio.charset.CharsetDecoder;
+import java.nio.charset.CharsetEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 import javax.xml.XMLConstants;
 import javax.xml.transform.stream.StreamSource;
@@ -13,7 +21,11 @@ import javax.xml.validation.Validator;
 import com.thoughtworks.xstream.XStream;
 import de.uni_passau.fim.infosun.prophet.util.qTree.Attribute;
 import de.uni_passau.fim.infosun.prophet.util.qTree.QTreeNode;
-import nu.xom.*;
+import nu.xom.Builder;
+import nu.xom.Document;
+import nu.xom.Element;
+import nu.xom.Elements;
+import nu.xom.ParsingException;
 import org.xml.sax.SAXException;
 
 /**
@@ -74,6 +86,9 @@ public final class QTreeXMLHandler extends QTreeFormatHandler {
         } catch (SAXException e) {
             System.err.println("Could not create a Validator for the XML format.");
         }
+        
+        CharsetEncoder utf8encoder = StandardCharsets.UTF_8.newEncoder();
+        CharsetDecoder utf8decoder = StandardCharsets.UTF_8.newDecoder();
     }
 
     /**
@@ -97,10 +112,11 @@ public final class QTreeXMLHandler extends QTreeFormatHandler {
     public static void saveAnswerXML(QTreeNode root, File saveFile) throws IOException {
         Objects.requireNonNull(root, "root must not be null!");
         Objects.requireNonNull(saveFile, "saveFile must not be null!");
-
+        CharsetEncoder utf8encoder = StandardCharsets.UTF_8.newEncoder();
+        
         checkParent(saveFile);
-        try (FileWriter out = new FileWriter(saveFile)) {
-            answerStream.toXML(root, out);
+        try (Writer writer = new OutputStreamWriter(new FileOutputStream(saveFile), utf8encoder)) {
+            answerStream.toXML(root, writer);
         }
     }
 
@@ -115,11 +131,17 @@ public final class QTreeXMLHandler extends QTreeFormatHandler {
      */
     public static QTreeNode loadExperimentXML(File xmlFile) {
         Objects.requireNonNull(xmlFile, "xmlFile must not be null!");
-
+        CharsetDecoder utf8decoder = StandardCharsets.UTF_8.newDecoder();
         QTreeNode node;
 
         if (isValidXML(validator, "CurrentValidator" , xmlFile)) {
-            node = (QTreeNode) saveLoadStream.fromXML(xmlFile);
+            try (Reader reader = new InputStreamReader(new FileInputStream(xmlFile), utf8decoder)) {
+                node = (QTreeNode) saveLoadStream.fromXML(reader);
+            } catch (IOException e) {
+                System.err.println("There was an error deserializing " + xmlFile.getName());
+                System.err.println(e.getMessage());
+                node = null;
+            }
         } else if (isValidXML(legacyValidator, "LegacyValidator" , xmlFile)) {
             node = loadOldExperimentXML(xmlFile);
         } else {
@@ -145,17 +167,18 @@ public final class QTreeXMLHandler extends QTreeFormatHandler {
      * @return true iff the <code>Validator</code> accepts the <code>xmlFile</code>
      */
     private static boolean isValidXML(Validator validator, String validatorID, File xmlFile) {
-
+        CharsetDecoder utf8decoder = StandardCharsets.UTF_8.newDecoder();
+        
         if (validator == null || xmlFile == null) {
+            System.err.println("Validator or XML file is null. Considering the file invalid.");
             return false;
         }
 
-        try {
-            validator.validate(new StreamSource(xmlFile));
+        try (Reader reader = new InputStreamReader(new FileInputStream(xmlFile), utf8decoder)) {
+            validator.validate(new StreamSource(reader));
         } catch (SAXException | IOException e) {
             System.err.println("The file " + xmlFile.getName() + " is invalid according to " + validatorID);
-            System.err.println("Cause:");
-            System.err.println(e.getMessage());
+            System.err.println("Cause: " + e.getMessage());
             return false;
         }
 
@@ -178,10 +201,11 @@ public final class QTreeXMLHandler extends QTreeFormatHandler {
     public static void saveExperimentXML(QTreeNode root, File saveFile) throws IOException {
         Objects.requireNonNull(root, "root must not be null!");
         Objects.requireNonNull(saveFile, "saveFile must not be null!");
-
+        CharsetEncoder utf8encoder = StandardCharsets.UTF_8.newEncoder();
+        
         checkParent(saveFile);
-        try (FileWriter out = new FileWriter(saveFile)) {
-            saveLoadStream.toXML(root, out);
+        try (Writer writer = new OutputStreamWriter(new FileOutputStream(saveFile), utf8encoder)) {
+            saveLoadStream.toXML(root, writer);
         }
     }
 
@@ -207,12 +231,12 @@ public final class QTreeXMLHandler extends QTreeFormatHandler {
      */
     private static QTreeNode loadOldExperimentXML(File xmlFile) {
         Objects.requireNonNull(xmlFile, "xmlFile must not be null!");
-
+        CharsetDecoder utf8decoder = StandardCharsets.UTF_8.newDecoder();
         Builder parser = new Builder();
         Document document;
 
-        try {
-            document = parser.build(xmlFile);
+        try (Reader reader = new InputStreamReader(new FileInputStream(xmlFile), utf8decoder)) {
+            document = parser.build(reader);
         } catch (ParsingException | IOException e) {
             System.err.println("Could not parse " + xmlFile.getName());
             System.err.println(e.getMessage());
