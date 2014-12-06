@@ -1,12 +1,32 @@
 package de.uni_passau.fim.infosun.prophet.experimentEditor.macroEditor;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.GridLayout;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
-import java.io.FileWriter;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.*;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.Reader;
+import java.io.Writer;
+import java.nio.charset.CharsetDecoder;
+import java.nio.charset.CharsetEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import javax.swing.*;
 import javax.xml.XMLConstants;
 import javax.xml.transform.stream.StreamSource;
@@ -29,6 +49,7 @@ import static de.uni_passau.fim.infosun.prophet.util.language.UIElementNames.get
  */
 public class MacroEditor extends JFrame {
 
+    private static final String xmlProlog = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n";
     private static final String XML_FILENAME = "macros.xml";
     private static final String XSD_FILENAME = "macros.xsd";
     private static File xmlFile;
@@ -356,9 +377,13 @@ public class MacroEditor extends JFrame {
      */
     private void saveXMLFile() throws IOException {
         List<Macro> list = Collections.list(model.elements());
-
+        CharsetEncoder utf8encoder = StandardCharsets.UTF_8.newEncoder();
+        
         if (!list.isEmpty()) {
-            xStream.toXML(list, new FileWriter(xmlFile));
+            try (Writer writer = new OutputStreamWriter(new FileOutputStream(xmlFile), utf8encoder)) {
+                writer.write(xmlProlog);
+                xStream.toXML(list, writer);
+            }
         }
     }
 
@@ -371,20 +396,26 @@ public class MacroEditor extends JFrame {
     @SuppressWarnings({"unchecked"}) // the macros.xsd ensures that the XML can be deserialised to a Collection<Macro>
     public static List<Macro> loadMacros() {
         List<Macro> macros = new LinkedList<>();
+        CharsetDecoder utf8decoder;
 
-        if (xmlFile.exists()) {
+        if (!xmlFile.exists()) {
+            return macros;
+        }
 
-            try {
-                validator.validate(new StreamSource(xmlFile));
-
-                try {
-                    macros.addAll((Collection<Macro>) xStream.fromXML(xmlFile));
-                } catch (XStreamException | ClassCastException e) {
-                    System.err.println(xmlFile.getName() + " could not be deserialised. " + e.getMessage());
-                }
-            } catch (SAXException | IOException e) {
-                System.err.println(xmlFile.getName() + " did not pass validation. " + e.getMessage());
+        try {
+            utf8decoder = StandardCharsets.UTF_8.newDecoder();
+            try (Reader reader = new InputStreamReader(new FileInputStream(xmlFile), utf8decoder)) {
+                validator.validate(new StreamSource(reader));
             }
+
+            utf8decoder = StandardCharsets.UTF_8.newDecoder();
+            try (Reader reader = new InputStreamReader(new FileInputStream(xmlFile), utf8decoder)) {
+                macros.addAll((Collection<Macro>) xStream.fromXML(reader));
+            } catch (XStreamException | ClassCastException e) {
+                System.err.println(xmlFile.getName() + " could not be deserialised. " + e.getMessage());
+            }
+        } catch (SAXException | IOException e) {
+            System.err.println(xmlFile.getName() + " did not pass validation. " + e.getMessage());
         }
 
         return macros;
