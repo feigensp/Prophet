@@ -1,8 +1,12 @@
 package de.uni_passau.fim.infosun.prophet.util.qTree.handlers;
 
 import java.io.File;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.nio.charset.CharsetEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -183,8 +187,10 @@ public final class QTreeHTMLHandler extends QTreeFormatHandler {
             body.append(divider);
         }
 
-        try (FileWriter out = new FileWriter(saveFile)) {
-            out.write(doc.outerHtml());
+        CharsetEncoder utf8encoder = StandardCharsets.UTF_8.newEncoder();
+
+        try (Writer writer = new OutputStreamWriter(new FileOutputStream(saveFile), utf8encoder)) {
+            writer.write(doc.outerHtml());
         }
     }
 
