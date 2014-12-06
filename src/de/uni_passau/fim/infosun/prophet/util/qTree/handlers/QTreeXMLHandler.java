@@ -87,9 +87,6 @@ public final class QTreeXMLHandler extends QTreeFormatHandler {
         } catch (SAXException e) {
             System.err.println("Could not create a Validator for the XML format.");
         }
-        
-        CharsetEncoder utf8encoder = StandardCharsets.UTF_8.newEncoder();
-        CharsetDecoder utf8decoder = StandardCharsets.UTF_8.newDecoder();
     }
 
     /**
