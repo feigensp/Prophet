@@ -37,7 +37,8 @@ import org.xml.sax.SAXException;
  * </ul>
  */
 public final class QTreeXMLHandler extends QTreeFormatHandler {
-
+    
+    private static final String xmlProlog = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n";
     private static final XStream saveLoadStream;
     private static final XStream answerStream;
     private static Validator legacyValidator;
@@ -116,6 +117,7 @@ public final class QTreeXMLHandler extends QTreeFormatHandler {
         
         checkParent(saveFile);
         try (Writer writer = new OutputStreamWriter(new FileOutputStream(saveFile), utf8encoder)) {
+            writer.write(xmlProlog);
             answerStream.toXML(root, writer);
         }
     }
@@ -205,6 +207,7 @@ public final class QTreeXMLHandler extends QTreeFormatHandler {
         
         checkParent(saveFile);
         try (Writer writer = new OutputStreamWriter(new FileOutputStream(saveFile), utf8encoder)) {
+            writer.write(xmlProlog);
             saveLoadStream.toXML(root, writer);
         }
     }
