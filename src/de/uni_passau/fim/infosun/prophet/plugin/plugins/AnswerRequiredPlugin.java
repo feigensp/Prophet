@@ -61,8 +61,8 @@ public class AnswerRequiredPlugin implements Plugin {
             Map<String, String[]> answers = currentNode.getAnswers();
             Scanner sc = new Scanner(requiredAnswers);
 
-            while (sc.hasNext()) {
-                String requiredAnswerKey = sc.next();
+            while (sc.hasNextLine()) {
+                String requiredAnswerKey = sc.nextLine();
                 boolean missing = !answers.containsKey(requiredAnswerKey);
                 boolean empty = missing || Arrays.stream(answers.get(requiredAnswerKey)).allMatch(String::isEmpty);
 
