@@ -9,9 +9,11 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -192,8 +194,13 @@ public class QuestionViewPane extends JScrollPane {
         textPane.addHyperlinkListener(formSubmitListener);
         ((HTMLEditorKit) textPane.getEditorKit()).setAutoFormSubmission(false);
 
-        URL trueBase = ClassLoader.getSystemResource(".");
-        ((HTMLDocument) textPane.getDocument()).setBase(trueBase);
+        try {
+            URL base = Paths.get("").toUri().toURL();
+            ((HTMLDocument) textPane.getDocument()).setBase(base);
+        } catch (MalformedURLException e) {
+            System.err.println("Could not determine the base URL for the HTML document.");
+            System.err.println(e.getMessage());
+        }
 
         textPane.setText(getHTML(questionNode));
         textPane.setCaretPosition(0);
