@@ -122,7 +122,7 @@ public class FormComboBox extends JComboBox<String> implements ActionListener {
             tableBuilder.append(String.format(rowFormat, rowBuilder.toString()));
         }
 
-        textArea.replaceSelection(String.format(tableFormat, tableInfo.getKey(), tableBuilder.toString()));
+        textArea.replaceSelection(String.format(tableFormat, norm(tableInfo.getKey()), tableBuilder.toString()));
     }
 
     /**
@@ -142,10 +142,11 @@ public class FormComboBox extends JComboBox<String> implements ActionListener {
         }
 
         StringBuilder checks = new StringBuilder();
+        String name = norm(checkInfo.getKey());
 
         formatString = "<input type=\"checkbox\" name=\"%s\" value=\"%s\">%s<br>%n";
         for (String checkEntry : checkInfo.getValue()) {
-            checks.append(String.format(formatString, checkInfo.getKey(), checkEntry, checkEntry));
+            checks.append(String.format(formatString, name, checkEntry, checkEntry));
         }
 
         textArea.replaceSelection(checks.toString());
@@ -168,10 +169,11 @@ public class FormComboBox extends JComboBox<String> implements ActionListener {
         }
 
         StringBuilder radios = new StringBuilder();
-
+        String name = norm(radioInfo.getKey());
+        
         formatString = "<input type=\"radio\" name=\"%s\" value=\"%s\">%s<br>%n";
         for (String radioEntry : radioInfo.getValue()) {
-            radios.append(String.format(formatString, radioInfo.getKey(), radioEntry, radioEntry));
+            radios.append(String.format(formatString, name, radioEntry, radioEntry));
         }
 
         textArea.replaceSelection(radios.toString());
@@ -200,7 +202,7 @@ public class FormComboBox extends JComboBox<String> implements ActionListener {
         }
 
         formatString = "<select name=\"%s\">%s%n</select>";
-        textArea.replaceSelection(String.format(formatString, comboInfo.getKey(), combos.toString()));
+        textArea.replaceSelection(String.format(formatString, norm(comboInfo.getKey()), combos.toString()));
     }
 
     /**
@@ -226,7 +228,7 @@ public class FormComboBox extends JComboBox<String> implements ActionListener {
         }
 
         formatString = "<select name=\"%s\" size=\"3\" multiple>%s%n</select>";
-        textArea.replaceSelection(String.format(formatString, listInfo.getKey(), list.toString()));
+        textArea.replaceSelection(String.format(formatString, norm(listInfo.getKey()), list.toString()));
     }
 
     /**
@@ -244,7 +246,7 @@ public class FormComboBox extends JComboBox<String> implements ActionListener {
         }
 
         formatString = "<textarea name=\"%s\" cols=\"50\" rows=\"10\"></textarea>";
-        textArea.replaceSelection(String.format(formatString, textAreaName));
+        textArea.replaceSelection(String.format(formatString, norm(textAreaName)));
     }
 
     /**
@@ -262,6 +264,16 @@ public class FormComboBox extends JComboBox<String> implements ActionListener {
         }
 
         formatString = "<input type=\"text\" name=\"%s\">";
-        textArea.replaceSelection(String.format(formatString, textFieldName));
+        textArea.replaceSelection(String.format(formatString, norm(textFieldName)));
+    }
+
+    /**
+     * Normalises a given <code>String</code> by removing all whitespace characters from it.
+     * 
+     * @param string the <code>String</code> to normalise
+     * @return the normalised <code>String</code>
+     */
+    private String norm(String string) {
+        return string.replaceAll("[\\s]+", "");
     }
 }
