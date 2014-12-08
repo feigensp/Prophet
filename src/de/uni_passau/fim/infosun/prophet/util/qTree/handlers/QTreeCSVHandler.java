@@ -1,14 +1,6 @@
 package de.uni_passau.fim.infosun.prophet.util.qTree.handlers;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.Reader;
-import java.io.StringWriter;
-import java.io.Writer;
+import java.io.*;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CharsetEncoder;
 import java.nio.charset.StandardCharsets;
@@ -21,12 +13,7 @@ import java.util.function.Function;
 import au.com.bytecode.opencsv.CSVWriter;
 import de.uni_passau.fim.infosun.prophet.Constants;
 import de.uni_passau.fim.infosun.prophet.util.qTree.QTreeNode;
-import nu.xom.Builder;
-import nu.xom.Document;
-import nu.xom.Element;
-import nu.xom.Elements;
-import nu.xom.ParentNode;
-import nu.xom.ParsingException;
+import nu.xom.*;
 
 /**
  * Handles CSV operations for the <code>QTree</code>
@@ -89,11 +76,11 @@ public final class QTreeCSVHandler extends QTreeFormatHandler {
     public static void exportCSV(File answerDir, File saveFile) {
         List<File> files = getFilesByName(answerDir, Constants.FILE_ANSWERS);
         List<String[]> lines = new LinkedList<>();
-        CharsetDecoder utf8decoder;    
-        
+        CharsetDecoder utf8decoder;
+
         for (File file : files) {
             utf8decoder = StandardCharsets.UTF_8.newDecoder();
-            
+
             try (Reader reader = new InputStreamReader(new FileInputStream(file), utf8decoder)) {
                 Builder builder = new Builder();
                 Document document = builder.build(reader);
@@ -116,7 +103,7 @@ public final class QTreeCSVHandler extends QTreeFormatHandler {
         }
 
         CharsetEncoder utf8encoder = StandardCharsets.UTF_8.newEncoder();
-        
+
         try (Writer writer = new OutputStreamWriter(new FileOutputStream(saveFile), utf8encoder)) {
             CSVWriter csvWriter = new CSVWriter(writer, ';', '"');
             csvWriter.writeAll(lines);
@@ -173,7 +160,7 @@ public final class QTreeCSVHandler extends QTreeFormatHandler {
             path.add("answerTime");
 
             return path.stream().reduce(String::concat).get();
-        } else if (name.equals("entry")) {
+        } else if ("entry".equals(name)) {
             List<String> path = pathTo(element);
             path.add(PATH_SEPARATOR);
             path.add(element.getFirstChildElement("string").getValue());
@@ -198,7 +185,7 @@ public final class QTreeCSVHandler extends QTreeFormatHandler {
 
         if (name.equals(QTreeNode.class.getSimpleName())) {
             return element.getAttributeValue("answerTime");
-        } else if (name.equals("entry")) {
+        } else if ("entry".equals(name)) {
             Elements answerElements = element.getFirstChildElement("string-array").getChildElements("string");
 
             if (answerElements.size() == 1) {
