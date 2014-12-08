@@ -8,13 +8,7 @@ import java.util.Properties;
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.activation.FileDataSource;
-import javax.mail.Authenticator;
-import javax.mail.BodyPart;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Transport;
+import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
@@ -43,18 +37,18 @@ import static de.uni_passau.fim.infosun.prophet.util.qTree.QTreeNode.Type.EXPERI
  */
 public class MailPlugin implements Plugin {
 
-    private final static String KEY = "sendmail";
-    private final static String SMTP_SERVER = "smtp_server";
-    private final static String SMTP_USER = "smtp_user";
-    private final static String SMTP_PASS = "smtp_pass";
-    private final static String SMTP_SENDER = "smtp_sender";
-    private final static String SMTP_RECEIVER = "smtp_receiver";
-    private final static String SMTP_SERVER_PORT = "smtp_server_port";
-    private final static String SMTP_SERVER_SEC = "smtp_server_sec";
+    private static final String KEY = "sendmail";
+    private static final String SMTP_SERVER = "smtp_server";
+    private static final String SMTP_USER = "smtp_user";
+    private static final String SMTP_PASS = "smtp_pass";
+    private static final String SMTP_SENDER = "smtp_sender";
+    private static final String SMTP_RECEIVER = "smtp_receiver";
+    private static final String SMTP_SERVER_PORT = "smtp_server_port";
+    private static final String SMTP_SERVER_SEC = "smtp_server_sec";
 
-    private final static String SEC_NONE = "-";
-    private final static String SEC_STARTTLS = "STARTTLS";
-    private final static String SEC_SSL_TLS = "SSL/TLS";
+    private static final String SEC_NONE = "-";
+    private static final String SEC_STARTTLS = "STARTTLS";
+    private static final String SEC_SSL_TLS = "SSL/TLS";
 
     private boolean enabled;
     private String smtpServer;
@@ -80,22 +74,22 @@ public class MailPlugin implements Plugin {
 
         Attribute subAttribute = mainAttribute.getSubAttribute(SMTP_SENDER);
         Setting subSetting = new SettingsTextField(subAttribute, null);
-        subSetting.setCaption(getLocalized("MAIL_SMTP_SENDER") + ":");
+        subSetting.setCaption(getLocalized("MAIL_SMTP_SENDER") + ':');
         pluginSettings.addSetting(subSetting);
 
         subAttribute = mainAttribute.getSubAttribute(SMTP_RECEIVER);
         subSetting = new SettingsTextField(subAttribute, null);
-        subSetting.setCaption(getLocalized("MAIL_SMTP_RECIPIENT") + ":");
+        subSetting.setCaption(getLocalized("MAIL_SMTP_RECIPIENT") + ':');
         pluginSettings.addSetting(subSetting);
 
         subAttribute = mainAttribute.getSubAttribute(SMTP_SERVER);
         subSetting = new SettingsTextField(subAttribute, null);
-        subSetting.setCaption(getLocalized("MAIL_SMTP_SERVER") + ":");
+        subSetting.setCaption(getLocalized("MAIL_SMTP_SERVER") + ':');
         pluginSettings.addSetting(subSetting);
 
         subAttribute = mainAttribute.getSubAttribute(SMTP_SERVER_PORT);
         subSetting = new SettingsSpinner(subAttribute, null, new SpinnerNumberModel(587, 0, 65535, 1));
-        subSetting.setCaption(getLocalized("MAIL_SMTP_SERVER_PORT") + ":");
+        subSetting.setCaption(getLocalized("MAIL_SMTP_SERVER_PORT") + ':');
         pluginSettings.addSetting(subSetting);
 
         List<Pair<String, String>> items = new ArrayList<>();
@@ -105,17 +99,17 @@ public class MailPlugin implements Plugin {
 
         subAttribute = mainAttribute.getSubAttribute(SMTP_SERVER_SEC);
         subSetting = new SettingsComboBox(subAttribute, null, items);
-        subSetting.setCaption(getLocalized("MAIL_SMTP_SECURITY") + ":");
+        subSetting.setCaption(getLocalized("MAIL_SMTP_SECURITY") + ':');
         pluginSettings.addSetting(subSetting);
 
         subAttribute = mainAttribute.getSubAttribute(SMTP_USER);
         subSetting = new SettingsTextField(subAttribute, null);
-        subSetting.setCaption(getLocalized("MAIL_SMTP_USER") + ":");
+        subSetting.setCaption(getLocalized("MAIL_SMTP_USER") + ':');
         pluginSettings.addSetting(subSetting);
 
         subAttribute = mainAttribute.getSubAttribute(SMTP_PASS);
         subSetting = new SettingsPasswordField(subAttribute, null);
-        subSetting.setCaption(getLocalized("MAIL_SMTP_PASSWORD") + ":");
+        subSetting.setCaption(getLocalized("MAIL_SMTP_PASSWORD") + ':');
         pluginSettings.addSetting(subSetting);
 
         return pluginSettings;
@@ -200,18 +194,18 @@ public class MailPlugin implements Plugin {
         MailAuthenticator auth = new MailAuthenticator(smtpUser, smtpPass);
         Properties properties = new Properties();
 
-        properties.put("mail.smtp.host", smtpServer);
-        properties.put("mail.smtp.port", String.valueOf(smtpPort));
-        properties.put("mail.smtp.auth", "true");
+        properties.setProperty("mail.smtp.host", smtpServer);
+        properties.setProperty("mail.smtp.port", String.valueOf(smtpPort));
+        properties.setProperty("mail.smtp.auth", "true");
 
         if (smtpSec.equals(SEC_STARTTLS) || smtpSec.equals(SEC_SSL_TLS)) {
-            properties.put("mail.smtp.starttls.enable","true");
+            properties.setProperty("mail.smtp.starttls.enable", "true");
         }
 
         if (smtpSec.equals(SEC_SSL_TLS)) {
-            properties.put("mail.smtp.socketFactory.port", String.valueOf(smtpPort));
-            properties.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
-            properties.put("mail.smtp.socketFactory.fallback", "false");
+            properties.setProperty("mail.smtp.socketFactory.port", String.valueOf(smtpPort));
+            properties.setProperty("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+            properties.setProperty("mail.smtp.socketFactory.fallback", "false");
         }
 
         Session session = Session.getDefaultInstance(properties, auth);
