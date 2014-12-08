@@ -81,9 +81,9 @@ public class VerticalLayout implements LayoutManager {
         constantReps = Collections.unmodifiableMap(reps);
     }
 
-    private int vgap; // the vertical gap between components ... defaults to 5
-    private int alignment; // LEFT, RIGHT, CENTER or STRETCH ... how the components are justified
-    private int anchor; // TOP, BOTTOM or CENTER ... where are the components positioned in an overlarge space
+    private final int vgap; // the vertical gap between components ... defaults to 5
+    private final int alignment; // LEFT, RIGHT, CENTER or STRETCH ... how the components are justified
+    private final int anchor; // TOP, BOTTOM or CENTER ... where are the components positioned in an overlarge space
 
     /**
      * Constructs a new <code>VerticalLayout</code> with a vertical gap of 5 pixels and horizontal centering. Components
