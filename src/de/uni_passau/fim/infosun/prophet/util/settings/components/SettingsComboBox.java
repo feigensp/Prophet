@@ -18,6 +18,9 @@ import de.uni_passau.fim.infosun.prophet.util.settings.Setting;
  */
 public class SettingsComboBox extends Setting {
 
+    private static final String[] EMPTY_VALUES = new String[0];
+    private static final String[] EMPTY_REPRESENTATIONS = new String[0];
+
     private JLabel caption;
     private JComboBox<String> comboBox;
 
@@ -59,8 +62,8 @@ public class SettingsComboBox extends Setting {
 
             comboBox = new JComboBox<>(representations);
         } else {
-            values = new String[0];
-            representations = new String[0];
+            values = EMPTY_VALUES;
+            representations = EMPTY_REPRESENTATIONS;
 
             comboBox = new JComboBox<>();
         }
