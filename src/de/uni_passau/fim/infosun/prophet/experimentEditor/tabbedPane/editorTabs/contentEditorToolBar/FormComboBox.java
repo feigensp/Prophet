@@ -2,7 +2,6 @@ package de.uni_passau.fim.infosun.prophet.experimentEditor.tabbedPane.editorTabs
 
 import java.awt.Component;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JComboBox;
@@ -20,7 +19,7 @@ import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
  * @author Andreas Hasselberg
  * @author Markus Köppen
  */
-public class FormComboBox extends JComboBox<String> implements ActionListener {
+public class FormComboBox extends JComboBox<String> {
 
     private RSyntaxTextArea textArea;
 
