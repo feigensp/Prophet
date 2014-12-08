@@ -88,7 +88,7 @@ public class PluginList {
         for (Plugin plugin : plugins) {
             try {
                 plugin.experimentViewerRun(experimentViewer);
-            } catch (Exception e) {
+            } catch (RuntimeException e) {
                 e.printStackTrace();
             }
         }
@@ -110,7 +110,7 @@ public class PluginList {
                 if (plugin.denyEnterNode(node)) {
                     return true;
                 }
-            } catch (Exception e) {
+            } catch (RuntimeException e) {
                 e.printStackTrace();
             }
         }
@@ -130,7 +130,7 @@ public class PluginList {
         for (Plugin plugin : plugins) {
             try {
                 plugin.enterNode(node);
-            } catch (Exception e) {
+            } catch (RuntimeException e) {
                 e.printStackTrace();
             }
         }
@@ -154,7 +154,7 @@ public class PluginList {
                 if (message != null && !message.trim().isEmpty()) {
                     return message;
                 }
-            } catch (Exception e) {
+            } catch (RuntimeException e) {
                 e.printStackTrace();
             }
         }
@@ -174,7 +174,7 @@ public class PluginList {
         for (Plugin plugin : plugins) {
             try {
                 plugin.exitNode(node);
-            } catch (Exception e) {
+            } catch (RuntimeException e) {
                 e.printStackTrace();
             }
         }
@@ -196,7 +196,7 @@ public class PluginList {
                 if (pluginMessage != null && !pluginMessage.isEmpty()) {
                     element.appendElement("p").text(pluginMessage);
                 }
-            } catch (Exception e) {
+            } catch (RuntimeException e) {
                 e.printStackTrace();
             }
         }
