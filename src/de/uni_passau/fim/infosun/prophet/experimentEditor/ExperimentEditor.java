@@ -5,10 +5,10 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
+import java.nio.charset.CharsetDecoder;
+import java.nio.charset.CharsetEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -102,8 +102,10 @@ public class ExperimentEditor extends JFrame {
 
         config = new Properties();
         if (configFile.exists() && !configFile.isDirectory()) {
-            try {
-                config.load(new FileInputStream(configFile));
+            CharsetDecoder dec = StandardCharsets.UTF_8.newDecoder();
+
+            try (Reader reader = new InputStreamReader(new FileInputStream(configFile), dec) ){
+                config.load(reader);
             } catch (IOException | IllegalArgumentException e) {
                 System.err.println("Could not load properties file " + configFile.getAbsolutePath());
             }
@@ -112,15 +114,17 @@ public class ExperimentEditor extends JFrame {
         addWindowListener(new WindowAdapter() {
 
             @Override
-            public void windowClosing(WindowEvent e) {
+            public void windowClosing(WindowEvent event) {
+                CharsetEncoder enc = StandardCharsets.UTF_8.newEncoder();
 
-                try {
-                    config.store(new FileOutputStream(configFile), null);
-                } catch (IOException e1) {
+                try (Writer writer = new OutputStreamWriter(new FileOutputStream(configFile), enc)) {
+                    config.store(writer, null);
+                } catch (IOException e) {
                     System.err.println("Could not store properties file " + configFile.getAbsolutePath());
+                    System.err.println(e.getMessage());
                 }
 
-                super.windowClosing(e);
+                super.windowClosing(event);
             }
         });
     }
