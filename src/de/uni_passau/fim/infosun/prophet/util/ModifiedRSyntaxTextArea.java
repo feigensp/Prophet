@@ -1,9 +1,11 @@
 package de.uni_passau.fim.infosun.prophet.util;
 
 import java.awt.event.ActionEvent;
+import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import javax.swing.AbstractAction;
 import javax.swing.KeyStroke;
+import javax.swing.text.BadLocationException;
 import javax.swing.text.Utilities;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxDocument;
@@ -113,7 +115,7 @@ public class ModifiedRSyntaxTextArea extends RSyntaxTextArea {
     }
 
     private void overrideCtrlDel() {
-        final KeyStroke stroke = KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, KeyEvent.CTRL_MASK);
+        final KeyStroke stroke = KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, InputEvent.CTRL_MASK);
         final String actionName = "delWord";
 
         getInputMap().put(stroke, actionName);
@@ -132,12 +134,12 @@ public class ModifiedRSyntaxTextArea extends RSyntaxTextArea {
                     int start = Utilities.getPreviousWord(textArea, caret);
                     int end = Utilities.getWordEnd(textArea, start);
 
-                    if ((start <= caret) && (caret < end)) {
+                    if (start <= caret && caret < end) {
                         textArea.getDocument().remove(start, end - start);
                     }
-                } catch (Exception ignored) {
+                } catch (BadLocationException e) {
                     // occurs when there are no 'words' in the textArea
-                }
+				}
             }
         });
     }

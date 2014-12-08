@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
+import javax.swing.SwingConstants;
 
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.CodeViewerPluginList;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.Recorder;
@@ -28,7 +29,7 @@ public class EditorTabbedPane extends JTabbedPane {
      *         the <code>Recorder</code> of the <code>CodeViewer</code> containing this <code>EditorTabbedPane</code>
      */
     public EditorTabbedPane(Recorder recorder) {
-        super(JTabbedPane.TOP);
+        super(SwingConstants.TOP);
 
         this.recorder = recorder;
         this.panels = new HashMap<>();
