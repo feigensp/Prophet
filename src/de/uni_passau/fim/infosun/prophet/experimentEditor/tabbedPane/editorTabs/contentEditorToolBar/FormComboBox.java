@@ -76,6 +76,8 @@ public class FormComboBox extends JComboBox<String> implements ActionListener {
             case 7: // Table
                 insertTable(event);
                 break;
+            default:
+                System.err.println("No action for index " + getSelectedIndex());
         }
 
         setSelectedIndex(0);
@@ -170,7 +172,7 @@ public class FormComboBox extends JComboBox<String> implements ActionListener {
 
         StringBuilder radios = new StringBuilder();
         String name = norm(radioInfo.getKey());
-        
+
         formatString = "<input type=\"radio\" name=\"%s\" value=\"%s\">%s<br>%n";
         for (String radioEntry : radioInfo.getValue()) {
             radios.append(String.format(formatString, name, radioEntry, radioEntry));
@@ -269,7 +271,7 @@ public class FormComboBox extends JComboBox<String> implements ActionListener {
 
     /**
      * Normalises a given <code>String</code> by removing all whitespace characters from it.
-     * 
+     *
      * @param string the <code>String</code> to normalise
      * @return the normalised <code>String</code>
      */

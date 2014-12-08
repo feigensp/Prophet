@@ -5,17 +5,9 @@ import java.awt.dnd.DropTarget;
 import java.awt.dnd.DropTargetAdapter;
 import java.awt.dnd.DropTargetDragEvent;
 import java.awt.dnd.DropTargetDropEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.util.TooManyListenersException;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JPopupMenu;
-import javax.swing.JTree;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
@@ -116,6 +108,7 @@ public class QTree extends JTree {
                     case KeyEvent.VK_V:
                         paste(selNode);
                         break;
+                    default:
                 }
             }
         });
@@ -190,6 +183,8 @@ public class QTree extends JTree {
                         moveQuestion(dragComponent, target);
                     }
                     break;
+                    default:
+                        System.err.println("Can't move nodes of type " + dragComponent.getType());
                 }
 
                 dtde.dropComplete(true);
@@ -347,6 +342,8 @@ public class QTree extends JTree {
                     case QUESTION:
                         questionPopup.show(QTree.this, selX, selY);
                         break;
+                    default:
+                        System.err.println("No popup for type " + selNode.getType());
                 }
             }
         });
@@ -402,6 +399,8 @@ public class QTree extends JTree {
                 model.addChild(target.getParent(), dragComponent, index);
             }
             break;
+            default:
+                System.err.println("Can not move QUESTION onto " + target.getType());
         }
     }
 
