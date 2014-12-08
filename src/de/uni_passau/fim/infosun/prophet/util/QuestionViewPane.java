@@ -14,20 +14,35 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.StringTokenizer;
 import java.util.concurrent.atomic.AtomicBoolean;
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.JTextPane;
 import javax.swing.Timer;
+import javax.swing.UIManager;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
-import javax.swing.text.*;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.ComponentView;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.View;
+import javax.swing.text.ViewFactory;
 import javax.swing.text.html.FormSubmitEvent;
 import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
 
 import de.uni_passau.fim.infosun.prophet.Constants;
 import de.uni_passau.fim.infosun.prophet.plugin.PluginList;
-import de.uni_passau.fim.infosun.prophet.util.language.UIElementNames;
 import de.uni_passau.fim.infosun.prophet.util.qTree.QTreeNode;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -35,12 +50,16 @@ import org.jsoup.nodes.Element;
 
 import static de.uni_passau.fim.infosun.prophet.Constants.*;
 import static de.uni_passau.fim.infosun.prophet.util.language.UIElementNames.getLocalized;
-import static de.uni_passau.fim.infosun.prophet.util.qTree.QTreeNode.Type.*;
+import static de.uni_passau.fim.infosun.prophet.util.qTree.QTreeNode.Type.CATEGORY;
+import static de.uni_passau.fim.infosun.prophet.util.qTree.QTreeNode.Type.EXPERIMENT;
+import static de.uni_passau.fim.infosun.prophet.util.qTree.QTreeNode.Type.QUESTION;
 import static de.uni_passau.fim.infosun.prophet.util.qTree.handlers.QTreeHTMLHandler.input;
 import static de.uni_passau.fim.infosun.prophet.util.qTree.handlers.QTreeHTMLHandler.table;
 import static javax.swing.text.html.HTML.Attribute.NAME;
 import static javax.swing.text.html.HTML.Attribute.TYPE;
-import static javax.swing.text.html.HTML.Tag.*;
+import static javax.swing.text.html.HTML.Tag.INPUT;
+import static javax.swing.text.html.HTML.Tag.SELECT;
+import static javax.swing.text.html.HTML.Tag.TEXTAREA;
 
 /**
  * Displays the rendered HTML content of a <code>QTreeNode</code>, saves the answers the user input to its
@@ -253,16 +272,16 @@ public class QuestionViewPane extends JScrollPane {
         if (node.getType() == EXPERIMENT) {
             String subjCodeDesc;
 
-            if (!node.containsAttribute(Constants.KEY_SUBJECT_CODE_CAP)) {
-                subjCodeDesc = UIElementNames.getLocalized("FOOTER_SUBJECT_CODE_CAPTION");
+            if (!node.containsAttribute(KEY_SUBJECT_CODE_CAP)) {
+                subjCodeDesc = getLocalized("FOOTER_SUBJECT_CODE_CAPTION");
             } else {
-                subjCodeDesc = node.getAttribute(Constants.KEY_SUBJECT_CODE_CAP).getValue();
+                subjCodeDesc = node.getAttribute(KEY_SUBJECT_CODE_CAP).getValue();
             }
 
             String experimentCode = node.getAttribute(KEY_EXPERIMENT_CODE).getValue();
-            body.appendChild(input("hidden", Constants.KEY_EXPERIMENT_CODE, experimentCode));
+            body.appendChild(input("hidden", KEY_EXPERIMENT_CODE, experimentCode));
 
-            Object[] row = {subjCodeDesc, input(null, Constants.KEY_SUBJECT_CODE, null)};
+            Object[] row = {subjCodeDesc, input(null, KEY_SUBJECT_CODE, null)};
             body.appendChild(table(null, row));
             body.append(HTML_DIVIDER);
             body.appendChild(input(HTML_SUBMIT, KEY_FORWARD, getLocalized("FOOTER_START_EXPERIMENT_CAPTION")));
