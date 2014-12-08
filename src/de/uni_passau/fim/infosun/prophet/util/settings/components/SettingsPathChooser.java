@@ -25,7 +25,7 @@ public class SettingsPathChooser extends Setting {
     /**
      * The type of path to enable choosing.
      */
-    public static enum Type {
+    public enum Type {
 
         /**
          * Enable choosing file paths only.
