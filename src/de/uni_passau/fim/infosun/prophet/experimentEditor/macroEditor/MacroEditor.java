@@ -49,7 +49,7 @@ import static de.uni_passau.fim.infosun.prophet.util.language.UIElementNames.get
  */
 public class MacroEditor extends JFrame {
 
-    private static final String xmlProlog = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n";
+    private static final String xmlProlog = String.format("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>%n");
     private static final String XML_FILENAME = "macros.xml";
     private static final String XSD_FILENAME = "macros.xsd";
     private static File xmlFile;

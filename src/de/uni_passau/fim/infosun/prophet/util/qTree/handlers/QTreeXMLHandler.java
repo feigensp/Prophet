@@ -1,6 +1,13 @@
 package de.uni_passau.fim.infosun.prophet.util.qTree.handlers;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.Reader;
+import java.io.Writer;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CharsetEncoder;
 import java.nio.charset.StandardCharsets;
@@ -14,7 +21,11 @@ import javax.xml.validation.Validator;
 import com.thoughtworks.xstream.XStream;
 import de.uni_passau.fim.infosun.prophet.util.qTree.Attribute;
 import de.uni_passau.fim.infosun.prophet.util.qTree.QTreeNode;
-import nu.xom.*;
+import nu.xom.Builder;
+import nu.xom.Document;
+import nu.xom.Element;
+import nu.xom.Elements;
+import nu.xom.ParsingException;
 import org.xml.sax.SAXException;
 
 /**
@@ -27,7 +38,7 @@ import org.xml.sax.SAXException;
  */
 public final class QTreeXMLHandler extends QTreeFormatHandler {
 
-    private static final String xmlProlog = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n";
+    private static final String xmlProlog = String.format("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>%n");
     private static final XStream saveLoadStream;
     private static final XStream answerStream;
     private static Validator legacyValidator;
