@@ -27,7 +27,7 @@ public final class QTreeHTMLHandler extends QTreeFormatHandler {
     private QTreeHTMLHandler() {
     }
 
-    private static int highestID = 0;
+    private static int highestID;
     private static final Set<String> returnedIDs = new HashSet<>();
 
     /**
