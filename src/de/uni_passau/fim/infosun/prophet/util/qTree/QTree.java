@@ -5,14 +5,24 @@ import java.awt.dnd.DropTarget;
 import java.awt.dnd.DropTargetAdapter;
 import java.awt.dnd.DropTargetDragEvent;
 import java.awt.dnd.DropTargetDropEvent;
-import java.awt.event.*;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.TooManyListenersException;
-import javax.swing.*;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPopupMenu;
+import javax.swing.JTree;
+import javax.swing.SwingUtilities;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
 import static de.uni_passau.fim.infosun.prophet.util.language.UIElementNames.getLocalized;
-import static de.uni_passau.fim.infosun.prophet.util.qTree.QTreeNode.Type.*;
+import static de.uni_passau.fim.infosun.prophet.util.qTree.QTreeNode.Type.CATEGORY;
+import static de.uni_passau.fim.infosun.prophet.util.qTree.QTreeNode.Type.EXPERIMENT;
+import static de.uni_passau.fim.infosun.prophet.util.qTree.QTreeNode.Type.QUESTION;
 
 /**
  * A <code>JTree</code> subclass displaying a tree of <code>QTreeNode</code> objects.
@@ -438,7 +448,7 @@ public class QTree extends JTree {
             try {
                 copy = (QTreeNode) clipboard.clone();
             } catch (CloneNotSupportedException e) {
-                JOptionPane.showMessageDialog(QTree.this, getLocalized("TREE.POPUP.COPY_FAILED"),
+                JOptionPane.showMessageDialog(this, getLocalized("TREE.POPUP.COPY_FAILED"),
                         getLocalized("TREE.POPUP.ERROR"), JOptionPane.ERROR_MESSAGE);
                 return;
             }
@@ -446,7 +456,7 @@ public class QTree extends JTree {
             copy.setParent(selNode);
             model.addChild(selNode, copy);
         } else {
-            JOptionPane.showMessageDialog(QTree.this, getLocalized("TREE.POPUP.COPY_IMPOSSIBLE"),
+            JOptionPane.showMessageDialog(this, getLocalized("TREE.POPUP.COPY_IMPOSSIBLE"),
                     getLocalized("TREE.POPUP.ERROR"), JOptionPane.ERROR_MESSAGE);
         }
     }
@@ -458,7 +468,7 @@ public class QTree extends JTree {
 
         if (model.getRoot() != null) {
             int choice = JOptionPane
-                    .showOptionDialog(QTree.this, getLocalized("TREE.POPUP.CONFIRM.NEW_EXPERIMENT"),
+                    .showOptionDialog(this, getLocalized("TREE.POPUP.CONFIRM.NEW_EXPERIMENT"),
                             getLocalized("TREE.POPUP.NEW_EXPERIMENT"), JOptionPane.OK_CANCEL_OPTION,
                             JOptionPane.WARNING_MESSAGE, null, null, null);
 
@@ -467,7 +477,7 @@ public class QTree extends JTree {
             }
         }
 
-        String name = JOptionPane.showInputDialog(QTree.this, getLocalized("TREE.POPUP.NAME"),
+        String name = JOptionPane.showInputDialog(this, getLocalized("TREE.POPUP.NAME"),
                 getLocalized("TREE.POPUP.NEW_EXPERIMENT"), JOptionPane.QUESTION_MESSAGE);
 
         if (name == null) {
@@ -494,7 +504,7 @@ public class QTree extends JTree {
      *         the node to be renamed
      */
     private void rename(QTreeNode selNode) {
-        String name = JOptionPane.showInputDialog(QTree.this, getLocalized("TREE.POPUP.NAME"),
+        String name = JOptionPane.showInputDialog(this, getLocalized("TREE.POPUP.NAME"),
                 getLocalized("TREE.POPUP.RENAME"), JOptionPane.QUESTION_MESSAGE);
 
         if (name == null) {
@@ -511,7 +521,7 @@ public class QTree extends JTree {
      *         the node to which a new question is to be added
      */
     private void newQuestion(QTreeNode selNode) {
-        String name = JOptionPane.showInputDialog(QTree.this, getLocalized("TREE.POPUP.NAME"),
+        String name = JOptionPane.showInputDialog(this, getLocalized("TREE.POPUP.NAME"),
                 getLocalized("TREE.POPUP.NEW_QUESTION"), JOptionPane.QUESTION_MESSAGE);
 
         if (name == null) {
@@ -529,7 +539,7 @@ public class QTree extends JTree {
      *         the node to which a new category is to be added
      */
     private void newCategory(QTreeNode selNode) {
-        String name = JOptionPane.showInputDialog(QTree.this, getLocalized("TREE.POPUP.NAME"),
+        String name = JOptionPane.showInputDialog(this, getLocalized("TREE.POPUP.NAME"),
                 getLocalized("TREE.POPUP.NEW_CATEGORY"), JOptionPane.QUESTION_MESSAGE);
 
         if (name == null) {
