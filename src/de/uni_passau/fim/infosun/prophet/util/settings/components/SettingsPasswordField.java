@@ -1,6 +1,7 @@
 package de.uni_passau.fim.infosun.prophet.util.settings.components;
 
 import java.awt.BorderLayout;
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import javax.swing.JLabel;
 import javax.swing.JPasswordField;
@@ -16,7 +17,7 @@ public class SettingsPasswordField extends Setting {
 
     private JLabel caption;
     private JTextField textField;
-    private final static byte XOR_KEY = 77;
+    private static final byte XOR_KEY = 77;
 
     /**
      * Constructs a new <code>SettingsPasswordField</code> for the given Attribute. If <code>borderDesc</code> is not
@@ -64,7 +65,7 @@ public class SettingsPasswordField extends Setting {
      * @return the encoded <code>String</code>
      */
     private static String encode(String s) {
-        return Base64.getEncoder().encodeToString(xor(s.getBytes()));
+        return Base64.getEncoder().encodeToString(xor(s.getBytes(StandardCharsets.UTF_8)));
     }
 
     /**
@@ -74,7 +75,7 @@ public class SettingsPasswordField extends Setting {
      * @return the decoded <code>String</code>
      */
     public static String decode(String s) {
-        return new String(xor(Base64.getDecoder().decode(s)));
+        return new String(xor(Base64.getDecoder().decode(s)), StandardCharsets.UTF_8);
     }
 
     @Override

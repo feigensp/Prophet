@@ -1,8 +1,8 @@
 package de.uni_passau.fim.infosun.prophet.plugin.plugins;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
+import java.nio.charset.CharsetDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
 import de.uni_passau.fim.infosun.prophet.Constants;
@@ -97,8 +97,10 @@ public class ValidSubjectCodePlugin implements Plugin {
 
         String path = mainAttribute.getSubAttribute(KEY_PATH).getValue();
         if (path != null && !path.isEmpty()) {
-            try (FileReader file = new FileReader(path)) {
-                if (contains(subjectCode, new Scanner(file), ignoreCase)) {
+            CharsetDecoder dec = StandardCharsets.UTF_8.newDecoder();
+
+            try (Reader reader = new InputStreamReader(new FileInputStream(path), dec)) {
+                if (contains(subjectCode, new Scanner(reader), ignoreCase)) {
                     return null;
                 }
             } catch (FileNotFoundException e) {
