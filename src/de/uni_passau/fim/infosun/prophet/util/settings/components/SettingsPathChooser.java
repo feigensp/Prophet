@@ -149,7 +149,7 @@ public class SettingsPathChooser extends Setting {
                 JOptionPane.showMessageDialog(null, getLocalized("MESSAGE_RELATIVE_PATH_NOTIFICATION"));
             }
 
-            textField.setText(selectedPath.replace('\\', '/'));
+            textField.setText(selectedPath);
         }
     }
 
