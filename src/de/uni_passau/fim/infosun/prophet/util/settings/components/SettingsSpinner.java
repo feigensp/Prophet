@@ -2,11 +2,7 @@ package de.uni_passau.fim.infosun.prophet.util.settings.components;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JLabel;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerNumberModel;
+import javax.swing.*;
 
 import de.uni_passau.fim.infosun.prophet.util.qTree.Attribute;
 import de.uni_passau.fim.infosun.prophet.util.settings.Setting;
@@ -58,14 +54,8 @@ public class SettingsSpinner extends Setting {
         }
 
         try {
-            NumberFormat numberFormat = NumberFormat.getInstance();
-
-            if (numberFormat != null) {
-                numberValue = numberFormat.parse(value);
-                spinner.setValue(numberValue);
-            } else {
-                System.err.println("Could not get a NumberFormat instance to parse the value for " + key);
-            }
+            numberValue = NumberFormat.getInstance().parse(value);
+            spinner.setValue(numberValue);
         } catch (ParseException e) {
             System.err.printf("Could not parse value \"%s\" for %s to a Number.%n", value, key);
         }
