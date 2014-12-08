@@ -127,9 +127,13 @@ public class ValidSubjectCodePlugin implements Plugin {
         while (sc.hasNext()) {
             String line = sc.next();
             if (ignoreCase) {
-                if (line.equalsIgnoreCase(subjectCode)) return true;
+                if (line.equalsIgnoreCase(subjectCode)) {
+                    return true;
+                }
             } else {
-                if (line.equals(subjectCode)) return true;
+                if (line.equals(subjectCode)) {
+                    return true;
+                }
             }
         }
 
