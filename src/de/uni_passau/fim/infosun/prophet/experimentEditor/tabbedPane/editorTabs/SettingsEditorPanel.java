@@ -108,7 +108,7 @@ public class SettingsEditorPanel extends ExperimentEditorTab {
 
             Attribute attribute = selected.getAttribute(Constants.KEY_EXPERIMENT_CODE);
             Setting setting = new SettingsTextField(attribute, null);
-            setting.setCaption(getLocalized("EXPERIMENT_CODE") + ":");
+            setting.setCaption(getLocalized("EXPERIMENT_CODE") + ':');
 
             componentList.add(setting);
             settingsPanel.add(setting);

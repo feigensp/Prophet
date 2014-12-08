@@ -215,7 +215,7 @@ public class ZFile extends File {
 
             try (Stream<Path> stream = Files.walk(toPath())) {
                 stream.forEach(path -> {
-                    String name = getName() + "/" + toURI().relativize(path.toUri()).getPath();
+                    String name = getName() + '/' + toURI().relativize(path.toUri()).getPath();
 
                     try {
                         zipOut.putNextEntry(new ZipEntry(name));
@@ -283,7 +283,7 @@ public class ZFile extends File {
             }
         } catch (IOException e) {
             System.err.println("Could not copy " + file.getAbsolutePath() + " to the given OutputStream.");
-            System.err.println(e.getClass().getSimpleName() + ":" + e.getMessage());
+            System.err.println(e.getClass().getSimpleName() + ':' + e.getMessage());
         }
     }
 }

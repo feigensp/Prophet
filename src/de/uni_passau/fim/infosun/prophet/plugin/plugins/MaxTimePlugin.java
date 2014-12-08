@@ -167,12 +167,12 @@ public class MaxTimePlugin implements Plugin {
 
         subAttribute = warningAttribute.getSubAttribute(KEY_HARD_EXIT_WARNING_TIME);
         subSetting = new SettingsTextField(subAttribute, null);
-        subSetting.setCaption(UIElementNames.getLocalized("MENU_TAB_SETTINGS_TIME_OUT_WARNING_TIME") + ":");
+        subSetting.setCaption(UIElementNames.getLocalized("MENU_TAB_SETTINGS_TIME_OUT_WARNING_TIME") + ':');
         warning.addSetting(subSetting);
 
         subAttribute = warningAttribute.getSubAttribute(KEY_HARD_EXIT_WARNING_MESSAGE);
         subSetting = new SettingsTextField(subAttribute, null);
-        subSetting.setCaption(UIElementNames.getLocalized("MENU_TAB_SETTINGS_TIME_OUT_WARNING_MESSAGE") + ":");
+        subSetting.setCaption(UIElementNames.getLocalized("MENU_TAB_SETTINGS_TIME_OUT_WARNING_MESSAGE") + ':');
         warning.addSetting(subSetting);
 
         hardExit.addSetting(warning);
@@ -180,7 +180,7 @@ public class MaxTimePlugin implements Plugin {
 
         subAttribute = resultAttribute.getSubAttribute(KEY_MESSAGE);
         subSetting = new SettingsTextField(subAttribute, null);
-        subSetting.setCaption(UIElementNames.getLocalized("MENU_TAB_SETTINGS_TIME_OUT_MESSAGE") + ":");
+        subSetting.setCaption(UIElementNames.getLocalized("MENU_TAB_SETTINGS_TIME_OUT_MESSAGE") + ':');
         result.addSetting(subSetting);
 
         if (node.getType() == CATEGORY) {
@@ -224,7 +224,7 @@ public class MaxTimePlugin implements Plugin {
             }
 
             if (Boolean.parseBoolean(node.getAttribute(KEY_IGNORE_TIMEOUT).getValue())) {
-                System.out.println("<-- false (hero: " + node.getName() + ")");
+                System.out.println("<-- false (hero: " + node.getName() + ')');
                 return false;
             }
 

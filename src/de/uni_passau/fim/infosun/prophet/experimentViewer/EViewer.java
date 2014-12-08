@@ -18,7 +18,12 @@ import java.util.function.IntFunction;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
-import javax.swing.*;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.WindowConstants;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import de.uni_passau.fim.infosun.prophet.plugin.PluginList;
@@ -421,11 +426,11 @@ public class EViewer extends JFrame {
                     experimentCode = DEFAULT_EXP_CODE;
                 }
 
-                dirName = experimentCode + "_" + subjectCode;
+                dirName = experimentCode + '_' + subjectCode;
                 saveDir = new File(dirName);
 
                 if (saveDir.exists()) {
-                    IntFunction<File> mapper = value -> new File(dirName + "_" + value);
+                    IntFunction<File> mapper = value -> new File(dirName + '_' + value);
                     Stream<File> dirs = IntStream.rangeClosed(1, Integer.MAX_VALUE).mapToObj(mapper);
 
                     saveDir = dirs.filter(f -> !f.exists()).findFirst().get();

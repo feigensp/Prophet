@@ -57,7 +57,7 @@ public class NoteEditorPanel extends ExperimentEditorTab {
             try {
                 doc.insertString(0, selected.getAttribute(KEY_NOTES).getValue(), null);
             } catch (BadLocationException e) {
-                System.err.println("Could not display the notes for " + selected + ".");
+                System.err.println("Could not display the notes for " + selected + '.');
             }
 
             editArea = new ModifiedRSyntaxTextArea(doc);

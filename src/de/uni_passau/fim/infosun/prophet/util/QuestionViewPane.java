@@ -338,8 +338,8 @@ public class QuestionViewPane extends JScrollPane {
             String value;
 
             try {
-                key = URLDecoder.decode(token.substring(0, token.indexOf("=")), "ISO-8859-1");
-                value = URLDecoder.decode(token.substring(token.indexOf("=") + 1, token.length()), "ISO-8859-1").trim();
+                key = URLDecoder.decode(token.substring(0, token.indexOf('=')), "ISO-8859-1");
+                value = URLDecoder.decode(token.substring(token.indexOf('=') + 1, token.length()), "ISO-8859-1").trim();
             } catch (UnsupportedEncodingException e) {
                 System.err.println("Invalid encoding in HTML form. " + e.getMessage());
                 continue;

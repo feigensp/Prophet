@@ -69,7 +69,7 @@ public class ContentEditorPanel extends ExperimentEditorTab {
             try {
                 doc.insertString(0, selected.getHtml(), null);
             } catch (BadLocationException e) {
-                System.err.println("Could not display the HTML content of " + selected + ".");
+                System.err.println("Could not display the HTML content of " + selected + '.');
             }
 
             editArea = new ModifiedRSyntaxTextArea(doc);

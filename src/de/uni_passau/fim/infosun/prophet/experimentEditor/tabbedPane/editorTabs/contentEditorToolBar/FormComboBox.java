@@ -4,6 +4,7 @@ import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
@@ -20,6 +21,8 @@ import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
  * @author Markus Köppen
  */
 public class FormComboBox extends JComboBox<String> {
+
+    private static final Pattern WHITESPACE = Pattern.compile("[\\s]+");
 
     private RSyntaxTextArea textArea;
 
@@ -239,7 +242,7 @@ public class FormComboBox extends JComboBox<String> {
         String formatString;
         String textAreaName = JOptionPane
                 .showInputDialog(this, UIElementNames.getLocalized(
-                        "DIALOG_DEFINE_TEXT_AREA") + ":", UIElementNames.getLocalized("HTML_TEXT_AREA"),
+                        "DIALOG_DEFINE_TEXT_AREA") + ':', UIElementNames.getLocalized("HTML_TEXT_AREA"),
                         JOptionPane.QUESTION_MESSAGE);
 
         if (textAreaName == null) {
@@ -257,7 +260,7 @@ public class FormComboBox extends JComboBox<String> {
         String formatString;
         String textFieldName = JOptionPane
                 .showInputDialog(null, UIElementNames.getLocalized(
-                        "DIALOG_DEFINE_TEXT_FIELD") + ":", UIElementNames.getLocalized("HTML_TEXT_FIELD"),
+                        "DIALOG_DEFINE_TEXT_FIELD") + ':', UIElementNames.getLocalized("HTML_TEXT_FIELD"),
                         JOptionPane.QUESTION_MESSAGE);
 
         if (textFieldName == null) {
@@ -275,6 +278,6 @@ public class FormComboBox extends JComboBox<String> {
      * @return the normalised <code>String</code>
      */
     private String norm(String string) {
-        return string.replaceAll("[\\s]+", "");
+        return WHITESPACE.matcher(string).replaceAll("");
     }
 }

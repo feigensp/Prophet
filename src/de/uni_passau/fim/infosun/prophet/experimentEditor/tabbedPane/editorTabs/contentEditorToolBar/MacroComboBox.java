@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 import javax.swing.JComboBox;
 
 import de.uni_passau.fim.infosun.prophet.experimentEditor.macroEditor.MacroEditor;
@@ -24,6 +25,8 @@ import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
  * @author Markus Köppen
  */
 public class MacroComboBox extends JComboBox<String> {
+
+    private static final Pattern REPLACE_DUMMY = Pattern.compile("%s");
 
     private RSyntaxTextArea textArea;
 
@@ -99,7 +102,7 @@ public class MacroComboBox extends JComboBox<String> {
      */
     private void useMacro(String macroText) {
         String selectedText = textArea.getSelectedText() == null ? "" : textArea.getSelectedText();
-        String replacementText = macroText.replaceAll("%s", selectedText);
+        String replacementText = REPLACE_DUMMY.matcher(macroText).replaceAll(selectedText);
 
         textArea.replaceSelection(replacementText);
     }
