@@ -18,7 +18,7 @@ import static de.uni_passau.fim.infosun.prophet.util.qTree.QTreeNode.Type;
  */
 public class QuestionListPlugin implements Plugin {
 
-    private final static String KEY = "question_list";
+    private static final String KEY = "question_list";
 
     private QuestionList questionList;
 

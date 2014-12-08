@@ -24,7 +24,7 @@ import static de.uni_passau.fim.infosun.prophet.util.qTree.QTreeNode.Type.CATEGO
 
 public class CodeViewerPlugin implements Plugin {
 
-    public final static String KEY = "codeviewer";
+    public static final String KEY = "codeviewer";
 
     private EViewer experimentViewer;
     private int count = 1;

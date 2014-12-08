@@ -37,13 +37,13 @@ public class QTree extends JTree {
     /**
      * ActionCommand String constants for the popup menus.
      */
-    private final static String ACTION_NEW_CATEGORY = "newcategory";
-    private final static String ACTION_NEW_QUESTION = "newquestion";
-    private final static String ACTION_NEW_EXPERIMENT = "newexperiment";
-    private final static String ACTION_RENAME = "rename";
-    private final static String ACTION_REMOVE = "remove";
-    private final static String ACTION_COPY = "copy";
-    private final static String ACTION_PASTE = "paste";
+    private static final String ACTION_NEW_CATEGORY = "newcategory";
+    private static final String ACTION_NEW_QUESTION = "newquestion";
+    private static final String ACTION_NEW_EXPERIMENT = "newexperiment";
+    private static final String ACTION_RENAME = "rename";
+    private static final String ACTION_REMOVE = "remove";
+    private static final String ACTION_COPY = "copy";
+    private static final String ACTION_PASTE = "paste";
 
     private QTreeModel model;
 

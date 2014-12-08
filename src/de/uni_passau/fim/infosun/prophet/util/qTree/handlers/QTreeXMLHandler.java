@@ -200,14 +200,14 @@ public final class QTreeXMLHandler extends QTreeFormatHandler {
 
     // Code to handle the old-style XML format below.
 
-    private final static String TYPE_EXPERIMENT = "experiment";
-    private final static String TYPE_CATEGORY = "category";
-    private final static String TYPE_QUESTION = "question";
-    private final static String TYPE_ATTRIBUTE = "attribute";
-    private final static String TYPE_ATTRIBUTES = "attributes";
-    private final static String TYPE_CHILDREN = "children";
-    private final static String ATTRIBUTE_NAME = "name";
-    private final static String ATTRIBUTE_VALUE = "value";
+    private static final String TYPE_EXPERIMENT = "experiment";
+    private static final String TYPE_CATEGORY = "category";
+    private static final String TYPE_QUESTION = "question";
+    private static final String TYPE_ATTRIBUTE = "attribute";
+    private static final String TYPE_ATTRIBUTES = "attributes";
+    private static final String TYPE_CHILDREN = "children";
+    private static final String ATTRIBUTE_NAME = "name";
+    private static final String ATTRIBUTE_VALUE = "value";
 
     /**
      * Loads the <code>QTreeNode</code> from an old-style XML file.

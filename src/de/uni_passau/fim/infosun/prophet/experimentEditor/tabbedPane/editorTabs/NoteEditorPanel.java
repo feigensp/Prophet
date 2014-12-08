@@ -21,7 +21,7 @@ import org.fife.ui.rtextarea.RTextScrollPane;
  */
 public class NoteEditorPanel extends ExperimentEditorTab {
 
-    public final static String KEY_NOTES = "notes";
+    public static final String KEY_NOTES = "notes";
 
     /**
      * Caches for the various layout components to preserve their state when the user switches between nodes.
