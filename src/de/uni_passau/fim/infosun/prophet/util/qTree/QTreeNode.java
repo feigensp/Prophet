@@ -18,7 +18,7 @@ public class QTreeNode implements Cloneable {
     /**
      * Possible types of <code>QTreeNode</code>s.
      */
-    public static enum Type {
+    public enum Type {
         EXPERIMENT, CATEGORY, QUESTION
     }
 
