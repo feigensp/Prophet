@@ -18,16 +18,9 @@ import java.util.function.IntFunction;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-import javax.swing.WindowConstants;
+import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import de.uni_passau.fim.infosun.prophet.Constants;
 import de.uni_passau.fim.infosun.prophet.plugin.PluginList;
 import de.uni_passau.fim.infosun.prophet.util.QuestionViewPane;
 import de.uni_passau.fim.infosun.prophet.util.language.UIElementNames;
@@ -87,7 +80,7 @@ public class EViewer extends JFrame {
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
 
         this.expTreeRoot = loadExperiment();
-        this.visibleStopwatches = Boolean.parseBoolean(expTreeRoot.getAttribute(Constants.KEY_TIMING).getValue());
+        this.visibleStopwatches = Boolean.parseBoolean(expTreeRoot.getAttribute(KEY_TIMING).getValue());
 
         initLanguage();
 
@@ -138,7 +131,7 @@ public class EViewer extends JFrame {
             @Override
             public void windowClosing(WindowEvent e) {
                 String message = getLocalized("EVIEWER_EXPERIMENT_NOT_FINISHED");
-                int choice = JOptionPane.showConfirmDialog(EViewer.this, message, null, JOptionPane.YES_NO_OPTION);
+                int choice = showConfirmDialog(EViewer.this, message, null, YES_NO_OPTION);
 
                 if (choice == YES_OPTION) {
                     experiment.get(currentIndex).getViewPane().clickSubmit(false);
@@ -159,7 +152,7 @@ public class EViewer extends JFrame {
      * Initialises the language bundle used by the <code>EViewer</code>.
      */
     private void initLanguage() {
-        String langTag = expTreeRoot.getAttribute(Constants.KEY_VIEWER_LANGUAGE).getValue();
+        String langTag = expTreeRoot.getAttribute(KEY_VIEWER_LANGUAGE).getValue();
 
         if (langTag.equals(Locale.GERMAN.toLanguageTag()) || langTag.equals(Locale.ENGLISH.toLanguageTag())) {
             UIElementNames.setLocale(Locale.forLanguageTag(langTag));
@@ -194,7 +187,7 @@ public class EViewer extends JFrame {
 
         String message;
         if (!ignoreDeny && (message = PluginList.denyNextNode(currentNode)) != null) {
-            JOptionPane.showMessageDialog(this, message, null, INFORMATION_MESSAGE);
+            showMessageDialog(this, message, null, INFORMATION_MESSAGE);
             return;
         }
 
@@ -203,7 +196,7 @@ public class EViewer extends JFrame {
             String[] answers = currentNode.getAnswers(KEY_SUBJECT_CODE);
 
             if (answers == null || answers.length < 1) {
-                JOptionPane.showMessageDialog(this, getLocalized("EVIEWER_NO_SUBJECT_CODE"), null, ERROR_MESSAGE);
+                showMessageDialog(this, getLocalized("EVIEWER_NO_SUBJECT_CODE"), null, ERROR_MESSAGE);
                 return;
             }
         }
@@ -347,7 +340,7 @@ public class EViewer extends JFrame {
         message += PluginList.finishExperiment();
 
         setEnabled(false);
-        JOptionPane.showMessageDialog(this, message, null, INFORMATION_MESSAGE);
+        showMessageDialog(this, message, null, INFORMATION_MESSAGE);
 
         dispose();
     }
@@ -369,7 +362,7 @@ public class EViewer extends JFrame {
             if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
                 experimentFile = fileChooser.getSelectedFile();
             } else {
-                JOptionPane.showMessageDialog(this, getLocalized("EVIEWER_NO_EXPERIMENT_CHOSEN"));
+                showMessageDialog(this, getLocalized("EVIEWER_NO_EXPERIMENT_CHOSEN"));
                 System.exit(LOAD_FAIL_EXIT_STATUS);
             }
 
@@ -377,12 +370,12 @@ public class EViewer extends JFrame {
             try {
                 inWorkingDir = Files.isSameFile(workingDir.toPath(), experimentFile.getParentFile().toPath());
             } catch (IOException e) {
-                System.err.println("Could not check whether the chosen experiment File is in the working directory.\n" +
-                        e.getMessage());
+                System.err.println("Could not check whether the chosen experiment File is in the working directory.");
+                System.err.println(e.getMessage());
             }
 
             if (!inWorkingDir) {
-                JOptionPane.showMessageDialog(this, getLocalized("EVIEWER_EXPERIMENT_NOT_IN_WORKING_DIR"));
+                showMessageDialog(this, getLocalized("EVIEWER_EXPERIMENT_NOT_IN_WORKING_DIR"));
                 System.exit(LOAD_FAIL_EXIT_STATUS);
             }
         }
@@ -390,7 +383,7 @@ public class EViewer extends JFrame {
         QTreeNode treeRoot = QTreeXMLHandler.loadExperimentXML(experimentFile);
 
         if (treeRoot == null) {
-            JOptionPane.showMessageDialog(this, getLocalized("MESSAGE_NO_VALID_EXPERIMENT_FILE"));
+            showMessageDialog(this, getLocalized("MESSAGE_NO_VALID_EXPERIMENT_FILE"));
             System.exit(LOAD_FAIL_EXIT_STATUS);
         }
 
