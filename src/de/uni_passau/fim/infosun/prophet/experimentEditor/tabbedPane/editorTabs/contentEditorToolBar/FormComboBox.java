@@ -89,7 +89,7 @@ public class FormComboBox extends JComboBox<String> {
      *         the <code>ActionEvent</code> that caused the insertion
      */
     private void insertTable(ActionEvent event) {
-        Component parent = SwingUtilities.getWindowAncestor(((Component) event.getSource()));
+        Component parent = SwingUtilities.getWindowAncestor((Component) event.getSource());
         Pair<String, String[][]> tableInfo = TableDialog.showTableDialog(parent,
                 UIElementNames.getLocalized("DIALOG_DEFINE_TABLE_INFORMATION"));
 
@@ -134,7 +134,7 @@ public class FormComboBox extends JComboBox<String> {
      */
     private void insertCheckBox(ActionEvent event) {
         String formatString;
-        Component parent = SwingUtilities.getWindowAncestor(((Component) event.getSource()));
+        Component parent = SwingUtilities.getWindowAncestor((Component) event.getSource());
         Pair<String, List<String>> checkInfo = MultilineDialog
                 .showMultiDialog(parent, UIElementNames.getLocalized("DIALOG_DEFINE_LIST_INFORMATION"));
 
@@ -161,7 +161,7 @@ public class FormComboBox extends JComboBox<String> {
      */
     private void insertRadioButton(ActionEvent event) {
         String formatString;
-        Component parent = SwingUtilities.getWindowAncestor(((Component) event.getSource()));
+        Component parent = SwingUtilities.getWindowAncestor((Component) event.getSource());
         Pair<String, List<String>> radioInfo = MultilineDialog
                 .showMultiDialog(parent, UIElementNames.getLocalized("DIALOG_DEFINE_LIST_INFORMATION"));
 
@@ -188,7 +188,7 @@ public class FormComboBox extends JComboBox<String> {
      */
     private void insertComboBox(ActionEvent event) {
         String formatString;
-        Component parent = SwingUtilities.getWindowAncestor(((Component) event.getSource()));
+        Component parent = SwingUtilities.getWindowAncestor((Component) event.getSource());
         Pair<String, List<String>> comboInfo = MultilineDialog
                 .showMultiDialog(parent, UIElementNames.getLocalized("DIALOG_DEFINE_LIST_INFORMATION"));
 
@@ -214,7 +214,7 @@ public class FormComboBox extends JComboBox<String> {
      */
     private void insertList(ActionEvent event) {
         String formatString;
-        Component parent = SwingUtilities.getWindowAncestor(((Component) event.getSource()));
+        Component parent = SwingUtilities.getWindowAncestor((Component) event.getSource());
         Pair<String, List<String>> listInfo = MultilineDialog
                 .showMultiDialog(parent, UIElementNames.getLocalized("DIALOG_DEFINE_LIST_INFORMATION"));
 

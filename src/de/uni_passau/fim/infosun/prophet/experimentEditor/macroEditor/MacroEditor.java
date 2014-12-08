@@ -166,7 +166,7 @@ public class MacroEditor extends JFrame {
                     saveXMLFile();
                 } catch (IOException e) {
                     System.err.println("Could not save the macros.xml file. " + e);
-                    Component parent = SwingUtilities.getWindowAncestor(((Component) event.getSource()));
+                    Component parent = SwingUtilities.getWindowAncestor((Component) event.getSource());
                     JOptionPane.showMessageDialog(parent, getLocalized("MESSAGE_SAVE_ERROR"));
                 }
             }
@@ -355,7 +355,7 @@ public class MacroEditor extends JFrame {
                 saveXMLFile();
             } catch (IOException e) {
                 System.err.println("Could not save the macros.xml file. " + e);
-                Component parent = SwingUtilities.getWindowAncestor(((Component) event.getSource()));
+                Component parent = SwingUtilities.getWindowAncestor((Component) event.getSource());
                 JOptionPane.showMessageDialog(parent, getLocalized("MESSAGE_SAVE_ERROR"));
             }
         });
@@ -378,7 +378,7 @@ public class MacroEditor extends JFrame {
     private void saveXMLFile() throws IOException {
         List<Macro> list = Collections.list(model.elements());
         CharsetEncoder utf8encoder = StandardCharsets.UTF_8.newEncoder();
-        
+
         if (!list.isEmpty()) {
             try (Writer writer = new OutputStreamWriter(new FileOutputStream(xmlFile), utf8encoder)) {
                 writer.write(xmlProlog);

@@ -216,7 +216,7 @@ public class QuestionViewPane extends JScrollPane {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                JButton button = ((JButton) submitButton.getComponent());
+                JButton button = (JButton) submitButton.getComponent();
                 int maxTimes = 5;
 
                 if (times == 0) {

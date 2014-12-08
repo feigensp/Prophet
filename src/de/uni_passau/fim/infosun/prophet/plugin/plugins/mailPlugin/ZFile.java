@@ -251,7 +251,7 @@ public class ZFile extends File {
      * @return the resulting name
      */
     private String checkArchiveName(String name) {
-        return (name.endsWith(EXTENSION)) ? name : name + EXTENSION;
+        return name.endsWith(EXTENSION) ? name : name + EXTENSION;
     }
 
     /**

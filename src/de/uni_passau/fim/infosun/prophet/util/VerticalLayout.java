@@ -260,8 +260,8 @@ public class VerticalLayout implements LayoutManager {
     @Override
     public String toString() {
         String unknown = "Unknown";
-        String anchor = (constantReps.containsKey(this.anchor)) ? constantReps.get(this.anchor) : unknown;
-        String alignment = (constantReps.containsKey(this.alignment)) ? constantReps.get(this.alignment) : unknown;
+        String anchor = constantReps.containsKey(this.anchor) ? constantReps.get(this.anchor) : unknown;
+        String alignment = constantReps.containsKey(this.alignment) ? constantReps.get(this.alignment) : unknown;
 
         return String.format("%s[vgap=%dpx align=%s anchor=%s]", getClass().getName(), vgap, alignment, anchor);
     }

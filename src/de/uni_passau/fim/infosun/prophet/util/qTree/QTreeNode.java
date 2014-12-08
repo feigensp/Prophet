@@ -383,7 +383,7 @@ public class QTreeNode implements Cloneable {
      * @return true iff this node is the root of its tree
      */
     public boolean isRoot() {
-        return (parent == null);
+        return parent == null;
     }
 
     /**

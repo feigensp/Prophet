@@ -30,7 +30,7 @@ public class FileTree extends JTree {
      *         the root directory for the <code>FileTree</code>
      */
     public FileTree(File rootDir) {
-        super(new FileTreeModel((rootDir != null && rootDir.exists()) ? new FileTreeNode(rootDir) : null));
+        super(new FileTreeModel(rootDir != null && rootDir.exists() ? new FileTreeNode(rootDir) : null));
 
         this.fileListeners = new LinkedList<>();
         this.model = getModel();
@@ -41,7 +41,7 @@ public class FileTree extends JTree {
             public void mousePressed(MouseEvent e) {
                 TreePath selPath = getPathForLocation(e.getX(), e.getY());
 
-                if ((e.getClickCount() == 2) && (selPath != null)) {
+                if (e.getClickCount() == 2 && selPath != null) {
                     FileTreeNode lastPathComponent = (FileTreeNode) selPath.getLastPathComponent();
 
                     if (lastPathComponent.isFile()) {
