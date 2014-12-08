@@ -193,7 +193,7 @@ public class PluginList {
             try {
                 String pluginMessage = plugin.finishExperiment();
 
-                if (pluginMessage != null && pluginMessage.length() > 0) {
+                if (pluginMessage != null && !pluginMessage.isEmpty()) {
                     element.appendElement("p").text(pluginMessage);
                 }
             } catch (Exception e) {
