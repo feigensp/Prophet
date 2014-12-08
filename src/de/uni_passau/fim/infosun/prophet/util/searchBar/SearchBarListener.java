@@ -15,5 +15,5 @@ public interface SearchBarListener {
      * @param query the <code>String</code> that was searched for
      * @param success whether <code>query</code> was found
      */
-    public void searched(String action, String query, boolean success);
+    void searched(String action, String query, boolean success);
 }

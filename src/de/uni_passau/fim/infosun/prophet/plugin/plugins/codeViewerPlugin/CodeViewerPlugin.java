@@ -6,15 +6,15 @@ import de.uni_passau.fim.infosun.prophet.util.settings.Setting;
 
 public interface CodeViewerPlugin {
 
-    public Setting getSetting(Attribute mainAttribute);
+    Setting getSetting(Attribute mainAttribute);
 
-    public void init(Attribute selected);
+    void init(Attribute selected);
 
-    public void onFrameCreate(CodeViewer viewer);
+    void onFrameCreate(CodeViewer viewer);
 
-    public void onEditorPanelCreate(EditorPanel editorPanel);
+    void onEditorPanelCreate(EditorPanel editorPanel);
 
-    public void onEditorPanelClose(EditorPanel editorPanel);
+    void onEditorPanelClose(EditorPanel editorPanel);
 
-    public void onClose();
+    void onClose();
 }

@@ -22,7 +22,7 @@ public interface Plugin {
      * @return a <code>Setting</code> object representing the settings of the plugin or <code>null</code> if there are
      *         none
      */
-    public Setting getSetting(QTreeNode node);
+    Setting getSetting(QTreeNode node);
 
     /**
      * Called after the <code>EViewer</code> has been initialized but before the first node is entered. The
@@ -31,7 +31,7 @@ public interface Plugin {
      * @param experimentViewer
      *         the initialized experiment viewer
      */
-    public void experimentViewerRun(EViewer experimentViewer);
+    void experimentViewerRun(EViewer experimentViewer);
 
     /**
      * Called before a new node is entered. The <code>Plugin</code> may request that this node be skipped by returning
@@ -42,7 +42,7 @@ public interface Plugin {
      *
      * @return true iff this <code>Plugin</code> denies entry to the given <code>node</code>
      */
-    public boolean denyEnterNode(QTreeNode node);
+    boolean denyEnterNode(QTreeNode node);
 
     /**
      * Called when a node is entered.
@@ -50,7 +50,7 @@ public interface Plugin {
      * @param node
      *         the entered node
      */
-    public void enterNode(QTreeNode node);
+    void enterNode(QTreeNode node);
 
     /**
      * Called before a node is exited. The <code>Plugin</code> may indicate that the <code>currentNode</code>
@@ -62,7 +62,7 @@ public interface Plugin {
      *
      * @return <code>null</code> if the node may be exited, otherwise a reason for denying the exit
      */
-    public String denyNextNode(QTreeNode currentNode);
+    String denyNextNode(QTreeNode currentNode);
 
     /**
      * Called when all children of a node have been exited. This means that the <code>exitNode(node)</code> call for the
@@ -71,12 +71,12 @@ public interface Plugin {
      * @param node
      *         the exited node
      */
-    public void exitNode(QTreeNode node);
+    void exitNode(QTreeNode node);
 
     /**
      * Called after the experiment is finished. The <code>Plugin</code> may provide a message to be shown to the user.
      *
      * @return a message shown to the user
      */
-    public String finishExperiment();
+    String finishExperiment();
 }
