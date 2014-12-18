@@ -2,9 +2,13 @@ package de.uni_passau.fim.infosun.prophet.experimentEditor.tabbedPane.editorTabs
 
 import java.awt.Component;
 import javax.swing.BorderFactory;
+import javax.swing.JButton;
 import javax.swing.JToolBar;
 
+import de.uni_passau.fim.infosun.prophet.util.language.UIElementNames;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 
 /**
  * <code>JToolBar</code> for the <code>ContentEditorPanel</code> that contains several <code>JComboBox</code>
@@ -34,6 +38,17 @@ public class ContentEditorToolBar extends JToolBar {
         add(new FormComboBox(textArea));
         addSeparator();
         add(new MacroComboBox(textArea));
+        addSeparator();
+
+        JButton prettyPrint = new JButton(UIElementNames.getLocalized("FORMAT_BUTTON_CAPTION"));
+        prettyPrint.addActionListener(event -> {
+            Document doc = Jsoup.parseBodyFragment(textArea.getText());
+            doc.outputSettings().prettyPrint(true);
+            textArea.setText(doc.body().html());
+            textArea.setCaretPosition(0);
+        });
+
+        add(prettyPrint);
     }
 
     /**
