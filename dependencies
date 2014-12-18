@@ -5,4 +5,4 @@ com.sun.mail:javax.mail:1.5.2
 net.sf.opencsv:opencsv:2.3
 com.io7m.xom:xom:1.2.10
 com.thoughtworks.xstream:xstream:1.4.7
-org.jsoup:jsoup:1.7.3
+org.jsoup:jsoup:1.8.1
