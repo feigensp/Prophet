@@ -82,4 +82,12 @@ public class NoteEditorPanel extends ExperimentEditorTab {
             }
         }
     }
+
+    @Override
+    public void reset() {
+        scrollPanes.clear();
+        editAreas.clear();
+        selected = null;
+        removeAll();
+    }
 }

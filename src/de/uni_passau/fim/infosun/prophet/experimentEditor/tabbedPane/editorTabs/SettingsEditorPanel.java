@@ -213,4 +213,12 @@ public class SettingsEditorPanel extends ExperimentEditorTab {
             comps.stream().forEach(Setting::saveValue);
         }
     }
+
+    @Override
+    public void reset() {
+        scrollPanes.clear();
+        settings.clear();
+        selected = null;
+        removeAll();
+    }
 }

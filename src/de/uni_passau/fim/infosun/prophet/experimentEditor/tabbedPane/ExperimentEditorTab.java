@@ -26,4 +26,9 @@ public abstract class ExperimentEditorTab extends JPanel {
      * was called with.
      */
     public abstract void save();
+
+    /**
+     * Resets the tab by clearing all caches and displaying an empty panel.
+     */
+    public abstract void reset();
 }

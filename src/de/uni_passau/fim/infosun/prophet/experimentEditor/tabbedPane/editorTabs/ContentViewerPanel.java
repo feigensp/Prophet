@@ -44,4 +44,10 @@ public class ContentViewerPanel extends ExperimentEditorTab {
     public void save() {
         // nothing to save
     }
+
+    @Override
+    public void reset() {
+        previewPane = null;
+        removeAll();
+    }
 }

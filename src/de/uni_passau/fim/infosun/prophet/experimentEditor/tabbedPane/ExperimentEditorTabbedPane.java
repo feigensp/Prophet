@@ -3,6 +3,8 @@ package de.uni_passau.fim.infosun.prophet.experimentEditor.tabbedPane;
 import java.awt.Component;
 import javax.swing.JComponent;
 import javax.swing.JTabbedPane;
+import javax.swing.event.TreeModelEvent;
+import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreePath;
 
 import de.uni_passau.fim.infosun.prophet.experimentEditor.tabbedPane.editorTabs.ContentEditorPanel;
@@ -26,6 +28,29 @@ public class ExperimentEditorTabbedPane extends JTabbedPane {
     private QTreeNode currentNode;
     private ExperimentEditorTab currentTab;
 
+    private static class TreeModelAdapter implements TreeModelListener {
+
+        @Override
+        public void treeNodesChanged(TreeModelEvent e) {
+
+        }
+
+        @Override
+        public void treeNodesInserted(TreeModelEvent e) {
+
+        }
+
+        @Override
+        public void treeNodesRemoved(TreeModelEvent e) {
+
+        }
+
+        @Override
+        public void treeStructureChanged(TreeModelEvent e) {
+
+        }
+    }
+
     /**
      * Constructs a new <code>ExperimentEditorTabbedPane</code>.
      *
@@ -41,6 +66,25 @@ public class ExperimentEditorTabbedPane extends JTabbedPane {
                 save();
                 currentNode = (QTreeNode) selectionPath.getLastPathComponent();
                 currentTab.load(currentNode);
+            }
+        });
+
+        tree.getModel().addTreeModelListener(new TreeModelAdapter() {
+
+            @Override
+            public void treeStructureChanged(TreeModelEvent e) {
+
+                if (e.getPath().length > 0) {
+                    Object oldRoot = e.getPath()[0];
+                    Object currentRoot = tree.getModel().getRoot();
+
+                    if (oldRoot != currentRoot) {
+
+                        for (int i = 0; i < getTabCount(); i++) {
+                            ((ExperimentEditorTab) getComponentAt(i)).reset();
+                        }
+                    }
+                }
             }
         });
 

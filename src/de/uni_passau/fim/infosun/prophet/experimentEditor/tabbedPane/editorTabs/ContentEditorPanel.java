@@ -115,6 +115,15 @@ public class ContentEditorPanel extends ExperimentEditorTab {
         }
     }
 
+    @Override
+    public void reset() {
+        editPanels.clear();
+        editAreas.clear();
+        searchBars.clear();
+        selected = null;
+        removeAll();
+    }
+
     /**
      * Shows a <code>SearchBar</code> in this <code>ContentEditorPanel</code> enabling the user to search through
      * the document.
