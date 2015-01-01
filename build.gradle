@@ -1,0 +1,65 @@
+apply plugin: 'java'
+
+sourceSets {
+    main {
+        java {
+            srcDir 'src'
+        }
+        resources {
+            srcDir 'res'
+        }
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'com.fifesoft:rsyntaxtextarea:2.5.3'
+    compile 'com.sun.mail:javax.mail:1.5.2'
+    compile 'net.sf.opencsv:opencsv:2.3'
+    compile 'com.io7m.xom:xom:1.2.10'
+    compile 'com.thoughtworks.xstream:xstream:1.4.7'
+    compile 'org.jsoup:jsoup:1.8.1'
+}
+
+def installDir = new File(new File(rootProject.buildDir, 'install'), rootProject.name)
+def libsDir = new File(installDir, 'lib')
+
+def getClassPath() {
+    def deps = configurations.runtime.collect {it.getName()} + jar.archiveName 
+    return deps.collect {'lib/' + it}.join(' ')
+}
+
+task editorJar(type: Jar) {
+    archiveName = "Editor.jar"
+    manifest {
+        attributes("Main-Class": "de.uni_passau.fim.infosun.prophet.experimentEditor.ExperimentEditor",
+                   "Class-Path": getClassPath())
+    }
+}
+
+editorJar.dependsOn jar
+
+task viewerJar(type: Jar) {
+    archiveName = "Viewer.jar"
+    manifest {
+        attributes("Main-Class": "de.uni_passau.fim.infosun.prophet.experimentViewer.EViewer",
+                   "Class-Path": getClassPath())
+    }
+}
+
+viewerJar.dependsOn jar
+
+task libs(type: Copy) {
+    from configurations.runtime, jar
+    into libsDir
+}
+
+task install(type: Copy) {
+    from editorJar, viewerJar
+    into installDir
+}
+
+install.dependsOn libs
