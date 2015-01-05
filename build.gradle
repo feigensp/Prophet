@@ -19,13 +19,16 @@ dependencies {
     compile 'com.fifesoft:rsyntaxtextarea:2.5.3'
     compile 'com.sun.mail:javax.mail:1.5.2'
     compile 'net.sf.opencsv:opencsv:2.3'
-    compile 'com.io7m.xom:xom:1.2.10'
+    compile('com.io7m.xom:xom:1.2.10') {
+        transitive = false // we only need xom.jar, see http://www.xom.nu/faq.xhtml#d0e213
+    }
     compile 'com.thoughtworks.xstream:xstream:1.4.7'
     compile 'org.jsoup:jsoup:1.8.1'
 }
 
-def installDir = new File(new File(rootProject.buildDir, 'install'), rootProject.name)
-def libsDir = new File(installDir, 'lib')
+def installDir = new File(rootProject.buildDir, 'install')
+def projInstallDir = new File(installDir, rootProject.name)
+def libsDir = new File(projInstallDir, 'lib')
 
 def getClassPath() {
     def deps = configurations.runtime.collect {it.getName()} + jar.archiveName 
@@ -40,8 +43,6 @@ task editorJar(type: Jar) {
     }
 }
 
-editorJar.dependsOn jar
-
 task viewerJar(type: Jar) {
     archiveName = "Viewer.jar"
     manifest {
@@ -50,8 +51,6 @@ task viewerJar(type: Jar) {
     }
 }
 
-viewerJar.dependsOn jar
-
 task libs(type: Copy) {
     from configurations.runtime, jar
     into libsDir
@@ -59,7 +58,12 @@ task libs(type: Copy) {
 
 task install(type: Copy) {
     from editorJar, viewerJar
-    into installDir
+    into projInstallDir
 }
 
 install.dependsOn libs
+
+task zip(type: Zip) {
+    from install
+    destinationDir = installDir
+}
