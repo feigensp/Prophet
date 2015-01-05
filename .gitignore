@@ -1,1 +1,3 @@
 *.lyx~
+.gradle
+build
