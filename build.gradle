@@ -56,14 +56,20 @@ task libs(type: Copy) {
     into libsDir
 }
 
-task install(type: Copy) {
+def relInstallDirPath = rootProject.projectDir.toURI().relativize(projInstallDir.toURI()).getPath()
+
+task dist(type: Copy) {
+    group "Distribution"
+    description "Assembles a distribution of the application in the ${relInstallDirPath} directory."
     from editorJar, viewerJar
     into projInstallDir
 }
 
-install.dependsOn libs
+dist.dependsOn libs
 
-task zip(type: Zip) {
-    from install
+task distZip(type: Zip) {
+    group "Distribution"
+    description "Assembles a .zip file containing the application in the ${relInstallDirPath} directory."
+    from dist
     destinationDir = installDir
 }
