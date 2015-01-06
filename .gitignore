@@ -1,3 +1,26 @@
+### LyX template
+# Ignore LyX backup and autosave files
+# http://www.lyx.org/
 *.lyx~
+*.lyx#
+
+### Gradle
 .gradle
-build
+build/
+
+# Ignore Gradle GUI config
+gradle-app.setting
+
+### JetBrains
+# Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm
+
+# Directory-based project format:
+.idea/
+*.iml
+
+# File-based project format:
+*.ipr
+*.iws
+
+# IntelliJ
+out/
