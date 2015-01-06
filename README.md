@@ -12,10 +12,10 @@ Contact
  * Janet Siegmund (siegmunj[at]fim.uni-passau.de)
  
 ### Current Developers of PROPHET:
- * Stefan Brand (brandste[at]fim.uni-passau.de)
  * Georg Seibt  (seibt[at]fim.uni-passau.de)
 
 #### Previous Developers of PROPHET: 
+ * Stefan Brand 
  * Andreas Hasselberg 
  * Markus Köppen
  
