@@ -3,7 +3,18 @@ package de.uni_passau.fim.infosun.prophet.experimentEditor.tabbedPane.editorTabs
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Window;
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.GroupLayout;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSpinner;
+import javax.swing.JTextField;
+import javax.swing.SpinnerNumberModel;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeListener;
 
 import de.uni_passau.fim.infosun.prophet.util.Pair;
@@ -159,7 +170,7 @@ public class TableDialog {
                 }
             }
 
-            return new Pair<>(key, value);
+            return Pair.of(key, value);
         } else {
             return null;
         }

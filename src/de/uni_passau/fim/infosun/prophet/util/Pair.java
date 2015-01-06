@@ -18,13 +18,23 @@ public class Pair<K, V> {
     private V value;
 
     /**
-     * Constructs a new <code>Pair</code> with both <code>key</code> and <code>value</code> set to <code>null</code>.
+     * Constructs a <code>Pair</code> containing the given values.
+     *
+     * @param key
+     *         the key of the pair
+     * @param value
+     *         the value of the pair
+     * @param <K>
+     *         the type of the key
+     * @param <V>
+     *         the type of the value
+     *
+     * @return a <code>Pair</code> containing <code>key</code> and <code>value</code>
      */
-    public Pair() {
-        key = null;
-        value = null;
+    public static <K, V> Pair<K, V> of(K key, V value) {
+        return new Pair<>(key, value);
     }
-
+    
     /**
      * Constructs a new <code>Pair</code> containing the given values.
      *
@@ -33,7 +43,7 @@ public class Pair<K, V> {
      * @param value
      *        the value of the pair
      */
-    public Pair(K key, V value) {
+    private Pair(K key, V value) {
         this.key = key;
         this.value = value;
     }

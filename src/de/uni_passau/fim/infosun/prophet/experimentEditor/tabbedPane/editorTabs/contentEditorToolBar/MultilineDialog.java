@@ -102,7 +102,7 @@ public class MultilineDialog {
             Stream<String> lines = Arrays.stream(textInputArea.getText().split("\\n")).map(String::trim);
             List<String> value = lines.collect(Collectors.toList());
 
-            return new Pair<>(key, value);
+            return Pair.of(key, value);
         } else {
             return null;
         }

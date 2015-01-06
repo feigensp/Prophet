@@ -26,12 +26,12 @@ public class FontSizeComboBox extends JComboBox<String> {
     public FontSizeComboBox(RSyntaxTextArea textArea) {
         List<Pair<String, String>> fontSizes = new ArrayList<>();
 
-        fontSizes.add(new Pair<>("-3", "-3"));
-        fontSizes.add(new Pair<>("-2", "-2"));
-        fontSizes.add(new Pair<>("-1", "-1"));
-        fontSizes.add(new Pair<>("+1", "+1"));
-        fontSizes.add(new Pair<>("+2", "+2"));
-        fontSizes.add(new Pair<>("+3", "+3"));
+        fontSizes.add(Pair.of("-3", "-3"));
+        fontSizes.add(Pair.of("-2", "-2"));
+        fontSizes.add(Pair.of("-1", "-1"));
+        fontSizes.add(Pair.of("+1", "+1"));
+        fontSizes.add(Pair.of("+2", "+2"));
+        fontSizes.add(Pair.of("+3", "+3"));
 
         addItem(getLocalized("MENU_TAB_EDITOR_FONT_SIZE"));
         fontSizes.forEach(pair -> addItem(pair.getKey()));
