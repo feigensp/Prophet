@@ -22,6 +22,12 @@ import de.uni_passau.fim.infosun.prophet.util.settings.components.SettingsPathCh
 import static de.uni_passau.fim.infosun.prophet.util.language.UIElementNames.getLocalized;
 import static de.uni_passau.fim.infosun.prophet.util.qTree.QTreeNode.Type.CATEGORY;
 
+/**
+ * A <code>Plugin</code> that displays a separate window in which code samples appropriate for the current experiment
+ * node can be viewed by the experimentee. The experiment editor may define a directory containing the code samples
+ * that should be available. Functionality such as syntax highlighting can be added as a plugin to the
+ * <code>CodeViewer</code>.
+ */
 public class CodeViewerPlugin implements Plugin {
 
     public static final String KEY = "codeviewer";
