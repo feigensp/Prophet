@@ -1,6 +1,6 @@
 package de.uni_passau.fim.infosun.prophet.plugin;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,7 +21,7 @@ import org.jsoup.nodes.Element;
  */
 public class PluginList {
 
-    private static List<Plugin> plugins = new LinkedList<>();
+    private static List<Plugin> plugins = new ArrayList<>();
 
     static {
         add(new ExperimentExportPlugin());

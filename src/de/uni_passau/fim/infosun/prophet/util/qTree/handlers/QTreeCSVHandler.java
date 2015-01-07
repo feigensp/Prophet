@@ -1,11 +1,18 @@
 package de.uni_passau.fim.infosun.prophet.util.qTree.handlers;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.Reader;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CharsetEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
@@ -13,7 +20,12 @@ import java.util.function.Function;
 import au.com.bytecode.opencsv.CSVWriter;
 import de.uni_passau.fim.infosun.prophet.Constants;
 import de.uni_passau.fim.infosun.prophet.util.qTree.QTreeNode;
-import nu.xom.*;
+import nu.xom.Builder;
+import nu.xom.Document;
+import nu.xom.Element;
+import nu.xom.Elements;
+import nu.xom.ParentNode;
+import nu.xom.ParsingException;
 
 /**
  * Handles CSV operations for the <code>QTree</code>
@@ -39,7 +51,7 @@ public final class QTreeCSVHandler extends QTreeFormatHandler {
         Objects.requireNonNull(directory, "directory must not be null!");
         Objects.requireNonNull(fileName, "fileName must not be null!");
 
-        List<File> xmlFiles = new LinkedList<>();
+        List<File> xmlFiles = new ArrayList<>();
 
         if (!directory.isDirectory()) {
             return xmlFiles;
@@ -75,7 +87,7 @@ public final class QTreeCSVHandler extends QTreeFormatHandler {
      */
     public static void exportCSV(File answerDir, File saveFile) {
         List<File> files = getFilesByName(answerDir, Constants.FILE_ANSWERS);
-        List<String[]> lines = new LinkedList<>();
+        List<String[]> lines = new ArrayList<>();
         CharsetDecoder utf8decoder;
 
         for (File file : files) {
@@ -218,7 +230,7 @@ public final class QTreeCSVHandler extends QTreeFormatHandler {
      * @return the path
      */
     private static List<String> pathTo(Element target) {
-        List<String> path = new LinkedList<>();
+        List<String> path = new ArrayList<>();
         boolean done = false;
         Element element = target;
 

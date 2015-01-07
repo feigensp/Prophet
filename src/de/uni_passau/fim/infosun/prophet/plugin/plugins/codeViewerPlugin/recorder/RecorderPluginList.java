@@ -1,6 +1,6 @@
 package de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.recorder;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -11,7 +11,7 @@ import de.uni_passau.fim.infosun.prophet.util.settings.Setting;
 
 public class RecorderPluginList {
 
-    private static List<RecorderPlugin> plugins = new LinkedList<>();
+    private static List<RecorderPlugin> plugins = new ArrayList<>();
 
     static {
         add(new ChangePlugin());

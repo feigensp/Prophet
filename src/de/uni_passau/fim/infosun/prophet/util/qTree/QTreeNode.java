@@ -236,7 +236,7 @@ public class QTreeNode implements Cloneable {
      * @return the subtree in preorder
      */
     public List<QTreeNode> preOrder() {
-        List<QTreeNode> preOrderNodes = new LinkedList<>();
+        List<QTreeNode> preOrderNodes = new ArrayList<>();
 
         preOrderNodes.add(this);
         children.stream().map(QTreeNode::preOrder).forEach(preOrderNodes::addAll);
@@ -250,7 +250,7 @@ public class QTreeNode implements Cloneable {
      * @return the breadth first order of the tree
      */
     public List<QTreeNode> breadthFirst() {
-        List<QTreeNode> nodes = new LinkedList<>();
+        List<QTreeNode> nodes = new ArrayList<>();
         Queue<QTreeNode> toVisit = new LinkedList<>();
         QTreeNode currentNode;
 

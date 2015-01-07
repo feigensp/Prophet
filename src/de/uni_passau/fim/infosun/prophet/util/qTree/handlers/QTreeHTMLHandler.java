@@ -7,9 +7,9 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.charset.CharsetEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -79,7 +79,7 @@ public final class QTreeHTMLHandler extends QTreeFormatHandler {
             for (Element element : body.getElementsByAttribute(nameAttr)) {
                 name = element.attr(nameAttr);
 
-                containingNodes = names.getOrDefault(name, new LinkedList<>());
+                containingNodes = names.getOrDefault(name, new ArrayList<>());
                 containingNodes.add(new TreePath(QTreeModel.buildPath(node, true)).pathByAddingChild(index));
                 names.putIfAbsent(name, containingNodes);
                 index++;
@@ -108,7 +108,7 @@ public final class QTreeHTMLHandler extends QTreeFormatHandler {
      */
     public static List<String> createIDs(QTreeNode root, int number) {
         Set<String> existingIDs = new HashSet<>();
-        List<String> newIDs = new LinkedList<>();
+        List<String> newIDs = new ArrayList<>();
         String idAttr = "id";
         String stringID;
         Document doc;

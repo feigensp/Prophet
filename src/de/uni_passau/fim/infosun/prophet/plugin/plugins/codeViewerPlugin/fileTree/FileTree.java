@@ -3,7 +3,7 @@ package de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.fileTr
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JTree;
 import javax.swing.tree.TreeModel;
@@ -32,7 +32,7 @@ public class FileTree extends JTree {
     public FileTree(File rootDir) {
         super(new FileTreeModel(rootDir != null && rootDir.exists() ? new FileTreeNode(rootDir) : null));
 
-        this.fileListeners = new LinkedList<>();
+        this.fileListeners = new ArrayList<>();
         this.model = getModel();
 
         addMouseListener(new MouseAdapter() {

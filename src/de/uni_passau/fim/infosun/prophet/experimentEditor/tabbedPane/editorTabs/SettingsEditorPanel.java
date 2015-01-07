@@ -3,7 +3,6 @@ package de.uni_passau.fim.infosun.prophet.experimentEditor.tabbedPane.editorTabs
 import java.awt.BorderLayout;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -99,7 +98,7 @@ public class SettingsEditorPanel extends ExperimentEditorTab {
         scrollPane.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
         scrollPane.getVerticalScrollBar().setUnitIncrement(16);
 
-        componentList = new LinkedList<>();
+        componentList = new ArrayList<>();
         settings.put(selected, componentList);
 
         // add the standard options for experiments and categories

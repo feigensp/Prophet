@@ -21,10 +21,10 @@ import java.io.Writer;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CharsetEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import javax.swing.*;
@@ -395,7 +395,7 @@ public class MacroEditor extends JFrame {
      */
     @SuppressWarnings({"unchecked"}) // the macros.xsd ensures that the XML can be deserialised to a Collection<Macro>
     public static List<Macro> loadMacros() {
-        List<Macro> macros = new LinkedList<>();
+        List<Macro> macros = new ArrayList<>();
         CharsetDecoder utf8decoder;
 
         if (!xmlFile.exists()) {

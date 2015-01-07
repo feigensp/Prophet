@@ -1,8 +1,8 @@
 package de.uni_passau.fim.infosun.prophet.util.settings;
 
 import java.awt.BorderLayout;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.List;
 import javax.swing.BoxLayout;
 import javax.swing.JCheckBox;
@@ -33,7 +33,7 @@ public class PluginSettings extends Setting {
     public PluginSettings(Attribute attribute, String pluginName, boolean enableable) {
         super(attribute, pluginName);
 
-        settingsList = new LinkedList<>();
+        settingsList = new ArrayList<>();
 
         settingsPanel = new JPanel();
         settingsPanel.setLayout(new BoxLayout(settingsPanel, BoxLayout.Y_AXIS));

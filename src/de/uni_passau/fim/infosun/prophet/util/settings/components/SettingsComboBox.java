@@ -1,8 +1,8 @@
 package de.uni_passau.fim.infosun.prophet.util.settings.components;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -47,7 +47,7 @@ public class SettingsComboBox extends Setting {
         this.caption = new JLabel();
 
         if (itemMappings != null) {
-            itemMappings = new LinkedList<>(itemMappings);
+            itemMappings = new ArrayList<>(itemMappings);
             Collections.sort(itemMappings, (p1, p2) -> p1.getKey().compareTo(p2.getKey()));
 
             values = new String[itemMappings.size()];
