@@ -1,4 +1,4 @@
-### LyX template
+### LyX
 # Ignore LyX backup and autosave files
 # http://www.lyx.org/
 *.lyx~
@@ -22,5 +22,5 @@ gradle-app.setting
 *.ipr
 *.iws
 
-# IntelliJ
+# IntelliJ output folder
 out/
