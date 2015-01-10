@@ -111,7 +111,7 @@ public class ShowCIDECodePlugin implements Plugin {
                 //anzahl der meisten features die gleichzeitig vorhanden sind holen
                 int maxParallelFeatures = 0;
                 for (Triple<Integer, Integer, ArrayList<String>> fileInfos : fileColoringInfos) {
-                    maxParallelFeatures = Math.max(maxParallelFeatures, fileInfos.getValue2().size());
+                    maxParallelFeatures = Math.max(maxParallelFeatures, fileInfos.getThird().size());
                 }
                 whitespaces = createWhitespaceString(maxParallelFeatures);
                 fileColoringInfos = correctXMLOffset(fileColoringInfos, editorPanel.getTextArea(), whitespaces);
@@ -119,7 +119,7 @@ public class ShowCIDECodePlugin implements Plugin {
                 for (Triple<Integer, Integer, ArrayList<String>> infos : fileColoringInfos) {
                     int offset = infos.getFirst();
                     int length = infos.getSecond();
-                    ArrayList<String> features = infos.getValue2();
+                    ArrayList<String> features = infos.getThird();
                     colorFeatures(offset, length, features, editorPanel.getTextArea(), hilit, painterYellow);
                 }
             }
@@ -153,7 +153,7 @@ public class ShowCIDECodePlugin implements Plugin {
         HashSet<String> features = new HashSet<>();
         while (colorInfosIterator.hasNext()) {
             for (Triple<Integer, Integer, ArrayList<String>> fragmentInfos : colorInfosIterator.next()) {
-                features.addAll(fragmentInfos.getValue2().stream().collect(Collectors.toList()));
+                features.addAll(fragmentInfos.getThird().stream().collect(Collectors.toList()));
             }
         }
 
@@ -191,7 +191,7 @@ public class ShowCIDECodePlugin implements Plugin {
 //				System.out.println("old Data: offset="+triple.getKey() + " : length="+triple.getValue1());
 //				System.out.println("new Data: offset="+newOffset+" : length="+newLength);
 //				System.out.println();
-                infos.set(i, Triple.of(newOffset, newLength, triple.getValue2()));
+                infos.set(i, Triple.of(newOffset, newLength, triple.getThird()));
             } catch (BadLocationException e) {
                 e.printStackTrace();
             }
