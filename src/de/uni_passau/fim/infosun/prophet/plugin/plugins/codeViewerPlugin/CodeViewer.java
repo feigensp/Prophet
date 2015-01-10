@@ -16,6 +16,7 @@ import javax.swing.plaf.basic.BasicSplitPaneDivider;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.fileTree.FileEvent;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.fileTree.FileListener;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.fileTree.FileTree;
+import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.recorder.Recorder;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.tabbedPane.EditorTabbedPane;
 import de.uni_passau.fim.infosun.prophet.util.qTree.Attribute;
 

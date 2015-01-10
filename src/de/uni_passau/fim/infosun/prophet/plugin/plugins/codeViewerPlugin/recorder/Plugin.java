@@ -6,7 +6,7 @@ import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.tabbedP
 import de.uni_passau.fim.infosun.prophet.util.qTree.Attribute;
 import de.uni_passau.fim.infosun.prophet.util.settings.Setting;
 
-public interface RecorderPlugin {
+public interface Plugin {
 
     Setting getSetting(Attribute node);
 

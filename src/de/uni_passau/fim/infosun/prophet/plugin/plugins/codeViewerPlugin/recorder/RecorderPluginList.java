@@ -11,7 +11,7 @@ import de.uni_passau.fim.infosun.prophet.util.settings.Setting;
 
 public class RecorderPluginList {
 
-    private static List<RecorderPlugin> plugins = new ArrayList<>();
+    private static List<Plugin> plugins = new ArrayList<>();
 
     static {
         add(new ChangePlugin());
@@ -30,15 +30,15 @@ public class RecorderPluginList {
         return plugins.stream().map(p -> p.getSetting(attribute)).filter(s -> s != null).collect(Collectors.toList());
     }
 
-    public static List<RecorderPlugin> getPlugins() {
+    public static List<Plugin> getPlugins() {
         return plugins;
     }
 
-    public static void add(RecorderPlugin plugin) {
+    public static void add(Plugin plugin) {
         plugins.add(plugin);
     }
 
-    public static boolean remove(RecorderPlugin plugin) {
+    public static boolean remove(Plugin plugin) {
         return plugins.remove(plugin);
     }
 }

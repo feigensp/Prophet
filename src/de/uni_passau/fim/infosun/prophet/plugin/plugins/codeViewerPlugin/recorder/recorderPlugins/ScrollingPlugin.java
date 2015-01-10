@@ -7,7 +7,7 @@ import javax.swing.event.ChangeListener;
 import javax.swing.text.BadLocationException;
 
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.CodeViewer;
-import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.recorder.RecorderPlugin;
+import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.recorder.Plugin;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.recorder.loggingTreeNode.LoggingTreeNode;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.tabbedPane.EditorPanel;
 import de.uni_passau.fim.infosun.prophet.util.language.UIElementNames;
@@ -17,7 +17,7 @@ import de.uni_passau.fim.infosun.prophet.util.settings.Setting;
 import de.uni_passau.fim.infosun.prophet.util.settings.components.SettingsTextField;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
-public class ScrollingPlugin implements RecorderPlugin {
+public class ScrollingPlugin implements Plugin {
 
     public final static String KEY = "scrolling";
     public final static String KEY_JOIN = "join";

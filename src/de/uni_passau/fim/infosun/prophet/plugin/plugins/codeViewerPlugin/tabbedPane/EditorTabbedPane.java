@@ -9,7 +9,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.SwingConstants;
 
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.CodeViewerPluginList;
-import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.Recorder;
+import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.recorder.Recorder;
 
 import static de.uni_passau.fim.infosun.prophet.util.language.UIElementNames.getLocalized;
 

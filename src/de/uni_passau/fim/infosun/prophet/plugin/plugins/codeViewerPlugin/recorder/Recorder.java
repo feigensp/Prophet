@@ -1,7 +1,6 @@
-package de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin;
+package de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.recorder;
 
-import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.recorder.RecorderPlugin;
-import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.recorder.RecorderPluginList;
+import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.CodeViewer;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.recorder.loggingTreeNode.LoggingTreeNode;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.recorder.loggingTreeNode.LoggingTreeXMLHandler;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.tabbedPane.EditorPanel;
@@ -45,7 +44,7 @@ public class Recorder {
         return settings;
     }
 
-    protected void onFrameCreate(CodeViewer viewer) {
+    public void onFrameCreate(CodeViewer viewer) {
         codeViewer = viewer;
         tabbedPane = codeViewer.getTabbedPane();
         currentTab = null;
@@ -62,13 +61,13 @@ public class Recorder {
                 }
                 rootNode.add(currentNode);
                 //Plugins aktualisieren
-                for (RecorderPlugin plugin : RecorderPluginList.getPlugins()) {
+                for (Plugin plugin : RecorderPluginList.getPlugins()) {
                     plugin.onNodeChange(currentNode, currentTab);
                 }
             }
         });
 
-        for (RecorderPlugin plugin : RecorderPluginList.getPlugins()) {
+        for (Plugin plugin : RecorderPluginList.getPlugins()) {
             plugin.onFrameCreate(selected.getSubAttribute(KEY), codeViewer, currentNode);
         }
     }

@@ -6,7 +6,7 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.CodeViewer;
-import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.recorder.RecorderPlugin;
+import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.recorder.Plugin;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.recorder.loggingTreeNode.LoggingTreeNode;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.tabbedPane.EditorPanel;
 import de.uni_passau.fim.infosun.prophet.util.qTree.Attribute;
@@ -16,7 +16,7 @@ import de.uni_passau.fim.infosun.prophet.util.settings.components.SettingsTextFi
 
 import static de.uni_passau.fim.infosun.prophet.util.language.UIElementNames.getLocalized;
 
-public class ChangePlugin implements RecorderPlugin {
+public class ChangePlugin implements Plugin {
 
     public final static String KEY = "change";
     public final static String KEY_JOIN = "join";

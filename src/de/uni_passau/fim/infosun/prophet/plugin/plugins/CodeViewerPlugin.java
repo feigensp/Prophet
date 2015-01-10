@@ -12,7 +12,7 @@ import de.uni_passau.fim.infosun.prophet.experimentViewer.EViewer;
 import de.uni_passau.fim.infosun.prophet.plugin.Plugin;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.CodeViewer;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.CodeViewerPluginList;
-import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.Recorder;
+import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.recorder.Recorder;
 import de.uni_passau.fim.infosun.prophet.util.qTree.Attribute;
 import de.uni_passau.fim.infosun.prophet.util.qTree.QTreeNode;
 import de.uni_passau.fim.infosun.prophet.util.settings.PluginSettings;
