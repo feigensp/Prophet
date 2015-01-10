@@ -6,7 +6,6 @@ import java.util.Map;
 import javax.swing.text.BadLocationException;
 
 import de.uni_passau.fim.infosun.prophet.experimentEditor.tabbedPane.ExperimentEditorTab;
-import de.uni_passau.fim.infosun.prophet.util.ModifiedRSyntaxTextArea;
 import de.uni_passau.fim.infosun.prophet.util.qTree.QTreeNode;
 import org.fife.ui.rsyntaxtextarea.RSyntaxDocument;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;

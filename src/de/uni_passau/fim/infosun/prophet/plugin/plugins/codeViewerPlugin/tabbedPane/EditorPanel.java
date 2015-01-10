@@ -9,7 +9,7 @@ import java.nio.file.Files;
 import javax.swing.JPanel;
 import javax.swing.text.BadLocationException;
 
-import de.uni_passau.fim.infosun.prophet.util.ModifiedRSyntaxTextArea;
+import de.uni_passau.fim.infosun.prophet.experimentEditor.tabbedPane.editorTabs.ModifiedRSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.RSyntaxDocument;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;

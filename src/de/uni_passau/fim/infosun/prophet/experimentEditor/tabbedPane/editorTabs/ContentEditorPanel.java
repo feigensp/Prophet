@@ -12,7 +12,6 @@ import de.uni_passau.fim.infosun.prophet.experimentEditor.tabbedPane.ExperimentE
 import de.uni_passau.fim.infosun.prophet.experimentEditor.tabbedPane.ExperimentEditorTabbedPane;
 import de.uni_passau.fim.infosun.prophet.experimentEditor.tabbedPane.editorTabs.contentEditorToolBar
         .ContentEditorToolBar;
-import de.uni_passau.fim.infosun.prophet.util.ModifiedRSyntaxTextArea;
 import de.uni_passau.fim.infosun.prophet.util.qTree.QTreeNode;
 import de.uni_passau.fim.infosun.prophet.util.searchBar.SearchBar;
 import org.fife.ui.rsyntaxtextarea.RSyntaxDocument;

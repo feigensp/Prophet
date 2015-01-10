@@ -1,4 +1,4 @@
-package de.uni_passau.fim.infosun.prophet.util;
+package de.uni_passau.fim.infosun.prophet.experimentEditor.tabbedPane.editorTabs;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
