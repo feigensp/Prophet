@@ -1,4 +1,4 @@
-package de.uni_passau.fim.infosun.prophet.plugin.plugins;
+package de.uni_passau.fim.infosun.prophet.plugin.plugins.mailPlugin;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -23,7 +23,6 @@ import javax.swing.SpinnerNumberModel;
 
 import de.uni_passau.fim.infosun.prophet.experimentViewer.EViewer;
 import de.uni_passau.fim.infosun.prophet.plugin.Plugin;
-import de.uni_passau.fim.infosun.prophet.plugin.plugins.mailPlugin.ZFile;
 import de.uni_passau.fim.infosun.prophet.util.Pair;
 import de.uni_passau.fim.infosun.prophet.util.qTree.Attribute;
 import de.uni_passau.fim.infosun.prophet.util.qTree.QTreeNode;
