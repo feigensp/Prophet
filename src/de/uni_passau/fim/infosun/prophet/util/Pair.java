@@ -14,8 +14,8 @@ package de.uni_passau.fim.infosun.prophet.util;
  */
 public class Pair<K, V> {
 
-    private K key;
-    private V value;
+    protected K key;
+    protected V value;
 
     /**
      * Constructs a <code>Pair</code> containing the given values.
@@ -43,7 +43,7 @@ public class Pair<K, V> {
      * @param value
      *        the value of the pair
      */
-    private Pair(K key, V value) {
+    protected Pair(K key, V value) {
         this.key = key;
         this.value = value;
     }
@@ -88,6 +88,6 @@ public class Pair<K, V> {
 
     @Override
     public String toString() {
-        return String.format("Pair{key=%s, value=%s}", key, value);
+        return String.format("(%s, %s)", key, value);
     }
 }

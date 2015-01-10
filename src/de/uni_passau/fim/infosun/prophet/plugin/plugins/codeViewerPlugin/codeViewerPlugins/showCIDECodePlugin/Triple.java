@@ -1,5 +1,7 @@
 package de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeViewerPlugins.showCIDECodePlugin;
 
+import de.uni_passau.fim.infosun.prophet.util.Pair;
+
 /**
  * A triple composed of a key and two values.
  *
@@ -9,19 +11,25 @@ package de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeVi
  *
  * @author Markus Köppen, Andreas Hasselberg
  */
-public class Triple<K, V1, V2> {
-
-    private K key;
-    private V1 value1;
+public class Triple<K, V1, V2> extends Pair<K, V1> {
+    
     private V2 value2;
 
     /**
-     * Constructs a new <code>Triple</code> initialising the key and both values with <code>null</code>.
+     * Constructs a <code>Triple</code> containing the given values.
+     * 
+     * @param key the value for the key
+     * @param v1 the first value
+     * @param v2 the second value
+     * @param <K> the type of the key
+     * @param <V1> the type of the first value
+     * @param <V2> the type of the second value
+     * @return a <code>Triple</code> containing the given values
      */
-    public Triple() {
-        this(null, null, null);
+    public static <K, V1, V2> Triple<K, V1, V2> of(K key, V1 v1, V2 v2) {
+        return new Triple<>(key, v1, v2);
     }
-
+    
     /**
      * Constructs a new <code>Triple</code> initialising the key and both values with the given parameters.
      *
@@ -32,46 +40,9 @@ public class Triple<K, V1, V2> {
      * @param value2
      *         the second value
      */
-    public Triple(K key, V1 value1, V2 value2) {
-        this.key = key;
-        this.value1 = value1;
+    private Triple(K key, V1 value1, V2 value2) {
+        super(key, value1);
         this.value2 = value2;
-    }
-
-    /**
-     * Gets the key.
-     *
-     * @return the key
-     */
-    public K getKey() {
-        return key;
-    }
-
-    /**
-     * Sets the key.
-     *
-     * @param key the new key
-     */
-    public void setKey(K key) {
-        this.key = key;
-    }
-
-    /**
-     * Gets the first value.
-     *
-     * @return the first value
-     */
-    public V1 getValue1() {
-        return value1;
-    }
-
-    /**
-     * Sets the first value.
-     *
-     * @param value1 the new first value
-     */
-    public void setValue1(V1 value1) {
-        this.value1 = value1;
     }
 
     /**
@@ -94,6 +65,6 @@ public class Triple<K, V1, V2> {
 
     @Override
     public String toString() {
-        return String.format("(%s, %s, %s)", key.toString(), value1.toString(), value2.toString());
+        return String.format("(%s, %s, %s)", key, value, value2);
     }
 }

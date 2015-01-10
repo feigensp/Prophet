@@ -118,7 +118,7 @@ public class ShowCIDECodePlugin implements Plugin {
                 addWhitespaces(whitespaces, editorPanel.getTextArea());
                 for (Triple<Integer, Integer, ArrayList<String>> infos : fileColoringInfos) {
                     int offset = infos.getKey();
-                    int length = infos.getValue1();
+                    int length = infos.getValue();
                     ArrayList<String> features = infos.getValue2();
                     colorFeatures(offset, length, features, editorPanel.getTextArea(), hilit, painterYellow);
                 }
@@ -184,14 +184,14 @@ public class ShowCIDECodePlugin implements Plugin {
             Triple<Integer, Integer, ArrayList<String>> triple = infos.get(i);
             try {
                 int startLine = textArea.getLineOfOffset(triple.getKey());
-                int endLine = textArea.getLineOfOffset(triple.getKey() + triple.getValue1());
+                int endLine = textArea.getLineOfOffset(triple.getKey() + triple.getValue());
                 int newOffset = triple.getKey() + startLine * whitespaces.length();
-                int newLength = ((endLine - startLine) * whitespaces.length()) + triple.getValue1();
+                int newLength = ((endLine - startLine) * whitespaces.length()) + triple.getValue();
 //				System.out.println("startline="+startLine+" : endLine="+endLine);
 //				System.out.println("old Data: offset="+triple.getKey() + " : length="+triple.getValue1());
 //				System.out.println("new Data: offset="+newOffset+" : length="+newLength);
 //				System.out.println();
-                infos.set(i, new Triple<>(newOffset, newLength, triple.getValue2()));
+                infos.set(i, Triple.of(newOffset, newLength, triple.getValue2()));
             } catch (BadLocationException e) {
                 e.printStackTrace();
             }
@@ -282,7 +282,7 @@ public class ShowCIDECodePlugin implements Plugin {
                     if (infos.get(path) == null) {
                         infos.put(path, new ArrayList<>());
                     }
-                    infos.get(path).add(new Triple<>(offset, length, features));
+                    infos.get(path).add(Triple.of(offset, length, features));
                 }
             }
         }
