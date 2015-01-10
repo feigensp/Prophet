@@ -17,8 +17,8 @@ import java.util.Set;
 import javax.swing.tree.TreePath;
 
 import de.uni_passau.fim.infosun.prophet.Constants;
+import de.uni_passau.fim.infosun.prophet.experimentEditor.qTree.QTreeModel;
 import de.uni_passau.fim.infosun.prophet.util.language.UIElementNames;
-import de.uni_passau.fim.infosun.prophet.util.qTree.QTreeModel;
 import de.uni_passau.fim.infosun.prophet.util.qTree.QTreeNode;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;

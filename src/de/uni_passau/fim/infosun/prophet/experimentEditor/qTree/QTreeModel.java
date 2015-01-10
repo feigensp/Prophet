@@ -1,4 +1,4 @@
-package de.uni_passau.fim.infosun.prophet.util.qTree;
+package de.uni_passau.fim.infosun.prophet.experimentEditor.qTree;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -8,6 +8,8 @@ import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
+
+import de.uni_passau.fim.infosun.prophet.util.qTree.QTreeNode;
 
 /**
  * A <code>TreeModel</code> that handles <code>QTreeNode</code> objects.

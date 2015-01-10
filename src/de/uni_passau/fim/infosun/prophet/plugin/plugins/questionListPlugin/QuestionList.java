@@ -7,7 +7,7 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreePath;
 
-import de.uni_passau.fim.infosun.prophet.util.qTree.QTreeModel;
+import de.uni_passau.fim.infosun.prophet.experimentEditor.qTree.QTreeModel;
 import de.uni_passau.fim.infosun.prophet.util.qTree.QTreeNode;
 
 /**

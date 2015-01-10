@@ -432,7 +432,7 @@ public class QTreeNode implements Cloneable {
     }
 
     @Override
-    protected Object clone() throws CloneNotSupportedException {
+    public Object clone() throws CloneNotSupportedException {
         QTreeNode clone = (QTreeNode) super.clone();
         Map<String, Attribute> cAttributes = new HashMap<>();
         List<QTreeNode> cChildren = new ArrayList<>();

@@ -31,9 +31,9 @@ import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.WindowConstants;
 import javax.swing.plaf.basic.BasicSplitPaneDivider;
 
+import de.uni_passau.fim.infosun.prophet.experimentEditor.qTree.QTree;
 import de.uni_passau.fim.infosun.prophet.experimentEditor.tabbedPane.ExperimentEditorTabbedPane;
 import de.uni_passau.fim.infosun.prophet.util.language.UIElementNames;
-import de.uni_passau.fim.infosun.prophet.util.qTree.QTree;
 
 /**
  * An editor for experiments that can be viewed by experimentees using the <code>EViewer</code>.

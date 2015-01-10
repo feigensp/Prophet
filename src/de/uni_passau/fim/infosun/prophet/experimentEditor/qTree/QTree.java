@@ -1,4 +1,4 @@
-package de.uni_passau.fim.infosun.prophet.util.qTree;
+package de.uni_passau.fim.infosun.prophet.experimentEditor.qTree;
 
 import java.awt.Point;
 import java.awt.dnd.DropTarget;
@@ -18,6 +18,8 @@ import javax.swing.JTree;
 import javax.swing.SwingUtilities;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
+
+import de.uni_passau.fim.infosun.prophet.util.qTree.QTreeNode;
 
 import static de.uni_passau.fim.infosun.prophet.util.language.UIElementNames.getLocalized;
 import static de.uni_passau.fim.infosun.prophet.util.qTree.QTreeNode.Type.CATEGORY;

@@ -7,11 +7,11 @@ import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreePath;
 
+import de.uni_passau.fim.infosun.prophet.experimentEditor.qTree.QTree;
 import de.uni_passau.fim.infosun.prophet.experimentEditor.tabbedPane.editorTabs.ContentEditorPanel;
 import de.uni_passau.fim.infosun.prophet.experimentEditor.tabbedPane.editorTabs.ContentViewerPanel;
 import de.uni_passau.fim.infosun.prophet.experimentEditor.tabbedPane.editorTabs.NoteEditorPanel;
 import de.uni_passau.fim.infosun.prophet.experimentEditor.tabbedPane.editorTabs.SettingsEditorPanel;
-import de.uni_passau.fim.infosun.prophet.util.qTree.QTree;
 import de.uni_passau.fim.infosun.prophet.util.qTree.QTreeNode;
 
 import static de.uni_passau.fim.infosun.prophet.util.language.UIElementNames.getLocalized;
