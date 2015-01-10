@@ -1,8 +1,7 @@
-package de.uni_passau.fim.infosun.prophet.plugin.plugins;
+package de.uni_passau.fim.infosun.prophet.plugin.plugins.phpExportPlugin;
 
 import de.uni_passau.fim.infosun.prophet.experimentViewer.EViewer;
 import de.uni_passau.fim.infosun.prophet.plugin.Plugin;
-import de.uni_passau.fim.infosun.prophet.plugin.plugins.phpExportPlugin.PHPExportComponent;
 import de.uni_passau.fim.infosun.prophet.util.qTree.QTreeNode;
 import de.uni_passau.fim.infosun.prophet.util.settings.Setting;
 
