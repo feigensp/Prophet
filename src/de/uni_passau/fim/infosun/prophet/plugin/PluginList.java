@@ -5,7 +5,16 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import de.uni_passau.fim.infosun.prophet.experimentViewer.EViewer;
-import de.uni_passau.fim.infosun.prophet.plugin.plugins.*;
+import de.uni_passau.fim.infosun.prophet.plugin.plugins.AnswerRequiredPlugin;
+import de.uni_passau.fim.infosun.prophet.plugin.plugins.CodeViewerPlugin;
+import de.uni_passau.fim.infosun.prophet.plugin.plugins.ExperimentExportPlugin;
+import de.uni_passau.fim.infosun.prophet.plugin.plugins.ExternalProgramsPlugin;
+import de.uni_passau.fim.infosun.prophet.plugin.plugins.InactivityPlugin;
+import de.uni_passau.fim.infosun.prophet.plugin.plugins.MailPlugin;
+import de.uni_passau.fim.infosun.prophet.plugin.plugins.MaxTimePlugin;
+import de.uni_passau.fim.infosun.prophet.plugin.plugins.PHPExportPlugin;
+import de.uni_passau.fim.infosun.prophet.plugin.plugins.ValidSubjectCodePlugin;
+import de.uni_passau.fim.infosun.prophet.plugin.plugins.questionListPlugin.QuestionListPlugin;
 import de.uni_passau.fim.infosun.prophet.util.qTree.QTreeNode;
 import de.uni_passau.fim.infosun.prophet.util.settings.Setting;
 import org.jsoup.nodes.Document;

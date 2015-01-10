@@ -1,11 +1,10 @@
-package de.uni_passau.fim.infosun.prophet.plugin.plugins;
+package de.uni_passau.fim.infosun.prophet.plugin.plugins.questionListPlugin;
 
 import java.awt.BorderLayout;
 import javax.swing.JScrollPane;
 
 import de.uni_passau.fim.infosun.prophet.experimentViewer.EViewer;
 import de.uni_passau.fim.infosun.prophet.plugin.Plugin;
-import de.uni_passau.fim.infosun.prophet.plugin.plugins.questionListPlugin.QuestionList;
 import de.uni_passau.fim.infosun.prophet.util.language.UIElementNames;
 import de.uni_passau.fim.infosun.prophet.util.qTree.QTreeNode;
 import de.uni_passau.fim.infosun.prophet.util.settings.Setting;
