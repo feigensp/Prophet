@@ -7,7 +7,7 @@ import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
 
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.CodeViewer;
-import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.CodeViewerPlugin;
+import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.Plugin;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.recorder.loggingTreeNode.LoggingTreeNode;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.tabbedPane.EditorPanel;
 import de.uni_passau.fim.infosun.prophet.util.language.UIElementNames;
@@ -19,7 +19,7 @@ import de.uni_passau.fim.infosun.prophet.util.settings.Setting;
 import de.uni_passau.fim.infosun.prophet.util.settings.components.SettingsCheckBox;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
-public class SearchBarPlugin implements CodeViewerPlugin {
+public class SearchBarPlugin implements Plugin {
 
     public final static String KEY = "searchable";
     public final static String KEY_DISABLE_REGEX = "disableregex";

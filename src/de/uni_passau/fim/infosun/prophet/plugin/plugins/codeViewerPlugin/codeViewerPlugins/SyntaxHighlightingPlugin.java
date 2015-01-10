@@ -5,7 +5,7 @@ import javax.swing.event.DocumentListener;
 import javax.swing.text.Document;
 
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.CodeViewer;
-import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.CodeViewerPlugin;
+import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.Plugin;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.tabbedPane.EditorPanel;
 import de.uni_passau.fim.infosun.prophet.util.language.UIElementNames;
 import de.uni_passau.fim.infosun.prophet.util.qTree.Attribute;
@@ -14,7 +14,7 @@ import de.uni_passau.fim.infosun.prophet.util.settings.components.SettingsCheckB
 import org.fife.ui.rsyntaxtextarea.RSyntaxDocument;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 
-public class SyntaxHighlightingPlugin implements CodeViewerPlugin {
+public class SyntaxHighlightingPlugin implements Plugin {
 
     public final static String KEY = "syntaxhighlighting";
     private HashMap<String, String> extensionMap;

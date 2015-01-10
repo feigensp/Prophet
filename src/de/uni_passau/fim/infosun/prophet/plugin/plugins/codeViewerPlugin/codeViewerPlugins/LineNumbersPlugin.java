@@ -1,14 +1,14 @@
 package de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeViewerPlugins;
 
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.CodeViewer;
-import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.CodeViewerPlugin;
+import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.Plugin;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.tabbedPane.EditorPanel;
 import de.uni_passau.fim.infosun.prophet.util.language.UIElementNames;
 import de.uni_passau.fim.infosun.prophet.util.qTree.Attribute;
 import de.uni_passau.fim.infosun.prophet.util.settings.Setting;
 import de.uni_passau.fim.infosun.prophet.util.settings.components.SettingsCheckBox;
 
-public class LineNumbersPlugin implements CodeViewerPlugin {
+public class LineNumbersPlugin implements Plugin {
 
     public static final String KEY = "linenumbers";
     private Attribute selected;

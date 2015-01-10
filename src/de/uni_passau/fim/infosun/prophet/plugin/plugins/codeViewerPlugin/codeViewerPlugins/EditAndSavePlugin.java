@@ -16,7 +16,7 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.CodeViewer;
-import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.CodeViewerPlugin;
+import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.Plugin;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.tabbedPane.EditorPanel;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.tabbedPane.EditorTabbedPane;
 import de.uni_passau.fim.infosun.prophet.util.qTree.Attribute;
@@ -27,7 +27,7 @@ import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
 import static de.uni_passau.fim.infosun.prophet.util.language.UIElementNames.getLocalized;
 
-public class EditAndSavePlugin implements CodeViewerPlugin {
+public class EditAndSavePlugin implements Plugin {
 
     public final static String KEY = "editable";
     private boolean editable;

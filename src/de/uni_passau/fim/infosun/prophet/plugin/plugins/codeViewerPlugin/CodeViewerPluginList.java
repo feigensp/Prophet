@@ -15,7 +15,7 @@ import de.uni_passau.fim.infosun.prophet.util.settings.Setting;
 
 public class CodeViewerPluginList {
 
-    private static List<CodeViewerPlugin> plugins = new ArrayList<>();
+    private static List<Plugin> plugins = new ArrayList<>();
 
     static {
         add(new EditAndSavePlugin());
@@ -26,11 +26,11 @@ public class CodeViewerPluginList {
         add(new OpenedFromStartPlugin());
     }
 
-    public static void add(CodeViewerPlugin plugin) {
+    public static void add(Plugin plugin) {
         plugins.add(plugin);
     }
 
-    public static boolean remove(CodeViewerPlugin plugin) {
+    public static boolean remove(Plugin plugin) {
         return plugins.remove(plugin);
     }
 
@@ -39,7 +39,7 @@ public class CodeViewerPluginList {
     }
 
     public static void init(Attribute selected) {
-        for (CodeViewerPlugin plugin : plugins) {
+        for (Plugin plugin : plugins) {
             try {
                 plugin.init(selected);
             } catch (Exception e) {
@@ -49,7 +49,7 @@ public class CodeViewerPluginList {
     }
 
     public static void onFrameCreate(CodeViewer viewer) {
-        for (CodeViewerPlugin plugin : plugins) {
+        for (Plugin plugin : plugins) {
             try {
                 plugin.onFrameCreate(viewer);
             } catch (Exception e) {
@@ -59,7 +59,7 @@ public class CodeViewerPluginList {
     }
 
     public static void onEditorPanelCreate(EditorPanel editorPanel) {
-        for (CodeViewerPlugin plugin : plugins) {
+        for (Plugin plugin : plugins) {
             try {
                 plugin.onEditorPanelCreate(editorPanel);
             } catch (Exception e) {
@@ -69,7 +69,7 @@ public class CodeViewerPluginList {
     }
 
     public static void onEditorPanelClose(EditorPanel editorPanel) {
-        for (CodeViewerPlugin plugin : plugins) {
+        for (Plugin plugin : plugins) {
             try {
                 plugin.onEditorPanelClose(editorPanel);
             } catch (Exception e) {
@@ -79,7 +79,7 @@ public class CodeViewerPluginList {
     }
 
     public static void onClose() {
-        for (CodeViewerPlugin plugin : plugins) {
+        for (Plugin plugin : plugins) {
             try {
                 plugin.onClose();
             } catch (Exception e) {

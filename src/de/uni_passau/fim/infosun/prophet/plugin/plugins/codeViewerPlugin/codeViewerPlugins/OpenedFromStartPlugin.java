@@ -3,7 +3,7 @@ package de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeVi
 import java.io.File;
 
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.CodeViewer;
-import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.CodeViewerPlugin;
+import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.Plugin;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.tabbedPane.EditorPanel;
 import de.uni_passau.fim.infosun.prophet.util.language.UIElementNames;
 import de.uni_passau.fim.infosun.prophet.util.qTree.Attribute;
@@ -11,7 +11,7 @@ import de.uni_passau.fim.infosun.prophet.util.settings.PluginSettings;
 import de.uni_passau.fim.infosun.prophet.util.settings.Setting;
 import de.uni_passau.fim.infosun.prophet.util.settings.components.SettingsTextField;
 
-public class OpenedFromStartPlugin implements CodeViewerPlugin {
+public class OpenedFromStartPlugin implements Plugin {
 
     public static final String KEY = "openedByStart";
     public static final String KEY_PATH = "startPath";
