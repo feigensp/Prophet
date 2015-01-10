@@ -109,7 +109,7 @@ public class FormComboBox extends JComboBox<String> {
         StringBuilder rowBuilder = new StringBuilder();
         StringBuilder tableBuilder = new StringBuilder();
 
-        String[][] table = tableInfo.getValue();
+        String[][] table = tableInfo.getSecond();
 
         for (int i = 0; i < table.length; i++) {
             rowBuilder.delete(0, rowBuilder.length());
@@ -126,7 +126,7 @@ public class FormComboBox extends JComboBox<String> {
             tableBuilder.append(String.format(rowFormat, rowBuilder.toString()));
         }
 
-        textArea.replaceSelection(String.format(tableFormat, norm(tableInfo.getKey()), tableBuilder.toString()));
+        textArea.replaceSelection(String.format(tableFormat, norm(tableInfo.getFirst()), tableBuilder.toString()));
     }
 
     /**
@@ -146,10 +146,10 @@ public class FormComboBox extends JComboBox<String> {
         }
 
         StringBuilder checks = new StringBuilder();
-        String name = norm(checkInfo.getKey());
+        String name = norm(checkInfo.getFirst());
 
         formatString = "<input type=\"checkbox\" name=\"%s\" value=\"%s\">%s<br>%n";
-        for (String checkEntry : checkInfo.getValue()) {
+        for (String checkEntry : checkInfo.getSecond()) {
             checks.append(String.format(formatString, name, checkEntry, checkEntry));
         }
 
@@ -173,10 +173,10 @@ public class FormComboBox extends JComboBox<String> {
         }
 
         StringBuilder radios = new StringBuilder();
-        String name = norm(radioInfo.getKey());
+        String name = norm(radioInfo.getFirst());
 
         formatString = "<input type=\"radio\" name=\"%s\" value=\"%s\">%s<br>%n";
-        for (String radioEntry : radioInfo.getValue()) {
+        for (String radioEntry : radioInfo.getSecond()) {
             radios.append(String.format(formatString, name, radioEntry, radioEntry));
         }
 
@@ -201,12 +201,12 @@ public class FormComboBox extends JComboBox<String> {
 
         StringBuilder combos = new StringBuilder();
 
-        for (String comboEntry : comboInfo.getValue()) {
+        for (String comboEntry : comboInfo.getSecond()) {
             combos.append(String.format("%n<option value=\"%s\">%s</option>", comboEntry, comboEntry));
         }
 
         formatString = "<select name=\"%s\">%s%n</select>";
-        textArea.replaceSelection(String.format(formatString, norm(comboInfo.getKey()), combos.toString()));
+        textArea.replaceSelection(String.format(formatString, norm(comboInfo.getFirst()), combos.toString()));
     }
 
     /**
@@ -227,12 +227,12 @@ public class FormComboBox extends JComboBox<String> {
 
         StringBuilder list = new StringBuilder();
 
-        for (String listEntry : listInfo.getValue()) {
+        for (String listEntry : listInfo.getSecond()) {
             list.append(String.format("%n<option value=\"%s\">%s</option>", listEntry, listEntry));
         }
 
         formatString = "<select name=\"%s\" size=\"3\" multiple>%s%n</select>";
-        textArea.replaceSelection(String.format(formatString, norm(listInfo.getKey()), list.toString()));
+        textArea.replaceSelection(String.format(formatString, norm(listInfo.getFirst()), list.toString()));
     }
 
     /**

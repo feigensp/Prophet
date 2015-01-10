@@ -48,15 +48,15 @@ public class SettingsComboBox extends Setting {
 
         if (itemMappings != null) {
             itemMappings = new ArrayList<>(itemMappings);
-            Collections.sort(itemMappings, (p1, p2) -> p1.getKey().compareTo(p2.getKey()));
+            Collections.sort(itemMappings, (p1, p2) -> p1.getFirst().compareTo(p2.getFirst()));
 
             values = new String[itemMappings.size()];
             representations = new String[itemMappings.size()];
 
             int index = 0;
             for (Pair<String, String> itemMapping : itemMappings) {
-                values[index] = itemMapping.getKey();
-                representations[index] = itemMapping.getValue();
+                values[index] = itemMapping.getFirst();
+                representations[index] = itemMapping.getSecond();
                 index++;
             }
 

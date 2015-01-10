@@ -3,91 +3,91 @@ package de.uni_passau.fim.infosun.prophet.util;
 /**
  * A type generic pair of two values.
  *
- * @param <K>
- *         the type of the key
- * @param <V>
- *         the type of the value
+ * @param <V1>
+ *         the type of the first value
+ * @param <V2>
+ *         the type of the second value
  *
  * @author Markus Köppen
  * @author Andreas Hasselberg
  * @author Georg Seibt
  */
-public class Pair<K, V> {
+public class Pair<V1, V2> {
 
-    protected K key;
-    protected V value;
+    protected V1 first;
+    protected V2 second;
 
     /**
      * Constructs a <code>Pair</code> containing the given values.
      *
-     * @param key
-     *         the key of the pair
-     * @param value
-     *         the value of the pair
-     * @param <K>
-     *         the type of the key
-     * @param <V>
-     *         the type of the value
+     * @param first
+     *         the first value
+     * @param second
+     *         the second value
+     * @param <V1>
+     *         the type of the first value
+     * @param <V2>
+     *         the type of the second value
      *
-     * @return a <code>Pair</code> containing <code>key</code> and <code>value</code>
+     * @return a <code>Pair</code> containing the given values
      */
-    public static <K, V> Pair<K, V> of(K key, V value) {
-        return new Pair<>(key, value);
+    public static <V1, V2> Pair<V1, V2> of(V1 first, V2 second) {
+        return new Pair<>(first, second);
     }
-    
+
     /**
      * Constructs a new <code>Pair</code> containing the given values.
      *
-     * @param key
-     *        the key of the pair
-     * @param value
-     *        the value of the pair
+     * @param first
+     *         the first value
+     * @param second
+     *         the second value
      */
-    protected Pair(K key, V value) {
-        this.key = key;
-        this.value = value;
+    protected Pair(V1 first, V2 second) {
+        this.first = first;
+        this.second = second;
     }
 
     /**
-     * Returns the key of the <code>Pair</code>.
+     * Returns the first value of the <code>Pair</code>.
      *
-     * @return the key
+     * @return the first value
      */
-    public K getKey() {
-        return key;
+    public V1 getFirst() {
+        return first;
     }
 
     /**
-     * Sets the key to <code>key</code>.
+     * Sets the first value to <code>first</code>.
      *
-     * @param key
-     *         the new key
+     * @param first
+     *         the new first value
      */
-    public void setKey(K key) {
-        this.key = key;
+    public void setFirst(V1 first) {
+        this.first = first;
     }
 
     /**
-     * Returns the value of the <code>Pair</code>.
+     * Returns the second value of the <code>Pair</code>.
      *
-     * @return the value
+     * @return the second value
      */
-    public V getValue() {
-        return value;
+    public V2 getSecond() {
+        return second;
     }
 
     /**
-     * Sets the value to <code>value</code>.
+     * Sets the second value to <code>second</code>.
      *
-     * @param value
-     *         new value
+     * @param second
+     *         the new second value
      */
-    public void setValue(V value) {
-        this.value = value;
+    public void setSecond(V2 second) {
+        this.second = second;
     }
 
     @Override
     public String toString() {
-        return String.format("(%s, %s)", key, value);
+        return String.format("(%s, %s)", first, second);
     }
 }

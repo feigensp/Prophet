@@ -30,7 +30,7 @@ public class FontStyleComboBox extends JComboBox<String> {
         fontFaces.add(Pair.of(UIElementNames.getLocalized("FONT_FACE_UNDERLINE"), "u"));
 
         addItem(UIElementNames.getLocalized("MENU_TAB_EDITOR_FONT_FACE"));
-        fontFaces.forEach(pair -> addItem(pair.getKey()));
+        fontFaces.forEach(pair -> addItem(pair.getFirst()));
 
         addActionListener(event -> {
 
@@ -38,7 +38,7 @@ public class FontStyleComboBox extends JComboBox<String> {
                 return;
             }
 
-            String tag = fontFaces.get(getSelectedIndex() - 1).getValue();
+            String tag = fontFaces.get(getSelectedIndex() - 1).getSecond();
             String text = textArea.getSelectedText();
 
             text = text == null ? "" : text;

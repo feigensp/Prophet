@@ -65,6 +65,6 @@ public class Triple<K, V1, V2> extends Pair<K, V1> {
 
     @Override
     public String toString() {
-        return String.format("(%s, %s, %s)", key, value, value2);
+        return String.format("(%s, %s, %s)", first, second, value2);
     }
 }

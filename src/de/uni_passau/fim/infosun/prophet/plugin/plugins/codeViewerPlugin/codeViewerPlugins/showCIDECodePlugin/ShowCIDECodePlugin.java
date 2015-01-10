@@ -117,8 +117,8 @@ public class ShowCIDECodePlugin implements Plugin {
                 fileColoringInfos = correctXMLOffset(fileColoringInfos, editorPanel.getTextArea(), whitespaces);
                 addWhitespaces(whitespaces, editorPanel.getTextArea());
                 for (Triple<Integer, Integer, ArrayList<String>> infos : fileColoringInfos) {
-                    int offset = infos.getKey();
-                    int length = infos.getValue();
+                    int offset = infos.getFirst();
+                    int length = infos.getSecond();
                     ArrayList<String> features = infos.getValue2();
                     colorFeatures(offset, length, features, editorPanel.getTextArea(), hilit, painterYellow);
                 }
@@ -183,10 +183,10 @@ public class ShowCIDECodePlugin implements Plugin {
         for (int i = 0; i < infos.size(); i++) {
             Triple<Integer, Integer, ArrayList<String>> triple = infos.get(i);
             try {
-                int startLine = textArea.getLineOfOffset(triple.getKey());
-                int endLine = textArea.getLineOfOffset(triple.getKey() + triple.getValue());
-                int newOffset = triple.getKey() + startLine * whitespaces.length();
-                int newLength = ((endLine - startLine) * whitespaces.length()) + triple.getValue();
+                int startLine = textArea.getLineOfOffset(triple.getFirst());
+                int endLine = textArea.getLineOfOffset(triple.getFirst() + triple.getSecond());
+                int newOffset = triple.getFirst() + startLine * whitespaces.length();
+                int newLength = ((endLine - startLine) * whitespaces.length()) + triple.getSecond();
 //				System.out.println("startline="+startLine+" : endLine="+endLine);
 //				System.out.println("old Data: offset="+triple.getKey() + " : length="+triple.getValue1());
 //				System.out.println("new Data: offset="+newOffset+" : length="+newLength);
