@@ -6,12 +6,12 @@ import java.util.stream.Collectors;
 
 import de.uni_passau.fim.infosun.prophet.experimentViewer.EViewer;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.AnswerRequiredPlugin;
-import de.uni_passau.fim.infosun.prophet.plugin.plugins.CodeViewerPlugin;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.ExperimentExportPlugin;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.ExternalProgramsPlugin;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.InactivityPlugin;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.MaxTimePlugin;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.ValidSubjectCodePlugin;
+import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.CodeViewerPlugin;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.mailPlugin.MailPlugin;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.phpExportPlugin.PHPExportPlugin;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.questionListPlugin.QuestionListPlugin;
