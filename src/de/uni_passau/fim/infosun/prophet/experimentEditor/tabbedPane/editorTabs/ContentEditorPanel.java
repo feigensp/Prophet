@@ -5,6 +5,8 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.text.BadLocationException;
 
@@ -18,6 +20,11 @@ import org.fife.ui.rsyntaxtextarea.RSyntaxDocument;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 import org.fife.ui.rtextarea.RTextScrollPane;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
+
+import static de.uni_passau.fim.infosun.prophet.util.language.UIElementNames.getLocalized;
 
 /**
  * Enables the user to edit the HTML content of a <code>QTreeNode</code>.
@@ -106,12 +113,38 @@ public class ContentEditorPanel extends ExperimentEditorTab {
 
     @Override
     public void save() {
+        
         if (selected != null) {
             RSyntaxTextArea editArea = editAreas.get(selected);
+            
             if (editArea != null) {
-                selected.setHtml(editArea.getText());
+                String text = editArea.getText();
+                
+                if (nameContainingWhitespace(text)) {
+                    JOptionPane.showConfirmDialog(this, getLocalized("MESSAGE_HTML_CONTAINS_INV_NAMES"), null, 
+                            JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE);
+                }
+                
+                selected.setHtml(text);
             }
         }
+    }
+
+    /**
+     * Checks whether any element in the given HTML String contains a whitespace in the value of its 'name' attribute.
+     *
+     * @param html
+     *         the HTML to check
+     *
+     * @return whether there are any elements with whitespace characters in their 'name' attribute value
+     */
+    private boolean nameContainingWhitespace(String html) {
+        String nameKey = "name";
+        Pattern whiteSpace = Pattern.compile("\\s");
+        Document document = Jsoup.parseBodyFragment(html);
+        Elements named = document.body().getElementsByAttribute(nameKey);
+
+        return named.stream().anyMatch(element -> whiteSpace.matcher(element.attr(nameKey)).find());
     }
 
     @Override
