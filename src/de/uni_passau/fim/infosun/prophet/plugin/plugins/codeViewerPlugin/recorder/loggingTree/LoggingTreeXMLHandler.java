@@ -5,7 +5,7 @@
  * @author Markus Köppen, Andreas Hasselberg
  */
 
-package de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.recorder.loggingTreeNode;
+package de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.recorder.loggingTree;
 
 import java.io.File;
 import java.io.IOException;

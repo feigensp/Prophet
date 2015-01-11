@@ -1,4 +1,4 @@
-package de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.recorder.loggingTreeNode;
+package de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.recorder.loggingTree;
 
 import java.util.TreeMap;
 import javax.swing.tree.DefaultMutableTreeNode;
