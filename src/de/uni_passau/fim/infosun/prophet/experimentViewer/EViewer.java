@@ -1,8 +1,17 @@
 package de.uni_passau.fim.infosun.prophet.experimentViewer;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
+import de.uni_passau.fim.infosun.prophet.plugin.PluginList;
+import de.uni_passau.fim.infosun.prophet.util.QuestionViewPane;
+import de.uni_passau.fim.infosun.prophet.util.language.UIElementNames;
+import de.uni_passau.fim.infosun.prophet.util.qTree.Attribute;
+import de.uni_passau.fim.infosun.prophet.util.qTree.QTreeNode;
+import de.uni_passau.fim.infosun.prophet.util.qTree.handlers.QTreeXMLHandler;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+
+import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -18,21 +27,6 @@ import java.util.function.IntFunction;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
-import javax.swing.WindowConstants;
-import javax.swing.filechooser.FileNameExtensionFilter;
-
-import de.uni_passau.fim.infosun.prophet.plugin.PluginList;
-import de.uni_passau.fim.infosun.prophet.util.QuestionViewPane;
-import de.uni_passau.fim.infosun.prophet.util.language.UIElementNames;
-import de.uni_passau.fim.infosun.prophet.util.qTree.Attribute;
-import de.uni_passau.fim.infosun.prophet.util.qTree.QTreeNode;
-import de.uni_passau.fim.infosun.prophet.util.qTree.handlers.QTreeXMLHandler;
 
 import static de.uni_passau.fim.infosun.prophet.Constants.*;
 import static de.uni_passau.fim.infosun.prophet.util.language.UIElementNames.getLocalized;
@@ -342,11 +336,14 @@ public class EViewer extends JFrame {
             System.err.println("Could not save the answers.xml. " + e);
         }
 
-        String message = "<html><p>" + getLocalized("EVIEWER_EXPERIMENT_FINISHED") + "</p></html>";
-        message += PluginList.finishExperiment();
+        Document doc = Document.createShell("");
+        Element body = doc.body();
+
+        body.appendElement("p").text(getLocalized("EVIEWER_EXPERIMENT_FINISHED"));
+        body.append(PluginList.finishExperiment());
 
         setEnabled(false);
-        showMessageDialog(this, message, null, INFORMATION_MESSAGE);
+        showMessageDialog(this, new JLabel(doc.outerHtml()), null, INFORMATION_MESSAGE);
 
         dispose();
     }
