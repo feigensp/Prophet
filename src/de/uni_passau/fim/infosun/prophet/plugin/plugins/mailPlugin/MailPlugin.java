@@ -1,26 +1,5 @@
 package de.uni_passau.fim.infosun.prophet.plugin.plugins.mailPlugin;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Properties;
-import javax.activation.DataHandler;
-import javax.activation.DataSource;
-import javax.activation.FileDataSource;
-import javax.mail.Authenticator;
-import javax.mail.BodyPart;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
-import javax.swing.SpinnerNumberModel;
-
 import de.uni_passau.fim.infosun.prophet.experimentViewer.EViewer;
 import de.uni_passau.fim.infosun.prophet.plugin.Plugin;
 import de.uni_passau.fim.infosun.prophet.util.Pair;
@@ -32,6 +11,21 @@ import de.uni_passau.fim.infosun.prophet.util.settings.components.SettingsComboB
 import de.uni_passau.fim.infosun.prophet.util.settings.components.SettingsPasswordField;
 import de.uni_passau.fim.infosun.prophet.util.settings.components.SettingsSpinner;
 import de.uni_passau.fim.infosun.prophet.util.settings.components.SettingsTextField;
+
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import javax.activation.FileDataSource;
+import javax.mail.*;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
+import javax.swing.*;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Properties;
 
 import static de.uni_passau.fim.infosun.prophet.util.language.UIElementNames.getLocalized;
 import static de.uni_passau.fim.infosun.prophet.util.qTree.QTreeNode.Type.EXPERIMENT;
@@ -137,7 +131,7 @@ public class MailPlugin implements Plugin {
             return;
         }
 
-        enabled = Boolean.parseBoolean(node.getAttribute(KEY).getValue());
+        enabled = node.containsAttribute(KEY) && Boolean.parseBoolean(node.getAttribute(KEY).getValue());
 
         if (enabled) {
             Attribute attributes = node.getAttribute(KEY);
@@ -196,24 +190,20 @@ public class MailPlugin implements Plugin {
      *         if there is an error creating or sending the EMail
      */
     private void sendEMail(String subject, String text, File attachmentFile) throws MessagingException {
-        MailAuthenticator auth = new MailAuthenticator(smtpUser, smtpPass);
         Properties properties = new Properties();
 
         properties.setProperty("mail.smtp.host", smtpServer);
         properties.setProperty("mail.smtp.port", String.valueOf(smtpPort));
         properties.setProperty("mail.smtp.auth", "true");
 
-        if (smtpSec.equals(SEC_STARTTLS) || smtpSec.equals(SEC_SSL_TLS)) {
+        if (SEC_STARTTLS.equals(smtpSec)) {
             properties.setProperty("mail.smtp.starttls.enable", "true");
+        } else if (SEC_SSL_TLS.equals(smtpSec)) {
+            properties.setProperty("mail.smtp.ssl.enable", "true");
         }
 
-        if (smtpSec.equals(SEC_SSL_TLS)) {
-            properties.setProperty("mail.smtp.socketFactory.port", String.valueOf(smtpPort));
-            properties.setProperty("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
-            properties.setProperty("mail.smtp.socketFactory.fallback", "false");
-        }
-
-        Session session = Session.getDefaultInstance(properties, auth);
+        Session session = Session.getInstance(properties);
+        Transport transport = session.getTransport("smtp");
         Message message = new MimeMessage(session);
 
         MimeMultipart content = new MimeMultipart();
@@ -237,37 +227,11 @@ public class MailPlugin implements Plugin {
         message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(smtpReceiver, false));
         message.setSubject(subject);
 
-        Transport.send(message);
-    }
-
-    /**
-     * An <code>Authenticator</code> that can be initialized with a username and password and will henceforth
-     * return an instance of <code>PasswordAuthentication</code> containing that information.
-     */
-    private static class MailAuthenticator extends Authenticator {
-
-        private final PasswordAuthentication auth;
-
-        /**
-         * Constructs a new <code>MailAuthenticator</code> that will provide a <code>PasswordAuthentication</code>
-         * containing the given username and password upon request.
-         *
-         * @param userName the username for the authentication
-         * @param password the password for the authentication
-         */
-        public MailAuthenticator(String userName, String password) {
-            auth = new PasswordAuthentication(userName, password);
-        }
-
-        /**
-         * Returns the <code>PasswordAuthentication</code> constructed from the username and password this instance
-         * of <code>MailAuthenticator</code> was initialized with.
-         *
-         * @return the <code>PasswordAuthentication</code> containing the username and password
-         */
-        @Override
-        protected PasswordAuthentication getPasswordAuthentication() {
-            return auth;
+        try {
+            transport.connect(smtpUser, smtpPass);
+            transport.sendMessage(message, message.getAllRecipients());
+        } finally {
+            transport.close();
         }
     }
 }
