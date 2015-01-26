@@ -228,6 +228,8 @@ public class EViewer extends JFrame {
         }
 
         ViewNode newViewNode;
+        QTreeNode newTreeNode;
+        
         boolean doNotShow;
         int newIndex = currentIndex;
 
@@ -244,8 +246,11 @@ public class EViewer extends JFrame {
             }
 
             newViewNode = experiment.get(newIndex);
-            doNotShow = Boolean.parseBoolean(newViewNode.getTreeNode().getAttribute(KEY_DONOTSHOWCONTENT).getValue());
-        } while (doNotShow || PluginList.denyEnterNode(newViewNode.getTreeNode()));
+            newTreeNode = newViewNode.getTreeNode();
+            
+            doNotShow = newTreeNode.containsAttribute(KEY_DONOTSHOWCONTENT);  
+            doNotShow &= Boolean.parseBoolean(newTreeNode.getAttribute(KEY_DONOTSHOWCONTENT).getValue());
+        } while (doNotShow || PluginList.denyEnterNode(newTreeNode));
 
         switchNode(newIndex);
     }
