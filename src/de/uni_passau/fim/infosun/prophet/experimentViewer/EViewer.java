@@ -42,7 +42,8 @@ public class EViewer extends JFrame {
     private static final int WIDTH = 800;
     private static final int HEIGHT = 600;
     private static final int LOAD_FAIL_EXIT_STATUS = 1;
-    private static final String DEFAULT_EXP_CODE = "default";
+    private static final String NO_EXP_CODE = "NoExperimentCode";
+    private static final String NO_SUBJ_CODE = "NoSubjectCode";
 
     private QTreeNode expTreeRoot;
     private List<ViewNode> experiment; // the experiment tree in pre-order
@@ -410,34 +411,40 @@ public class EViewer extends JFrame {
      * @return the save directory or <code>null</code>
      */
     public File getSaveDir() {
-        if (saveDir == null) {
-            final String dirName;
-            String[] subjectCodeAns = expTreeRoot.getAnswers(KEY_SUBJECT_CODE);
-            String experimentCode;
-            String subjectCode;
 
-            if (subjectCodeAns != null && subjectCodeAns.length == 1) {
-                subjectCode = subjectCodeAns[0];
-                experimentCode = expTreeRoot.getAttribute(KEY_EXPERIMENT_CODE).getValue();
+        if (saveDir != null) {
+            return saveDir;
+        }
 
-                if (experimentCode == null) {
-                    experimentCode = DEFAULT_EXP_CODE;
-                }
+        String[] subjectCodeAns = expTreeRoot.getAnswers(KEY_SUBJECT_CODE);
+        String experimentCode;
+        String subjectCode;
+        String dirName;
 
-                dirName = experimentCode + '_' + subjectCode;
-                saveDir = new File(dirName);
+        if (subjectCodeAns != null && subjectCodeAns.length >= 1) {
+            subjectCode = subjectCodeAns[0].trim();
+            subjectCode = (subjectCode.isEmpty()) ? NO_SUBJ_CODE : subjectCode;
 
-                if (saveDir.exists()) {
-                    IntFunction<File> mapper = value -> new File(dirName + '_' + value);
-                    Stream<File> dirs = IntStream.rangeClosed(1, Integer.MAX_VALUE).mapToObj(mapper);
+            if (expTreeRoot.containsAttribute(KEY_EXPERIMENT_CODE)) {
+                experimentCode = expTreeRoot.getAttribute(KEY_EXPERIMENT_CODE).getValue().trim();
+                experimentCode = (experimentCode.isEmpty()) ? NO_EXP_CODE : experimentCode;
+            } else {
+                experimentCode = NO_EXP_CODE;
+            }
 
-                    saveDir = dirs.filter(f -> !f.exists()).findFirst().get();
-                }
+            dirName = experimentCode + '_' + subjectCode;
+            saveDir = new File(dirName);
 
-                if (!saveDir.mkdirs()) {
-                    System.err.println("Could not create the save directory for the ExperimentViewer.");
-                    saveDir = null;
-                }
+            if (saveDir.exists()) {
+                IntFunction<File> mapper = value -> new File(dirName + '_' + value);
+                Stream<File> dirs = IntStream.rangeClosed(1, Integer.MAX_VALUE).mapToObj(mapper);
+
+                saveDir = dirs.filter(f -> !f.exists()).findFirst().get();
+            }
+
+            if (!saveDir.mkdirs()) {
+                System.err.println("Could not create the save directory for the " + getClass().getSimpleName() + ".");
+                saveDir = null;
             }
         }
 
