@@ -1,17 +1,8 @@
 package de.uni_passau.fim.infosun.prophet.experimentViewer;
 
-import de.uni_passau.fim.infosun.prophet.plugin.PluginList;
-import de.uni_passau.fim.infosun.prophet.util.QuestionViewPane;
-import de.uni_passau.fim.infosun.prophet.util.language.UIElementNames;
-import de.uni_passau.fim.infosun.prophet.util.qTree.Attribute;
-import de.uni_passau.fim.infosun.prophet.util.qTree.QTreeNode;
-import de.uni_passau.fim.infosun.prophet.util.qTree.handlers.QTreeXMLHandler;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-
-import javax.swing.*;
-import javax.swing.filechooser.FileNameExtensionFilter;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -27,10 +18,44 @@ import java.util.function.IntFunction;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.WindowConstants;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
-import static de.uni_passau.fim.infosun.prophet.Constants.*;
+import de.uni_passau.fim.infosun.prophet.plugin.PluginList;
+import de.uni_passau.fim.infosun.prophet.util.QuestionViewPane;
+import de.uni_passau.fim.infosun.prophet.util.language.UIElementNames;
+import de.uni_passau.fim.infosun.prophet.util.qTree.Attribute;
+import de.uni_passau.fim.infosun.prophet.util.qTree.QTreeNode;
+import de.uni_passau.fim.infosun.prophet.util.qTree.handlers.QTreeXMLHandler;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+
+import static de.uni_passau.fim.infosun.prophet.Constants.DEFAULT_FILE;
+import static de.uni_passau.fim.infosun.prophet.Constants.FILE_ANSWERS;
+import static de.uni_passau.fim.infosun.prophet.Constants.KEY_BACKWARD;
+import static de.uni_passau.fim.infosun.prophet.Constants.KEY_DONOTSHOWCONTENT;
+import static de.uni_passau.fim.infosun.prophet.Constants.KEY_EXPERIMENT_CODE;
+import static de.uni_passau.fim.infosun.prophet.Constants.KEY_FORWARD;
+import static de.uni_passau.fim.infosun.prophet.Constants.KEY_ONLY_SHOW_X_CHILDREN;
+import static de.uni_passau.fim.infosun.prophet.Constants.KEY_RANDOMIZE_CHILDREN;
+import static de.uni_passau.fim.infosun.prophet.Constants.KEY_SHOW_NUMBER_OF_CHILDREN;
+import static de.uni_passau.fim.infosun.prophet.Constants.KEY_SUBJECT_CODE;
+import static de.uni_passau.fim.infosun.prophet.Constants.KEY_TIMING;
+import static de.uni_passau.fim.infosun.prophet.Constants.KEY_VIEWER_LANGUAGE;
 import static de.uni_passau.fim.infosun.prophet.util.language.UIElementNames.getLocalized;
-import static javax.swing.JOptionPane.*;
+import static javax.swing.JOptionPane.ERROR_MESSAGE;
+import static javax.swing.JOptionPane.INFORMATION_MESSAGE;
+import static javax.swing.JOptionPane.YES_NO_OPTION;
+import static javax.swing.JOptionPane.YES_OPTION;
+import static javax.swing.JOptionPane.showConfirmDialog;
+import static javax.swing.JOptionPane.showMessageDialog;
 
 /**
  * A viewer for the experiments created with the <code>ExperimentEditor</code>.
@@ -318,7 +343,7 @@ public class EViewer extends JFrame {
 
     /**
      * Ends the experiment and shows a dialog containing the <code>Plugin</code> messages.
-     * The Window will then close.
+     * The window will then close.
      */
     private void endExperiment() {
         experiment.get(0).getStopwatch().pause();
@@ -334,7 +359,8 @@ public class EViewer extends JFrame {
         try {
             QTreeXMLHandler.saveAnswerXML(expTreeRoot, new File(getSaveDir(), FILE_ANSWERS));
         } catch (IOException e) {
-            System.err.println("Could not save the answers.xml. " + e);
+            System.err.println("Could not save the answers.xml.");
+            System.err.println(e.getMessage());
         }
 
         Document doc = Document.createShell("");
