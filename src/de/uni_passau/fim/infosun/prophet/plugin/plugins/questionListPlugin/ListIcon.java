@@ -6,6 +6,9 @@ import java.awt.Graphics;
 import java.awt.Polygon;
 import javax.swing.Icon;
 
+/**
+ * A small <code>Icon</code> used by the <code>QuestionList</code>. 
+ */
 public class ListIcon implements Icon {
 
     public static final int NOICON = -1;
@@ -15,6 +18,12 @@ public class ListIcon implements Icon {
 
     private int type;
 
+    /**
+     * Constructs a new <code>ListIcon</code> of the specified type.
+     * <code>type</code> must be one of {@link #NOICON}, {@link #DOWNARROW}, {@link #UPDOWNARROW}, {@link #CIRCLE}.  
+     * 
+     * @param type the type of the <code>ListIcon</code>
+     */
     public ListIcon(int type) {
         this.type = type;
     }
@@ -31,8 +40,10 @@ public class ListIcon implements Icon {
 
     @Override
     public void paintIcon(Component c, Graphics g, int x, int y) {
+        
         if (type != NOICON) {
             g.setColor(Color.BLACK);
+            
             if (type == DOWNARROW || type == UPDOWNARROW) {
                 // draw arrow down
                 Polygon p = new Polygon();
@@ -46,6 +57,7 @@ public class ListIcon implements Icon {
                 g.drawPolygon(p);
                 g.fillPolygon(p);
             }
+            
             if (type == UPDOWNARROW) {
                 // draw arrow up
                 Polygon p = new Polygon();
@@ -59,6 +71,7 @@ public class ListIcon implements Icon {
                 g.drawPolygon(p);
                 g.fillPolygon(p);
             }
+            
             if (type == CIRCLE) {
                 g.drawRoundRect(6, 6, 5, 5, 4, 4);
             }
