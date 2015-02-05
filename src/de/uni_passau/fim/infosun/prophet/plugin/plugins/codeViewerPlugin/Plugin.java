@@ -22,11 +22,29 @@ public interface Plugin {
      */
     Setting getSetting(Attribute mainAttribute);
 
+    /**
+     * Called after a new <code>CodeViewer</code> was created.
+     * 
+     * @param viewer the <code>CodeViewer</code> that was created
+     */
     void onCreate(CodeViewer viewer);
 
+    /**
+     * Called after a new editor panel in the <code>CodeViewer</code> was created.
+     * 
+     * @param editorPanel the created <code>EditorPanel</code>
+     */
     void onEditorPanelCreate(EditorPanel editorPanel);
 
+    /**
+     * Called after an editor panel of the <code>CodeViewer</code> was closed.
+     * 
+     * @param editorPanel the closed <code>EditorPanel</code>
+     */
     void onEditorPanelClose(EditorPanel editorPanel);
 
+    /**
+     * Called after the <code>CodeViewer</code> was closed.
+     */
     void onClose();
 }
