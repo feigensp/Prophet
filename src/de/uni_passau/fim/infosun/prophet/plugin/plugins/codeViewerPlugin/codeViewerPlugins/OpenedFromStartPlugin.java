@@ -39,10 +39,11 @@ public class OpenedFromStartPlugin implements Plugin {
 
     @Override
     public void onFrameCreate(CodeViewer viewer) {
-        if (Boolean.parseBoolean(selected.getSubAttribute(KEY).getValue())) {
+
+        if (selected.containsSubAttribute(KEY) && Boolean.parseBoolean(selected.getSubAttribute(KEY).getValue())) {
             Attribute attributes = selected.getSubAttribute(KEY);
             String path = attributes.getSubAttribute(KEY_PATH).getValue();
-            File file = new File(path);
+            File file = new File(viewer.getShowDir(), path);
 
             viewer.getTabbedPane().openFile(file);
             viewer.getFileTree().selectFile(file);
