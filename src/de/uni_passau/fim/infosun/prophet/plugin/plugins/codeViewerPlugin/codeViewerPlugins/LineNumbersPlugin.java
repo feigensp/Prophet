@@ -24,12 +24,8 @@ public class LineNumbersPlugin implements Plugin {
     }
 
     @Override
-    public void init(Attribute selected) {
-        this.selected = selected;
-    }
-
-    @Override
-    public void onFrameCreate(CodeViewer viewer) {
+    public void onCreate(CodeViewer viewer) {
+        this.selected = viewer.getAttribute();        
     }
 
     @Override
@@ -40,9 +36,11 @@ public class LineNumbersPlugin implements Plugin {
 
     @Override
     public void onClose() {
+        
     }
 
     @Override
     public void onEditorPanelClose(EditorPanel editorPanel) {
+        
     }
 }

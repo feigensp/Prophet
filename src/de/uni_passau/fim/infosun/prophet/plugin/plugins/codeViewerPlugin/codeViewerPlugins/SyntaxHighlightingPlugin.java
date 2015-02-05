@@ -31,8 +31,10 @@ public class SyntaxHighlightingPlugin implements Plugin {
     }
 
     @Override
-    public void init(Attribute selected) {
-        enabled = Boolean.parseBoolean(selected.getSubAttribute(KEY).getValue());
+    public void onCreate(CodeViewer viewer) {
+        Attribute selected = viewer.getAttribute();
+        enabled = selected.containsSubAttribute(KEY) && Boolean.parseBoolean(selected.getSubAttribute(KEY).getValue());
+        
         if (enabled) {
             extensionMap = new HashMap<>();
 
@@ -57,10 +59,6 @@ public class SyntaxHighlightingPlugin implements Plugin {
             extensionMap.put(".sql", SyntaxConstants.SYNTAX_STYLE_SQL);
             extensionMap.put(".xml", SyntaxConstants.SYNTAX_STYLE_XML);
         }
-    }
-
-    @Override
-    public void onFrameCreate(CodeViewer viewer) {
     }
 
     @Override
@@ -100,7 +98,6 @@ public class SyntaxHighlightingPlugin implements Plugin {
 
     @Override
     public void onEditorPanelClose(EditorPanel editorPanel) {
-        // TODO Auto-generated method stub
-
+        
     }
 }

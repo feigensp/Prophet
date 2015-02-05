@@ -44,9 +44,10 @@ public class CodeViewer extends JFrame implements FileListener {
     private File saveDir;
 
     private Recorder recorder;
+    private Attribute attribute;
 
     /**
-     * Constructs a new <code>CodeViewer</code> taking its settings from the sub-attributes of th given
+     * Constructs a new <code>CodeViewer</code> taking its settings from the sub-attributes of the given
      * <code>Attribute</code>.
      *
      * @param cvAttributes
@@ -69,6 +70,7 @@ public class CodeViewer extends JFrame implements FileListener {
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         setLayout(new BorderLayout());
 
+        this.attribute = cvAttributes;
         this.saveDir = saveDir;
 
         if (cvAttributes.containsSubAttribute(KEY_PATH)) {
@@ -115,9 +117,8 @@ public class CodeViewer extends JFrame implements FileListener {
 
         add(splitPane, BorderLayout.CENTER);
 
-        CodeViewerPluginList.init(cvAttributes);
         recorder.onFrameCreate(this);
-        CodeViewerPluginList.onFrameCreate(this);
+        CodeViewerPluginList.onCreate(this);
 
         pack();
     }
@@ -177,6 +178,16 @@ public class CodeViewer extends JFrame implements FileListener {
         return saveDir;
     }
 
+    /**
+     * Returns the main <code>Attribute</code> of the <code>CodeViewerPlugin</code> this <code>CodeViewer</code> belongs
+     * to. <code>Plugins</code> may take their settings from the sub-attributes of this <code>Attribute</code>.
+     * 
+     * @return the main <code>Attribute</code> of this <code>CodeViewer</code>
+     */
+    public Attribute getAttribute() {
+        return attribute;
+    }
+    
     /**
      * Adds a <code>JMenu</code> to the <code>JMenuBar</code> this <code>CodeViewer</code> uses.
      *

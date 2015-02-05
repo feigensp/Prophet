@@ -38,20 +38,10 @@ public class CodeViewerPluginList {
         return plugins.stream().map(p -> p.getSetting(attribute)).filter(s -> s != null).collect(Collectors.toList());
     }
 
-    public static void init(Attribute selected) {
+    public static void onCreate(CodeViewer viewer) {
         for (Plugin plugin : plugins) {
             try {
-                plugin.init(selected);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public static void onFrameCreate(CodeViewer viewer) {
-        for (Plugin plugin : plugins) {
-            try {
-                plugin.onFrameCreate(viewer);
+                plugin.onCreate(viewer);
             } catch (Exception e) {
                 e.printStackTrace();
             }

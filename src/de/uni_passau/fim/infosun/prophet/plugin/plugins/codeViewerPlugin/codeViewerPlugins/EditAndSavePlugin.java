@@ -30,10 +30,11 @@ import static de.uni_passau.fim.infosun.prophet.util.language.UIElementNames.get
 public class EditAndSavePlugin implements Plugin {
 
     public final static String KEY = "editable";
-    private boolean editable;
+    
     private EditorTabbedPane tabbedPane;
     private File saveDir;
-    Map<EditorPanel, Boolean> isChanged;
+    private Map<EditorPanel, Boolean> isChanged;
+    private boolean editable;
 
     @Override
     public Setting getSetting(Attribute mainAttribute) {
@@ -46,12 +47,10 @@ public class EditAndSavePlugin implements Plugin {
     }
 
     @Override
-    public void init(Attribute selected) {
-        editable = Boolean.parseBoolean(selected.getSubAttribute(KEY).getValue());
-    }
-
-    @Override
-    public void onFrameCreate(CodeViewer viewer) {
+    public void onCreate(CodeViewer viewer) {
+        Attribute attr = viewer.getAttribute();
+        editable = attr.containsSubAttribute(KEY) && Boolean.parseBoolean(attr.getSubAttribute(KEY).getValue());
+        
         if (editable) {
             tabbedPane = viewer.getTabbedPane();
             saveDir = new File(viewer.getSaveDir().getPath() + System.getProperty("file.separator") + "savedFiles");

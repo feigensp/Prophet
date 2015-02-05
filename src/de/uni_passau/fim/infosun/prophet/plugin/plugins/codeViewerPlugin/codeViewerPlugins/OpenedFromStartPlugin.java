@@ -33,12 +33,9 @@ public class OpenedFromStartPlugin implements Plugin {
     }
 
     @Override
-    public void init(Attribute selected) {
-        this.selected = selected;
-    }
-
-    @Override
-    public void onFrameCreate(CodeViewer viewer) {
+    public void onCreate(CodeViewer viewer) {
+        this.selected = viewer.getAttribute();
+        
         if (Boolean.parseBoolean(selected.getSubAttribute(KEY).getValue())) {
             Attribute attributes = selected.getSubAttribute(KEY);
             String path = attributes.getSubAttribute(KEY_PATH).getValue();

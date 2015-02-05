@@ -58,14 +58,11 @@ public class SearchBarPlugin implements Plugin {
     }
 
     @Override
-    public void init(Attribute selected) {
-        this.selected = selected;
-        this.enabled = Boolean.parseBoolean(selected.getSubAttribute(KEY).getValue());
-    }
-
-    @Override
-    public void onFrameCreate(CodeViewer v) {
-        viewer = v;
+    public void onCreate(CodeViewer v) {
+        this.selected = v.getAttribute();
+        this.enabled = selected.containsSubAttribute(KEY) && Boolean.parseBoolean(selected.getSubAttribute(KEY).getValue());
+        this.viewer = v;
+        
         if (enabled) {
             map = new HashMap<>();
             JMenuItem findMenuItem = new JMenuItem(UIElementNames.getLocalized("SEARCH_BAR_MENU_SEARCH"));

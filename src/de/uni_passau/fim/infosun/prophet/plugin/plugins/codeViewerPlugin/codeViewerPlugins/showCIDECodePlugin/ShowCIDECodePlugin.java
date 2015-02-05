@@ -74,25 +74,24 @@ public class ShowCIDECodePlugin implements Plugin {
         return pluginSettings;
     }
 
-    @Override
-    public void init(Attribute selected) {
-        enabled = Boolean.parseBoolean(selected.getSubAttribute(KEY).getValue());
-        if (enabled) {
-            try {
-                Attribute attributes = selected.getSubAttribute(KEY);
-                path = attributes.getSubAttribute(CIDE_INFO_PATH).getValue()
-                        .replace('/', System.getProperty("file.separator").charAt(0));
-                coloringInfos = loadXMLTree(path);
-            } catch (FileNotFoundException e) {
-                //TODO: Fehler
-                e.printStackTrace();
-            }
-        }
-    }
+//    @Override
+//    public void init(Attribute selected) {
+//        enabled = Boolean.parseBoolean(selected.getSubAttribute(KEY).getValue());
+//        if (enabled) {
+//            try {
+//                Attribute attributes = selected.getSubAttribute(KEY);
+//                path = attributes.getSubAttribute(CIDE_INFO_PATH).getValue()
+//                        .replace('/', System.getProperty("file.separator").charAt(0));
+//                coloringInfos = loadXMLTree(path);
+//            } catch (FileNotFoundException e) {
+//                //TODO: Fehler
+//                e.printStackTrace();
+//            }
+//        }
+//    }
 
     @Override
-    public void onFrameCreate(CodeViewer viewer) {
-        // TODO Auto-generated method stub
+    public void onCreate(CodeViewer viewer) {
 
     }
 
