@@ -15,6 +15,8 @@ public interface Plugin {
 
     /**
      * Returns the <code>Setting</code> object of the <code>Plugin</code> for the given <code>Node</code>.
+     * <code>Plugin</code>s may use the <code>node</code> to obtain <code>Attribute</code>s for their 
+     * <code>Setting</code>.
      *
      * @param node
      *         the node to get the <code>Setting</code> for
