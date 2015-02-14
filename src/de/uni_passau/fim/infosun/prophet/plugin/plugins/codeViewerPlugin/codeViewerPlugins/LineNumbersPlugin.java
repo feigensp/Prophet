@@ -8,10 +8,15 @@ import de.uni_passau.fim.infosun.prophet.util.qTree.Attribute;
 import de.uni_passau.fim.infosun.prophet.util.settings.Setting;
 import de.uni_passau.fim.infosun.prophet.util.settings.components.SettingsCheckBox;
 
+/**
+ * A <code>Plugin</code> that enables/disables displaying line numbers in the <code>EditorPanel</code>s of the 
+ * <code>CodeViewer</code>.
+ */
 public class LineNumbersPlugin implements Plugin {
 
     public static final String KEY = "linenumbers";
-    private Attribute selected;
+    
+    private boolean enabled;
 
     @Override
     public Setting getSetting(Attribute mainAttribute) {
@@ -25,13 +30,13 @@ public class LineNumbersPlugin implements Plugin {
 
     @Override
     public void onCreate(CodeViewer viewer) {
-        this.selected = viewer.getAttribute();        
+        Attribute attr = viewer.getAttribute();
+        enabled = attr.containsSubAttribute(KEY) && Boolean.parseBoolean(attr.getSubAttribute(KEY).getValue());
     }
 
     @Override
     public void onEditorPanelCreate(EditorPanel editorPanel) {
-        boolean lineNumbers = Boolean.parseBoolean(selected.getSubAttribute("linenumbers_default").getValue());
-        editorPanel.getScrollPane().setLineNumbersEnabled(lineNumbers);
+        editorPanel.getScrollPane().setLineNumbersEnabled(enabled);
     }
 
     @Override
