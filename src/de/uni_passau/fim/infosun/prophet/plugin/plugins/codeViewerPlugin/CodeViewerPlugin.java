@@ -88,7 +88,7 @@ public class CodeViewerPlugin implements Plugin {
 
     @Override
     public void enterNode(QTreeNode node) {
-        boolean enabled = Boolean.parseBoolean(node.getAttribute(KEY).getValue());
+        boolean enabled = node.containsAttribute(KEY) && Boolean.parseBoolean(node.getAttribute(KEY).getValue());
 
         if (!enabled) {
             return;
