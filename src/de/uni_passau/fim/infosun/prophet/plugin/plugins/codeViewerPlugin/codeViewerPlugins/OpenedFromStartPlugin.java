@@ -11,11 +11,14 @@ import de.uni_passau.fim.infosun.prophet.util.settings.PluginSettings;
 import de.uni_passau.fim.infosun.prophet.util.settings.Setting;
 import de.uni_passau.fim.infosun.prophet.util.settings.components.SettingsTextField;
 
+/**
+ * A <code>Plugin</code> that enables having a file opened immediately after the a <code>CodeViewer</code> was
+ * opened.
+ */
 public class OpenedFromStartPlugin implements Plugin {
 
     public static final String KEY = "openedByStart";
     public static final String KEY_PATH = "startPath";
-    private Attribute selected;
 
     @Override
     public Setting getSetting(Attribute mainAttribute) {
@@ -34,11 +37,10 @@ public class OpenedFromStartPlugin implements Plugin {
 
     @Override
     public void onCreate(CodeViewer viewer) {
-        this.selected = viewer.getAttribute();
+        Attribute attr = viewer.getAttribute();
         
-        if (Boolean.parseBoolean(selected.getSubAttribute(KEY).getValue())) {
-            Attribute attributes = selected.getSubAttribute(KEY);
-            String path = attributes.getSubAttribute(KEY_PATH).getValue();
+        if (attr.containsSubAttribute(KEY) && Boolean.parseBoolean(attr.getSubAttribute(KEY).getValue())) {
+            String path = attr.getSubAttribute(KEY).getSubAttribute(KEY_PATH).getValue();
             File file = new File(path);
 
             viewer.getTabbedPane().openFile(file);
