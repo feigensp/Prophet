@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.JMenuItem;
@@ -61,43 +63,12 @@ public class EditAndSavePlugin implements Plugin {
         JMenuItem saveMenuItem = new JMenuItem(getLocalized("EDIT_AND_SAVE_SAVE"));
         saveMenuItem.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.Event.CTRL_MASK));
         viewer.addMenuItemToFileMenu(saveMenuItem);
-        saveMenuItem.addActionListener(e -> saveActiveFile());
+        saveMenuItem.addActionListener(e -> saveActiveEditorPanel());
         JMenuItem saveAllMenuItem = new JMenuItem(getLocalized("EDIT_AND_SAVE_SAVE_ALL"));
         saveAllMenuItem.setAccelerator(KeyStroke
                 .getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.Event.CTRL_MASK | java.awt.Event.SHIFT_MASK));
         viewer.addMenuItemToFileMenu(saveAllMenuItem);
-        saveAllMenuItem.addActionListener(event -> saveAllFiles());
-    }
-
-    private void saveActiveFile() {
-        Component activeComp = tabbedPane.getSelectedComponent();
-        if (activeComp != null && activeComp instanceof EditorPanel) {
-            saveEditorPanel((EditorPanel) activeComp);
-        }
-    }
-
-    private void saveAllFiles() {
-        for (int i = 0; i < tabbedPane.getTabCount(); i++) {
-            Component myComp = tabbedPane.getComponentAt(i);
-            if (myComp instanceof EditorPanel) {
-                saveEditorPanel((EditorPanel) myComp);
-            }
-        }
-    }
-
-    private void saveEditorPanel(EditorPanel editorPanel) {
-        File file = new File(saveDir.getPath() + editorPanel.getFile().getName());
-        FileWriter fileWriter = null;
-        try {
-            file.getParentFile().mkdirs();
-            fileWriter = new FileWriter(file);
-            fileWriter.write(editorPanel.getTextArea().getText());
-            fileWriter.flush();
-            fileWriter.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        isChanged.put(editorPanel, false);
+        saveAllMenuItem.addActionListener(event -> saveAllEditorPanels());
     }
 
     @Override
@@ -196,12 +167,59 @@ public class EditAndSavePlugin implements Plugin {
             int n = JOptionPane.showConfirmDialog(null, getLocalized("EDIT_AND_SAVE_DIALOG_SAVE_CHANGES") + "?",
                     getLocalized("EDIT_AND_SAVE_SAVE") + "?", JOptionPane.YES_NO_OPTION);
             if (n == JOptionPane.YES_OPTION) {
-                saveAllFiles();
+                saveAllEditorPanels();
             }
         }
         isChanged = null;
     }
 
+    /**
+     * Saves the <code>EditorPanel</code> that is currently selected in the <code>tabbedPane</code>.  
+     */
+    private void saveActiveEditorPanel() {
+        Component activeComp = tabbedPane.getSelectedComponent();
+
+        if (activeComp != null && activeComp instanceof EditorPanel) {
+            saveEditorPanel((EditorPanel) activeComp);
+        }
+    }
+
+    /**
+     * Saves all <code>EditorPanel</code>s that are currently open in the <code>tabbedPane</code>.
+     */
+    private void saveAllEditorPanels() {
+
+        for (int i = 0; i < tabbedPane.getTabCount(); i++) {
+            Component myComp = tabbedPane.getComponentAt(i);
+
+            if (myComp instanceof EditorPanel) {
+                saveEditorPanel((EditorPanel) myComp);
+            }
+        }
+    }
+
+    /**
+     * Saves the contents of the given <code>editorPanel</code> to a <code>File</code> (of the original name) in the
+     * directory <code>saveDir</code>.
+     *
+     * @param editorPanel
+     *         the <code>EditorPanel</code> whose contents are to be saved
+     */
+    private void saveEditorPanel(EditorPanel editorPanel) {
+        File file = new File(saveDir.getPath() + editorPanel.getFile().getName());
+        FileWriter fileWriter = null;
+        try {
+            file.getParentFile().mkdirs();
+            fileWriter = new FileWriter(file);
+            fileWriter.write(editorPanel.getTextArea().getText());
+            fileWriter.flush();
+            fileWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        isChanged.put(editorPanel, false);
+    }
+    
     /**
      * Removes all <code>DocumentListener</code>s from the given <code>RSyntaxDocument</code> and returns them.
      *
@@ -233,5 +251,20 @@ public class EditAndSavePlugin implements Plugin {
         for (DocumentListener listener : listeners) {
             doc.addDocumentListener(listener);
         }
+    }
+
+    /**
+     * Returns the contents of the given <code>File</code> as a <code>String</code>. This assumes UTF-8 encoding.
+     *
+     * @param f
+     *         the <code>File</code> to read
+     *
+     * @return the contents of the <code>File</code>
+     *
+     * @throws IOException
+     *         if there is an <code>IOException</code> reading the <code>File</code>
+     */
+    private String readFile(File f) throws IOException {
+        return new String(Files.readAllBytes(f.toPath()), StandardCharsets.UTF_8).intern();
     }
 }
