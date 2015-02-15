@@ -7,8 +7,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.HashSet;
+import java.util.Set;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
@@ -31,12 +31,21 @@ import static de.uni_passau.fim.infosun.prophet.util.language.UIElementNames.get
 
 public class EditAndSavePlugin implements Plugin {
 
-    public final static String KEY = "editable";
-    
-    private EditorTabbedPane tabbedPane;
+    private static final String KEY = "editable";
+    private static final String DIR_NAME = "savedFiles";
+
     private File saveDir;
-    private Map<EditorPanel, Boolean> isChanged;
+    private EditorTabbedPane tabbedPane;
+    private Set<EditorPanel> isChanged;
+    
     private boolean enabled;
+
+    /**
+     * Constructs a new <code>EditAndSavePlugin</code>.
+     */
+    public EditAndSavePlugin() {
+        isChanged = new HashSet<>();
+    }
 
     @Override
     public Setting getSetting(Attribute mainAttribute) {
@@ -58,21 +67,22 @@ public class EditAndSavePlugin implements Plugin {
         }
 
         tabbedPane = viewer.getTabbedPane();
-        saveDir = new File(viewer.getSaveDir().getPath() + System.getProperty("file.separator") + "savedFiles");
-        isChanged = new HashMap<>();
+        saveDir = new File(viewer.getSaveDir(), DIR_NAME);
+        
         JMenuItem saveMenuItem = new JMenuItem(getLocalized("EDIT_AND_SAVE_SAVE"));
         saveMenuItem.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.Event.CTRL_MASK));
-        viewer.addMenuItemToFileMenu(saveMenuItem);
         saveMenuItem.addActionListener(e -> saveActiveEditorPanel());
+        viewer.addMenuItemToFileMenu(saveMenuItem);
+        
         JMenuItem saveAllMenuItem = new JMenuItem(getLocalized("EDIT_AND_SAVE_SAVE_ALL"));
         saveAllMenuItem.setAccelerator(KeyStroke
                 .getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.Event.CTRL_MASK | java.awt.Event.SHIFT_MASK));
-        viewer.addMenuItemToFileMenu(saveAllMenuItem);
         saveAllMenuItem.addActionListener(event -> saveAllEditorPanels());
+        viewer.addMenuItemToFileMenu(saveAllMenuItem);
     }
 
     @Override
-    public void onEditorPanelCreate(final EditorPanel editorPanel) {
+    public void onEditorPanelCreate(EditorPanel editorPanel) {
         
         if (!enabled) {
             return;
@@ -106,7 +116,7 @@ public class EditAndSavePlugin implements Plugin {
         textArea.getDocument().addDocumentListener(new DocumentListener() {
 
             private void changeOccured() {
-                isChanged.put(editorPanel, true);
+                isChanged.add(editorPanel);
             }
 
             @Override
@@ -133,14 +143,14 @@ public class EditAndSavePlugin implements Plugin {
             return;
         }
 
-        Boolean changed = isChanged.get(editorPanel);
-        if (changed != null && changed) {
+        if (isChanged.contains(editorPanel)) {
             int n = JOptionPane.showConfirmDialog(null, getLocalized("EDIT_AND_SAVE_DIALOG_SAVE_CHANGES") + "?",
                     getLocalized("EDIT_AND_SAVE_SAVE") + "?", JOptionPane.YES_NO_OPTION);
             if (n == JOptionPane.YES_OPTION) {
                 saveEditorPanel(editorPanel);
             }
         }
+        
         isChanged.remove(editorPanel);
     }
 
@@ -154,15 +164,13 @@ public class EditAndSavePlugin implements Plugin {
         boolean ask = false;
         for (int i = 0; i < tabbedPane.getTabCount(); i++) {
             Component myComp = tabbedPane.getComponentAt(i);
-            if (myComp instanceof EditorPanel) {
-                Boolean changed = isChanged.get(myComp);
-                System.out.println(changed);
-                if (changed != null && changed) {
-                    ask = true;
-                    break;
-                }
+            
+            if (myComp instanceof EditorPanel && isChanged.contains(myComp)) {
+                ask = true;
+                break;
             }
         }
+        
         if (ask) {
             int n = JOptionPane.showConfirmDialog(null, getLocalized("EDIT_AND_SAVE_DIALOG_SAVE_CHANGES") + "?",
                     getLocalized("EDIT_AND_SAVE_SAVE") + "?", JOptionPane.YES_NO_OPTION);
@@ -170,7 +178,10 @@ public class EditAndSavePlugin implements Plugin {
                 saveAllEditorPanels();
             }
         }
-        isChanged = null;
+
+        saveDir = null;
+        tabbedPane = null;
+        isChanged.clear();
     }
 
     /**
@@ -217,7 +228,8 @@ public class EditAndSavePlugin implements Plugin {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        isChanged.put(editorPanel, false);
+        
+        isChanged.remove(editorPanel);
     }
     
     /**
