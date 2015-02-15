@@ -3,8 +3,10 @@ package de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeVi
 import java.awt.Component;
 import java.awt.event.KeyEvent;
 import java.io.File;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.HashSet;
@@ -70,6 +72,10 @@ public class EditAndSavePlugin implements Plugin {
 
         tabbedPane = viewer.getTabbedPane();
         saveDir = new File(viewer.getSaveDir(), DIR_NAME);
+        
+        if (!saveDir.mkdirs()) {
+            System.err.println("Could not create the directory to save files in.");
+        }
         
         JMenuItem saveMenuItem = new JMenuItem(getLocalized("EDIT_AND_SAVE_SAVE"));
         saveMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, CTRL_MASK));
@@ -167,21 +173,12 @@ public class EditAndSavePlugin implements Plugin {
             return;
         }
 
-        boolean ask = false;
-        for (int i = 0; i < tabbedPane.getTabCount(); i++) {
-            Component myComp = tabbedPane.getComponentAt(i);
-            
-            if (myComp instanceof EditorPanel && isChanged.contains(myComp)) {
-                ask = true;
-                break;
-            }
-        }
-        
-        if (ask) {
-            int n = JOptionPane.showConfirmDialog(null, getLocalized("EDIT_AND_SAVE_DIALOG_SAVE_CHANGES") + "?",
-                    getLocalized("EDIT_AND_SAVE_SAVE") + "?", JOptionPane.YES_NO_OPTION);
-            if (n == JOptionPane.YES_OPTION) {
-                saveAllEditorPanels();
+        if (!isChanged.isEmpty()) {
+            String msg = getLocalized("EDIT_AND_SAVE_DIALOG_SAVE_CHANGES") + "?";
+            String title = getLocalized("EDIT_AND_SAVE_SAVE") + "?";
+
+            if (JOptionPane.showConfirmDialog(null, msg, title, JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                isChanged.forEach(this::saveEditorPanel);
             }
         }
 
@@ -224,17 +221,14 @@ public class EditAndSavePlugin implements Plugin {
      */
     private void saveEditorPanel(EditorPanel editorPanel) {
         File file = getSaveFile(editorPanel);
-        FileWriter fileWriter = null;
-        try {
-            file.getParentFile().mkdirs();
-            fileWriter = new FileWriter(file);
-            fileWriter.write(editorPanel.getTextArea().getText());
-            fileWriter.flush();
-            fileWriter.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         
+        try (Writer w = new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8)) {
+            w.write(editorPanel.getTextArea().getText());
+        } catch (IOException e) {
+            System.err.println("Could not save an EditorPanels text.");
+            System.err.println(e.getMessage());
+        }
+
         isChanged.remove(editorPanel);
     }
 
