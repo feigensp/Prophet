@@ -3,7 +3,6 @@ package de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeVi
 import java.awt.Component;
 import java.awt.event.KeyEvent;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -91,25 +90,29 @@ public class EditAndSavePlugin implements Plugin {
         }
 
         RSyntaxTextArea textArea = editorPanel.getTextArea();
-        File savedFile = new File(saveDir.getPath() + editorPanel.getFile().getName());
+        File savedFile = getSaveFile(editorPanel);
         
         if (savedFile.exists()) {
             Document doc = textArea.getDocument();
             DocumentListener[] listeners = removeListeners((RSyntaxDocument) doc);
+            
             try {
                 doc.remove(0, doc.getLength());
             } catch (BadLocationException e) {
-                e.printStackTrace();
+                System.err.println("Could not clear the document.");
+                System.err.println(e.getMessage());
             }
-            byte[] buffer = new byte[(int) savedFile.length()];
-            FileInputStream fileStream;
+
             try {
-                fileStream = new FileInputStream(savedFile);
-                fileStream.read(buffer);
-                doc.insertString(0, new String(buffer), null);
-            } catch (Exception e) {
-                e.printStackTrace();
+                doc.insertString(0, readFile(savedFile), null);
+            } catch (BadLocationException e) {
+                System.err.println("Could not insert the contents of the saveFile.");
+                System.err.println(e.getMessage());
+            } catch (IOException e) {
+                System.err.println("Could not read the saveFile.");
+                System.err.println(e.getMessage());
             }
+
             textArea.setCaretPosition(0);
             addListeners((RSyntaxDocument) doc, listeners);
         }
@@ -117,23 +120,23 @@ public class EditAndSavePlugin implements Plugin {
         textArea.setEditable(true);
         textArea.getDocument().addDocumentListener(new DocumentListener() {
 
-            private void changeOccured() {
+            private void changeOccurred() {
                 isChanged.add(editorPanel);
             }
 
             @Override
-            public void changedUpdate(DocumentEvent arg0) {
-//					changeOccured();
+            public void changedUpdate(DocumentEvent event) {
+
             }
 
             @Override
-            public void insertUpdate(DocumentEvent arg0) {
-                changeOccured();
+            public void insertUpdate(DocumentEvent event) {
+                changeOccurred();
             }
 
             @Override
-            public void removeUpdate(DocumentEvent arg0) {
-                changeOccured();
+            public void removeUpdate(DocumentEvent event) {
+                changeOccurred();
             }
         });
     }
@@ -219,7 +222,7 @@ public class EditAndSavePlugin implements Plugin {
      *         the <code>EditorPanel</code> whose contents are to be saved
      */
     private void saveEditorPanel(EditorPanel editorPanel) {
-        File file = new File(saveDir.getPath() + editorPanel.getFile().getName());
+        File file = getSaveFile(editorPanel);
         FileWriter fileWriter = null;
         try {
             file.getParentFile().mkdirs();
@@ -233,7 +236,20 @@ public class EditAndSavePlugin implements Plugin {
         
         isChanged.remove(editorPanel);
     }
-    
+
+    /**
+     * Returns the <code>File</code> in which the contents of the given <code>EditorPanel</code> should be saved
+     * if they are changed.
+     *
+     * @param editorPanel
+     *         the <code>EditorPanel</code> whose <code>savedFile</code> is to be returned
+     *
+     * @return the <code>savedFile</code> for the <code>editorPanel</code>
+     */
+    private File getSaveFile(EditorPanel editorPanel) {
+        return new File(saveDir, editorPanel.getFile().getName());
+    }
+
     /**
      * Removes all <code>DocumentListener</code>s from the given <code>RSyntaxDocument</code> and returns them.
      *
