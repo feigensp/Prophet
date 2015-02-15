@@ -46,15 +46,15 @@ public class EditAndSavePlugin implements Plugin {
 
     private File saveDir;
     private EditorTabbedPane tabbedPane;
-    private Set<EditorPanel> isChanged;
-
+    private Set<EditorPanel> changed;
+    
     private boolean enabled;
 
     /**
      * Constructs a new <code>EditAndSavePlugin</code>.
      */
     public EditAndSavePlugin() {
-        isChanged = new HashSet<>();
+        changed = new HashSet<>();
     }
 
     @Override
@@ -133,7 +133,7 @@ public class EditAndSavePlugin implements Plugin {
         textArea.getDocument().addDocumentListener(new DocumentListener() {
 
             private void changeOccurred() {
-                isChanged.add(editorPanel);
+                changed.add(editorPanel);
             }
 
             @Override
@@ -160,7 +160,7 @@ public class EditAndSavePlugin implements Plugin {
             return;
         }
 
-        if (isChanged.contains(editorPanel)) {
+        if (changed.contains(editorPanel)) {
             String msg = getLocalized("EDIT_AND_SAVE_DIALOG_SAVE_CHANGES") + "?";
             String title = getLocalized("EDIT_AND_SAVE_SAVE") + "?";
 
@@ -168,7 +168,7 @@ public class EditAndSavePlugin implements Plugin {
                 saveEditorPanel(editorPanel);
             }
 
-            isChanged.remove(editorPanel);
+            changed.remove(editorPanel);
         }
     }
 
@@ -179,18 +179,18 @@ public class EditAndSavePlugin implements Plugin {
             return;
         }
 
-        if (!isChanged.isEmpty()) {
+        if (!changed.isEmpty()) {
             String msg = getLocalized("EDIT_AND_SAVE_DIALOG_SAVE_CHANGES") + "?";
             String title = getLocalized("EDIT_AND_SAVE_SAVE") + "?";
 
             if (JOptionPane.showConfirmDialog(null, msg, title, JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-                isChanged.forEach(this::saveEditorPanel);
+                changed.forEach(this::saveEditorPanel);
             }
         }
 
         saveDir = null;
         tabbedPane = null;
-        isChanged.clear();
+        changed.clear();
     }
 
     /**
@@ -230,12 +230,11 @@ public class EditAndSavePlugin implements Plugin {
 
         try (Writer w = new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8)) {
             w.write(editorPanel.getTextArea().getText());
+            changed.remove(editorPanel);
         } catch (IOException e) {
             System.err.println("Could not save an EditorPanels text.");
             System.err.println(e.getMessage());
         }
-
-        isChanged.remove(editorPanel);
     }
 
     /**
