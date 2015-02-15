@@ -34,7 +34,7 @@ public class EditAndSavePlugin implements Plugin {
     private EditorTabbedPane tabbedPane;
     private File saveDir;
     private Map<EditorPanel, Boolean> isChanged;
-    private boolean editable;
+    private boolean enabled;
 
     @Override
     public Setting getSetting(Attribute mainAttribute) {
@@ -49,9 +49,9 @@ public class EditAndSavePlugin implements Plugin {
     @Override
     public void onCreate(CodeViewer viewer) {
         Attribute attr = viewer.getAttribute();
-        editable = attr.containsSubAttribute(KEY) && Boolean.parseBoolean(attr.getSubAttribute(KEY).getValue());
+        enabled = attr.containsSubAttribute(KEY) && Boolean.parseBoolean(attr.getSubAttribute(KEY).getValue());
 
-        if (!editable) {
+        if (!enabled) {
             return;
         }
 
@@ -103,7 +103,7 @@ public class EditAndSavePlugin implements Plugin {
     @Override
     public void onEditorPanelCreate(final EditorPanel editorPanel) {
         
-        if (!editable) {
+        if (!enabled) {
             return;
         }
 
@@ -158,7 +158,7 @@ public class EditAndSavePlugin implements Plugin {
     @Override
     public void onEditorPanelClose(EditorPanel editorPanel) {
 
-        if (!editable) {
+        if (!enabled) {
             return;
         }
 
@@ -176,7 +176,7 @@ public class EditAndSavePlugin implements Plugin {
     @Override
     public void onClose() {
 
-        if (!editable) {
+        if (!enabled) {
             return;
         }
 
