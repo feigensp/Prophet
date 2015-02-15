@@ -33,6 +33,12 @@ import static de.uni_passau.fim.infosun.prophet.util.language.UIElementNames.get
 import static java.awt.event.InputEvent.CTRL_MASK;
 import static java.awt.event.InputEvent.SHIFT_MASK;
 
+/**
+ * A <code>Plugin</code> that enables editing the contents of the <code>CodeViewer</code>s <code>EditorPanel</code>s.
+ * Menu items and keyboard shortcuts to save the currently active panel or all panels will be added to the 
+ * <code>CodeViewer</code>. The edited versions of the files will be saved in a directory under the 
+ * <code>CodeViewer</code>s save directory.
+ */
 public class EditAndSavePlugin implements Plugin {
 
     private static final String KEY = "editable";
