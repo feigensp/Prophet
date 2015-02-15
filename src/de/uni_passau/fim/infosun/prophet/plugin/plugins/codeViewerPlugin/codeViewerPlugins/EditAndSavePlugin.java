@@ -149,14 +149,15 @@ public class EditAndSavePlugin implements Plugin {
         }
 
         if (isChanged.contains(editorPanel)) {
-            int n = JOptionPane.showConfirmDialog(null, getLocalized("EDIT_AND_SAVE_DIALOG_SAVE_CHANGES") + "?",
-                    getLocalized("EDIT_AND_SAVE_SAVE") + "?", JOptionPane.YES_NO_OPTION);
-            if (n == JOptionPane.YES_OPTION) {
+            String msg = getLocalized("EDIT_AND_SAVE_DIALOG_SAVE_CHANGES") + "?";
+            String title = getLocalized("EDIT_AND_SAVE_SAVE") + "?";
+
+            if (JOptionPane.showConfirmDialog(null, msg, title, JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
                 saveEditorPanel(editorPanel);
             }
+
+            isChanged.remove(editorPanel);
         }
-        
-        isChanged.remove(editorPanel);
     }
 
     @Override
