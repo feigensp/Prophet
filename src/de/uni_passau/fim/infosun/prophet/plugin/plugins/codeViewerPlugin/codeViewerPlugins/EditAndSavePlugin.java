@@ -1,6 +1,7 @@
 package de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeViewerPlugins;
 
 import java.awt.Component;
+import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
@@ -28,6 +29,8 @@ import org.fife.ui.rsyntaxtextarea.RSyntaxDocument;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
 import static de.uni_passau.fim.infosun.prophet.util.language.UIElementNames.getLocalized;
+import static java.awt.event.InputEvent.CTRL_MASK;
+import static java.awt.event.InputEvent.SHIFT_MASK;
 
 public class EditAndSavePlugin implements Plugin {
 
@@ -70,13 +73,12 @@ public class EditAndSavePlugin implements Plugin {
         saveDir = new File(viewer.getSaveDir(), DIR_NAME);
         
         JMenuItem saveMenuItem = new JMenuItem(getLocalized("EDIT_AND_SAVE_SAVE"));
-        saveMenuItem.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.Event.CTRL_MASK));
-        saveMenuItem.addActionListener(e -> saveActiveEditorPanel());
+        saveMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, CTRL_MASK));
+        saveMenuItem.addActionListener(event -> saveActiveEditorPanel());
         viewer.addMenuItemToFileMenu(saveMenuItem);
         
         JMenuItem saveAllMenuItem = new JMenuItem(getLocalized("EDIT_AND_SAVE_SAVE_ALL"));
-        saveAllMenuItem.setAccelerator(KeyStroke
-                .getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.Event.CTRL_MASK | java.awt.Event.SHIFT_MASK));
+        saveAllMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, CTRL_MASK | SHIFT_MASK));
         saveAllMenuItem.addActionListener(event -> saveAllEditorPanels());
         viewer.addMenuItemToFileMenu(saveAllMenuItem);
     }
