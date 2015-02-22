@@ -1,7 +1,16 @@
 package de.uni_passau.fim.infosun.prophet.plugin;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import de.uni_passau.fim.infosun.prophet.experimentViewer.EViewer;
-import de.uni_passau.fim.infosun.prophet.plugin.plugins.*;
+import de.uni_passau.fim.infosun.prophet.plugin.plugins.AnswerRequiredPlugin;
+import de.uni_passau.fim.infosun.prophet.plugin.plugins.ExperimentExportPlugin;
+import de.uni_passau.fim.infosun.prophet.plugin.plugins.ExternalProgramsPlugin;
+import de.uni_passau.fim.infosun.prophet.plugin.plugins.InactivityPlugin;
+import de.uni_passau.fim.infosun.prophet.plugin.plugins.MaxTimePlugin;
+import de.uni_passau.fim.infosun.prophet.plugin.plugins.ValidSubjectCodePlugin;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.CodeViewerPlugin;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.mailPlugin.MailPlugin;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.phpExportPlugin.PHPExportPlugin;
@@ -11,13 +20,9 @@ import de.uni_passau.fim.infosun.prophet.util.settings.Setting;
 import org.jsoup.nodes.Element;
 import org.jsoup.parser.Tag;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
 /**
- * A <code>Plugin</code> repository. Allows adding and removing <code>Plugin</code>s as well as calling the methods
- * of the <code>Plugin</code> interface on all currently active <code>Plugin</code>s.
+ * The top level <code>Plugin</code> repository. Allows adding and removing <code>Plugin</code>s as well as calling the
+ * methods of the <code>Plugin</code> interface on all currently active <code>Plugin</code>s.
  *
  * @author Georg Seibt
  * @author Andreas Hasselberg
