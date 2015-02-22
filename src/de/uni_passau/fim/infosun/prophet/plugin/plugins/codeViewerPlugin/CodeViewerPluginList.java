@@ -1,6 +1,7 @@
 package de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,12 +36,12 @@ public class CodeViewerPluginList {
     }
 
 	/**
-	 * Returns all currently active <code>Plugin</code>s.
+	 * Returns an unmodifiable list view of all currently active <code>Plugin</code>s.
 	 *
 	 * @return the list of plugins
 	 */
 	public static List<Plugin> getPlugins() {
-		return plugins;
+		return Collections.unmodifiableList(plugins);
 	}
 
 	/**
