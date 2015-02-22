@@ -22,16 +22,37 @@ import de.uni_passau.fim.infosun.prophet.util.settings.Setting;
 import de.uni_passau.fim.infosun.prophet.util.settings.components.SettingsCheckBox;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
+/**
+ * A <code>Plugin</code> that will enable showing <code>SearchBar</code>s for <code>EditorPanel</code>s opened in the
+ * <code>CodeViewer</code>. <br> <br>
+ * <center>
+ *  <table border="1">
+ *     <caption>Key Bindings</caption>
+ *     <tr>
+ *         <th>Key Combination</th>
+ *         <th>Function</th>
+ *     </tr>
+ *     <tr>
+ *         <td>CTRL + F</td>
+ *         <td>Show SearchBar</td>
+ *     </tr>
+ *	   <tr>
+ *		   <td>CTRL + H</td>
+ *		   <td>Show global SearchBar</td>
+ *	   </tr>
+ * 	</table>
+ * </center>
+ */
 public class SearchBarPlugin implements Plugin {
 
-    public final static String KEY = "searchable";
-    public final static String KEY_DISABLE_REGEX = "disableregex";
-    public final static String KEY_ENABLE_GLOBAL = "enableglobal";
+    public static final String KEY = "searchable";
+    public static final String KEY_DISABLE_REGEX = "disableregex";
+    public static final String KEY_ENABLE_GLOBAL = "enableglobal";
 
-    public final static String TYPE_SEARCH = "search";
-    public final static String ATTRIBUTE_ACTION = "action";
-    public final static String ATTRIBUTE_QUERY = "query";
-    public final static String ATTRIBUTE_SUCCESS = "success";
+    public static final String TYPE_SEARCH = "search";
+    public static final String ATTRIBUTE_ACTION = "action";
+    public static final String ATTRIBUTE_QUERY = "query";
+    public static final String ATTRIBUTE_SUCCESS = "success";
 
 	private Recorder recorder;
     private boolean enabled;
