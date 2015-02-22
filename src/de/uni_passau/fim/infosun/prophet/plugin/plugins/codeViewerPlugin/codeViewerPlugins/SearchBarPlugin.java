@@ -67,17 +67,17 @@ public class SearchBarPlugin implements Plugin {
 
 	@Override
 	public void onCreate(CodeViewer viewer) {
-		Attribute attr = viewer.getAttribute();
-
-		this.enabled = attr.containsSubAttribute(KEY) && Boolean.parseBoolean(attr.getSubAttribute(KEY).getValue());
+		Attribute vAttr = viewer.getAttribute();
+		this.enabled = vAttr.containsSubAttribute(KEY) && Boolean.parseBoolean(vAttr.getSubAttribute(KEY).getValue());
 
 		if (!enabled) {
 			return;
 		}
 
+		Attribute pluginAttr = vAttr.getSubAttribute(KEY);
+
 		this.recorder = viewer.getRecorder();
-		this.regexDisabled = Boolean.parseBoolean(
-				attr.getSubAttribute(KEY).getSubAttribute(KEY_DISABLE_REGEX).getValue());
+		this.regexDisabled = Boolean.parseBoolean(pluginAttr.getSubAttribute(KEY_DISABLE_REGEX).getValue());
 
 		JMenuItem findMenuItem = new JMenuItem(UIElementNames.getLocalized("SEARCH_BAR_MENU_SEARCH"));
 		findMenuItem.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F, java.awt.Event.CTRL_MASK));
@@ -90,9 +90,7 @@ public class SearchBarPlugin implements Plugin {
 		});
 		viewer.addMenuItemToEditMenu(findMenuItem);
 
-		boolean activateGlobal =
-				Boolean.parseBoolean(attr.getSubAttribute(KEY).getSubAttribute(KEY_ENABLE_GLOBAL).getValue());
-		if (activateGlobal) {
+		if (Boolean.parseBoolean(pluginAttr.getSubAttribute(KEY_ENABLE_GLOBAL).getValue())) {
 			globalSearchBar = new GlobalSearchBar(viewer);
 			globalSearchBar.setVisible(false);
 
@@ -104,7 +102,7 @@ public class SearchBarPlugin implements Plugin {
 				viewer.getRecorder().addLoggingTreeNode(node);
 			});
 
-			if (Boolean.parseBoolean(attr.getSubAttribute(KEY).getSubAttribute(KEY_DISABLE_REGEX).getValue())) {
+			if (regexDisabled) {
 				globalSearchBar.getRegexCB().setVisible(false);
 			}
 
