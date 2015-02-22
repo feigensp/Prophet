@@ -135,11 +135,14 @@ public class SearchBarPlugin implements Plugin {
 		RSyntaxTextArea textPane = editorPanel.getTextArea();
 		SearchBar searchBar = new SearchBar(textPane);
 		searchBar.setVisible(false);
+
 		searchBar.addSearchBarListener((action, query, success) -> {
 			LoggingTreeNode node = new LoggingTreeNode(TYPE_SEARCH);
+
 			node.setAttribute(ATTRIBUTE_ACTION, action);
 			node.setAttribute(ATTRIBUTE_QUERY, query);
-			node.setAttribute(ATTRIBUTE_SUCCESS, "" + success);
+			node.setAttribute(ATTRIBUTE_SUCCESS, String.valueOf(success));
+
 			recorder.addLoggingTreeNode(node);
 		});
 
