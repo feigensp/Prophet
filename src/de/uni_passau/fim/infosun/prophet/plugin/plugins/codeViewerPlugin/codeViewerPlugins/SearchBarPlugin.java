@@ -1,6 +1,8 @@
 package de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeViewerPlugins;
 
 import java.awt.BorderLayout;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.JMenuItem;
@@ -80,14 +82,16 @@ public class SearchBarPlugin implements Plugin {
 		this.regexDisabled = Boolean.parseBoolean(pluginAttr.getSubAttribute(KEY_DISABLE_REGEX).getValue());
 
 		JMenuItem findMenuItem = new JMenuItem(UIElementNames.getLocalized("SEARCH_BAR_MENU_SEARCH"));
-		findMenuItem.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F, java.awt.Event.CTRL_MASK));
+		findMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F, InputEvent.CTRL_MASK));
 		findMenuItem.addActionListener(e -> {
-			SearchBar curr = searchBars.get(viewer.getTabbedPane().getSelectedComponent());
-			if (curr != null) {
-				curr.setVisible(true);
-				curr.grabFocus();
+			SearchBar sBar = searchBars.get(viewer.getTabbedPane().getSelectedComponent());
+
+			if (sBar != null) {
+				sBar.setVisible(true);
+				sBar.grabFocus();
 			}
 		});
+
 		viewer.addMenuItemToEditMenu(findMenuItem);
 
 		if (Boolean.parseBoolean(pluginAttr.getSubAttribute(KEY_ENABLE_GLOBAL).getValue())) {
@@ -96,9 +100,11 @@ public class SearchBarPlugin implements Plugin {
 
 			globalSearchBar.addSearchBarListener((action, query, success) -> {
 				LoggingTreeNode node = new LoggingTreeNode(TYPE_SEARCH);
+
 				node.setAttribute(ATTRIBUTE_ACTION, action);
 				node.setAttribute(ATTRIBUTE_QUERY, query);
-				node.setAttribute(ATTRIBUTE_SUCCESS, "" + success);
+				node.setAttribute(ATTRIBUTE_SUCCESS, String.valueOf(success));
+
 				viewer.getRecorder().addLoggingTreeNode(node);
 			});
 
@@ -109,12 +115,12 @@ public class SearchBarPlugin implements Plugin {
 			viewer.add(globalSearchBar, BorderLayout.SOUTH);
 
 			JMenuItem findGlobalMenuItem = new JMenuItem(UIElementNames.getLocalized("SEARCH_BAR_MENU_GLOBAL_SEARCH"));
-			findGlobalMenuItem
-					.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_H, java.awt.Event.CTRL_MASK));
+			findGlobalMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_H, InputEvent.CTRL_MASK));
 			findGlobalMenuItem.addActionListener(event -> {
 				globalSearchBar.setVisible(true);
 				globalSearchBar.grabFocus();
 			});
+
 			viewer.addMenuItemToEditMenu(findGlobalMenuItem);
 		}
 	}
