@@ -27,6 +27,37 @@ public class RecorderPluginList {
         add(new ScrollingPlugin());
     }
 
+	/**
+	 * Returns an unmodifiable list view of all currently active <code>Plugin</code>s.
+	 *
+	 * @return the list of plugins
+	 */
+	public static List<Plugin> getPlugins() {
+		return Collections.unmodifiableList(plugins);
+	}
+
+	/**
+	 * Adds a <code>Plugin</code> to the currently active plugins.
+	 *
+	 * @param plugin
+	 * 		the plugin to be added
+	 */
+	public static void add(Plugin plugin) {
+		plugins.add(plugin);
+	}
+
+	/**
+	 * Removes a <code>Plugin</code> from the currently active plugins.
+	 *
+	 * @param plugin
+	 * 		the plugin to be removed
+	 *
+	 * @return true iff the <code>Plugin</code> was active and has been removed
+	 */
+	public static boolean remove(Plugin plugin) {
+		return plugins.remove(plugin);
+	}
+
     /**
      * Returns the settings for all plugins.
      *
@@ -37,36 +68,5 @@ public class RecorderPluginList {
      */
     public static List<Setting> getAllSettings(Attribute attribute) {
         return plugins.stream().map(p -> p.getSetting(attribute)).filter(s -> s != null).collect(Collectors.toList());
-    }
-
-	/**
-	 * Returns an unmodifiable list view of all currently active <code>Plugin</code>s.
-	 *
-	 * @return the list of plugins
-	 */
-    public static List<Plugin> getPlugins() {
-        return Collections.unmodifiableList(plugins);
-    }
-
-	/**
-	 * Adds a <code>Plugin</code> to the currently active plugins.
-	 *
-	 * @param plugin
-	 * 		the plugin to be added
-	 */
-    public static void add(Plugin plugin) {
-        plugins.add(plugin);
-    }
-
-	/**
-	 * Removes a <code>Plugin</code> from the currently active plugins.
-	 *
-	 * @param plugin
-	 * 		the plugin to be removed
-	 *
-	 * @return true iff the <code>Plugin</code> was active and has been removed
-	 */
-    public static boolean remove(Plugin plugin) {
-        return plugins.remove(plugin);
     }
 }
