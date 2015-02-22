@@ -8,6 +8,7 @@ import javax.swing.KeyStroke;
 
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.CodeViewer;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.Plugin;
+import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.recorder.Recorder;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.recorder.loggingTree.LoggingTreeNode;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.tabbedPane.EditorPanel;
 import de.uni_passau.fim.infosun.prophet.util.language.UIElementNames;
@@ -30,12 +31,19 @@ public class SearchBarPlugin implements Plugin {
     public final static String ATTRIBUTE_QUERY = "query";
     public final static String ATTRIBUTE_SUCCESS = "success";
 
-	private CodeViewer viewer;
-    private Attribute attr;
+	private Recorder recorder;
     private boolean enabled;
+	private boolean regexDisabled;
 
-    private Map<EditorPanel, SearchBar> map;
+    private Map<EditorPanel, SearchBar> searchBars;
     private GlobalSearchBar globalSearchBar;
+
+	/**
+	 * Constructs a new <code>SearchBarPlugin</code>.
+	 */
+	public SearchBarPlugin() {
+		this.searchBars = new HashMap<>();
+	}
 
     @Override
     public Setting getSetting(Attribute mainAttribute) {
@@ -58,20 +66,23 @@ public class SearchBarPlugin implements Plugin {
     }
 
 	@Override
-	public void onCreate(CodeViewer v) {
-		this.attr = v.getAttribute();
+	public void onCreate(CodeViewer viewer) {
+		Attribute attr = viewer.getAttribute();
+
 		this.enabled = attr.containsSubAttribute(KEY) && Boolean.parseBoolean(attr.getSubAttribute(KEY).getValue());
-		this.viewer = v;
 
 		if (!enabled) {
 			return;
 		}
 
-		map = new HashMap<>();
+		this.recorder = viewer.getRecorder();
+		this.regexDisabled = Boolean.parseBoolean(
+				attr.getSubAttribute(KEY).getSubAttribute(KEY_DISABLE_REGEX).getValue());
+
 		JMenuItem findMenuItem = new JMenuItem(UIElementNames.getLocalized("SEARCH_BAR_MENU_SEARCH"));
 		findMenuItem.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F, java.awt.Event.CTRL_MASK));
 		findMenuItem.addActionListener(e -> {
-			SearchBar curr = map.get(viewer.getTabbedPane().getSelectedComponent());
+			SearchBar curr = searchBars.get(viewer.getTabbedPane().getSelectedComponent());
 			if (curr != null) {
 				curr.setVisible(true);
 				curr.grabFocus();
@@ -82,7 +93,7 @@ public class SearchBarPlugin implements Plugin {
 		boolean activateGlobal =
 				Boolean.parseBoolean(attr.getSubAttribute(KEY).getSubAttribute(KEY_ENABLE_GLOBAL).getValue());
 		if (activateGlobal) {
-			globalSearchBar = new GlobalSearchBar(v);
+			globalSearchBar = new GlobalSearchBar(viewer);
 			globalSearchBar.setVisible(false);
 
 			globalSearchBar.addSearchBarListener((action, query, success) -> {
@@ -125,27 +136,33 @@ public class SearchBarPlugin implements Plugin {
 			node.setAttribute(ATTRIBUTE_ACTION, action);
 			node.setAttribute(ATTRIBUTE_QUERY, query);
 			node.setAttribute(ATTRIBUTE_SUCCESS, "" + success);
-			viewer.getRecorder().addLoggingTreeNode(node);
+			recorder.addLoggingTreeNode(node);
 		});
 
-		if (Boolean.parseBoolean(attr.getSubAttribute(KEY).getSubAttribute(KEY_DISABLE_REGEX).getValue())) {
+		if (regexDisabled) {
 			searchBar.getRegexCB().setVisible(false);
 		}
 
 		editorPanel.add(searchBar, BorderLayout.SOUTH);
-		map.put(editorPanel, searchBar);
+		searchBars.put(editorPanel, searchBar);
 	}
 
     @Override
     public void onClose() {
+		enabled = false;
+		regexDisabled = false;
 
+		searchBars.clear();
+
+		recorder = null;
+		globalSearchBar = null;
     }
 
     @Override
     public void onEditorPanelClose(EditorPanel editorPanel) {
 
 		if (enabled) {
-            map.remove(editorPanel);
+            searchBars.remove(editorPanel);
         }
     }
 }
