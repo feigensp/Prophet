@@ -84,7 +84,8 @@ public class CodeViewerPluginList {
 	 * @param viewer the <code>CodeViewer</code> that was created
 	 */
     public static void onCreate(CodeViewer viewer) {
-        for (Plugin plugin : plugins) {
+
+		for (Plugin plugin : plugins) {
             try {
                 plugin.onCreate(viewer);
             } catch (Exception e) {
@@ -101,7 +102,8 @@ public class CodeViewerPluginList {
 	 * 		the created <code>EditorPanel</code>
 	 */
     public static void onEditorPanelCreate(EditorPanel editorPanel) {
-        for (Plugin plugin : plugins) {
+
+		for (Plugin plugin : plugins) {
             try {
                 plugin.onEditorPanelCreate(editorPanel);
             } catch (Exception e) {
@@ -118,7 +120,8 @@ public class CodeViewerPluginList {
 	 * 		the closed <code>EditorPanel</code>
 	 */
     public static void onEditorPanelClose(EditorPanel editorPanel) {
-        for (Plugin plugin : plugins) {
+
+		for (Plugin plugin : plugins) {
             try {
                 plugin.onEditorPanelClose(editorPanel);
             } catch (Exception e) {
@@ -131,7 +134,8 @@ public class CodeViewerPluginList {
 	 * Calls the {@link Plugin#onClose()} method of all currently active plugins.
 	 */
     public static void onClose() {
-        for (Plugin plugin : plugins) {
+
+		for (Plugin plugin : plugins) {
             try {
                 plugin.onClose();
             } catch (Exception e) {
