@@ -18,14 +18,14 @@ import static de.uni_passau.fim.infosun.prophet.util.language.UIElementNames.get
 
 public class ChangePlugin implements Plugin {
 
-    public final static String KEY = "change";
-    public final static String KEY_JOIN = "join";
-    public final static String KEY_JOIN_TIME = "jointime";
-    public final static String TYPE_INSERT = "insert";
-    public final static String TYPE_REMOVE = "remove";
-    public final static String ATTRIBUTE_OFFSET = "offset";
-    public final static String ATTRIBUTE_LENGTH = "length";
-    public final static String ATTRIBUTE_CONTENT = "content";
+    public static final String KEY = "change";
+    public static final String KEY_JOIN = "join";
+    public static final String KEY_JOIN_TIME = "jointime";
+    public static final String TYPE_INSERT = "insert";
+    public static final String TYPE_REMOVE = "remove";
+    public static final String ATTRIBUTE_OFFSET = "offset";
+    public static final String ATTRIBUTE_LENGTH = "length";
+    public static final String ATTRIBUTE_CONTENT = "content";
 
     private boolean enabled;
     private boolean join;

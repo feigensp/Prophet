@@ -135,7 +135,7 @@ public class ButtonTabComponent extends JPanel {
         }
     }
 
-    private final static MouseListener buttonMouseListener = new MouseAdapter() {
+    private static final MouseListener buttonMouseListener = new MouseAdapter() {
 
         @Override
         public void mouseEntered(MouseEvent e) {

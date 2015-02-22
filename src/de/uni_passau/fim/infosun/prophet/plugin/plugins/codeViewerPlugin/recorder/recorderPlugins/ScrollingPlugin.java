@@ -19,13 +19,13 @@ import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
 public class ScrollingPlugin implements Plugin {
 
-    public final static String KEY = "scrolling";
-    public final static String KEY_JOIN = "join";
-    public final static String KEY_JOIN_TIME = "jointime";
+    public static final String KEY = "scrolling";
+    public static final String KEY_JOIN = "join";
+    public static final String KEY_JOIN_TIME = "jointime";
 
-    public final static String TYPE_SCROLLING = "scrolling";
-    public final static String ATTRIBUTE_STARTLINE = "startline";
-    public final static String ATTRIBUTE_ENDLINE = "endline";
+    public static final String TYPE_SCROLLING = "scrolling";
+    public static final String ATTRIBUTE_STARTLINE = "startline";
+    public static final String ATTRIBUTE_ENDLINE = "endline";
 
     private boolean enabled;
     private boolean join;

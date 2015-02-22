@@ -6,10 +6,10 @@ import javax.swing.tree.DefaultMutableTreeNode;
 @SuppressWarnings("serial")
 public class LoggingTreeNode extends DefaultMutableTreeNode {
 
-    public final static String TYPE_LOGFILE = "logfile";
-    public final static String TYPE_FILE = "file";
-    public final static String TYPE_NOFILE = "nofile";
-    public final static String ATTRIBUTE_TIME = "time";
+    public static final String TYPE_LOGFILE = "logfile";
+    public static final String TYPE_FILE = "file";
+    public static final String TYPE_NOFILE = "nofile";
+    public static final String ATTRIBUTE_TIME = "time";
 
     private String type = "(default)";
 

@@ -11,11 +11,11 @@ import de.uni_passau.fim.infosun.prophet.util.settings.Setting;
 
 public class Recorder {
 
-    public final static String KEY = "recorder";
-    public final static String KEY_FILENAME = "filename";
-    public final static String TYPE_OPENED = "opened";
-    public final static String TYPE_CLOSED = "closed";
-    public final static String TYPE_VIEWERCLOSED = "viewerclosed";
+    public static final String KEY = "recorder";
+    public static final String KEY_FILENAME = "filename";
+    public static final String TYPE_OPENED = "opened";
+    public static final String TYPE_CLOSED = "closed";
+    public static final String TYPE_VIEWERCLOSED = "viewerclosed";
     public static final String ATTRIBUTE_PATH = "path";
 
     private LoggingTreeNode rootNode;

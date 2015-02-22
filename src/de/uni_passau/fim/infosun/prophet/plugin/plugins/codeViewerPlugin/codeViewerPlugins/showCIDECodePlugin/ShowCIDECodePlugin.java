@@ -48,7 +48,7 @@ public class ShowCIDECodePlugin implements Plugin {
     public static final String ATTRIBUE_OFFSET = "offset";
     public static final String NODE_FEATURE = "feature";
 
-    final static int rectWidth = 5;
+    static final int rectWidth = 5;
 
     //Pfad --> Liste(offset, length, features)
     HashMap<String, ArrayList<Triple<Integer, Integer, ArrayList<String>>>> coloringInfos;
