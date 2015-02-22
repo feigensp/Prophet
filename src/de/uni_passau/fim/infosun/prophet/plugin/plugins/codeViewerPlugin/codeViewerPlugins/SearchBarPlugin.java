@@ -29,9 +29,9 @@ public class SearchBarPlugin implements Plugin {
     public final static String ATTRIBUTE_ACTION = "action";
     public final static String ATTRIBUTE_QUERY = "query";
     public final static String ATTRIBUTE_SUCCESS = "success";
-    private CodeViewer viewer;
 
-    private Attribute selected;
+	private CodeViewer viewer;
+    private Attribute attr;
     private boolean enabled;
 
     private Map<EditorPanel, SearchBar> map;
@@ -57,88 +57,94 @@ public class SearchBarPlugin implements Plugin {
         return pluginSettings;
     }
 
-    @Override
-    public void onCreate(CodeViewer v) {
-        this.selected = v.getAttribute();
-        this.enabled = selected.containsSubAttribute(KEY) && Boolean.parseBoolean(selected.getSubAttribute(KEY).getValue());
-        this.viewer = v;
-        
-        if (enabled) {
-            map = new HashMap<>();
-            JMenuItem findMenuItem = new JMenuItem(UIElementNames.getLocalized("SEARCH_BAR_MENU_SEARCH"));
-            findMenuItem.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F, java.awt.Event.CTRL_MASK));
-            findMenuItem.addActionListener(e -> {
-                SearchBar curr = map.get(viewer.getTabbedPane().getSelectedComponent());
-                if (curr != null) {
-                    curr.setVisible(true);
-                    curr.grabFocus();
-                }
-            });
-            viewer.addMenuItemToEditMenu(findMenuItem);
+	@Override
+	public void onCreate(CodeViewer v) {
+		this.attr = v.getAttribute();
+		this.enabled = attr.containsSubAttribute(KEY) && Boolean.parseBoolean(attr.getSubAttribute(KEY).getValue());
+		this.viewer = v;
 
-            boolean activateGlobal =
-                    Boolean.parseBoolean(selected.getSubAttribute(KEY).getSubAttribute(KEY_ENABLE_GLOBAL).getValue());
-            if (activateGlobal) {
-                globalSearchBar = new GlobalSearchBar(v);
-                globalSearchBar.setVisible(false);
+		if (!enabled) {
+			return;
+		}
 
-                globalSearchBar.addSearchBarListener((action, query, success) -> {
-                    LoggingTreeNode node = new LoggingTreeNode(TYPE_SEARCH);
-                    node.setAttribute(ATTRIBUTE_ACTION, action);
-                    node.setAttribute(ATTRIBUTE_QUERY, query);
-                    node.setAttribute(ATTRIBUTE_SUCCESS, "" + success);
-                    viewer.getRecorder().addLoggingTreeNode(node);
-                });
+		map = new HashMap<>();
+		JMenuItem findMenuItem = new JMenuItem(UIElementNames.getLocalized("SEARCH_BAR_MENU_SEARCH"));
+		findMenuItem.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F, java.awt.Event.CTRL_MASK));
+		findMenuItem.addActionListener(e -> {
+			SearchBar curr = map.get(viewer.getTabbedPane().getSelectedComponent());
+			if (curr != null) {
+				curr.setVisible(true);
+				curr.grabFocus();
+			}
+		});
+		viewer.addMenuItemToEditMenu(findMenuItem);
 
-                if (Boolean.parseBoolean(selected.getSubAttribute(KEY).getSubAttribute(KEY_DISABLE_REGEX).getValue())) {
-                    globalSearchBar.getRegexCB().setVisible(false);
-                }
+		boolean activateGlobal =
+				Boolean.parseBoolean(attr.getSubAttribute(KEY).getSubAttribute(KEY_ENABLE_GLOBAL).getValue());
+		if (activateGlobal) {
+			globalSearchBar = new GlobalSearchBar(v);
+			globalSearchBar.setVisible(false);
 
-                viewer.add(globalSearchBar, BorderLayout.SOUTH);
+			globalSearchBar.addSearchBarListener((action, query, success) -> {
+				LoggingTreeNode node = new LoggingTreeNode(TYPE_SEARCH);
+				node.setAttribute(ATTRIBUTE_ACTION, action);
+				node.setAttribute(ATTRIBUTE_QUERY, query);
+				node.setAttribute(ATTRIBUTE_SUCCESS, "" + success);
+				viewer.getRecorder().addLoggingTreeNode(node);
+			});
 
-                JMenuItem findGlobalMenuItem = new JMenuItem(UIElementNames.getLocalized(
-                        "SEARCH_BAR_MENU_GLOBAL_SEARCH"));
-                findGlobalMenuItem
-                        .setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_H, java.awt.Event.CTRL_MASK));
-                findGlobalMenuItem.addActionListener(event -> {
-                    globalSearchBar.setVisible(true);
-                    globalSearchBar.grabFocus();
-                });
-                viewer.addMenuItemToEditMenu(findGlobalMenuItem);
-            }
-        }
-    }
+			if (Boolean.parseBoolean(attr.getSubAttribute(KEY).getSubAttribute(KEY_DISABLE_REGEX).getValue())) {
+				globalSearchBar.getRegexCB().setVisible(false);
+			}
 
-    @Override
-    public void onEditorPanelCreate(EditorPanel editorPanel) {
-        if (enabled) {
-            RSyntaxTextArea textPane = editorPanel.getTextArea();
-            SearchBar searchBar = new SearchBar(textPane);
-            searchBar.setVisible(false);
-            searchBar.addSearchBarListener((action, query, success) -> {
-                LoggingTreeNode node = new LoggingTreeNode(TYPE_SEARCH);
-                node.setAttribute(ATTRIBUTE_ACTION, action);
-                node.setAttribute(ATTRIBUTE_QUERY, query);
-                node.setAttribute(ATTRIBUTE_SUCCESS, "" + success);
-                viewer.getRecorder().addLoggingTreeNode(node);
-            });
+			viewer.add(globalSearchBar, BorderLayout.SOUTH);
 
-            if (Boolean.parseBoolean(selected.getSubAttribute(KEY).getSubAttribute(KEY_DISABLE_REGEX).getValue())) {
-                searchBar.getRegexCB().setVisible(false);
-            }
+			JMenuItem findGlobalMenuItem = new JMenuItem(UIElementNames.getLocalized("SEARCH_BAR_MENU_GLOBAL_SEARCH"));
+			findGlobalMenuItem
+					.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_H, java.awt.Event.CTRL_MASK));
+			findGlobalMenuItem.addActionListener(event -> {
+				globalSearchBar.setVisible(true);
+				globalSearchBar.grabFocus();
+			});
+			viewer.addMenuItemToEditMenu(findGlobalMenuItem);
+		}
+	}
 
-            editorPanel.add(searchBar, BorderLayout.SOUTH);
-            map.put(editorPanel, searchBar);
-        }
-    }
+	@Override
+	public void onEditorPanelCreate(EditorPanel editorPanel) {
+
+		if (!enabled) {
+			return;
+		}
+
+		RSyntaxTextArea textPane = editorPanel.getTextArea();
+		SearchBar searchBar = new SearchBar(textPane);
+		searchBar.setVisible(false);
+		searchBar.addSearchBarListener((action, query, success) -> {
+			LoggingTreeNode node = new LoggingTreeNode(TYPE_SEARCH);
+			node.setAttribute(ATTRIBUTE_ACTION, action);
+			node.setAttribute(ATTRIBUTE_QUERY, query);
+			node.setAttribute(ATTRIBUTE_SUCCESS, "" + success);
+			viewer.getRecorder().addLoggingTreeNode(node);
+		});
+
+		if (Boolean.parseBoolean(attr.getSubAttribute(KEY).getSubAttribute(KEY_DISABLE_REGEX).getValue())) {
+			searchBar.getRegexCB().setVisible(false);
+		}
+
+		editorPanel.add(searchBar, BorderLayout.SOUTH);
+		map.put(editorPanel, searchBar);
+	}
 
     @Override
     public void onClose() {
+
     }
 
     @Override
     public void onEditorPanelClose(EditorPanel editorPanel) {
-        if (enabled) {
+
+		if (enabled) {
             map.remove(editorPanel);
         }
     }
