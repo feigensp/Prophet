@@ -39,17 +39,6 @@ public class ScrollingPlugin implements Plugin {
 
     @Override
     public Setting getSetting(Attribute mainAttribute) {
-//        SettingsPluginComponentDescription resultDesc =
-//                new SettingsPluginComponentDescription(KEY, UIElementNames.RECORDER_SCROLL_SCROLLING_BEHAVIOR, true);
-//        SettingsPluginComponentDescription joinDesc =
-//                new SettingsPluginComponentDescription(KEY_JOIN, UIElementNames.RECORDER_SCROLL_SUMMARIZE_SCROLLING,
-//                        true);
-//        SettingsComponentDescription joinTimeDesc =
-//                new SettingsComponentDescription(SettingsTextField.class, KEY_JOIN_TIME,
-//                        UIElementNames.RECORDER_TIME_INTERVAL_FOR_SUMMARY);
-//        joinDesc.addSubComponent(joinTimeDesc);
-//        resultDesc.addSubComponent(joinDesc);
-
         Attribute rDescAttribute = mainAttribute.getSubAttribute(KEY);
         PluginSettings resultDesc = new PluginSettings(rDescAttribute, getClass().getSimpleName(), true);
         resultDesc.setCaption(UIElementNames.getLocalized("RECORDER_SCROLL_SCROLLING_BEHAVIOR"));

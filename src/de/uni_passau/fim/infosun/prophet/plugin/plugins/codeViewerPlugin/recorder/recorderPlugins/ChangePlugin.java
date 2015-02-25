@@ -23,6 +23,7 @@ public class ChangePlugin implements Plugin {
     public static final String KEY_JOIN_TIME = "jointime";
     public static final String TYPE_INSERT = "insert";
     public static final String TYPE_REMOVE = "remove";
+
     public static final String ATTRIBUTE_OFFSET = "offset";
     public static final String ATTRIBUTE_LENGTH = "length";
     public static final String ATTRIBUTE_CONTENT = "content";
@@ -38,17 +39,6 @@ public class ChangePlugin implements Plugin {
 
     @Override
     public Setting getSetting(Attribute mainAttribute) {
-//        SettingsPluginComponentDescription resultDesc =
-//                new SettingsPluginComponentDescription(KEY, UIElementNames.RECORDER_CHANGE_SOURCE_CODE_EDITS, true);
-//        SettingsPluginComponentDescription joinDesc =
-//                new SettingsPluginComponentDescription(KEY_JOIN, UIElementNames.RECORDER_CHANGE_SUMMARIZE_CHANGES,
-//                        true);
-//        SettingsComponentDescription joinTimeDesc =
-//                new SettingsComponentDescription(SettingsTextField.class, KEY_JOIN_TIME,
-//                        UIElementNames.RECORDER_TIME_INTERVAL_FOR_SUMMARY);
-//        joinDesc.addSubComponent(joinTimeDesc);
-//        resultDesc.addSubComponent(joinDesc);
-
         Attribute rDescAttribute = mainAttribute.getSubAttribute(KEY);
         PluginSettings resultDesc = new PluginSettings(rDescAttribute, getClass().getSimpleName(), true);
         resultDesc.setCaption(getLocalized("RECORDER_CHANGE_SOURCE_CODE_EDITS"));
