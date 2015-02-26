@@ -28,7 +28,6 @@ import static de.uni_passau.fim.infosun.prophet.util.language.UIElementNames.get
 public class CodeViewer extends JFrame implements FileListener {
 
     public static final String KEY_PATH = "path";
-    public static final String KEY_EDITABLE = "editable";
 
     public static final int WIDTH = 400;
     public static final int HEIGHT = 300;
@@ -181,13 +180,13 @@ public class CodeViewer extends JFrame implements FileListener {
     /**
      * Returns the main <code>Attribute</code> of the <code>CodeViewerPlugin</code> this <code>CodeViewer</code> belongs
      * to. <code>Plugins</code> may take their settings from the sub-attributes of this <code>Attribute</code>.
-     * 
+     *
      * @return the main <code>Attribute</code> of this <code>CodeViewer</code>
      */
     public Attribute getAttribute() {
         return attribute;
     }
-    
+
     /**
      * Adds a <code>JMenu</code> to the <code>JMenuBar</code> this <code>CodeViewer</code> uses.
      *
