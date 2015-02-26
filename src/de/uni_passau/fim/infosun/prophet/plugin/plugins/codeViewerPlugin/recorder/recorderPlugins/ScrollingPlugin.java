@@ -141,9 +141,4 @@ public class ScrollingPlugin implements Plugin {
             }
         }
     }
-
-    @Override
-    public String getKey() {
-        return KEY;
-    }
 }

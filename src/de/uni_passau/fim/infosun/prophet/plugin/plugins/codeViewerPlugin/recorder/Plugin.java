@@ -13,6 +13,4 @@ public interface Plugin {
     void onFrameCreate(Attribute selected, CodeViewer viewer, LoggingTreeNode currentNode);
 
     void onNodeChange(LoggingTreeNode newNode, EditorPanel newTab);
-
-    String getKey();
 }

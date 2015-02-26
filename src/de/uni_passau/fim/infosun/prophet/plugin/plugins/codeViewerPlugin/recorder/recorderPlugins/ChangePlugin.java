@@ -166,9 +166,4 @@ public class ChangePlugin implements Plugin {
             }
         }
     }
-
-    @Override
-    public String getKey() {
-        return KEY;
-    }
 }
