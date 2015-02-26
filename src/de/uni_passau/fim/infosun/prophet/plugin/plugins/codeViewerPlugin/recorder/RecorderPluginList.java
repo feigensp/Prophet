@@ -5,8 +5,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.CodeViewer;
+import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.recorder.loggingTree.LoggingTreeNode;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.recorder.recorderPlugins.ChangePlugin;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.recorder.recorderPlugins.ScrollingPlugin;
+import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.tabbedPane.EditorPanel;
 import de.uni_passau.fim.infosun.prophet.util.qTree.Attribute;
 import de.uni_passau.fim.infosun.prophet.util.settings.Setting;
 
@@ -69,4 +72,42 @@ public class RecorderPluginList {
     public static List<Setting> getAllSettings(Attribute attribute) {
         return plugins.stream().map(p -> p.getSetting(attribute)).filter(s -> s != null).collect(Collectors.toList());
     }
+
+	// TODO document the parameters below when they have been documented in the plugin interface
+
+	/**
+	 * Calls the {@link Plugin#onFrameCreate(Attribute, CodeViewer, LoggingTreeNode)} method of all currently active
+	 * plugins.
+	 *
+	 * @param selected
+	 * @param viewer
+	 * @param currentNode
+	 */
+	public static void onFrameCreate(Attribute selected, CodeViewer viewer, LoggingTreeNode currentNode) {
+
+		for (Plugin plugin : plugins) {
+			try {
+				plugin.onFrameCreate(selected, viewer, currentNode);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	/**
+	 * Calls the {@link Plugin#onNodeChange(LoggingTreeNode, EditorPanel)} method of all currently active plugins.
+	 *
+	 * @param newNode
+	 * @param newTab
+	 */
+	public static void onNodeChange(LoggingTreeNode newNode, EditorPanel newTab) {
+
+		for (Plugin plugin : plugins) {
+			try {
+				plugin.onNodeChange(newNode, newTab);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
 }

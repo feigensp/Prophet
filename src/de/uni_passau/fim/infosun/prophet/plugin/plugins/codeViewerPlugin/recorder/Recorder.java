@@ -60,16 +60,12 @@ public class Recorder {
                     currentNode.setAttribute(ATTRIBUTE_PATH, currentTab.getFile().getName());
                 }
                 rootNode.add(currentNode);
-                //Plugins aktualisieren
-                for (Plugin plugin : RecorderPluginList.getPlugins()) {
-                    plugin.onNodeChange(currentNode, currentTab);
-                }
+
+				RecorderPluginList.onNodeChange(currentNode, currentTab);
             }
         });
 
-        for (Plugin plugin : RecorderPluginList.getPlugins()) {
-            plugin.onFrameCreate(selected.getSubAttribute(KEY), codeViewer, currentNode);
-        }
+		RecorderPluginList.onFrameCreate(selected.getSubAttribute(KEY), codeViewer, currentNode);
     }
 
     public void onEditorPanelCreate(EditorPanel editorPanel) {
