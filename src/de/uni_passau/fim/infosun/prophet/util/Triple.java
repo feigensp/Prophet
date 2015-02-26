@@ -1,6 +1,4 @@
-package de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeViewerPlugins.showCIDECodePlugin;
-
-import de.uni_passau.fim.infosun.prophet.util.Pair;
+package de.uni_passau.fim.infosun.prophet.util;
 
 /**
  * A type generic triple of three values.

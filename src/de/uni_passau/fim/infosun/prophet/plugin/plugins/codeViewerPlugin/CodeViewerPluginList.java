@@ -31,7 +31,6 @@ public class CodeViewerPluginList {
         add(new LineNumbersPlugin());
         add(new SearchBarPlugin());
         add(new SyntaxHighlightingPlugin());
-//		add(new ShowCIDECodePlugin());
         add(new OpenedFromStartPlugin());
     }
 
