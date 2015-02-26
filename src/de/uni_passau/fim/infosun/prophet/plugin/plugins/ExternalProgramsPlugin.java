@@ -25,7 +25,7 @@ import de.uni_passau.fim.infosun.prophet.util.qTree.Attribute;
 import de.uni_passau.fim.infosun.prophet.util.qTree.QTreeNode;
 import de.uni_passau.fim.infosun.prophet.util.settings.Setting;
 import de.uni_passau.fim.infosun.prophet.util.settings.SettingsList;
-import de.uni_passau.fim.infosun.prophet.util.settings.components.SettingsTextArea;
+import de.uni_passau.fim.infosun.prophet.util.settings.components.TextAreaSetting;
 
 import static de.uni_passau.fim.infosun.prophet.util.language.UIElementNames.getLocalized;
 import static de.uni_passau.fim.infosun.prophet.util.qTree.QTreeNode.Type.CATEGORY;
@@ -161,7 +161,7 @@ public class ExternalProgramsPlugin implements Plugin {
         settingsList.setCaption(getLocalized("MENU_TAB_SETTINGS_EXTERNAL_PROGRAMS"));
 
         Attribute subAttribute = mainAttribute.getSubAttribute(KEY_COMMANDS);
-        Setting subSetting = new SettingsTextArea(subAttribute, null);
+        Setting subSetting = new TextAreaSetting(subAttribute, null);
         subSetting.setCaption(getLocalized("MENU_TAB_SETTINGS_PATH_OF_EXTERNAL_PROGRAMS"));
         settingsList.addSetting(subSetting);
 

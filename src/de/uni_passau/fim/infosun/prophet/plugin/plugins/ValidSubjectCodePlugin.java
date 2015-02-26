@@ -17,9 +17,9 @@ import de.uni_passau.fim.infosun.prophet.util.qTree.Attribute;
 import de.uni_passau.fim.infosun.prophet.util.qTree.QTreeNode;
 import de.uni_passau.fim.infosun.prophet.util.settings.Setting;
 import de.uni_passau.fim.infosun.prophet.util.settings.SettingsList;
-import de.uni_passau.fim.infosun.prophet.util.settings.components.SettingsCheckBox;
-import de.uni_passau.fim.infosun.prophet.util.settings.components.SettingsPathChooser;
-import de.uni_passau.fim.infosun.prophet.util.settings.components.SettingsTextArea;
+import de.uni_passau.fim.infosun.prophet.util.settings.components.CheckBoxSetting;
+import de.uni_passau.fim.infosun.prophet.util.settings.components.PathChooserSetting;
+import de.uni_passau.fim.infosun.prophet.util.settings.components.TextAreaSetting;
 
 import static de.uni_passau.fim.infosun.prophet.util.qTree.QTreeNode.Type.EXPERIMENT;
 
@@ -45,17 +45,17 @@ public class ValidSubjectCodePlugin implements Plugin {
         SettingsList settingsList = new SettingsList(mainAttribute, getClass().getSimpleName(), true);
         settingsList.setCaption(UIElementNames.getLocalized("SUBJECT_CODE_CHECK_SUBJECT_CODE"));
 
-        SettingsTextArea settingsTextArea = new SettingsTextArea(mainAttribute.getSubAttribute(KEY_CODES), null);
-        settingsTextArea.setCaption(UIElementNames.getLocalized("SUBJECT_CODE_VALID_CODES"));
-        settingsList.addSetting(settingsTextArea);
+        TextAreaSetting textAreaSetting = new TextAreaSetting(mainAttribute.getSubAttribute(KEY_CODES), null);
+        textAreaSetting.setCaption(UIElementNames.getLocalized("SUBJECT_CODE_VALID_CODES"));
+        settingsList.addSetting(textAreaSetting);
 
-        SettingsPathChooser filePathChooser = new SettingsPathChooser(mainAttribute.getSubAttribute(KEY_PATH), null);
+        PathChooserSetting filePathChooser = new PathChooserSetting(mainAttribute.getSubAttribute(KEY_PATH), null);
         filePathChooser.setCaption(UIElementNames.getLocalized("SUBJECT_CODE_CODE_FILE"));
         settingsList.addSetting(filePathChooser);
 
-        SettingsCheckBox settingsCheckBox = new SettingsCheckBox(mainAttribute.getSubAttribute(KEY_IGNORE_CASE), null);
-        settingsCheckBox.setCaption(UIElementNames.getLocalized("SUBJECT_CODE_IGNORE_CASE"));
-        settingsList.addSetting(settingsCheckBox);
+        CheckBoxSetting checkBoxSetting = new CheckBoxSetting(mainAttribute.getSubAttribute(KEY_IGNORE_CASE), null);
+        checkBoxSetting.setCaption(UIElementNames.getLocalized("SUBJECT_CODE_IGNORE_CASE"));
+        settingsList.addSetting(checkBoxSetting);
 
         return settingsList;
     }

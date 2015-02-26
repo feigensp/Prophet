@@ -16,7 +16,7 @@ import de.uni_passau.fim.infosun.prophet.util.settings.Setting;
 /**
  * A <code>Setting</code> that uses a <code>JComboBox</code> to present a choice of several items.
  */
-public class SettingsComboBox extends Setting {
+public class ComboBoxSetting extends Setting {
 
     private static final String[] EMPTY_VALUES = new String[0];
     private static final String[] EMPTY_REPRESENTATIONS = new String[0];
@@ -28,7 +28,7 @@ public class SettingsComboBox extends Setting {
     private String[] representations;
 
     /**
-     * Constructs a new <code>SettingsComboBox</code> for the given <code>Attribute</code>. If <code>borderDesc</code>
+     * Constructs a new <code>ComboBoxSetting</code> for the given <code>Attribute</code>. If <code>borderDesc</code>
      * is not <code>null</code> this <code>JPanel</code> will be surrounded by a titled border with the given title.
      * <code>itemMappings</code> contains mappings from <code>String</code> values that will be stored in the given
      * attribute to a <code>String</code> that will be used to represent them in the <code>JComboBox</code>. This
@@ -41,7 +41,7 @@ public class SettingsComboBox extends Setting {
      * @param itemMappings
      *         the item mappings as described above
      */
-    public SettingsComboBox(Attribute attribute, String borderDesc, List<Pair<String, String>> itemMappings) {
+    public ComboBoxSetting(Attribute attribute, String borderDesc, List<Pair<String, String>> itemMappings) {
         super(attribute, borderDesc);
 
         this.caption = new JLabel();

@@ -12,7 +12,7 @@ import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.tabbedP
 import de.uni_passau.fim.infosun.prophet.util.qTree.Attribute;
 import de.uni_passau.fim.infosun.prophet.util.settings.Setting;
 import de.uni_passau.fim.infosun.prophet.util.settings.SettingsList;
-import de.uni_passau.fim.infosun.prophet.util.settings.components.SettingsTextField;
+import de.uni_passau.fim.infosun.prophet.util.settings.components.TextFieldSetting;
 
 import static de.uni_passau.fim.infosun.prophet.util.language.UIElementNames.getLocalized;
 
@@ -48,7 +48,7 @@ public class ChangePlugin implements Plugin {
         joinDesc.setCaption(getLocalized("RECORDER_CHANGE_SUMMARIZE_CHANGES"));
 
         Attribute joinTimeDescAttribute = joinDescAttribute.getSubAttribute(KEY_JOIN_TIME);
-        Setting joinTimeDesc = new SettingsTextField(joinTimeDescAttribute, null);
+        Setting joinTimeDesc = new TextFieldSetting(joinTimeDescAttribute, null);
         joinTimeDesc.setCaption(getLocalized("RECORDER_TIME_INTERVAL_FOR_SUMMARY"));
 
         joinDesc.addSetting(joinTimeDesc);

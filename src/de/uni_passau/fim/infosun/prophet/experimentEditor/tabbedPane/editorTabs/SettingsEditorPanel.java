@@ -21,10 +21,10 @@ import de.uni_passau.fim.infosun.prophet.util.qTree.Attribute;
 import de.uni_passau.fim.infosun.prophet.util.qTree.QTreeNode;
 import de.uni_passau.fim.infosun.prophet.util.settings.Setting;
 import de.uni_passau.fim.infosun.prophet.util.settings.SettingsList;
-import de.uni_passau.fim.infosun.prophet.util.settings.components.SettingsCheckBox;
-import de.uni_passau.fim.infosun.prophet.util.settings.components.SettingsComboBox;
-import de.uni_passau.fim.infosun.prophet.util.settings.components.SettingsSpinner;
-import de.uni_passau.fim.infosun.prophet.util.settings.components.SettingsTextField;
+import de.uni_passau.fim.infosun.prophet.util.settings.components.CheckBoxSetting;
+import de.uni_passau.fim.infosun.prophet.util.settings.components.ComboBoxSetting;
+import de.uni_passau.fim.infosun.prophet.util.settings.components.SpinnerSetting;
+import de.uni_passau.fim.infosun.prophet.util.settings.components.TextFieldSetting;
 
 import static de.uni_passau.fim.infosun.prophet.util.language.UIElementNames.getLocalized;
 import static de.uni_passau.fim.infosun.prophet.util.qTree.QTreeNode.Type.CATEGORY;
@@ -106,7 +106,7 @@ public class SettingsEditorPanel extends ExperimentEditorTab {
         if (selectedType == EXPERIMENT) {
 
             Attribute attribute = selected.getAttribute(Constants.KEY_EXPERIMENT_CODE);
-            Setting setting = new SettingsTextField(attribute, null);
+            Setting setting = new TextFieldSetting(attribute, null);
             setting.setCaption(getLocalized("EXPERIMENT_CODE") + ':');
 
             componentList.add(setting);
@@ -119,7 +119,7 @@ public class SettingsEditorPanel extends ExperimentEditorTab {
                 attribute.setValue(getLocalized("FOOTER_SUBJECT_CODE_CAPTION"));
             }
 
-            setting = new SettingsTextField(attribute, null);
+            setting = new TextFieldSetting(attribute, null);
             setting.setCaption(getLocalized("SETTING_SUBJECT_CODE"));
 
             componentList.add(setting);
@@ -131,14 +131,14 @@ public class SettingsEditorPanel extends ExperimentEditorTab {
             items.add(Pair.of(Locale.ENGLISH.toLanguageTag(), getLocalized("LANGUAGE_ENGLISH")));
 
             attribute = selected.getAttribute(Constants.KEY_VIEWER_LANGUAGE);
-            setting = new SettingsComboBox(attribute, null, items);
+            setting = new ComboBoxSetting(attribute, null, items);
             setting.setCaption(getLocalized("VIEWER_LANGUAGE"));
 
             componentList.add(setting);
             settingsPanel.add(setting);
 
             attribute = selected.getAttribute(Constants.KEY_TIMING);
-            setting = new SettingsCheckBox(attribute, null);
+            setting = new CheckBoxSetting(attribute, null);
             setting.setCaption(getLocalized("STOPWATCH_CAPTION"));
 
             componentList.add(setting);
@@ -147,14 +147,14 @@ public class SettingsEditorPanel extends ExperimentEditorTab {
 
         if (selectedType == CATEGORY) {
             Attribute attribute = selected.getAttribute(Constants.KEY_DONOTSHOWCONTENT); //TODO apply this setting to all children when saved
-            Setting setting = new SettingsCheckBox(attribute, null);
+            Setting setting = new CheckBoxSetting(attribute, null);
             setting.setCaption(getLocalized("MENU_TAB_SETTINGS_DONT_SHOW_CONTENT"));
 
             componentList.add(setting);
             settingsPanel.add(setting);
 
             attribute = selected.getAttribute(Constants.KEY_QUESTIONSWITCHING);
-            setting = new SettingsCheckBox(attribute, null);
+            setting = new CheckBoxSetting(attribute, null);
             setting.setCaption(getLocalized("MENU_TAB_SETTINGS_ALLOW_BACK_AND_FORTH"));
 
             componentList.add(setting);
@@ -168,7 +168,7 @@ public class SettingsEditorPanel extends ExperimentEditorTab {
 
             Attribute subAttribute = attribute.getSubAttribute(Constants.KEY_SHOW_NUMBER_OF_CHILDREN);
             SpinnerNumberModel model = new SpinnerNumberModel(0, 0, Integer.MAX_VALUE, 1);
-            Setting subSetting = new SettingsSpinner(subAttribute, null, model);
+            Setting subSetting = new SpinnerSetting(subAttribute, null, model);
 
             subSetting.setCaption(getLocalized("MENU_TAB_SETTINGS_SHOW_NUMBER_OF_CHILDREN"));
             setting.addSetting(subSetting);
@@ -179,7 +179,7 @@ public class SettingsEditorPanel extends ExperimentEditorTab {
 
         if (selectedType == EXPERIMENT || selectedType == CATEGORY) {
             Attribute attribute = selected.getAttribute(Constants.KEY_RANDOMIZE_CHILDREN);
-            Setting setting = new SettingsCheckBox(attribute, null);
+            Setting setting = new CheckBoxSetting(attribute, null);
             setting.setCaption(getLocalized("MENU_TAB_SETTINGS_RANDOMIZE_CHILDREN"));
 
             componentList.add(setting);

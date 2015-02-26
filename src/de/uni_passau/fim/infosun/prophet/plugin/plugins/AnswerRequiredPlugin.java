@@ -11,7 +11,7 @@ import de.uni_passau.fim.infosun.prophet.util.qTree.Attribute;
 import de.uni_passau.fim.infosun.prophet.util.qTree.QTreeNode;
 import de.uni_passau.fim.infosun.prophet.util.settings.Setting;
 import de.uni_passau.fim.infosun.prophet.util.settings.SettingsList;
-import de.uni_passau.fim.infosun.prophet.util.settings.components.SettingsTextArea;
+import de.uni_passau.fim.infosun.prophet.util.settings.components.TextAreaSetting;
 
 /**
  * <code>Plugin</code> that enables the experiment creator to specify the names of answers that are required.
@@ -30,7 +30,7 @@ public class AnswerRequiredPlugin implements Plugin {
         settingsList.setCaption(UIElementNames.getLocalized("MENU_TAB_SETTINGS_REQUIRED_ANSWERS"));
 
         Attribute subAttribute = mainAttribute.getSubAttribute(KEY_NAMES);
-        Setting subSetting = new SettingsTextArea(subAttribute, null);
+        Setting subSetting = new TextAreaSetting(subAttribute, null);
         subSetting.setCaption(UIElementNames.getLocalized("MENU_TAB_SETTINGS_REQUIRED_ANSWER_COMPONENTS") + ":");
         settingsList.addSetting(subSetting);
 

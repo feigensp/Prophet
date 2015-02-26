@@ -12,7 +12,7 @@ import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.Plugin;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.tabbedPane.EditorPanel;
 import de.uni_passau.fim.infosun.prophet.util.qTree.Attribute;
 import de.uni_passau.fim.infosun.prophet.util.settings.Setting;
-import de.uni_passau.fim.infosun.prophet.util.settings.components.SettingsCheckBox;
+import de.uni_passau.fim.infosun.prophet.util.settings.components.CheckBoxSetting;
 import org.fife.ui.rsyntaxtextarea.RSyntaxDocument;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
@@ -27,10 +27,10 @@ public class SyntaxHighlightingPlugin implements Plugin {
 
     private static final String KEY = "syntaxhighlighting";
     private static final Map<String, String> extensionMap;
-    
+
     static {
         Map<String, String> values = new HashMap<>();
-        
+
         values.put("makefile", SyntaxConstants.SYNTAX_STYLE_MAKEFILE);
         values.put(".asm", SyntaxConstants.SYNTAX_STYLE_ASSEMBLER_X86);
         values.put(".bat", SyntaxConstants.SYNTAX_STYLE_WINDOWS_BATCH);
@@ -50,18 +50,18 @@ public class SyntaxHighlightingPlugin implements Plugin {
         values.put(".py", SyntaxConstants.SYNTAX_STYLE_PYTHON);
         values.put(".rb", SyntaxConstants.SYNTAX_STYLE_RUBY);
         values.put(".sql", SyntaxConstants.SYNTAX_STYLE_SQL);
-        values.put(".xml", SyntaxConstants.SYNTAX_STYLE_XML); 
-        
+        values.put(".xml", SyntaxConstants.SYNTAX_STYLE_XML);
+
         extensionMap = Collections.unmodifiableMap(values);
     }
-    
+
     private boolean enabled;
 
     @Override
     public Setting getSetting(Attribute mainAttribute) {
 
         Attribute attribute = mainAttribute.getSubAttribute(KEY);
-        Setting setting = new SettingsCheckBox(attribute, getClass().getSimpleName());
+        Setting setting = new CheckBoxSetting(attribute, getClass().getSimpleName());
         setting.setCaption(getLocalized("SYNTAX_HIGHLIGHTING_ENABLE"));
 
         return setting;
@@ -75,7 +75,7 @@ public class SyntaxHighlightingPlugin implements Plugin {
 
     @Override
     public void onEditorPanelCreate(EditorPanel editorPanel) {
-        
+
         if (!enabled) {
             return;
         }
@@ -85,20 +85,20 @@ public class SyntaxHighlightingPlugin implements Plugin {
 
         RSyntaxTextArea textArea = editorPanel.getTextArea();
         Document doc = textArea.getDocument();
-        
+
         DocumentListener[] listeners = removeListeners((RSyntaxDocument) doc);
         textArea.setSyntaxEditingStyle(mimeType);
         addListeners((RSyntaxDocument) doc, listeners);
     }
-    
+
     @Override
     public void onClose() {
-        
+
     }
 
     @Override
     public void onEditorPanelClose(EditorPanel editorPanel) {
-        
+
     }
 
     /**

@@ -13,14 +13,14 @@ import de.uni_passau.fim.infosun.prophet.util.settings.Setting;
 /**
  * A <code>Setting</code> for editing password settings using a <code>JPasswordField</code>.
  */
-public class SettingsPasswordField extends Setting {
+public class PasswordFieldSetting extends Setting {
 
     private JLabel caption;
     private JTextField textField;
     private static final byte XOR_KEY = 77;
 
     /**
-     * Constructs a new <code>SettingsPasswordField</code> for the given Attribute. If <code>borderDesc</code> is not
+     * Constructs a new <code>PasswordFieldSetting</code> for the given Attribute. If <code>borderDesc</code> is not
      * <code>null</code> this <code>JPanel</code> will be surrounded by a titled border with the given title.
      *
      * @param attribute
@@ -28,7 +28,7 @@ public class SettingsPasswordField extends Setting {
      * @param borderDesc
      *         the title for the border or <code>null</code> for no border
      */
-    public SettingsPasswordField(Attribute attribute, String borderDesc) {
+    public PasswordFieldSetting(Attribute attribute, String borderDesc) {
         super(attribute, borderDesc);
 
         caption = new JLabel();
@@ -69,7 +69,7 @@ public class SettingsPasswordField extends Setting {
     }
 
     /**
-     * Decodes the given <code>String</code> from the <code>SettingsPasswordField</code> storage format.
+     * Decodes the given <code>String</code> from the <code>PasswordFieldSetting</code> storage format.
      *
      * @param s the <code>String</code> to decode
      * @return the decoded <code>String</code>

@@ -9,7 +9,7 @@ import de.uni_passau.fim.infosun.prophet.util.language.UIElementNames;
 import de.uni_passau.fim.infosun.prophet.util.qTree.Attribute;
 import de.uni_passau.fim.infosun.prophet.util.settings.Setting;
 import de.uni_passau.fim.infosun.prophet.util.settings.SettingsList;
-import de.uni_passau.fim.infosun.prophet.util.settings.components.SettingsTextField;
+import de.uni_passau.fim.infosun.prophet.util.settings.components.TextFieldSetting;
 
 /**
  * A <code>Plugin</code> that enables having a file opened immediately after the a <code>CodeViewer</code> was
@@ -28,7 +28,7 @@ public class OpenedFromStartPlugin implements Plugin {
         settingsList.setCaption(UIElementNames.getLocalized("OPENED_FROM_START_OPEN_FILE_ON_START"));
 
         Attribute subAttribute = attribute.getSubAttribute(KEY_PATH);
-        Setting subSetting = new SettingsTextField(subAttribute, null);
+        Setting subSetting = new TextFieldSetting(subAttribute, null);
         subSetting.setCaption(UIElementNames.getLocalized("OPENED_FROM_START_FILE_TO_OPEN") + ":");
         settingsList.addSetting(subSetting);
 

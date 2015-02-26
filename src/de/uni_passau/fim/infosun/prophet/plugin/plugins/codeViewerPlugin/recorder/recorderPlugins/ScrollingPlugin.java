@@ -14,7 +14,7 @@ import de.uni_passau.fim.infosun.prophet.util.language.UIElementNames;
 import de.uni_passau.fim.infosun.prophet.util.qTree.Attribute;
 import de.uni_passau.fim.infosun.prophet.util.settings.Setting;
 import de.uni_passau.fim.infosun.prophet.util.settings.SettingsList;
-import de.uni_passau.fim.infosun.prophet.util.settings.components.SettingsTextField;
+import de.uni_passau.fim.infosun.prophet.util.settings.components.TextFieldSetting;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
 public class ScrollingPlugin implements Plugin {
@@ -48,7 +48,7 @@ public class ScrollingPlugin implements Plugin {
         joinDesc.setCaption(UIElementNames.getLocalized("RECORDER_SCROLL_SUMMARIZE_SCROLLING"));
 
         Attribute joinTimeDescAttribute = joinDescAttribute.getSubAttribute(KEY_JOIN_TIME);
-        Setting joinTimeDesc = new SettingsTextField(joinTimeDescAttribute, null);
+        Setting joinTimeDesc = new TextFieldSetting(joinTimeDescAttribute, null);
         joinTimeDesc.setCaption(UIElementNames.getLocalized("RECORDER_TIME_INTERVAL_FOR_SUMMARY"));
 
         joinDesc.addSetting(joinTimeDesc);

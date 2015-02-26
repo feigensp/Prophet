@@ -15,7 +15,7 @@ import de.uni_passau.fim.infosun.prophet.util.qTree.Attribute;
 import de.uni_passau.fim.infosun.prophet.util.qTree.QTreeNode;
 import de.uni_passau.fim.infosun.prophet.util.settings.Setting;
 import de.uni_passau.fim.infosun.prophet.util.settings.SettingsList;
-import de.uni_passau.fim.infosun.prophet.util.settings.components.SettingsPathChooser;
+import de.uni_passau.fim.infosun.prophet.util.settings.components.PathChooserSetting;
 
 import static de.uni_passau.fim.infosun.prophet.util.language.UIElementNames.getLocalized;
 import static de.uni_passau.fim.infosun.prophet.util.qTree.QTreeNode.Type.CATEGORY;
@@ -55,7 +55,7 @@ public class CodeViewerPlugin implements Plugin {
         settingsList.setCaption(getLocalized("MENU_TAB_SETTINGS_ACTIVATE_CODE_VIEWER"));
 
         Attribute subAttribute = mainAttribute.getSubAttribute(CodeViewer.KEY_PATH);
-        Setting subSetting = new SettingsPathChooser(subAttribute, null, SettingsPathChooser.Type.DIRECTORIES);
+        Setting subSetting = new PathChooserSetting(subAttribute, null, PathChooserSetting.Type.DIRECTORIES);
         subSetting.setCaption(getLocalized("MENU_TAB_SETTINGS_SOURCE_CODE_PATH") + ":");
         settingsList.addSetting(subSetting);
 

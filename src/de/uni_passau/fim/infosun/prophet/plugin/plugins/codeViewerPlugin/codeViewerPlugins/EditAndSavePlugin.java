@@ -25,7 +25,7 @@ import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.tabbedP
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.tabbedPane.EditorTabbedPane;
 import de.uni_passau.fim.infosun.prophet.util.qTree.Attribute;
 import de.uni_passau.fim.infosun.prophet.util.settings.Setting;
-import de.uni_passau.fim.infosun.prophet.util.settings.components.SettingsCheckBox;
+import de.uni_passau.fim.infosun.prophet.util.settings.components.CheckBoxSetting;
 import org.fife.ui.rsyntaxtextarea.RSyntaxDocument;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
@@ -35,8 +35,8 @@ import static java.awt.event.InputEvent.SHIFT_MASK;
 
 /**
  * A <code>Plugin</code> that enables editing the contents of the <code>CodeViewer</code>s <code>EditorPanel</code>s.
- * Menu items and keyboard shortcuts to save the currently active panel or all panels will be added to the 
- * <code>CodeViewer</code>. The edited versions of the files will be saved in a directory under the 
+ * Menu items and keyboard shortcuts to save the currently active panel or all panels will be added to the
+ * <code>CodeViewer</code>. The edited versions of the files will be saved in a directory under the
  * <code>CodeViewer</code>s save directory.
  */
 public class EditAndSavePlugin implements Plugin {
@@ -47,7 +47,7 @@ public class EditAndSavePlugin implements Plugin {
     private File saveDir;
     private EditorTabbedPane tabbedPane;
     private Set<EditorPanel> isChanged;
-    
+
     private boolean enabled;
 
     /**
@@ -61,7 +61,7 @@ public class EditAndSavePlugin implements Plugin {
     public Setting getSetting(Attribute mainAttribute) {
 
         Attribute attribute = mainAttribute.getSubAttribute(KEY);
-        Setting setting = new SettingsCheckBox(attribute, getClass().getSimpleName());
+        Setting setting = new CheckBoxSetting(attribute, getClass().getSimpleName());
         setting.setCaption(getLocalized("EDIT_AND_SAVE_EDITABLE_CODE"));
 
         return setting;
@@ -78,16 +78,16 @@ public class EditAndSavePlugin implements Plugin {
 
         tabbedPane = viewer.getTabbedPane();
         saveDir = new File(viewer.getSaveDir(), DIR_NAME);
-        
+
         if (!saveDir.mkdirs()) {
             System.err.println("Could not create the directory to save files in.");
         }
-        
+
         JMenuItem saveMenuItem = new JMenuItem(getLocalized("EDIT_AND_SAVE_SAVE"));
         saveMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, CTRL_MASK));
         saveMenuItem.addActionListener(event -> saveActiveEditorPanel());
         viewer.addMenuItemToFileMenu(saveMenuItem);
-        
+
         JMenuItem saveAllMenuItem = new JMenuItem(getLocalized("EDIT_AND_SAVE_SAVE_ALL"));
         saveAllMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, CTRL_MASK | SHIFT_MASK));
         saveAllMenuItem.addActionListener(event -> saveAllEditorPanels());
@@ -96,18 +96,18 @@ public class EditAndSavePlugin implements Plugin {
 
     @Override
     public void onEditorPanelCreate(EditorPanel editorPanel) {
-        
+
         if (!enabled) {
             return;
         }
 
         RSyntaxTextArea textArea = editorPanel.getTextArea();
         File savedFile = getSaveFile(editorPanel);
-        
+
         if (savedFile.exists()) {
             Document doc = textArea.getDocument();
             DocumentListener[] listeners = removeListeners((RSyntaxDocument) doc);
-            
+
             try {
                 doc.remove(0, doc.getLength());
             } catch (BadLocationException e) {
@@ -128,7 +128,7 @@ public class EditAndSavePlugin implements Plugin {
             textArea.setCaretPosition(0);
             addListeners((RSyntaxDocument) doc, listeners);
         }
-        
+
         textArea.setEditable(true);
         textArea.getDocument().addDocumentListener(new DocumentListener() {
 
@@ -194,7 +194,7 @@ public class EditAndSavePlugin implements Plugin {
     }
 
     /**
-     * Saves the <code>EditorPanel</code> that is currently selected in the <code>tabbedPane</code>.  
+     * Saves the <code>EditorPanel</code> that is currently selected in the <code>tabbedPane</code>.
      */
     private void saveActiveEditorPanel() {
         Component activeComp = tabbedPane.getSelectedComponent();
@@ -227,7 +227,7 @@ public class EditAndSavePlugin implements Plugin {
      */
     private void saveEditorPanel(EditorPanel editorPanel) {
         File file = getSaveFile(editorPanel);
-        
+
         try (Writer w = new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8)) {
             w.write(editorPanel.getTextArea().getText());
         } catch (IOException e) {

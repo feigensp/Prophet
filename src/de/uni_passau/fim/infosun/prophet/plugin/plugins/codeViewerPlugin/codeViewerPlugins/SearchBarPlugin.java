@@ -19,7 +19,7 @@ import de.uni_passau.fim.infosun.prophet.util.searchBar.GlobalSearchBar;
 import de.uni_passau.fim.infosun.prophet.util.searchBar.SearchBar;
 import de.uni_passau.fim.infosun.prophet.util.settings.Setting;
 import de.uni_passau.fim.infosun.prophet.util.settings.SettingsList;
-import de.uni_passau.fim.infosun.prophet.util.settings.components.SettingsCheckBox;
+import de.uni_passau.fim.infosun.prophet.util.settings.components.CheckBoxSetting;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
 /**
@@ -76,12 +76,12 @@ public class SearchBarPlugin implements Plugin {
         settingsList.setCaption(UIElementNames.getLocalized("SEARCH_BAR_ENABLE_SEARCH"));
 
         Attribute subAttribute = attribute.getSubAttribute(KEY_DISABLE_REGEX);
-        Setting subSetting = new SettingsCheckBox(subAttribute, null);
+        Setting subSetting = new CheckBoxSetting(subAttribute, null);
         subSetting.setCaption(UIElementNames.getLocalized("SEARCH_BAR_DEACTIVATE_REGULAR_EXPRESSIONS"));
         settingsList.addSetting(subSetting);
 
         subAttribute = attribute.getSubAttribute(KEY_ENABLE_GLOBAL);
-        subSetting = new SettingsCheckBox(subAttribute, null);
+        subSetting = new CheckBoxSetting(subAttribute, null);
         subSetting.setCaption(UIElementNames.getLocalized("SEARCH_BAR_ACTIVATE_GLOBAL_SEARCH"));
         settingsList.addSetting(subSetting);
 

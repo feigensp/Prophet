@@ -2,7 +2,11 @@ package de.uni_passau.fim.infosun.prophet.util.settings.components;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
-import javax.swing.*;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JLabel;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerNumberModel;
 
 import de.uni_passau.fim.infosun.prophet.util.qTree.Attribute;
 import de.uni_passau.fim.infosun.prophet.util.settings.Setting;
@@ -10,13 +14,13 @@ import de.uni_passau.fim.infosun.prophet.util.settings.Setting;
 /**
  * A <code>Setting</code> that uses a <code>JSpinner</code> to set a number value.
  */
-public class SettingsSpinner extends Setting {
+public class SpinnerSetting extends Setting {
 
     private JLabel caption;
     private JSpinner spinner;
 
     /**
-     * Constructs a new <code>SettingsSpinner</code> for the given Attribute. If <code>borderDesc</code> is not
+     * Constructs a new <code>SpinnerSetting</code> for the given Attribute. If <code>borderDesc</code> is not
      * <code>null</code> this <code>JPanel</code> will be surrounded by a titled border with the given title.
      *
      * @param attribute
@@ -24,9 +28,9 @@ public class SettingsSpinner extends Setting {
      * @param borderDesc
      *         the title for the border or <code>null</code> for no border
      * @param model
-     *         the model for the <code>JSpinner</code> this <code>SettingsSpinner</code> uses
+     *         the model for the <code>JSpinner</code> this <code>SpinnerSetting</code> uses
      */
-    public SettingsSpinner(Attribute attribute, String borderDesc, SpinnerNumberModel model) {
+    public SpinnerSetting(Attribute attribute, String borderDesc, SpinnerNumberModel model) {
         super(attribute, borderDesc);
 
         caption = new JLabel();

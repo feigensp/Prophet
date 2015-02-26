@@ -6,23 +6,23 @@ import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.tabbedP
 import de.uni_passau.fim.infosun.prophet.util.language.UIElementNames;
 import de.uni_passau.fim.infosun.prophet.util.qTree.Attribute;
 import de.uni_passau.fim.infosun.prophet.util.settings.Setting;
-import de.uni_passau.fim.infosun.prophet.util.settings.components.SettingsCheckBox;
+import de.uni_passau.fim.infosun.prophet.util.settings.components.CheckBoxSetting;
 
 /**
- * A <code>Plugin</code> that enables/disables displaying line numbers in the <code>EditorPanel</code>s of the 
+ * A <code>Plugin</code> that enables/disables displaying line numbers in the <code>EditorPanel</code>s of the
  * <code>CodeViewer</code>.
  */
 public class LineNumbersPlugin implements Plugin {
 
     public static final String KEY = "linenumbers";
-    
+
     private boolean enabled;
 
     @Override
     public Setting getSetting(Attribute mainAttribute) {
 
         Attribute attribute = mainAttribute.getSubAttribute(KEY);
-        Setting setting = new SettingsCheckBox(attribute, getClass().getSimpleName());
+        Setting setting = new CheckBoxSetting(attribute, getClass().getSimpleName());
         setting.setCaption(UIElementNames.getLocalized("LINE_NUMBER_SHOW_LINE_NUMBERS"));
 
         return setting;
@@ -41,11 +41,11 @@ public class LineNumbersPlugin implements Plugin {
 
     @Override
     public void onClose() {
-        
+
     }
 
     @Override
     public void onEditorPanelClose(EditorPanel editorPanel) {
-        
+
     }
 }

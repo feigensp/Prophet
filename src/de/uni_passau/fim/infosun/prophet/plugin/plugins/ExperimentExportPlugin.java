@@ -9,7 +9,7 @@ import de.uni_passau.fim.infosun.prophet.util.language.UIElementNames;
 import de.uni_passau.fim.infosun.prophet.util.qTree.QTreeNode;
 import de.uni_passau.fim.infosun.prophet.util.qTree.handlers.QTreeXMLHandler;
 import de.uni_passau.fim.infosun.prophet.util.settings.Setting;
-import de.uni_passau.fim.infosun.prophet.util.settings.components.SettingsCheckBox;
+import de.uni_passau.fim.infosun.prophet.util.settings.components.CheckBoxSetting;
 
 /**
  * A <code>Plugin</code> that, when activated, exports the experiment that was shown to the user in the
@@ -29,7 +29,7 @@ public class ExperimentExportPlugin implements Plugin {
             return null;
         }
 
-        Setting setting = new SettingsCheckBox(node.getAttribute(KEY), getClass().getSimpleName());
+        Setting setting = new CheckBoxSetting(node.getAttribute(KEY), getClass().getSimpleName());
         setting.setCaption(UIElementNames.getLocalized("EXPERIMENT_EXPORT"));
 
         return setting;

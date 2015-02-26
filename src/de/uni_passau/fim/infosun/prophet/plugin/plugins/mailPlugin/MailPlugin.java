@@ -26,10 +26,10 @@ import de.uni_passau.fim.infosun.prophet.util.qTree.Attribute;
 import de.uni_passau.fim.infosun.prophet.util.qTree.QTreeNode;
 import de.uni_passau.fim.infosun.prophet.util.settings.Setting;
 import de.uni_passau.fim.infosun.prophet.util.settings.SettingsList;
-import de.uni_passau.fim.infosun.prophet.util.settings.components.SettingsComboBox;
-import de.uni_passau.fim.infosun.prophet.util.settings.components.SettingsPasswordField;
-import de.uni_passau.fim.infosun.prophet.util.settings.components.SettingsSpinner;
-import de.uni_passau.fim.infosun.prophet.util.settings.components.SettingsTextField;
+import de.uni_passau.fim.infosun.prophet.util.settings.components.ComboBoxSetting;
+import de.uni_passau.fim.infosun.prophet.util.settings.components.PasswordFieldSetting;
+import de.uni_passau.fim.infosun.prophet.util.settings.components.SpinnerSetting;
+import de.uni_passau.fim.infosun.prophet.util.settings.components.TextFieldSetting;
 
 import static de.uni_passau.fim.infosun.prophet.util.language.UIElementNames.getLocalized;
 import static de.uni_passau.fim.infosun.prophet.util.qTree.QTreeNode.Type.EXPERIMENT;
@@ -76,22 +76,22 @@ public class MailPlugin implements Plugin {
         settingsList.setCaption(getLocalized("MAIL_SEND_MAIL"));
 
         Attribute subAttribute = mainAttribute.getSubAttribute(SMTP_SENDER);
-        Setting subSetting = new SettingsTextField(subAttribute, null);
+        Setting subSetting = new TextFieldSetting(subAttribute, null);
         subSetting.setCaption(getLocalized("MAIL_SMTP_SENDER") + ':');
         settingsList.addSetting(subSetting);
 
         subAttribute = mainAttribute.getSubAttribute(SMTP_RECEIVER);
-        subSetting = new SettingsTextField(subAttribute, null);
+        subSetting = new TextFieldSetting(subAttribute, null);
         subSetting.setCaption(getLocalized("MAIL_SMTP_RECIPIENT") + ':');
         settingsList.addSetting(subSetting);
 
         subAttribute = mainAttribute.getSubAttribute(SMTP_SERVER);
-        subSetting = new SettingsTextField(subAttribute, null);
+        subSetting = new TextFieldSetting(subAttribute, null);
         subSetting.setCaption(getLocalized("MAIL_SMTP_SERVER") + ':');
         settingsList.addSetting(subSetting);
 
         subAttribute = mainAttribute.getSubAttribute(SMTP_SERVER_PORT);
-        subSetting = new SettingsSpinner(subAttribute, null, new SpinnerNumberModel(587, 0, 65535, 1));
+        subSetting = new SpinnerSetting(subAttribute, null, new SpinnerNumberModel(587, 0, 65535, 1));
         subSetting.setCaption(getLocalized("MAIL_SMTP_SERVER_PORT") + ':');
         settingsList.addSetting(subSetting);
 
@@ -101,17 +101,17 @@ public class MailPlugin implements Plugin {
         items.add(Pair.of(SEC_SSL_TLS, SEC_SSL_TLS));
 
         subAttribute = mainAttribute.getSubAttribute(SMTP_SERVER_SEC);
-        subSetting = new SettingsComboBox(subAttribute, null, items);
+        subSetting = new ComboBoxSetting(subAttribute, null, items);
         subSetting.setCaption(getLocalized("MAIL_SMTP_SECURITY") + ':');
         settingsList.addSetting(subSetting);
 
         subAttribute = mainAttribute.getSubAttribute(SMTP_USER);
-        subSetting = new SettingsTextField(subAttribute, null);
+        subSetting = new TextFieldSetting(subAttribute, null);
         subSetting.setCaption(getLocalized("MAIL_SMTP_USER") + ':');
         settingsList.addSetting(subSetting);
 
         subAttribute = mainAttribute.getSubAttribute(SMTP_PASS);
-        subSetting = new SettingsPasswordField(subAttribute, null);
+        subSetting = new PasswordFieldSetting(subAttribute, null);
         subSetting.setCaption(getLocalized("MAIL_SMTP_PASSWORD") + ':');
         settingsList.addSetting(subSetting);
 
@@ -142,7 +142,7 @@ public class MailPlugin implements Plugin {
 
             smtpServer = attributes.getSubAttribute(SMTP_SERVER).getValue();
             smtpUser = attributes.getSubAttribute(SMTP_USER).getValue();
-            smtpPass = SettingsPasswordField.decode(attributes.getSubAttribute(SMTP_PASS).getValue());
+            smtpPass = PasswordFieldSetting.decode(attributes.getSubAttribute(SMTP_PASS).getValue());
             smtpSender = attributes.getSubAttribute(SMTP_SENDER).getValue();
             smtpReceiver = attributes.getSubAttribute(SMTP_RECEIVER).getValue();
             smtpSec = attributes.getSubAttribute(SMTP_SERVER_SEC).getValue();
