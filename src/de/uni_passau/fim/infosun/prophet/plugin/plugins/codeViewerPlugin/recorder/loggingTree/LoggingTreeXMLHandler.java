@@ -105,7 +105,7 @@ public class LoggingTreeXMLHandler {
         NodeList xmlChildrenList = xmlNode.getChildNodes();
         for (int i = 0; i < xmlChildrenList.getLength(); i++) {
             Node xmlChildNode = xmlChildrenList.item(i);
-            result.add(loadXMLNode(xmlChildNode));
+            result.addChild(loadXMLNode(xmlChildNode));
         }
         return result;
     }

@@ -41,7 +41,7 @@ public class LoggingTreeNode {
         return type;
     }
 
-	public void add(LoggingTreeNode child) {
+	public void addChild(LoggingTreeNode child) {
 		children.add(child);
 	}
 

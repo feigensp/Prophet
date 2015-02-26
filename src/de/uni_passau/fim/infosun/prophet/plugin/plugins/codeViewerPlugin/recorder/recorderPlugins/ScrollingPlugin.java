@@ -120,7 +120,7 @@ public class ScrollingPlugin implements Plugin {
                 LoggingTreeNode node = new LoggingTreeNode(TYPE_SCROLLING);
                 node.setAttribute(ATTRIBUTE_STARTLINE, "" + startLine);
                 node.setAttribute(ATTRIBUTE_ENDLINE, "" + endLine);
-                currentNode.add(node);
+                currentNode.addChild(node);
             };
         }
     }

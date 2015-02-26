@@ -32,7 +32,7 @@ public class Recorder {
         this.rootNode = new LoggingTreeNode(LoggingTreeNode.TYPE_LOGFILE);
         this.currentNode = new LoggingTreeNode(LoggingTreeNode.TYPE_NOFILE);
 
-        rootNode.add(currentNode);
+        rootNode.addChild(currentNode);
     }
 
     public static Setting getSetting(Attribute mainAttribute) {
@@ -59,7 +59,7 @@ public class Recorder {
                     currentNode = new LoggingTreeNode(LoggingTreeNode.TYPE_FILE);
                     currentNode.setAttribute(ATTRIBUTE_PATH, currentTab.getFile().getName());
                 }
-                rootNode.add(currentNode);
+                rootNode.addChild(currentNode);
 
 				RecorderPluginList.onNodeChange(currentNode, currentTab);
             }
@@ -71,22 +71,22 @@ public class Recorder {
     public void onEditorPanelCreate(EditorPanel editorPanel) {
         LoggingTreeNode openedNode = new LoggingTreeNode(TYPE_OPENED);
         openedNode.setAttribute(ATTRIBUTE_PATH, editorPanel.getFile().getName());
-        currentNode.add(openedNode);
+        currentNode.addChild(openedNode);
     }
 
     public void onEditorPanelClose(EditorPanel editorPanel) {
         LoggingTreeNode closedNode = new LoggingTreeNode(TYPE_CLOSED);
         closedNode.setAttribute(ATTRIBUTE_PATH, editorPanel.getFile().getName());
-        currentNode.add(closedNode);
+        currentNode.addChild(closedNode);
     }
 
     public void addLoggingTreeNode(LoggingTreeNode node) {
-        currentNode.add(node);
+        currentNode.addChild(node);
     }
 
     public void onClose() {
         LoggingTreeNode node = new LoggingTreeNode(TYPE_VIEWERCLOSED);
-        currentNode.add(node);
+        currentNode.addChild(node);
         LoggingTreeXMLHandler.saveXMLTree(rootNode,
                 codeViewer.getSaveDir().getPath() + System.getProperty("file.separator") + "recorder.xml");
     }

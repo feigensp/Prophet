@@ -115,7 +115,7 @@ public class ChangePlugin implements Plugin {
                     node.setAttribute(ATTRIBUTE_OFFSET, "" + offset);
                     node.setAttribute(ATTRIBUTE_LENGTH, "" + length);
                     node.setAttribute(ATTRIBUTE_CONTENT, "" + content);
-                    currentNode.add(node);
+                    currentNode.addChild(node);
                 }
 
                 @Override
@@ -146,7 +146,7 @@ public class ChangePlugin implements Plugin {
                     LoggingTreeNode node = new LoggingTreeNode(TYPE_REMOVE);
                     node.setAttribute(ATTRIBUTE_OFFSET, "" + offset);
                     node.setAttribute(ATTRIBUTE_LENGTH, "" + length);
-                    currentNode.add(node);
+                    currentNode.addChild(node);
                 }
             };
         }
