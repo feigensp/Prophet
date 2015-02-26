@@ -14,8 +14,8 @@ import de.uni_passau.fim.infosun.prophet.plugin.Plugin;
 import de.uni_passau.fim.infosun.prophet.util.language.UIElementNames;
 import de.uni_passau.fim.infosun.prophet.util.qTree.Attribute;
 import de.uni_passau.fim.infosun.prophet.util.qTree.QTreeNode;
-import de.uni_passau.fim.infosun.prophet.util.settings.PluginSettings;
 import de.uni_passau.fim.infosun.prophet.util.settings.Setting;
+import de.uni_passau.fim.infosun.prophet.util.settings.SettingsList;
 import de.uni_passau.fim.infosun.prophet.util.settings.components.SettingsCheckBox;
 import de.uni_passau.fim.infosun.prophet.util.settings.components.SettingsTextField;
 
@@ -137,7 +137,7 @@ public class MaxTimePlugin implements Plugin {
     public Setting getSetting(QTreeNode node) {
 
         Attribute resultAttribute = node.getAttribute(KEY);
-        PluginSettings result = new PluginSettings(resultAttribute, getClass().getSimpleName(), true);
+        SettingsList result = new SettingsList(resultAttribute, getClass().getSimpleName(), true);
         result.setCaption(UIElementNames.getLocalized("MENU_TAB_SETTINGS_TIME_OUT"));
 
         Attribute subAttribute = resultAttribute.getSubAttribute(KEY_MAX_TIME);
@@ -158,11 +158,11 @@ public class MaxTimePlugin implements Plugin {
         result.addSetting(subSetting);
 
         Attribute hardExitAttribute = resultAttribute.getSubAttribute(KEY_HARD_EXIT);
-        PluginSettings hardExit = new PluginSettings(hardExitAttribute, null, true);
+        SettingsList hardExit = new SettingsList(hardExitAttribute, null, true);
         hardExit.setCaption(UIElementNames.getLocalized("MENU_TAB_SETTINGS_HARD_TIME_OUT"));
 
         Attribute warningAttribute = hardExitAttribute.getSubAttribute(KEY_HARD_EXIT_WARNING);
-        PluginSettings warning = new PluginSettings(warningAttribute, null, true);
+        SettingsList warning = new SettingsList(warningAttribute, null, true);
         warning.setCaption(UIElementNames.getLocalized("MENU_TAB_SETTINGS_TIME_OUT_WARN_SUBJECTS"));
 
         subAttribute = warningAttribute.getSubAttribute(KEY_HARD_EXIT_WARNING_TIME);

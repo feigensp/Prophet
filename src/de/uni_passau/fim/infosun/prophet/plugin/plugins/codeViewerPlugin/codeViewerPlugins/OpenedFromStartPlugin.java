@@ -7,8 +7,8 @@ import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.Plugin;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.tabbedPane.EditorPanel;
 import de.uni_passau.fim.infosun.prophet.util.language.UIElementNames;
 import de.uni_passau.fim.infosun.prophet.util.qTree.Attribute;
-import de.uni_passau.fim.infosun.prophet.util.settings.PluginSettings;
 import de.uni_passau.fim.infosun.prophet.util.settings.Setting;
+import de.uni_passau.fim.infosun.prophet.util.settings.SettingsList;
 import de.uni_passau.fim.infosun.prophet.util.settings.components.SettingsTextField;
 
 /**
@@ -24,21 +24,21 @@ public class OpenedFromStartPlugin implements Plugin {
     public Setting getSetting(Attribute mainAttribute) {
 
         Attribute attribute = mainAttribute.getSubAttribute(KEY);
-        PluginSettings pluginSettings = new PluginSettings(attribute, getClass().getSimpleName(), true);
-        pluginSettings.setCaption(UIElementNames.getLocalized("OPENED_FROM_START_OPEN_FILE_ON_START"));
+        SettingsList settingsList = new SettingsList(attribute, getClass().getSimpleName(), true);
+        settingsList.setCaption(UIElementNames.getLocalized("OPENED_FROM_START_OPEN_FILE_ON_START"));
 
         Attribute subAttribute = attribute.getSubAttribute(KEY_PATH);
         Setting subSetting = new SettingsTextField(subAttribute, null);
         subSetting.setCaption(UIElementNames.getLocalized("OPENED_FROM_START_FILE_TO_OPEN") + ":");
-        pluginSettings.addSetting(subSetting);
+        settingsList.addSetting(subSetting);
 
-        return pluginSettings;
+        return settingsList;
     }
 
     @Override
     public void onCreate(CodeViewer viewer) {
         Attribute attr = viewer.getAttribute();
-        
+
         if (attr.containsSubAttribute(KEY) && Boolean.parseBoolean(attr.getSubAttribute(KEY).getValue())) {
             String path = attr.getSubAttribute(KEY).getSubAttribute(KEY_PATH).getValue();
             File file = new File(path);

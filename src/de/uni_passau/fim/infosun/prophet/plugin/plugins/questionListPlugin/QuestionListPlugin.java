@@ -13,7 +13,8 @@ import de.uni_passau.fim.infosun.prophet.util.settings.components.SettingsCheckB
 import static de.uni_passau.fim.infosun.prophet.util.qTree.QTreeNode.Type;
 
 /**
- * Plugin that modifies the <code>ExperimentViewer</code> by adding a JTree representation of the current experiment.
+ * <code>Plugin</code> that modifies the <code>ExperimentViewer</code> by adding a JTree representation of the current
+ * experiment.
  */
 public class QuestionListPlugin implements Plugin {
 

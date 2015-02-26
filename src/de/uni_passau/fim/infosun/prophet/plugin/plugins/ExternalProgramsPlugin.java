@@ -23,8 +23,8 @@ import de.uni_passau.fim.infosun.prophet.plugin.Plugin;
 import de.uni_passau.fim.infosun.prophet.util.VerticalLayout;
 import de.uni_passau.fim.infosun.prophet.util.qTree.Attribute;
 import de.uni_passau.fim.infosun.prophet.util.qTree.QTreeNode;
-import de.uni_passau.fim.infosun.prophet.util.settings.PluginSettings;
 import de.uni_passau.fim.infosun.prophet.util.settings.Setting;
+import de.uni_passau.fim.infosun.prophet.util.settings.SettingsList;
 import de.uni_passau.fim.infosun.prophet.util.settings.components.SettingsTextArea;
 
 import static de.uni_passau.fim.infosun.prophet.util.language.UIElementNames.getLocalized;
@@ -157,15 +157,15 @@ public class ExternalProgramsPlugin implements Plugin {
         }
 
         Attribute mainAttribute = node.getAttribute(KEY);
-        PluginSettings pluginSettings = new PluginSettings(mainAttribute, getClass().getSimpleName(), true);
-        pluginSettings.setCaption(getLocalized("MENU_TAB_SETTINGS_EXTERNAL_PROGRAMS"));
+        SettingsList settingsList = new SettingsList(mainAttribute, getClass().getSimpleName(), true);
+        settingsList.setCaption(getLocalized("MENU_TAB_SETTINGS_EXTERNAL_PROGRAMS"));
 
         Attribute subAttribute = mainAttribute.getSubAttribute(KEY_COMMANDS);
         Setting subSetting = new SettingsTextArea(subAttribute, null);
         subSetting.setCaption(getLocalized("MENU_TAB_SETTINGS_PATH_OF_EXTERNAL_PROGRAMS"));
-        pluginSettings.addSetting(subSetting);
+        settingsList.addSetting(subSetting);
 
-        return pluginSettings;
+        return settingsList;
     }
 
     @Override

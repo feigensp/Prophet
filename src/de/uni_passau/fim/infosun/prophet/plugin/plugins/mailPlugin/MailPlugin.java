@@ -1,31 +1,35 @@
 package de.uni_passau.fim.infosun.prophet.plugin.plugins.mailPlugin;
 
-import de.uni_passau.fim.infosun.prophet.experimentViewer.EViewer;
-import de.uni_passau.fim.infosun.prophet.plugin.Plugin;
-import de.uni_passau.fim.infosun.prophet.util.Pair;
-import de.uni_passau.fim.infosun.prophet.util.qTree.Attribute;
-import de.uni_passau.fim.infosun.prophet.util.qTree.QTreeNode;
-import de.uni_passau.fim.infosun.prophet.util.settings.PluginSettings;
-import de.uni_passau.fim.infosun.prophet.util.settings.Setting;
-import de.uni_passau.fim.infosun.prophet.util.settings.components.SettingsComboBox;
-import de.uni_passau.fim.infosun.prophet.util.settings.components.SettingsPasswordField;
-import de.uni_passau.fim.infosun.prophet.util.settings.components.SettingsSpinner;
-import de.uni_passau.fim.infosun.prophet.util.settings.components.SettingsTextField;
-
-import javax.activation.DataHandler;
-import javax.activation.DataSource;
-import javax.activation.FileDataSource;
-import javax.mail.*;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
-import javax.swing.*;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import javax.activation.FileDataSource;
+import javax.mail.BodyPart;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
+import javax.swing.SpinnerNumberModel;
+
+import de.uni_passau.fim.infosun.prophet.experimentViewer.EViewer;
+import de.uni_passau.fim.infosun.prophet.plugin.Plugin;
+import de.uni_passau.fim.infosun.prophet.util.Pair;
+import de.uni_passau.fim.infosun.prophet.util.qTree.Attribute;
+import de.uni_passau.fim.infosun.prophet.util.qTree.QTreeNode;
+import de.uni_passau.fim.infosun.prophet.util.settings.Setting;
+import de.uni_passau.fim.infosun.prophet.util.settings.SettingsList;
+import de.uni_passau.fim.infosun.prophet.util.settings.components.SettingsComboBox;
+import de.uni_passau.fim.infosun.prophet.util.settings.components.SettingsPasswordField;
+import de.uni_passau.fim.infosun.prophet.util.settings.components.SettingsSpinner;
+import de.uni_passau.fim.infosun.prophet.util.settings.components.SettingsTextField;
 
 import static de.uni_passau.fim.infosun.prophet.util.language.UIElementNames.getLocalized;
 import static de.uni_passau.fim.infosun.prophet.util.qTree.QTreeNode.Type.EXPERIMENT;
@@ -68,28 +72,28 @@ public class MailPlugin implements Plugin {
         }
 
         Attribute mainAttribute = node.getAttribute(KEY);
-        PluginSettings pluginSettings = new PluginSettings(mainAttribute, getClass().getSimpleName(), true);
-        pluginSettings.setCaption(getLocalized("MAIL_SEND_MAIL"));
+        SettingsList settingsList = new SettingsList(mainAttribute, getClass().getSimpleName(), true);
+        settingsList.setCaption(getLocalized("MAIL_SEND_MAIL"));
 
         Attribute subAttribute = mainAttribute.getSubAttribute(SMTP_SENDER);
         Setting subSetting = new SettingsTextField(subAttribute, null);
         subSetting.setCaption(getLocalized("MAIL_SMTP_SENDER") + ':');
-        pluginSettings.addSetting(subSetting);
+        settingsList.addSetting(subSetting);
 
         subAttribute = mainAttribute.getSubAttribute(SMTP_RECEIVER);
         subSetting = new SettingsTextField(subAttribute, null);
         subSetting.setCaption(getLocalized("MAIL_SMTP_RECIPIENT") + ':');
-        pluginSettings.addSetting(subSetting);
+        settingsList.addSetting(subSetting);
 
         subAttribute = mainAttribute.getSubAttribute(SMTP_SERVER);
         subSetting = new SettingsTextField(subAttribute, null);
         subSetting.setCaption(getLocalized("MAIL_SMTP_SERVER") + ':');
-        pluginSettings.addSetting(subSetting);
+        settingsList.addSetting(subSetting);
 
         subAttribute = mainAttribute.getSubAttribute(SMTP_SERVER_PORT);
         subSetting = new SettingsSpinner(subAttribute, null, new SpinnerNumberModel(587, 0, 65535, 1));
         subSetting.setCaption(getLocalized("MAIL_SMTP_SERVER_PORT") + ':');
-        pluginSettings.addSetting(subSetting);
+        settingsList.addSetting(subSetting);
 
         List<Pair<String, String>> items = new ArrayList<>();
         items.add(Pair.of(SEC_NONE, SEC_NONE));
@@ -99,19 +103,19 @@ public class MailPlugin implements Plugin {
         subAttribute = mainAttribute.getSubAttribute(SMTP_SERVER_SEC);
         subSetting = new SettingsComboBox(subAttribute, null, items);
         subSetting.setCaption(getLocalized("MAIL_SMTP_SECURITY") + ':');
-        pluginSettings.addSetting(subSetting);
+        settingsList.addSetting(subSetting);
 
         subAttribute = mainAttribute.getSubAttribute(SMTP_USER);
         subSetting = new SettingsTextField(subAttribute, null);
         subSetting.setCaption(getLocalized("MAIL_SMTP_USER") + ':');
-        pluginSettings.addSetting(subSetting);
+        settingsList.addSetting(subSetting);
 
         subAttribute = mainAttribute.getSubAttribute(SMTP_PASS);
         subSetting = new SettingsPasswordField(subAttribute, null);
         subSetting.setCaption(getLocalized("MAIL_SMTP_PASSWORD") + ':');
-        pluginSettings.addSetting(subSetting);
+        settingsList.addSetting(subSetting);
 
-        return pluginSettings;
+        return settingsList;
     }
 
     @Override

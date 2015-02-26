@@ -10,8 +10,8 @@ import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.recorde
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.recorder.loggingTree.LoggingTreeNode;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.tabbedPane.EditorPanel;
 import de.uni_passau.fim.infosun.prophet.util.qTree.Attribute;
-import de.uni_passau.fim.infosun.prophet.util.settings.PluginSettings;
 import de.uni_passau.fim.infosun.prophet.util.settings.Setting;
+import de.uni_passau.fim.infosun.prophet.util.settings.SettingsList;
 import de.uni_passau.fim.infosun.prophet.util.settings.components.SettingsTextField;
 
 import static de.uni_passau.fim.infosun.prophet.util.language.UIElementNames.getLocalized;
@@ -40,11 +40,11 @@ public class ChangePlugin implements Plugin {
     @Override
     public Setting getSetting(Attribute mainAttribute) {
         Attribute rDescAttribute = mainAttribute.getSubAttribute(KEY);
-        PluginSettings resultDesc = new PluginSettings(rDescAttribute, getClass().getSimpleName(), true);
+        SettingsList resultDesc = new SettingsList(rDescAttribute, getClass().getSimpleName(), true);
         resultDesc.setCaption(getLocalized("RECORDER_CHANGE_SOURCE_CODE_EDITS"));
 
         Attribute joinDescAttribute = rDescAttribute.getSubAttribute(KEY_JOIN);
-        PluginSettings joinDesc = new PluginSettings(joinDescAttribute, null, true);
+        SettingsList joinDesc = new SettingsList(joinDescAttribute, null, true);
         joinDesc.setCaption(getLocalized("RECORDER_CHANGE_SUMMARIZE_CHANGES"));
 
         Attribute joinTimeDescAttribute = joinDescAttribute.getSubAttribute(KEY_JOIN_TIME);

@@ -13,8 +13,8 @@ import de.uni_passau.fim.infosun.prophet.plugin.Plugin;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.recorder.Recorder;
 import de.uni_passau.fim.infosun.prophet.util.qTree.Attribute;
 import de.uni_passau.fim.infosun.prophet.util.qTree.QTreeNode;
-import de.uni_passau.fim.infosun.prophet.util.settings.PluginSettings;
 import de.uni_passau.fim.infosun.prophet.util.settings.Setting;
+import de.uni_passau.fim.infosun.prophet.util.settings.SettingsList;
 import de.uni_passau.fim.infosun.prophet.util.settings.components.SettingsPathChooser;
 
 import static de.uni_passau.fim.infosun.prophet.util.language.UIElementNames.getLocalized;
@@ -51,18 +51,18 @@ public class CodeViewerPlugin implements Plugin {
         }
 
         Attribute mainAttribute = node.getAttribute(KEY);
-        PluginSettings pluginSettings = new PluginSettings(mainAttribute, getClass().getSimpleName(), true);
-        pluginSettings.setCaption(getLocalized("MENU_TAB_SETTINGS_ACTIVATE_CODE_VIEWER"));
+        SettingsList settingsList = new SettingsList(mainAttribute, getClass().getSimpleName(), true);
+        settingsList.setCaption(getLocalized("MENU_TAB_SETTINGS_ACTIVATE_CODE_VIEWER"));
 
         Attribute subAttribute = mainAttribute.getSubAttribute(CodeViewer.KEY_PATH);
         Setting subSetting = new SettingsPathChooser(subAttribute, null, SettingsPathChooser.Type.DIRECTORIES);
         subSetting.setCaption(getLocalized("MENU_TAB_SETTINGS_SOURCE_CODE_PATH") + ":");
-        pluginSettings.addSetting(subSetting);
+        settingsList.addSetting(subSetting);
 
-        pluginSettings.addSetting(Recorder.getSetting(mainAttribute));
-        pluginSettings.addAllSettings(CodeViewerPluginList.getAllSettings(mainAttribute));
+        settingsList.addSetting(Recorder.getSetting(mainAttribute));
+        settingsList.addAllSettings(CodeViewerPluginList.getAllSettings(mainAttribute));
 
-        return pluginSettings;
+        return settingsList;
     }
 
     @Override

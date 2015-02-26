@@ -6,8 +6,8 @@ import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.recorde
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.tabbedPane.EditorPanel;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.tabbedPane.EditorTabbedPane;
 import de.uni_passau.fim.infosun.prophet.util.qTree.Attribute;
-import de.uni_passau.fim.infosun.prophet.util.settings.PluginSettings;
 import de.uni_passau.fim.infosun.prophet.util.settings.Setting;
+import de.uni_passau.fim.infosun.prophet.util.settings.SettingsList;
 
 public class Recorder {
 
@@ -37,7 +37,7 @@ public class Recorder {
 
     public static Setting getSetting(Attribute mainAttribute) {
         Attribute attribute = mainAttribute.getSubAttribute(KEY);
-        PluginSettings settings = new PluginSettings(mainAttribute, Recorder.class.getSimpleName(), false);
+        SettingsList settings = new SettingsList(mainAttribute, Recorder.class.getSimpleName(), false);
         settings.setCaption("Recorder");
         settings.addAllSettings(RecorderPluginList.getAllSettings(mainAttribute));
 

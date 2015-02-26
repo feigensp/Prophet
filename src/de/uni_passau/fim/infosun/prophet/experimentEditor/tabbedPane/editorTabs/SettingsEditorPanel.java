@@ -19,8 +19,8 @@ import de.uni_passau.fim.infosun.prophet.util.Pair;
 import de.uni_passau.fim.infosun.prophet.util.VerticalLayout;
 import de.uni_passau.fim.infosun.prophet.util.qTree.Attribute;
 import de.uni_passau.fim.infosun.prophet.util.qTree.QTreeNode;
-import de.uni_passau.fim.infosun.prophet.util.settings.PluginSettings;
 import de.uni_passau.fim.infosun.prophet.util.settings.Setting;
+import de.uni_passau.fim.infosun.prophet.util.settings.SettingsList;
 import de.uni_passau.fim.infosun.prophet.util.settings.components.SettingsCheckBox;
 import de.uni_passau.fim.infosun.prophet.util.settings.components.SettingsComboBox;
 import de.uni_passau.fim.infosun.prophet.util.settings.components.SettingsSpinner;
@@ -163,7 +163,7 @@ public class SettingsEditorPanel extends ExperimentEditorTab {
 
         if (selectedType == EXPERIMENT || selectedType == CATEGORY) {
             Attribute attribute = selected.getAttribute(Constants.KEY_ONLY_SHOW_X_CHILDREN);
-            PluginSettings setting = new PluginSettings(attribute, null, true);
+            SettingsList setting = new SettingsList(attribute, null, true);
             setting.setCaption(getLocalized("MENU_TAB_SETTINGS_ONLY_SHOW_X_CHILDREN"));
 
             Attribute subAttribute = attribute.getSubAttribute(Constants.KEY_SHOW_NUMBER_OF_CHILDREN);

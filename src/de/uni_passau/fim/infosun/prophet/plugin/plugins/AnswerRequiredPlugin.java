@@ -9,8 +9,8 @@ import de.uni_passau.fim.infosun.prophet.plugin.Plugin;
 import de.uni_passau.fim.infosun.prophet.util.language.UIElementNames;
 import de.uni_passau.fim.infosun.prophet.util.qTree.Attribute;
 import de.uni_passau.fim.infosun.prophet.util.qTree.QTreeNode;
-import de.uni_passau.fim.infosun.prophet.util.settings.PluginSettings;
 import de.uni_passau.fim.infosun.prophet.util.settings.Setting;
+import de.uni_passau.fim.infosun.prophet.util.settings.SettingsList;
 import de.uni_passau.fim.infosun.prophet.util.settings.components.SettingsTextArea;
 
 /**
@@ -26,15 +26,15 @@ public class AnswerRequiredPlugin implements Plugin {
     public Setting getSetting(QTreeNode node) {
 
         Attribute mainAttribute = node.getAttribute(KEY);
-        PluginSettings pluginSettings = new PluginSettings(mainAttribute, getClass().getSimpleName(), true);
-        pluginSettings.setCaption(UIElementNames.getLocalized("MENU_TAB_SETTINGS_REQUIRED_ANSWERS"));
+        SettingsList settingsList = new SettingsList(mainAttribute, getClass().getSimpleName(), true);
+        settingsList.setCaption(UIElementNames.getLocalized("MENU_TAB_SETTINGS_REQUIRED_ANSWERS"));
 
         Attribute subAttribute = mainAttribute.getSubAttribute(KEY_NAMES);
         Setting subSetting = new SettingsTextArea(subAttribute, null);
         subSetting.setCaption(UIElementNames.getLocalized("MENU_TAB_SETTINGS_REQUIRED_ANSWER_COMPONENTS") + ":");
-        pluginSettings.addSetting(subSetting);
+        settingsList.addSetting(subSetting);
 
-        return pluginSettings;
+        return settingsList;
     }
 
     @Override
