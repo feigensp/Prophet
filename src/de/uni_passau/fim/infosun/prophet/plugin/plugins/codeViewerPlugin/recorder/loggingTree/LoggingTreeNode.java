@@ -1,42 +1,31 @@
 package de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.recorder.loggingTree;
 
-import java.util.TreeMap;
-import javax.swing.tree.DefaultMutableTreeNode;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-@SuppressWarnings("serial")
-public class LoggingTreeNode extends DefaultMutableTreeNode {
+public class LoggingTreeNode {
 
     public static final String TYPE_LOGFILE = "logfile";
     public static final String TYPE_FILE = "file";
     public static final String TYPE_NOFILE = "nofile";
+
     public static final String ATTRIBUTE_TIME = "time";
 
-    private String type = "(default)";
+	private List<LoggingTreeNode> children;
+	private Map<String, String> attributes;
+	private String type;
 
-    private TreeMap<String, String> attributes = new TreeMap<>();
+    public LoggingTreeNode(String type) {
+        this.children = new ArrayList<>();
+		this.attributes = new HashMap<>();
+		this.type = type;
 
-    long answerTime = 0;
-
-    public LoggingTreeNode() {
-        this("");
+        attributes.put(ATTRIBUTE_TIME, String.valueOf(System.currentTimeMillis()));
     }
 
-    public LoggingTreeNode(String t) {
-        if (!(t.trim().equals(""))) {
-            type = t;
-        }
-        attributes.put(ATTRIBUTE_TIME, "" + System.currentTimeMillis());
-    }
-
-    public boolean isLogFile() {
-        return type.equals(TYPE_LOGFILE);
-    }
-
-    public boolean isFile() {
-        return type.equals(TYPE_FILE);
-    }
-
-    public TreeMap<String, String> getAttributes() {
+    public Map<String, String> getAttributes() {
         return attributes;
     }
 
@@ -52,11 +41,19 @@ public class LoggingTreeNode extends DefaultMutableTreeNode {
         return type;
     }
 
-    public boolean setType(String t) {
-        if (t.trim().equals("")) {
-            return false;
-        }
-        type = t;
-        return true;
-    }
+	public void add(LoggingTreeNode child) {
+		children.add(child);
+	}
+
+	public int getChildCount() {
+		return children.size();
+	}
+
+	public LoggingTreeNode getChildAt(int index) {
+		return children.get(index);
+	}
+
+	public LoggingTreeNode getLastChild() {
+		return children.isEmpty() ? null : children.get(children.size() - 1);
+	}
 }
