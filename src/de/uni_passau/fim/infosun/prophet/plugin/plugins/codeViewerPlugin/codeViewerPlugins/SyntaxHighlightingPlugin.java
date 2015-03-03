@@ -55,8 +55,6 @@ public class SyntaxHighlightingPlugin implements Plugin {
         extensionMap = Collections.unmodifiableMap(values);
     }
 
-    private boolean enabled;
-
     @Override
     public Setting getSetting(Attribute mainAttribute) {
 
@@ -69,12 +67,13 @@ public class SyntaxHighlightingPlugin implements Plugin {
 
     @Override
     public void onCreate(CodeViewer viewer) {
-        Attribute selected = viewer.getAttribute();
-        enabled = selected.containsSubAttribute(KEY) && Boolean.parseBoolean(selected.getSubAttribute(KEY).getValue());
+
     }
 
     @Override
     public void onEditorPanelCreate(CodeViewer codeViewer, EditorPanel editorPanel) {
+        Attribute attr = codeViewer.getAttribute();
+        boolean enabled = attr.containsSubAttribute(KEY) && Boolean.parseBoolean(attr.getSubAttribute(KEY).getValue());
 
         if (!enabled) {
             return;
@@ -92,12 +91,12 @@ public class SyntaxHighlightingPlugin implements Plugin {
     }
 
     @Override
-    public void onClose(CodeViewer codeViewer) {
+    public void onEditorPanelClose(CodeViewer codeViewer, EditorPanel editorPanel) {
 
     }
 
     @Override
-    public void onEditorPanelClose(CodeViewer codeViewer, EditorPanel editorPanel) {
+    public void onClose(CodeViewer codeViewer) {
 
     }
 
