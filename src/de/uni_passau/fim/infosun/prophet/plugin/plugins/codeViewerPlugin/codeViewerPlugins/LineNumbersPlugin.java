@@ -16,8 +16,6 @@ public class LineNumbersPlugin implements Plugin {
 
     public static final String KEY = "linenumbers";
 
-    private boolean enabled;
-
     @Override
     public Setting getSetting(Attribute mainAttribute) {
 
@@ -30,12 +28,14 @@ public class LineNumbersPlugin implements Plugin {
 
     @Override
     public void onCreate(CodeViewer viewer) {
-        Attribute attr = viewer.getAttribute();
-        enabled = attr.containsSubAttribute(KEY) && Boolean.parseBoolean(attr.getSubAttribute(KEY).getValue());
+
     }
 
     @Override
     public void onEditorPanelCreate(CodeViewer codeViewer, EditorPanel editorPanel) {
+        Attribute attr = codeViewer.getAttribute();
+        boolean enabled = attr.containsSubAttribute(KEY) && Boolean.parseBoolean(attr.getSubAttribute(KEY).getValue());
+
         editorPanel.getScrollPane().setLineNumbersEnabled(enabled);
     }
 
