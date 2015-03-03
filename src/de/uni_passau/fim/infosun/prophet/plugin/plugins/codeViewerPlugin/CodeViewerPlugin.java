@@ -116,7 +116,7 @@ public class CodeViewerPlugin implements Plugin {
         CodeViewer cv = codeViewers.get(node);
 
         if (cv != null) {
-            CodeViewerPluginList.onClose();
+            CodeViewerPluginList.onClose(cv);
             cv.getRecorder().onClose();
             cv.dispose();
 

@@ -35,17 +35,17 @@ public class LineNumbersPlugin implements Plugin {
     }
 
     @Override
-    public void onEditorPanelCreate(EditorPanel editorPanel) {
+    public void onEditorPanelCreate(CodeViewer codeViewer, EditorPanel editorPanel) {
         editorPanel.getScrollPane().setLineNumbersEnabled(enabled);
     }
 
     @Override
-    public void onClose() {
+    public void onClose(CodeViewer codeViewer) {
 
     }
 
     @Override
-    public void onEditorPanelClose(EditorPanel editorPanel) {
+    public void onEditorPanelClose(CodeViewer codeViewer, EditorPanel editorPanel) {
 
     }
 }

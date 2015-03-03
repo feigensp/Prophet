@@ -95,7 +95,7 @@ public class EditAndSavePlugin implements Plugin {
     }
 
     @Override
-    public void onEditorPanelCreate(EditorPanel editorPanel) {
+    public void onEditorPanelCreate(CodeViewer codeViewer, EditorPanel editorPanel) {
 
         if (!enabled) {
             return;
@@ -154,7 +154,7 @@ public class EditAndSavePlugin implements Plugin {
     }
 
     @Override
-    public void onEditorPanelClose(EditorPanel editorPanel) {
+    public void onEditorPanelClose(CodeViewer codeViewer, EditorPanel editorPanel) {
 
         if (!enabled) {
             return;
@@ -173,7 +173,7 @@ public class EditAndSavePlugin implements Plugin {
     }
 
     @Override
-    public void onClose() {
+    public void onClose(CodeViewer codeViewer) {
 
         if (!enabled) {
             return;

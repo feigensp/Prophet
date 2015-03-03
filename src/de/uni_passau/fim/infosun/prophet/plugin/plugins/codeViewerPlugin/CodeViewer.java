@@ -103,7 +103,7 @@ public class CodeViewer extends JFrame implements FileListener {
 
         recorder = new Recorder(cvAttributes);
 
-        tabbedPane = new EditorTabbedPane(recorder);
+        tabbedPane = new EditorTabbedPane(this);
         tabbedPane.setBorder(null);
         splitPane.setRightComponent(tabbedPane);
 
