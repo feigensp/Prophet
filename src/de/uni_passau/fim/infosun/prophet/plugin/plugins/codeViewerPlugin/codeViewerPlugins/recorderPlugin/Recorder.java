@@ -42,4 +42,9 @@ public abstract class Recorder {
      *         the closed <code>EditorPanel</code>
      */
     public abstract void onEditorPanelClose(EditorPanel editorPanel);
+
+    /**
+     * Called after the <code>CodeViewer</code> this <code>Recorder</code> belongs to was closed.
+     */
+    public abstract void onClose();
 }

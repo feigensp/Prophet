@@ -59,11 +59,17 @@ public class RecorderPlugin implements Plugin {
     @Override
     public void onEditorPanelCreate(CodeViewer codeViewer, EditorPanel editorPanel) {
         
+        if (recorders.containsKey(codeViewer)) {
+            recorders.get(codeViewer).getSecond().forEach(r -> r.onEditorPanelCreate(editorPanel));
+        }
     }
 
     @Override
     public void onEditorPanelClose(CodeViewer codeViewer, EditorPanel editorPanel) {
         
+        if (recorders.containsKey(codeViewer)) {
+            recorders.get(codeViewer).getSecond().forEach(r -> r.onEditorPanelClose(editorPanel));
+        }
     }
 
     @Override
@@ -73,9 +79,10 @@ public class RecorderPlugin implements Plugin {
             return;
         }
 
-        Record record = recorders.remove(codeViewer).getFirst();
+        Pair<Record, List<Recorder>> cvRecord = recorders.remove(codeViewer);
         File saveDir = new File(codeViewer.getSaveDir(), getClass().getSimpleName());
-        
-        record.save(saveDir);
+
+        cvRecord.getSecond().forEach(Recorder::onClose);
+        cvRecord.getFirst().save(saveDir);
     }
 }

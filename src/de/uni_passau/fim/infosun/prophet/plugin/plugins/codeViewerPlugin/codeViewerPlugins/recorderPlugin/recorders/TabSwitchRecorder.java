@@ -27,4 +27,9 @@ public class TabSwitchRecorder extends Recorder {
     public void onEditorPanelClose(EditorPanel editorPanel) {
 
     }
+    
+    @Override
+    public void onClose() {
+
+    }
 }
