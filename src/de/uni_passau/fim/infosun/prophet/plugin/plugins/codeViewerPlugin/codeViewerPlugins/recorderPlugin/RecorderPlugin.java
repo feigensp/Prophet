@@ -1,5 +1,6 @@
 package de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,12 +17,15 @@ import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeVie
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin.recorders
         .TabSwitchRecorder;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.tabbedPane.EditorPanel;
+import de.uni_passau.fim.infosun.prophet.util.Pair;
 import de.uni_passau.fim.infosun.prophet.util.qTree.Attribute;
 import de.uni_passau.fim.infosun.prophet.util.settings.Setting;
 
 public class RecorderPlugin implements Plugin {
+
+    public static final String KEY = "recorder";
     
-    Map<CodeViewer, List<Recorder>> recorders;
+    private Map<CodeViewer, Pair<Record, List<Recorder>>> recorders;
 
     public RecorderPlugin() {
         recorders = new HashMap<>();
@@ -44,7 +48,12 @@ public class RecorderPlugin implements Plugin {
 
     @Override
     public void onCreate(CodeViewer viewer) {
+        Attribute attr = viewer.getAttribute();
+        boolean enabled = attr.containsSubAttribute(KEY) && Boolean.parseBoolean(attr.getSubAttribute(KEY).getValue());
         
+        if (enabled) {
+            recorders.put(viewer, Pair.of(new Record(), getAllRecorders(viewer)));
+        }
     }
 
     @Override
@@ -60,5 +69,13 @@ public class RecorderPlugin implements Plugin {
     @Override
     public void onClose(CodeViewer codeViewer) {
         
+        if (!recorders.containsKey(codeViewer)) {
+            return;
+        }
+
+        Record record = recorders.remove(codeViewer).getFirst();
+        File saveDir = new File(codeViewer.getSaveDir(), getClass().getSimpleName());
+        
+        record.save(saveDir);
     }
 }
