@@ -10,7 +10,6 @@ import javax.swing.SwingConstants;
 
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.CodeViewer;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.CodeViewerPluginList;
-import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.recorder.Recorder;
 
 import static de.uni_passau.fim.infosun.prophet.util.language.UIElementNames.getLocalized;
 
@@ -21,7 +20,6 @@ import static de.uni_passau.fim.infosun.prophet.util.language.UIElementNames.get
 public class EditorTabbedPane extends JTabbedPane {
 
 	private CodeViewer codeViewer;
-    private Recorder recorder;
     private Map<File, EditorPanel> panels;
 
     /**
@@ -34,7 +32,6 @@ public class EditorTabbedPane extends JTabbedPane {
         super(SwingConstants.TOP);
 
 		this.codeViewer = codeViewer;
-        this.recorder = codeViewer.getRecorder();
         this.panels = new HashMap<>();
 
         this.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
@@ -56,7 +53,6 @@ public class EditorTabbedPane extends JTabbedPane {
             if (panel == null) {
                 panel = new EditorPanel(file);
 
-                recorder.onEditorPanelCreate(panel);
                 CodeViewerPluginList.onEditorPanelCreate(codeViewer, panel);
 
                 panels.put(file, panel);
@@ -101,7 +97,6 @@ public class EditorTabbedPane extends JTabbedPane {
 
             if (panelFound) {
                 CodeViewerPluginList.onEditorPanelClose(codeViewer, panel);
-                recorder.onEditorPanelClose(panel);
 
                 panels.remove(panel.getFile());
                 remove(panel);

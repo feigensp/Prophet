@@ -10,8 +10,8 @@ import javax.swing.KeyStroke;
 
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.CodeViewer;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.Plugin;
-import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.recorder.Recorder;
-import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.recorder.loggingTree.LoggingTreeNode;
+import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin
+        .RecorderPlugin;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.tabbedPane.EditorPanel;
 import de.uni_passau.fim.infosun.prophet.util.language.UIElementNames;
 import de.uni_passau.fim.infosun.prophet.util.qTree.Attribute;
@@ -54,7 +54,7 @@ public class SearchBarPlugin implements Plugin {
     public static final String ATTRIBUTE_QUERY = "query";
     public static final String ATTRIBUTE_SUCCESS = "success";
 
-	private Recorder recorder;
+	private RecorderPlugin recorder;
     private boolean enabled;
 	private boolean regexDisabled;
 
@@ -120,13 +120,14 @@ public class SearchBarPlugin implements Plugin {
 			globalSearchBar.setVisible(false);
 
 			globalSearchBar.addSearchBarListener((action, query, success) -> {
-				LoggingTreeNode node = new LoggingTreeNode(TYPE_SEARCH);
-
-				node.setAttribute(ATTRIBUTE_ACTION, action);
-				node.setAttribute(ATTRIBUTE_QUERY, query);
-				node.setAttribute(ATTRIBUTE_SUCCESS, String.valueOf(success));
-
-				viewer.getRecorder().addLoggingTreeNode(node);
+                // TODO implement appropriate RecorderEntry
+//				LoggingTreeNode node = new LoggingTreeNode(TYPE_SEARCH);
+//
+//				node.setAttribute(ATTRIBUTE_ACTION, action);
+//				node.setAttribute(ATTRIBUTE_QUERY, query);
+//				node.setAttribute(ATTRIBUTE_SUCCESS, String.valueOf(success));
+//
+//				viewer.getRecorder().addLoggingTreeNode(node);
 			});
 
 			if (regexDisabled) {
@@ -158,13 +159,14 @@ public class SearchBarPlugin implements Plugin {
 		searchBar.setVisible(false);
 
 		searchBar.addSearchBarListener((action, query, success) -> {
-			LoggingTreeNode node = new LoggingTreeNode(TYPE_SEARCH);
-
-			node.setAttribute(ATTRIBUTE_ACTION, action);
-			node.setAttribute(ATTRIBUTE_QUERY, query);
-			node.setAttribute(ATTRIBUTE_SUCCESS, String.valueOf(success));
-
-			recorder.addLoggingTreeNode(node);
+            // TODO implement appropriate RecorderEntry
+//			LoggingTreeNode node = new LoggingTreeNode(TYPE_SEARCH);
+//
+//			node.setAttribute(ATTRIBUTE_ACTION, action);
+//			node.setAttribute(ATTRIBUTE_QUERY, query);
+//			node.setAttribute(ATTRIBUTE_SUCCESS, String.valueOf(success));
+//
+//			recorder.addLoggingTreeNode(node);
 		});
 
 		if (regexDisabled) {
