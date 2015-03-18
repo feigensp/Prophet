@@ -18,8 +18,10 @@ import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeVie
         .TabSwitchRecorder;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.tabbedPane.EditorPanel;
 import de.uni_passau.fim.infosun.prophet.util.Pair;
+import de.uni_passau.fim.infosun.prophet.util.language.UIElementNames;
 import de.uni_passau.fim.infosun.prophet.util.qTree.Attribute;
 import de.uni_passau.fim.infosun.prophet.util.settings.Setting;
+import de.uni_passau.fim.infosun.prophet.util.settings.SettingsList;
 
 public class RecorderPlugin implements Plugin {
 
@@ -43,7 +45,16 @@ public class RecorderPlugin implements Plugin {
     
     @Override
     public Setting getSetting(Attribute mainAttribute) {
-        return null;
+        Attribute attribute = mainAttribute.getSubAttribute(KEY);
+        SettingsList setting = new SettingsList(attribute, getClass().getSimpleName(), true);
+        setting.setCaption(UIElementNames.getLocalized("RECORDER_SETTING_CAPTION"));
+        
+        setting.addSetting(ChangeRecorder.getSetting(attribute));
+        setting.addSetting(FileRecorder.getSetting(attribute));
+        setting.addSetting(ScrollingRecorder.getSetting(attribute));
+        setting.addSetting(TabSwitchRecorder.getSetting(attribute));
+        
+        return setting;
     }
 
     @Override

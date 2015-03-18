@@ -13,8 +13,17 @@ public class TabSwitchRecorder extends Recorder {
         super(recorder, viewer);
     }
 
-    @Override
-    public Setting getSetting(Attribute mainAttribute) {
+    /**
+     * Returns the <code>Setting</code> of this <code>Recorder</code>. <code>Attribute</code>s to store settings in may
+     * be obtained from the given <code>mainAttribute</code>.
+     *
+     * @param mainAttribute
+     *         the <code>Attribute</code> to obtain sub-attributes from
+     *
+     * @return a <code>Setting</code> object representing the settings of the recorder or <code>null</code> if there are
+     *         none
+     */
+    public static Setting getSetting(Attribute mainAttribute) {
         return null;
     }
 
