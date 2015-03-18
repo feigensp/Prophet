@@ -2,7 +2,10 @@ package de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeVi
 
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.CodeViewer;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin.Recorder;
-import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin.RecorderPlugin;
+import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin
+        .RecorderPlugin;
+import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin
+        .recordEntries.FileEntry;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.tabbedPane.EditorPanel;
 import de.uni_passau.fim.infosun.prophet.util.qTree.Attribute;
 import de.uni_passau.fim.infosun.prophet.util.settings.Setting;
@@ -29,12 +32,12 @@ public class FileRecorder extends Recorder {
 
     @Override
     public void onEditorPanelCreate(EditorPanel editorPanel) {
-
+        recorder.record(viewer, new FileEntry(editorPanel.getFile(), true));
     }
 
     @Override
     public void onEditorPanelClose(EditorPanel editorPanel) {
-
+        recorder.record(viewer, new FileEntry(editorPanel.getFile(), false));
     }
 
     @Override

@@ -96,4 +96,11 @@ public class RecorderPlugin implements Plugin {
         cvRecord.getSecond().forEach(Recorder::onClose);
         cvRecord.getFirst().save(saveDir);
     }
+    
+    public void record(CodeViewer viewer, RecordEntry entry) {
+        
+        if (recorders.containsKey(viewer)) {
+            recorders.get(viewer).getFirst().add(entry);
+        }
+    }
 }
