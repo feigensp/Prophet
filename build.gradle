@@ -16,13 +16,13 @@ repositories {
 }
 
 dependencies {
-    compile 'com.fifesoft:rsyntaxtextarea:2.5.3'
+    compile 'com.fifesoft:rsyntaxtextarea:2.5.6'
     compile 'com.sun.mail:javax.mail:1.5.2'
     compile 'net.sf.opencsv:opencsv:2.3'
     compile('com.io7m.xom:xom:1.2.10') {
         transitive = false // we only need xom.jar, see http://www.xom.nu/faq.xhtml#d0e213
     }
-    compile 'com.thoughtworks.xstream:xstream:1.4.7'
+    compile 'com.thoughtworks.xstream:xstream:1.4.8'
     compile 'org.jsoup:jsoup:1.8.1'
 }
 
