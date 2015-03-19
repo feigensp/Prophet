@@ -53,8 +53,11 @@ public class SettingsList extends Setting {
      *         the <code>Setting</code> to be added
      */
     public void addSetting(Setting setting) {
-        settingsList.add(setting);
-        settingsPanel.add(setting);
+        
+        if (setting != null) {
+            settingsList.add(setting);
+            settingsPanel.add(setting);    
+        }
     }
 
     /**
