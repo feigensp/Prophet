@@ -33,13 +33,6 @@ public class CodeViewer extends JFrame implements FileListener {
     public static final int WIDTH = 400;
     public static final int HEIGHT = 300;
 
-    private static RecorderPlugin recorder;
-    
-    static {
-        recorder = new RecorderPlugin();
-        CodeViewerPluginList.add(recorder);
-    }
-    
     private JMenuBar menuBar;
     private JMenu fileMenu;
     private JMenu editMenu;
@@ -140,7 +133,7 @@ public class CodeViewer extends JFrame implements FileListener {
      * @return the <code>RecorderPlugin</code>
      */
     public RecorderPlugin getRecorder() {
-        return recorder;
+        return CodeViewerPlugin.recorder;
     }
 
     /**

@@ -1,6 +1,7 @@
 package de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,8 +26,9 @@ import de.uni_passau.fim.infosun.prophet.util.settings.SettingsList;
 
 public class RecorderPlugin implements Plugin {
 
-    public static final String KEY = "recorder";
-    
+    private static final String KEY = "recorder";
+    private static final String RECORD_FILENAME = "record.xml";
+
     private Map<CodeViewer, Pair<Record, List<Recorder>>> recorders;
 
     public RecorderPlugin() {
@@ -92,9 +94,16 @@ public class RecorderPlugin implements Plugin {
 
         Pair<Record, List<Recorder>> cvRecord = recorders.remove(codeViewer);
         File saveDir = new File(codeViewer.getSaveDir(), getClass().getSimpleName());
-
+        File saveFile = new File(saveDir, RECORD_FILENAME);
+        
         cvRecord.getSecond().forEach(Recorder::onClose);
-        cvRecord.getFirst().save(saveDir);
+        
+        try {
+            cvRecord.getFirst().save(saveFile);
+        } catch (IOException e) {
+            System.err.println("Could not save the " + RECORD_FILENAME);
+            System.err.println(e.getMessage());
+        }
     }
     
     public void record(CodeViewer viewer, RecordEntry entry) {
