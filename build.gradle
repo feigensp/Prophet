@@ -35,20 +35,20 @@ def getClassPath() {
     return deps.collect {'lib/' + it}.join(' ')
 }
 
-def editorMainClass = "de.uni_passau.fim.infosun.prophet.experimentEditor.ExperimentEditor"
-def viewerMainClass = "de.uni_passau.fim.infosun.prophet.experimentViewer.EViewer"
+def editorMainClass = 'de.uni_passau.fim.infosun.prophet.experimentEditor.ExperimentEditor'
+def viewerMainClass = 'de.uni_passau.fim.infosun.prophet.experimentViewer.EViewer'
 
 task editorJar(type: Jar) {
-    archiveName = "Editor.jar"
+    archiveName = 'Editor.jar'
     manifest {
-        attributes("Main-Class": editorMainClass, "Class-Path": getClassPath())
+        attributes('Main-Class': editorMainClass, 'Class-Path': getClassPath())
     }
 }
 
 task viewerJar(type: Jar) {
-    archiveName = "Viewer.jar"
+    archiveName = 'Viewer.jar'
     manifest {
-        attributes("Main-Class": viewerMainClass, "Class-Path": getClassPath())
+        attributes('Main-Class': viewerMainClass, 'Class-Path': getClassPath())
     }
 }
 
@@ -70,7 +70,7 @@ task libs(type: Copy) {
 def relInstallDirPath = rootProject.projectDir.toURI().relativize(projInstallDir.toURI()).getPath()
 
 task dist(type: Copy) {
-    group "Distribution"
+    group 'Distribution'
     description "Assembles a distribution of the application in the ${relInstallDirPath} directory."
     from editorJar, viewerJar
     into projInstallDir
@@ -79,7 +79,7 @@ task dist(type: Copy) {
 dist.dependsOn libs
 
 task distZip(type: Zip) {
-    group "Distribution"
+    group 'Distribution'
     description "Assembles a .zip file containing the application in the ${relInstallDirPath} directory."
     from dist
     destinationDir = installDir
