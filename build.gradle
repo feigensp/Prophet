@@ -53,11 +53,15 @@ task viewerJar(type: Jar) {
 }
 
 task editor(type: JavaExec) {
+    group 'Execution'
+    description 'Runs the experiment editor.'
     main = editorMainClass
     classpath = sourceSets.main.runtimeClasspath
 }
 
 task viewer(type: JavaExec) {
+    group 'Execution'
+    description 'Runs the experiment viewer.'
     main = viewerMainClass
     classpath = sourceSets.main.runtimeClasspath
 }
