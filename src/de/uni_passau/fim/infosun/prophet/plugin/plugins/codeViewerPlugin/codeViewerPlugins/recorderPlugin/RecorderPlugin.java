@@ -9,6 +9,8 @@ import java.util.Map;
 
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.CodeViewer;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.Plugin;
+import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin
+        .recordEntries.CVEntry;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin.recorders
         .ChangeRecorder;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin.recorders
@@ -65,7 +67,10 @@ public class RecorderPlugin implements Plugin {
         boolean enabled = attr.containsSubAttribute(KEY) && Boolean.parseBoolean(attr.getSubAttribute(KEY).getValue());
         
         if (enabled) {
-            recorders.put(viewer, Pair.of(new Record(), getAllRecorders(viewer)));
+            Record record = new Record();
+            
+            record.add(new CVEntry(true));
+            recorders.put(viewer, Pair.of(record, getAllRecorders(viewer)));
         }
     }
 
@@ -99,6 +104,7 @@ public class RecorderPlugin implements Plugin {
         cvRecord.getSecond().forEach(Recorder::onClose);
         
         try {
+            cvRecord.getFirst().add(new CVEntry(false));
             cvRecord.getFirst().save(saveFile);
         } catch (IOException e) {
             System.err.println("Could not save the " + RECORD_FILENAME);

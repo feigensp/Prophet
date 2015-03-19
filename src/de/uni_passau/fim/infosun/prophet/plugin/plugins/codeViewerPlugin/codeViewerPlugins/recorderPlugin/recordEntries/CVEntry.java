@@ -1,19 +1,15 @@
 package de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin.recordEntries;
 
 
-import java.io.File;
-
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin.RecordEntry;
 
-@XStreamAlias("fileEntry")
-public class FileEntry extends RecordEntry {
-
-    private String action;
-    private File file;
+@XStreamAlias("codeViewerEntry")
+public class CVEntry extends RecordEntry {
     
-    public FileEntry(File file, boolean opened) {
-        this.action = (opened) ? OPENED : CLOSED;
-        this.file = file;
+    private String action;
+
+    public CVEntry(boolean opened) {
+        this.action = opened ? OPENED : CLOSED;
     }
 }
