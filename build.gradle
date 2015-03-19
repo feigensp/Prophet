@@ -56,14 +56,26 @@ task editor(type: JavaExec) {
     group 'Execution'
     description 'Runs the experiment editor.'
     main = editorMainClass
-    classpath = sourceSets.main.runtimeClasspath
+    classpath sourceSets.main.runtimeClasspath
+    
+    if (projInstallDir.exists() || projInstallDir.mkdirs()) {
+        workingDir projInstallDir    
+    } else {
+        logger.warn("Could not create the working directory ${projInstallDir}. Using the project directoy.")
+    }
 }
 
 task viewer(type: JavaExec) {
     group 'Execution'
     description 'Runs the experiment viewer.'
     main = viewerMainClass
-    classpath = sourceSets.main.runtimeClasspath
+    classpath sourceSets.main.runtimeClasspath
+
+    if (projInstallDir.exists() || projInstallDir.mkdirs()) {
+        workingDir projInstallDir
+    } else {
+        logger.warn("Could not create the working directory ${projInstallDir}. Using the project directoy.")
+    }
 }
 
 task libs(type: Copy) {
