@@ -35,20 +35,31 @@ def getClassPath() {
     return deps.collect {'lib/' + it}.join(' ')
 }
 
+def editorMainClass = "de.uni_passau.fim.infosun.prophet.experimentEditor.ExperimentEditor"
+def viewerMainClass = "de.uni_passau.fim.infosun.prophet.experimentViewer.EViewer"
+
 task editorJar(type: Jar) {
     archiveName = "Editor.jar"
     manifest {
-        attributes("Main-Class": "de.uni_passau.fim.infosun.prophet.experimentEditor.ExperimentEditor",
-                   "Class-Path": getClassPath())
+        attributes("Main-Class": editorMainClass, "Class-Path": getClassPath())
     }
 }
 
 task viewerJar(type: Jar) {
     archiveName = "Viewer.jar"
     manifest {
-        attributes("Main-Class": "de.uni_passau.fim.infosun.prophet.experimentViewer.EViewer",
-                   "Class-Path": getClassPath())
+        attributes("Main-Class": viewerMainClass, "Class-Path": getClassPath())
     }
+}
+
+task editor(type: JavaExec) {
+    main = editorMainClass
+    classpath = sourceSets.main.runtimeClasspath
+}
+
+task viewer(type: JavaExec) {
+    main = viewerMainClass
+    classpath = sourceSets.main.runtimeClasspath
 }
 
 task libs(type: Copy) {
