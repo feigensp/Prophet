@@ -1,5 +1,9 @@
 package de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin.recorders;
 
+import java.io.File;
+import java.util.HashSet;
+import java.util.Set;
+
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.CodeViewer;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin.Recorder;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin
@@ -12,8 +16,12 @@ import de.uni_passau.fim.infosun.prophet.util.settings.Setting;
 
 public class FileRecorder extends Recorder {
 
+    private Set<File> opened;
+    
     public FileRecorder(RecorderPlugin recorder, CodeViewer viewer) {
         super(recorder, viewer);
+        
+        this.opened = new HashSet<>();
     }
 
     /**
@@ -32,16 +40,26 @@ public class FileRecorder extends Recorder {
 
     @Override
     public void onEditorPanelCreate(EditorPanel editorPanel) {
-        recorder.record(viewer, new FileEntry(editorPanel.getFile(), true));
+        File file = editorPanel.getFile();
+        
+        if (!opened.contains(file)) {
+            opened.add(file);
+            recorder.record(viewer, new FileEntry(file, true));
+        }
     }
 
     @Override
     public void onEditorPanelClose(EditorPanel editorPanel) {
-        recorder.record(viewer, new FileEntry(editorPanel.getFile(), false));
+        File file = editorPanel.getFile();
+
+        if (opened.contains(file)) {
+            opened.remove(file);
+            recorder.record(viewer, new FileEntry(file, false));
+        }
     }
 
     @Override
     public void onClose() {
-
+        opened.clear();
     }
 }
