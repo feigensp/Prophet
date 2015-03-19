@@ -8,6 +8,7 @@ import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import com.thoughtworks.xstream.XStream;
@@ -31,6 +32,7 @@ public class Record {
 
     public void save(File saveFile) throws IOException {
 
+        Collections.sort(entries);
         QTreeFormatHandler.checkParent(saveFile);
         try (Writer writer = new OutputStreamWriter(new FileOutputStream(saveFile), StandardCharsets.UTF_8)) {
             serialiser.toXML(this, writer);
