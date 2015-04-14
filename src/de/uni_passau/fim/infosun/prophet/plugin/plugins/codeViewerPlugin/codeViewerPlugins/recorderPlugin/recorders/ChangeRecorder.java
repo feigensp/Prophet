@@ -3,11 +3,16 @@ package de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeVi
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.CodeViewer;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin.Recorder;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin.RecorderPlugin;
+import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin.recordEntries.ChangeEntry;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.tabbedPane.EditorPanel;
 import de.uni_passau.fim.infosun.prophet.util.qTree.Attribute;
 import de.uni_passau.fim.infosun.prophet.util.settings.Setting;
 import de.uni_passau.fim.infosun.prophet.util.settings.SettingsList;
 import de.uni_passau.fim.infosun.prophet.util.settings.components.TextFieldSetting;
+
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.text.BadLocationException;
 
 import static de.uni_passau.fim.infosun.prophet.util.language.UIElementNames.getLocalized;
 
@@ -20,6 +25,71 @@ public class ChangeRecorder extends Recorder {
     private boolean enabled;
     private boolean join;
     private long joinTime;
+
+    private long lastJoin;
+    private ChangeEntry lastEntry;
+    private DocumentListener listener = new DocumentListener() {
+
+        private boolean shouldJoin(ChangeEntry.Type eventType, DocumentEvent event) {
+
+            if (!join) {
+                return false;
+            }
+
+            if (lastEntry == null) {
+                return false;
+            }
+
+            if (lastEntry.getType() != eventType) {
+                return false;
+            }
+
+            if ((lastEntry.getOffset() + lastEntry.getLength()) != event.getOffset()) {
+                return false;
+            }
+
+            return (System.currentTimeMillis() - ((lastJoin == 0) ? lastEntry.getTimestamp() : lastJoin)) < joinTime;
+        }
+
+        private String getContent(DocumentEvent event) {
+            String content;
+
+            try {
+                content = event.getDocument().getText(event.getOffset(), event.getLength());
+            } catch (BadLocationException e) {
+                System.err.println("Could not get the text content of an update.");
+                System.err.println(e.getMessage());
+                return "";
+            }
+
+            return content;
+        }
+
+        @Override
+        public void insertUpdate(DocumentEvent event) {
+            String content = getContent(event);
+
+            if (shouldJoin(ChangeEntry.Type.INSERT, event)) {
+                lastEntry.appendContent(content);
+                lastJoin = System.currentTimeMillis();
+            } else {
+                lastEntry = new ChangeEntry(ChangeEntry.Type.INSERT);
+                lastEntry.setContent(content);
+                lastEntry.setOffset(event.getOffset());
+                recorder.record(viewer, lastEntry);
+            }
+        }
+
+        @Override
+        public void removeUpdate(DocumentEvent event) {
+
+        }
+
+        @Override
+        public void changedUpdate(DocumentEvent e) {
+
+        }
+    };
 
     public ChangeRecorder(RecorderPlugin recorder, CodeViewer viewer) {
         super(recorder, viewer);
@@ -73,12 +143,18 @@ public class ChangeRecorder extends Recorder {
 
     @Override
     public void onEditorPanelCreate(EditorPanel editorPanel) {
-        
+
+        if (enabled) {
+            editorPanel.getTextArea().getDocument().addDocumentListener(listener);
+        }
     }
 
     @Override
     public void onEditorPanelClose(EditorPanel editorPanel) {
-     
+
+        if (enabled) {
+            editorPanel.getTextArea().getDocument().removeDocumentListener(listener);
+        }
     }
 
     @Override

@@ -14,6 +14,10 @@ public abstract class RecordEntry implements Comparable<RecordEntry> {
         this.timestamp = System.currentTimeMillis();
     }
 
+    public long getTimestamp() {
+        return timestamp;
+    }
+
     @Override
     public int compareTo(RecordEntry other) {
         return Long.compare(timestamp, other.timestamp);
