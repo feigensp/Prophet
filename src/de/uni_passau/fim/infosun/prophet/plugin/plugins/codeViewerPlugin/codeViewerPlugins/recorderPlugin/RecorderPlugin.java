@@ -32,7 +32,6 @@ public class RecorderPlugin implements Plugin {
     private static final String RECORD_FILENAME = "record.xml";
 
     private Map<CodeViewer, Pair<Record, List<Recorder>>> recorders;
-    private Attribute attribute;
 
     public RecorderPlugin() {
         recorders = new HashMap<>();
@@ -40,9 +39,11 @@ public class RecorderPlugin implements Plugin {
 
     private List<Recorder> getAllRecorders(CodeViewer viewer) {
         List<Recorder> allRecorders = new ArrayList<>(4);
-        allRecorders.add(new ChangeRecorder(this, viewer));
+        Attribute recorderPluginAttr = viewer.getAttribute().getSubAttribute(KEY);
+
+        allRecorders.add(new ChangeRecorder(this, viewer, recorderPluginAttr));
         allRecorders.add(new FileRecorder(this, viewer));
-        allRecorders.add(new ScrollingRecorder(this, viewer));
+        allRecorders.add(new ScrollingRecorder(this, viewer, recorderPluginAttr));
         allRecorders.add(new TabSwitchRecorder(this, viewer));
         
         return allRecorders;
@@ -50,7 +51,7 @@ public class RecorderPlugin implements Plugin {
     
     @Override
     public Setting getSetting(Attribute mainAttribute) {
-        attribute = mainAttribute.getSubAttribute(KEY);
+        Attribute attribute = mainAttribute.getSubAttribute(KEY);
         SettingsList setting = new SettingsList(attribute, getClass().getSimpleName(), true);
         setting.setCaption(UIElementNames.getLocalized("RECORDER_SETTING_CAPTION"));
         
@@ -118,9 +119,5 @@ public class RecorderPlugin implements Plugin {
         if (recorders.containsKey(viewer)) {
             recorders.get(viewer).getFirst().add(entry);
         }
-    }
-
-    public Attribute getAttribute() {
-        return attribute;
     }
 }

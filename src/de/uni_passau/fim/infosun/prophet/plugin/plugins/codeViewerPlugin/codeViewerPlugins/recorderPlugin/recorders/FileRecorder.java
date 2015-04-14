@@ -26,10 +26,7 @@ public class FileRecorder extends Recorder {
 
     /**
      * Returns the <code>Setting</code> of this <code>Recorder</code>. <code>Attribute</code>s to store settings in may
-     * be obtained from the given <code>mainAttribute</code>. <code>mainAttribute</code> will be an
-     * <code>Attribute</code> returned by the {@link RecorderPlugin#getAttribute()} method. <code>Recorder</code>
-     * instances can retrieve the values for their settings from the <code>RecorderPlugin</code> instance given
-     * in the constructor.
+     * be obtained from the given <code>mainAttribute</code>.
      *
      * @param mainAttribute
      *         the <code>Attribute</code> to obtain sub-attributes from
