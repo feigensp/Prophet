@@ -6,16 +6,32 @@ import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeVie
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.tabbedPane.EditorPanel;
 import de.uni_passau.fim.infosun.prophet.util.qTree.Attribute;
 import de.uni_passau.fim.infosun.prophet.util.settings.Setting;
+import de.uni_passau.fim.infosun.prophet.util.settings.SettingsList;
+import de.uni_passau.fim.infosun.prophet.util.settings.components.TextFieldSetting;
+
+import static de.uni_passau.fim.infosun.prophet.util.language.UIElementNames.getLocalized;
 
 public class ChangeRecorder extends Recorder {
 
+    private static final String KEY = "change";
+    private static final String KEY_JOIN = "join";
+    private static final String KEY_JOIN_TIME = "jointime";
+
+    private boolean enabled;
+    private boolean join;
+    private long joinTime;
+
     public ChangeRecorder(RecorderPlugin recorder, CodeViewer viewer) {
         super(recorder, viewer);
+
     }
 
     /**
      * Returns the <code>Setting</code> of this <code>Recorder</code>. <code>Attribute</code>s to store settings in may
-     * be obtained from the given <code>mainAttribute</code>.
+     * be obtained from the given <code>mainAttribute</code>. <code>mainAttribute</code> will be an
+     * <code>Attribute</code> returned by the {@link RecorderPlugin#getAttribute()} method. <code>Recorder</code>
+     * instances can retrieve the values for their settings from the <code>RecorderPlugin</code> instance given
+     * in the constructor.
      *
      * @param mainAttribute
      *         the <code>Attribute</code> to obtain sub-attributes from
@@ -24,7 +40,22 @@ public class ChangeRecorder extends Recorder {
      *         none
      */
     public static Setting getSetting(Attribute mainAttribute) {
-        return null;
+        Attribute rDescAttribute = mainAttribute.getSubAttribute(KEY);
+        SettingsList resultDesc = new SettingsList(rDescAttribute, ChangeRecorder.class.getSimpleName(), true);
+        resultDesc.setCaption(getLocalized("RECORDER_CHANGE_SOURCE_CODE_EDITS"));
+
+        Attribute joinDescAttribute = rDescAttribute.getSubAttribute(KEY_JOIN);
+        SettingsList joinDesc = new SettingsList(joinDescAttribute, null, true);
+        joinDesc.setCaption(getLocalized("RECORDER_CHANGE_SUMMARIZE_CHANGES"));
+
+        Attribute joinTimeDescAttribute = joinDescAttribute.getSubAttribute(KEY_JOIN_TIME);
+        Setting joinTimeDesc = new TextFieldSetting(joinTimeDescAttribute, null);
+        joinTimeDesc.setCaption(getLocalized("RECORDER_TIME_INTERVAL_FOR_SUMMARY"));
+
+        joinDesc.addSetting(joinTimeDesc);
+        resultDesc.addSetting(joinDesc);
+
+        return resultDesc;
     }
 
     @Override

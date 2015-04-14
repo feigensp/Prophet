@@ -32,6 +32,7 @@ public class RecorderPlugin implements Plugin {
     private static final String RECORD_FILENAME = "record.xml";
 
     private Map<CodeViewer, Pair<Record, List<Recorder>>> recorders;
+    private Attribute attribute;
 
     public RecorderPlugin() {
         recorders = new HashMap<>();
@@ -49,7 +50,7 @@ public class RecorderPlugin implements Plugin {
     
     @Override
     public Setting getSetting(Attribute mainAttribute) {
-        Attribute attribute = mainAttribute.getSubAttribute(KEY);
+        attribute = mainAttribute.getSubAttribute(KEY);
         SettingsList setting = new SettingsList(attribute, getClass().getSimpleName(), true);
         setting.setCaption(UIElementNames.getLocalized("RECORDER_SETTING_CAPTION"));
         
@@ -117,5 +118,9 @@ public class RecorderPlugin implements Plugin {
         if (recorders.containsKey(viewer)) {
             recorders.get(viewer).getFirst().add(entry);
         }
+    }
+
+    public Attribute getAttribute() {
+        return attribute;
     }
 }
