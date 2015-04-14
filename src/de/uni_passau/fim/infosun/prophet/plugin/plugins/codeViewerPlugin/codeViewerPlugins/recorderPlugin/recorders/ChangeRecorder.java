@@ -24,6 +24,19 @@ public class ChangeRecorder extends Recorder {
     public ChangeRecorder(RecorderPlugin recorder, CodeViewer viewer) {
         super(recorder, viewer);
 
+        Attribute enabledAttr = recorder.getAttribute().getSubAttribute(KEY);
+        Attribute joinAttr = enabledAttr.getSubAttribute(KEY_JOIN);
+        Attribute joinTimeAttr = joinAttr.getSubAttribute(KEY_JOIN_TIME);
+
+        enabled = Boolean.parseBoolean(enabledAttr.getValue());
+
+        if (enabled) {
+            join = Boolean.parseBoolean(joinAttr.getValue());
+
+            if (join) {
+                joinTime = Long.parseLong(joinTimeAttr.getValue());
+            }
+        }
     }
 
     /**
