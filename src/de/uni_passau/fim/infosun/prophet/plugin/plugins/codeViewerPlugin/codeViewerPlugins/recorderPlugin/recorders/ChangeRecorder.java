@@ -44,8 +44,22 @@ public class ChangeRecorder extends Recorder {
                 return false;
             }
 
-            if ((lastEntry.getOffset() + lastEntry.getLength()) != event.getOffset()) {
-                return false;
+            if (eventType == ChangeEntry.Type.INSERT) {
+
+                if ((lastEntry.getOffset() + lastEntry.getLength()) != event.getOffset()) {
+                    return false;
+                }
+            } else if (eventType == ChangeEntry.Type.REMOVE) {
+                int lastOffset = lastEntry.getOffset();
+                int offset = event.getOffset();
+                int length = event.getLength();
+
+                boolean wasBackspace = offset + length == lastOffset;
+                boolean wasDelete = lastOffset == offset;
+
+                if (!(wasBackspace || wasDelete)) {
+                    return false;
+                }
             }
 
             return (System.currentTimeMillis() - ((lastJoin == 0) ? lastEntry.getTimestamp() : lastJoin)) < joinTime;
@@ -59,7 +73,7 @@ public class ChangeRecorder extends Recorder {
             } catch (BadLocationException e) {
                 System.err.println("Could not get the text content of an update.");
                 System.err.println(e.getMessage());
-                return "";
+                return "error";
             }
 
             return content;
@@ -73,9 +87,11 @@ public class ChangeRecorder extends Recorder {
                 lastEntry.appendContent(content);
                 lastJoin = System.currentTimeMillis();
             } else {
+                lastJoin = 0;
                 lastEntry = new ChangeEntry(ChangeEntry.Type.INSERT);
                 lastEntry.setContent(content);
                 lastEntry.setOffset(event.getOffset());
+                lastEntry.setLength(event.getLength());
                 recorder.record(viewer, lastEntry);
             }
         }
@@ -83,6 +99,16 @@ public class ChangeRecorder extends Recorder {
         @Override
         public void removeUpdate(DocumentEvent event) {
 
+            if (shouldJoin(ChangeEntry.Type.REMOVE, event)) {
+                lastEntry.setOffset(event.getOffset());
+                lastEntry.setLength(lastEntry.getLength() + event.getLength());
+            } else {
+                lastJoin = 0;
+                lastEntry = new ChangeEntry(ChangeEntry.Type.REMOVE);
+                lastEntry.setOffset(event.getOffset());
+                lastEntry.setLength(event.getLength());
+                recorder.record(viewer, lastEntry);
+            }
         }
 
         @Override

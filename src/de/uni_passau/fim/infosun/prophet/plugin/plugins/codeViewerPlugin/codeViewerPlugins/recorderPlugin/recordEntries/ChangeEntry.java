@@ -14,6 +14,7 @@ public class ChangeEntry extends RecordEntry {
     private Type type;
 
     private int offset;
+    private int length;
     private String content;
 
     public ChangeEntry(Type type) {
@@ -33,7 +34,11 @@ public class ChangeEntry extends RecordEntry {
     }
 
     public int getLength() {
-        return content.length();
+        return length;
+    }
+
+    public void setLength(int length) {
+        this.length = length;
     }
 
     public String getContent() {
@@ -45,6 +50,7 @@ public class ChangeEntry extends RecordEntry {
     }
 
     public void appendContent(String additionalContent) {
+        this.length += additionalContent.length();
         this.content += additionalContent;
     }
 }
