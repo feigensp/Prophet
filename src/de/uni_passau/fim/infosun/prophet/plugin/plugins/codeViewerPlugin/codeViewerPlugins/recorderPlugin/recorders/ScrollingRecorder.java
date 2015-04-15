@@ -3,12 +3,20 @@ package de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeVi
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.CodeViewer;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin.Recorder;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin.RecorderPlugin;
+import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin.recordEntries.ScrollingEntry;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.tabbedPane.EditorPanel;
 import de.uni_passau.fim.infosun.prophet.util.language.UIElementNames;
 import de.uni_passau.fim.infosun.prophet.util.qTree.Attribute;
 import de.uni_passau.fim.infosun.prophet.util.settings.Setting;
 import de.uni_passau.fim.infosun.prophet.util.settings.SettingsList;
 import de.uni_passau.fim.infosun.prophet.util.settings.components.TextFieldSetting;
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+
+import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.text.BadLocationException;
+import java.awt.*;
 
 public class ScrollingRecorder extends Recorder {
 
@@ -16,8 +24,74 @@ public class ScrollingRecorder extends Recorder {
     private static final String KEY_JOIN = "join";
     private static final String KEY_JOIN_TIME = "jointime";
 
+    private boolean enabled;
+    private boolean join;
+    private long joinTime;
+
+    private long lastJoin;
+    private ScrollingEntry lastEntry;
+    private ChangeListener listener = new ChangeListener() {
+
+        private boolean shouldJoin() {
+
+            if (!join) {
+                return false;
+            }
+
+            if (lastEntry == null) {
+                return false;
+            }
+
+            return (System.currentTimeMillis() - ((lastJoin == 0) ? lastEntry.getTimestamp() : lastJoin)) < joinTime;
+        }
+
+        @Override
+        public void stateChanged(ChangeEvent event) {
+            JViewport viewport = (JViewport) event.getSource();
+            RSyntaxTextArea view = (RSyntaxTextArea) viewport.getView();
+
+            Rectangle viewRect = viewport.getViewRect();
+            Point topLeft = viewRect.getLocation();
+
+            int line;
+
+            try {
+                line = view.getLineOfOffset(view.viewToModel(topLeft));
+            } catch (BadLocationException e) {
+                return;
+            }
+
+            if (lastEntry != null && line == lastEntry.getStartLine()) {
+                return;
+            }
+
+            if (shouldJoin()) {
+                lastEntry.setEndLine(line);
+                lastJoin = System.currentTimeMillis();
+            } else {
+                lastJoin = 0;
+                lastEntry = new ScrollingEntry(line);
+                recorder.record(viewer, lastEntry);
+            }
+        }
+    };
+
     public ScrollingRecorder(RecorderPlugin recorder, CodeViewer viewer, Attribute recorderPluginAttr) {
         super(recorder, viewer);
+
+        Attribute enabledAttr = recorderPluginAttr.getSubAttribute(KEY);
+        Attribute joinAttr = enabledAttr.getSubAttribute(KEY_JOIN);
+        Attribute joinTimeAttr = joinAttr.getSubAttribute(KEY_JOIN_TIME);
+
+        enabled = Boolean.parseBoolean(enabledAttr.getValue());
+
+        if (enabled) {
+            join = Boolean.parseBoolean(joinAttr.getValue());
+
+            if (join) {
+                joinTime = Long.parseLong(joinTimeAttr.getValue());
+            }
+        }
     }
 
     /**
@@ -52,11 +126,17 @@ public class ScrollingRecorder extends Recorder {
     @Override
     public void onEditorPanelCreate(EditorPanel editorPanel) {
 
+        if (enabled) {
+            editorPanel.getScrollPane().getViewport().addChangeListener(listener);
+        }
     }
 
     @Override
     public void onEditorPanelClose(EditorPanel editorPanel) {
 
+        if (enabled) {
+            editorPanel.getScrollPane().getViewport().removeChangeListener(listener);
+        }
     }
 
     @Override
