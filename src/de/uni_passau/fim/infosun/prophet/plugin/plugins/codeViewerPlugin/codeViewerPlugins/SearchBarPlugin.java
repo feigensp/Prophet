@@ -90,8 +90,8 @@ public class SearchBarPlugin implements Plugin {
     }
 
 	@Override
-	public void onCreate(CodeViewer viewer) {
-		Attribute vAttr = viewer.getAttribute();
+	public void onCreate(CodeViewer codeViewer) {
+		Attribute vAttr = codeViewer.getAttribute();
 		this.enabled = vAttr.containsSubAttribute(KEY) && Boolean.parseBoolean(vAttr.getSubAttribute(KEY).getValue());
 
 		if (!enabled) {
@@ -100,13 +100,13 @@ public class SearchBarPlugin implements Plugin {
 
 		Attribute pluginAttr = vAttr.getSubAttribute(KEY);
 
-		this.recorder = viewer.getRecorder();
+		this.recorder = codeViewer.getRecorder();
 		this.regexDisabled = Boolean.parseBoolean(pluginAttr.getSubAttribute(KEY_DISABLE_REGEX).getValue());
 
 		JMenuItem findMenuItem = new JMenuItem(UIElementNames.getLocalized("SEARCH_BAR_MENU_SEARCH"));
 		findMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F, InputEvent.CTRL_MASK));
 		findMenuItem.addActionListener(e -> {
-			SearchBar sBar = searchBars.get(viewer.getTabbedPane().getSelectedComponent());
+			SearchBar sBar = searchBars.get(codeViewer.getTabbedPane().getSelectedComponent());
 
 			if (sBar != null) {
 				sBar.setVisible(true);
@@ -114,20 +114,20 @@ public class SearchBarPlugin implements Plugin {
 			}
 		});
 
-		viewer.addMenuItemToEditMenu(findMenuItem);
+		codeViewer.addMenuItemToEditMenu(findMenuItem);
 
 		if (Boolean.parseBoolean(pluginAttr.getSubAttribute(KEY_ENABLE_GLOBAL).getValue())) {
-			globalSearchBar = new GlobalSearchBar(viewer);
+			globalSearchBar = new GlobalSearchBar(codeViewer);
 			globalSearchBar.setVisible(false);
 
 			globalSearchBar.addSearchBarListener((action, query, success) ->
-					recorder.record(viewer, new SearchEntry(action, query, success)));
+					recorder.record(codeViewer, new SearchEntry(action, query, success)));
 
 			if (regexDisabled) {
 				globalSearchBar.getRegexCB().setVisible(false);
 			}
 
-			viewer.add(globalSearchBar, BorderLayout.SOUTH);
+			codeViewer.add(globalSearchBar, BorderLayout.SOUTH);
 
 			JMenuItem findGlobalMenuItem = new JMenuItem(UIElementNames.getLocalized("SEARCH_BAR_MENU_GLOBAL_SEARCH"));
 			findGlobalMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_H, InputEvent.CTRL_MASK));
@@ -136,7 +136,7 @@ public class SearchBarPlugin implements Plugin {
 				globalSearchBar.grabFocus();
 			});
 
-			viewer.addMenuItemToEditMenu(findGlobalMenuItem);
+			codeViewer.addMenuItemToEditMenu(findGlobalMenuItem);
 		}
 	}
 
