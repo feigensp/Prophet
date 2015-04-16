@@ -26,6 +26,10 @@ import de.uni_passau.fim.infosun.prophet.util.qTree.Attribute;
 import de.uni_passau.fim.infosun.prophet.util.settings.Setting;
 import de.uni_passau.fim.infosun.prophet.util.settings.SettingsList;
 
+/**
+ * A <code>Plugin</code> that enables using <code>Recorder</code> implementations to record events of interest in
+ * <code>CodeViewer</code>s and their <code>EditorPanel</code>s.
+ */
 public class RecorderPlugin implements Plugin {
 
     private static final String KEY = "recorder";
@@ -33,10 +37,19 @@ public class RecorderPlugin implements Plugin {
 
     private Map<CodeViewer, Pair<Record, List<Recorder>>> recorders;
 
+    /**
+     * Constructs a new <code>RecorderPlugin</code>.
+     */
     public RecorderPlugin() {
         recorders = new HashMap<>();
     }
 
+    /**
+     * Instantiates all <code>Recorder</code>s for the given <code>CodeViewer</code>.
+     *
+     * @param viewer the <code>CodeViewer</code> for the <code>Recorder</code>s
+     * @return a list of all <code>Recorder</code>s
+     */
     private List<Recorder> getAllRecorders(CodeViewer viewer) {
         List<Recorder> allRecorders = new ArrayList<>(4);
         Attribute recorderPluginAttr = viewer.getAttribute().getSubAttribute(KEY);
@@ -113,9 +126,9 @@ public class RecorderPlugin implements Plugin {
             System.err.println(e.getMessage());
         }
     }
-    
+
     public void record(CodeViewer viewer, RecordEntry entry) {
-        
+
         if (recorders.containsKey(viewer)) {
             recorders.get(viewer).getFirst().add(entry);
         }
