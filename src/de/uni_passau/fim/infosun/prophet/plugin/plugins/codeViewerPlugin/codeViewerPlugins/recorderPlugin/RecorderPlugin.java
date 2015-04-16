@@ -130,6 +130,14 @@ public class RecorderPlugin implements Plugin {
         }
     }
 
+    /**
+     * Records the given <code>RecordEntry</code>.
+     *
+     * @param viewer
+     *         the <code>CodeViewer</code> the <code>entry</code> concerns
+     * @param entry
+     *         the <code>RecordEntry</code> to record
+     */
     public void record(CodeViewer viewer, RecordEntry entry) {
 
         if (recorders.containsKey(viewer)) {
