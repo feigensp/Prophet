@@ -3,7 +3,6 @@ package de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeVi
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.CodeViewer;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin.Record;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin.Recorder;
-import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin.RecorderPlugin;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin.recordEntries.ScrollingEntry;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.tabbedPane.EditorPanel;
 import de.uni_passau.fim.infosun.prophet.util.language.UIElementNames;
@@ -18,6 +17,8 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.text.BadLocationException;
 import java.awt.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ScrollingRecorder extends Recorder {
 
@@ -31,7 +32,16 @@ public class ScrollingRecorder extends Recorder {
 
     private long lastJoin;
     private ScrollingEntry lastEntry;
-    private ChangeListener listener = new ChangeListener() {
+
+    private Map<EditorPanel, ScrollListener> listeners;
+
+    private class ScrollListener implements ChangeListener {
+
+        private EditorPanel panel;
+
+        public ScrollListener(EditorPanel panel) {
+            this.panel = panel;
+        }
 
         private boolean shouldJoin() {
 
@@ -71,7 +81,7 @@ public class ScrollingRecorder extends Recorder {
                 lastJoin = System.currentTimeMillis();
             } else {
                 lastJoin = 0;
-                lastEntry = new ScrollingEntry(line);
+                lastEntry = new ScrollingEntry(panel, line);
                 record.add(lastEntry);
             }
         }
@@ -93,6 +103,8 @@ public class ScrollingRecorder extends Recorder {
                 joinTime = Long.parseLong(joinTimeAttr.getValue());
             }
         }
+
+        listeners = new HashMap<>();
     }
 
     /**
@@ -128,7 +140,10 @@ public class ScrollingRecorder extends Recorder {
     public void onEditorPanelCreate(EditorPanel editorPanel) {
 
         if (enabled) {
+            ScrollListener listener = new ScrollListener(editorPanel);
+
             editorPanel.getScrollPane().getViewport().addChangeListener(listener);
+            listeners.put(editorPanel, listener);
         }
     }
 
@@ -136,7 +151,7 @@ public class ScrollingRecorder extends Recorder {
     public void onEditorPanelClose(EditorPanel editorPanel) {
 
         if (enabled) {
-            editorPanel.getScrollPane().getViewport().removeChangeListener(listener);
+            editorPanel.getScrollPane().getViewport().removeChangeListener(listeners.get(editorPanel));
         }
     }
 
