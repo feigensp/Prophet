@@ -4,29 +4,35 @@ import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.CodeViewer;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin.RecordEntry;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public abstract class CodeViewerEntry extends RecordEntry {
 
-    private static Map<CodeViewer, Integer> cvIDs = new HashMap<>();
+    protected static class IDProvider<T> {
 
-    private static Integer idFor(CodeViewer viewer) {
-        Integer id;
+        private Map<T, Integer> cvIDs = new HashMap<>();
 
-        if (cvIDs.containsKey(viewer)) {
-            id = cvIDs.get(viewer);
-        } else {
-            id = cvIDs.values().stream().max(Integer::compareTo).orElse(-1) + 1;
-            cvIDs.put(viewer, id);
+        public synchronized Integer idFor(T obj) {
+            Integer id;
+
+            if (cvIDs.containsKey(obj)) {
+                id = cvIDs.get(obj);
+            } else {
+                id = cvIDs.values().stream().max(Integer::compareTo).orElse(-1) + 1;
+                cvIDs.put(obj, id);
+            }
+
+            return id;
         }
-
-        return id;
     }
+
+    private static IDProvider<CodeViewer> idProvider = new IDProvider<>();
 
     @XStreamAsAttribute
     private int cvId;
 
     public CodeViewerEntry(CodeViewer viewer) {
-        this.cvId = idFor(viewer);
+        this.cvId = idProvider.idFor(viewer);
     }
 }
