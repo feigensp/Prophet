@@ -51,7 +51,7 @@ public class EditorTabbedPane extends JTabbedPane {
             panel = panels.get(file);
 
             if (panel == null) {
-                panel = new EditorPanel(file);
+                panel = new EditorPanel(codeViewer, file);
 
                 CodeViewerPluginList.onEditorPanelCreate(codeViewer, panel);
 
