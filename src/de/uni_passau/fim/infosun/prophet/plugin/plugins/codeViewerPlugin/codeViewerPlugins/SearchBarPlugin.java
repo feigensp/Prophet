@@ -12,6 +12,7 @@ import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.CodeVie
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.Plugin;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin
         .RecorderPlugin;
+import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin.recordEntries.SearchEntry;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.tabbedPane.EditorPanel;
 import de.uni_passau.fim.infosun.prophet.util.language.UIElementNames;
 import de.uni_passau.fim.infosun.prophet.util.qTree.Attribute;
@@ -119,16 +120,8 @@ public class SearchBarPlugin implements Plugin {
 			globalSearchBar = new GlobalSearchBar(viewer);
 			globalSearchBar.setVisible(false);
 
-			globalSearchBar.addSearchBarListener((action, query, success) -> {
-                // TODO implement appropriate RecorderEntry
-//				LoggingTreeNode node = new LoggingTreeNode(TYPE_SEARCH);
-//
-//				node.setAttribute(ATTRIBUTE_ACTION, action);
-//				node.setAttribute(ATTRIBUTE_QUERY, query);
-//				node.setAttribute(ATTRIBUTE_SUCCESS, String.valueOf(success));
-//
-//				viewer.getRecorder().addLoggingTreeNode(node);
-			});
+			globalSearchBar.addSearchBarListener((action, query, success) ->
+					recorder.record(viewer, new SearchEntry(action, query, success)));
 
 			if (regexDisabled) {
 				globalSearchBar.getRegexCB().setVisible(false);
@@ -158,16 +151,8 @@ public class SearchBarPlugin implements Plugin {
 		SearchBar searchBar = new SearchBar(textPane);
 		searchBar.setVisible(false);
 
-		searchBar.addSearchBarListener((action, query, success) -> {
-            // TODO implement appropriate RecorderEntry
-//			LoggingTreeNode node = new LoggingTreeNode(TYPE_SEARCH);
-//
-//			node.setAttribute(ATTRIBUTE_ACTION, action);
-//			node.setAttribute(ATTRIBUTE_QUERY, query);
-//			node.setAttribute(ATTRIBUTE_SUCCESS, String.valueOf(success));
-//
-//			recorder.addLoggingTreeNode(node);
-		});
+		searchBar.addSearchBarListener((action, query, success) ->
+				recorder.record(codeViewer, new SearchEntry(action, query, success)));
 
 		if (regexDisabled) {
 			searchBar.getRegexCB().setVisible(false);
