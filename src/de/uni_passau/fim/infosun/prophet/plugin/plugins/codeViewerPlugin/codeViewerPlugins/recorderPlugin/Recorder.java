@@ -1,18 +1,34 @@
 package de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin;
 
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.CodeViewer;
+import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.Plugin;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.tabbedPane.EditorPanel;
 
+/**
+ * <code>Recorder</code> implementations are used by the <code>RecorderPlugin</code> to record some event in a
+ * <code>CodeViewer</code> or one of its <code>EditorPanel</code>s. The <code>RecorderPlugin</code> instantiates
+ * all <code>Recorder</code>s for every <code>CodeViewer</code> and passes the calls to its
+ * {@link Plugin#onEditorPanelCreate(CodeViewer, EditorPanel)},
+ * {@link Plugin#onEditorPanelClose(CodeViewer, EditorPanel)}, and {@link Plugin#onClose(CodeViewer)} to them.
+ */
 public abstract class Recorder {
-    
+
     protected RecorderPlugin recorder;
     protected CodeViewer viewer;
 
+    /**
+     * Constructs a new <code>Recorder</code> storing the given <code>RecorderPlugin</code> and <code>CodeViewer</code>.
+     *
+     * @param recorder
+     *         the <code>RecorderPlugin</code> that should be used to record <code>RecordEntry</code>s
+     * @param viewer
+     *         the <code>CodeViewer</code> this <code>Recorder</code> is for
+     */
     public Recorder(RecorderPlugin recorder, CodeViewer viewer) {
         this.recorder = recorder;
         this.viewer = viewer;
     }
- 
+
     /**
      * Called after a new editor panel in the <code>CodeViewer</code> this <code>Recorder</code> belongs to was created.
      *
