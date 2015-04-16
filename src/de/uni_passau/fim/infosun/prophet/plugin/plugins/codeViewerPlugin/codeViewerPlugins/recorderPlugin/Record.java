@@ -45,7 +45,7 @@ public class Record {
      * @throws IOException
      *         if there is an <code>IOException</code> writing to the file
      */
-    public void save(File saveFile) throws IOException {
+    protected void save(File saveFile) throws IOException {
 
         Collections.sort(entries);
         QTreeFormatHandler.checkParent(saveFile);

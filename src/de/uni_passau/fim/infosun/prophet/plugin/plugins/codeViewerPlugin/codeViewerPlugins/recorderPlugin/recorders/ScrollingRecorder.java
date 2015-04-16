@@ -1,6 +1,7 @@
 package de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin.recorders;
 
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.CodeViewer;
+import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin.Record;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin.Recorder;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin.RecorderPlugin;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin.recordEntries.ScrollingEntry;
@@ -71,13 +72,13 @@ public class ScrollingRecorder extends Recorder {
             } else {
                 lastJoin = 0;
                 lastEntry = new ScrollingEntry(line);
-                recorder.record(viewer, lastEntry);
+                record.add(lastEntry);
             }
         }
     };
 
-    public ScrollingRecorder(RecorderPlugin recorder, CodeViewer viewer, Attribute recorderPluginAttr) {
-        super(recorder, viewer);
+    public ScrollingRecorder(Record record, CodeViewer viewer, Attribute recorderPluginAttr) {
+        super(record, viewer);
 
         Attribute enabledAttr = recorderPluginAttr.getSubAttribute(KEY);
         Attribute joinAttr = enabledAttr.getSubAttribute(KEY_JOIN);

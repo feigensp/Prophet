@@ -13,19 +13,19 @@ import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.tabbedP
  */
 public abstract class Recorder {
 
-    protected RecorderPlugin recorder;
+    protected Record record;
     protected CodeViewer viewer;
 
     /**
-     * Constructs a new <code>Recorder</code> storing the given <code>RecorderPlugin</code> and <code>CodeViewer</code>.
+     * Constructs a new <code>Recorder</code> for the given <code>CodeViewer</code>.
      *
-     * @param recorder
-     *         the <code>RecorderPlugin</code> that should be used to record <code>RecordEntry</code>s
+     * @param record
+     *         the <code>Record</code> that should be used to record <code>RecordEntry</code>s
      * @param viewer
      *         the <code>CodeViewer</code> this <code>Recorder</code> is for
      */
-    public Recorder(RecorderPlugin recorder, CodeViewer viewer) {
-        this.recorder = recorder;
+    public Recorder(Record record, CodeViewer viewer) {
+        this.record = record;
         this.viewer = viewer;
     }
 

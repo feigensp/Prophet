@@ -47,32 +47,35 @@ public class RecorderPlugin implements Plugin {
     /**
      * Instantiates all <code>Recorder</code>s for the given <code>CodeViewer</code>.
      *
-     * @param viewer the <code>CodeViewer</code> for the <code>Recorder</code>s
+     * @param record
+     *         the <code>Recorder</code> to be used by the <code>Recorder</code>s
+     * @param viewer
+     *         the <code>CodeViewer</code> the <code>Recorder</code>s are for
      * @return a list of all <code>Recorder</code>s
      */
-    private List<Recorder> getAllRecorders(CodeViewer viewer) {
+    private List<Recorder> getAllRecorders(Record record, CodeViewer viewer) {
         List<Recorder> allRecorders = new ArrayList<>(4);
         Attribute recorderPluginAttr = viewer.getAttribute().getSubAttribute(KEY);
 
-        allRecorders.add(new ChangeRecorder(this, viewer, recorderPluginAttr));
-        allRecorders.add(new FileRecorder(this, viewer));
-        allRecorders.add(new ScrollingRecorder(this, viewer, recorderPluginAttr));
-        allRecorders.add(new TabSwitchRecorder(this, viewer));
-        
+        allRecorders.add(new ChangeRecorder(record, viewer, recorderPluginAttr));
+        allRecorders.add(new FileRecorder(record, viewer));
+        allRecorders.add(new ScrollingRecorder(record, viewer, recorderPluginAttr));
+        allRecorders.add(new TabSwitchRecorder(record, viewer));
+
         return allRecorders;
     }
-    
+
     @Override
     public Setting getSetting(Attribute mainAttribute) {
         Attribute attribute = mainAttribute.getSubAttribute(KEY);
         SettingsList setting = new SettingsList(attribute, getClass().getSimpleName(), true);
         setting.setCaption(UIElementNames.getLocalized("RECORDER_SETTING_CAPTION"));
-        
+
         setting.addSetting(ChangeRecorder.getSetting(attribute));
         setting.addSetting(FileRecorder.getSetting(attribute));
         setting.addSetting(ScrollingRecorder.getSetting(attribute));
         setting.addSetting(TabSwitchRecorder.getSetting(attribute));
-        
+
         return setting;
     }
 
@@ -80,18 +83,18 @@ public class RecorderPlugin implements Plugin {
     public void onCreate(CodeViewer viewer) {
         Attribute attr = viewer.getAttribute();
         boolean enabled = attr.containsSubAttribute(KEY) && Boolean.parseBoolean(attr.getSubAttribute(KEY).getValue());
-        
+
         if (enabled) {
             Record record = new Record();
-            
+
             record.add(new CVEntry(true));
-            recorders.put(viewer, Pair.of(record, getAllRecorders(viewer)));
+            recorders.put(viewer, Pair.of(record, getAllRecorders(record, viewer)));
         }
     }
 
     @Override
     public void onEditorPanelCreate(CodeViewer codeViewer, EditorPanel editorPanel) {
-        
+
         if (recorders.containsKey(codeViewer)) {
             recorders.get(codeViewer).getSecond().forEach(r -> r.onEditorPanelCreate(editorPanel));
         }
@@ -99,7 +102,7 @@ public class RecorderPlugin implements Plugin {
 
     @Override
     public void onEditorPanelClose(CodeViewer codeViewer, EditorPanel editorPanel) {
-        
+
         if (recorders.containsKey(codeViewer)) {
             recorders.get(codeViewer).getSecond().forEach(r -> r.onEditorPanelClose(editorPanel));
         }
@@ -107,7 +110,7 @@ public class RecorderPlugin implements Plugin {
 
     @Override
     public void onClose(CodeViewer codeViewer) {
-        
+
         if (!recorders.containsKey(codeViewer)) {
             return;
         }
@@ -115,9 +118,9 @@ public class RecorderPlugin implements Plugin {
         Pair<Record, List<Recorder>> cvRecord = recorders.remove(codeViewer);
         File saveDir = new File(codeViewer.getSaveDir(), getClass().getSimpleName());
         File saveFile = new File(saveDir, RECORD_FILENAME);
-        
+
         cvRecord.getSecond().forEach(Recorder::onClose);
-        
+
         try {
             cvRecord.getFirst().add(new CVEntry(false));
             cvRecord.getFirst().save(saveFile);

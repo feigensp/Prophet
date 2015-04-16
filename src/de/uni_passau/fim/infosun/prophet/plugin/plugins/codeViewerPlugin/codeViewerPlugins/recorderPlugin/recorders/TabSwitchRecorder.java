@@ -3,6 +3,7 @@ package de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeVi
 import javax.swing.event.ChangeListener;
 
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.CodeViewer;
+import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin.Record;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin.Recorder;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin
         .RecorderPlugin;
@@ -19,15 +20,15 @@ public class TabSwitchRecorder extends Recorder {
     private ChangeListener listener;
     private EditorPanel selected;
     
-    public TabSwitchRecorder(RecorderPlugin recorder, CodeViewer viewer) {
-        super(recorder, viewer);
+    public TabSwitchRecorder(Record record, CodeViewer viewer) {
+        super(record, viewer);
 
         this.tabbedPane = viewer.getTabbedPane();
         this.listener = c -> {
             EditorPanel newSelection = (EditorPanel) tabbedPane.getSelectedComponent();
             
             if (newSelection != null && newSelection != selected) {
-                recorder.record(viewer, new TabSelectionEntry(newSelection.getFile()));
+                record.add(new TabSelectionEntry(newSelection.getFile()));
                 selected = newSelection;
             }
         };

@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.CodeViewer;
+import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin.Record;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin.Recorder;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin
         .RecorderPlugin;
@@ -18,8 +19,8 @@ public class FileRecorder extends Recorder {
 
     private Set<File> opened;
     
-    public FileRecorder(RecorderPlugin recorder, CodeViewer viewer) {
-        super(recorder, viewer);
+    public FileRecorder(Record record, CodeViewer viewer) {
+        super(record, viewer);
         
         this.opened = new HashSet<>();
     }
@@ -44,7 +45,7 @@ public class FileRecorder extends Recorder {
         
         if (!opened.contains(file)) {
             opened.add(file);
-            recorder.record(viewer, new FileEntry(file, true));
+            record.add(new FileEntry(file, true));
         }
     }
 
@@ -54,7 +55,7 @@ public class FileRecorder extends Recorder {
 
         if (opened.contains(file)) {
             opened.remove(file);
-            recorder.record(viewer, new FileEntry(file, false));
+            record.add(new FileEntry(file, false));
         }
     }
 
