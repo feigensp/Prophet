@@ -3,6 +3,7 @@ package de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeVi
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.CodeViewer;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin.Record;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin.Recorder;
+import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin.recordEntries.CVStatusEntry;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin.recordEntries.FileStatusEntry;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.tabbedPane.EditorPanel;
 import de.uni_passau.fim.infosun.prophet.util.qTree.Attribute;
@@ -42,7 +43,7 @@ public class FileRecorder extends Recorder {
         
         if (!opened.contains(file)) {
             opened.add(file);
-            record.add(new FileStatusEntry(editorPanel, true));
+            record.add(new FileStatusEntry(editorPanel, CVStatusEntry.Action.OPENED));
         }
     }
 
@@ -52,7 +53,7 @@ public class FileRecorder extends Recorder {
 
         if (opened.contains(file)) {
             opened.remove(file);
-            record.add(new FileStatusEntry(editorPanel, false));
+            record.add(new FileStatusEntry(editorPanel, CVStatusEntry.Action.CLOSED));
         }
     }
 
