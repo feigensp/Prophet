@@ -1,30 +1,25 @@
 package de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.CodeViewer;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.Plugin;
-import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin
-        .recordEntries.CVEntry;
-import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin.recorders
-        .ChangeRecorder;
-import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin.recorders
-        .FileRecorder;
-import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin.recorders
-        .ScrollingRecorder;
-import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin.recorders
-        .TabSwitchRecorder;
+import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin.recordEntries.CVStatusEntry;
+import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin.recorders.ChangeRecorder;
+import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin.recorders.FileRecorder;
+import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin.recorders.ScrollingRecorder;
+import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin.recorders.TabSwitchRecorder;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.tabbedPane.EditorPanel;
 import de.uni_passau.fim.infosun.prophet.util.Pair;
 import de.uni_passau.fim.infosun.prophet.util.language.UIElementNames;
 import de.uni_passau.fim.infosun.prophet.util.qTree.Attribute;
 import de.uni_passau.fim.infosun.prophet.util.settings.Setting;
 import de.uni_passau.fim.infosun.prophet.util.settings.SettingsList;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * A <code>Plugin</code> that enables using <code>Recorder</code> implementations to record events of interest in
@@ -87,7 +82,7 @@ public class RecorderPlugin implements Plugin {
         if (enabled) {
             Record record = new Record();
 
-            record.add(new CVEntry(true));
+            record.add(new CVStatusEntry(viewer, CVStatusEntry.Action.OPENED));
             recorders.put(viewer, Pair.of(record, getAllRecorders(record, viewer)));
         }
     }
@@ -122,7 +117,7 @@ public class RecorderPlugin implements Plugin {
         cvRecord.getSecond().forEach(Recorder::onClose);
 
         try {
-            cvRecord.getFirst().add(new CVEntry(false));
+            cvRecord.getFirst().add(new CVStatusEntry(codeViewer, CVStatusEntry.Action.CLOSED));
             cvRecord.getFirst().save(saveFile);
         } catch (IOException e) {
             System.err.println("Could not save the " + RECORD_FILENAME);

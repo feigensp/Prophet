@@ -2,6 +2,7 @@ package de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeVi
 
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
+import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin.recordEntries.CVStatusEntry.Action;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.tabbedPane.EditorPanel;
 
 import java.io.File;
@@ -9,13 +10,12 @@ import java.io.File;
 @XStreamAlias("fileEntry")
 public class FileStatusEntry extends EditorPanelEntry {
 
-    private String action;
+    private Action action;
     private File file;
     
-    public FileStatusEntry(EditorPanel panel, boolean opened) {
+    public FileStatusEntry(EditorPanel panel, Action action) {
         super(panel);
-
-        this.action = (opened) ? OPENED : CLOSED;
+        this.action = action;
         this.file = panel.getFile();
     }
 }
