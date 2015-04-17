@@ -3,7 +3,7 @@ package de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeVi
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.tabbedPane.EditorPanel;
 
-public class EditorPanelEntry extends CodeViewerEntry {
+public abstract class EditorPanelEntry extends CodeViewerEntry {
 
     private static IDProvider<EditorPanel> idProvider = new IDProvider<>();
 

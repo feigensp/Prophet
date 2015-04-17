@@ -1,17 +1,9 @@
 package de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeViewerPlugins;
 
-import java.awt.BorderLayout;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
-import java.util.HashMap;
-import java.util.Map;
-import javax.swing.JMenuItem;
-import javax.swing.KeyStroke;
-
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.CodeViewer;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.Plugin;
-import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin
-        .RecorderPlugin;
+import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin.RecorderPlugin;
+import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin.recordEntries.GlobalSearchEntry;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin.recordEntries.SearchEntry;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.tabbedPane.EditorPanel;
 import de.uni_passau.fim.infosun.prophet.util.language.UIElementNames;
@@ -22,6 +14,13 @@ import de.uni_passau.fim.infosun.prophet.util.settings.Setting;
 import de.uni_passau.fim.infosun.prophet.util.settings.SettingsList;
 import de.uni_passau.fim.infosun.prophet.util.settings.components.CheckBoxSetting;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A <code>Plugin</code> that will enable showing <code>SearchBar</code>s for <code>EditorPanel</code>s opened in the
@@ -121,7 +120,7 @@ public class SearchBarPlugin implements Plugin {
 			globalSearchBar.setVisible(false);
 
 			globalSearchBar.addSearchBarListener((action, query, success) ->
-					recorder.record(codeViewer, new SearchEntry(action, query, success)));
+					recorder.record(codeViewer, new GlobalSearchEntry(codeViewer, action, query, success)));
 
 			if (regexDisabled) {
 				globalSearchBar.getRegexCB().setVisible(false);
@@ -152,7 +151,7 @@ public class SearchBarPlugin implements Plugin {
 		searchBar.setVisible(false);
 
 		searchBar.addSearchBarListener((action, query, success) ->
-				recorder.record(codeViewer, new SearchEntry(action, query, success)));
+				recorder.record(codeViewer, new SearchEntry(editorPanel, action, query, success)));
 
 		if (regexDisabled) {
 			searchBar.getRegexCB().setVisible(false);

@@ -1,17 +1,17 @@
 package de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin.recordEntries;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
-import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.tabbedPane.EditorPanel;
+import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.CodeViewer;
 
-@XStreamAlias("searchEntry")
-public class SearchEntry extends EditorPanelEntry {
+@XStreamAlias("globalSearchEntry")
+public class GlobalSearchEntry extends CodeViewerEntry {
 
     private String action;
     private String query;
     private boolean success;
 
-    public SearchEntry(EditorPanel panel, String action, String query, boolean success) {
-        super(panel);
+    public GlobalSearchEntry(CodeViewer viewer, String action, String query, boolean success) {
+        super(viewer);
 
         this.action = action;
         this.query = query;
