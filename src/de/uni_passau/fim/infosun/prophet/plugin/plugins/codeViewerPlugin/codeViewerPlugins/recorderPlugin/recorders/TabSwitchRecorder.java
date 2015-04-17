@@ -1,18 +1,15 @@
 package de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin.recorders;
 
-import javax.swing.event.ChangeListener;
-
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.CodeViewer;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin.Record;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin.Recorder;
-import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin
-        .RecorderPlugin;
-import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin
-        .recordEntries.TabSelectionEntry;
+import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin.recordEntries.TabSelectionEntry;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.tabbedPane.EditorPanel;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.tabbedPane.EditorTabbedPane;
 import de.uni_passau.fim.infosun.prophet.util.qTree.Attribute;
 import de.uni_passau.fim.infosun.prophet.util.settings.Setting;
+
+import javax.swing.event.ChangeListener;
 
 public class TabSwitchRecorder extends Recorder {
 
@@ -28,7 +25,7 @@ public class TabSwitchRecorder extends Recorder {
             EditorPanel newSelection = (EditorPanel) tabbedPane.getSelectedComponent();
             
             if (newSelection != null && newSelection != selected) {
-                record.add(new TabSelectionEntry(newSelection.getFile()));
+                record.add(new TabSelectionEntry(newSelection));
                 selected = newSelection;
             }
         };
