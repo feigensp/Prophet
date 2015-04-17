@@ -9,9 +9,6 @@ import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
  */
 public abstract class RecordEntry implements Comparable<RecordEntry> {
 
-    protected static final String OPENED = "opened";
-    protected static final String CLOSED = "closed";
-
     @XStreamAsAttribute
     private long timestamp;
 
