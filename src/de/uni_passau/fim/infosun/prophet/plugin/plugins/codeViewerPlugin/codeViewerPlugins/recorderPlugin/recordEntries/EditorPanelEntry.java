@@ -8,10 +8,10 @@ public abstract class EditorPanelEntry extends CodeViewerEntry {
     private static IDProvider<EditorPanel> idProvider = new IDProvider<>();
 
     @XStreamAsAttribute
-    private int panelId;
+    private int tabId;
 
     public EditorPanelEntry(EditorPanel panel) {
         super(panel.getCodeViewer());
-        this.panelId = idProvider.idFor(panel);
+        this.tabId = idProvider.idFor(panel);
     }
 }
