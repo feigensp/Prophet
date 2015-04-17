@@ -1,10 +1,10 @@
 package de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin.recordEntries;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
-import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin.RecordEntry;
+import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.tabbedPane.EditorPanel;
 
 @XStreamAlias("changeEntry")
-public class ChangeEntry extends RecordEntry {
+public class ChangeEntry extends EditorPanelEntry {
 
     @XStreamAlias("type")
     public static enum Type {
@@ -17,7 +17,8 @@ public class ChangeEntry extends RecordEntry {
     private int length;
     private String content;
 
-    public ChangeEntry(Type type) {
+    public ChangeEntry(EditorPanel panel, Type type) {
+        super(panel);
         this.type = type;
     }
 

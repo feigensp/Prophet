@@ -151,7 +151,7 @@ public class ScrollingRecorder extends Recorder {
     public void onEditorPanelClose(EditorPanel editorPanel) {
 
         if (enabled) {
-            editorPanel.getScrollPane().getViewport().removeChangeListener(listeners.get(editorPanel));
+            editorPanel.getScrollPane().getViewport().removeChangeListener(listeners.remove(editorPanel));
         }
     }
 

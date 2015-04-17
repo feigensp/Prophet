@@ -3,7 +3,6 @@ package de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeVi
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.CodeViewer;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin.Record;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin.Recorder;
-import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin.RecorderPlugin;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin.recordEntries.ChangeEntry;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.tabbedPane.EditorPanel;
 import de.uni_passau.fim.infosun.prophet.util.qTree.Attribute;
@@ -14,6 +13,8 @@ import de.uni_passau.fim.infosun.prophet.util.settings.components.TextFieldSetti
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
+import java.util.HashMap;
+import java.util.Map;
 
 import static de.uni_passau.fim.infosun.prophet.util.language.UIElementNames.getLocalized;
 
@@ -29,7 +30,16 @@ public class ChangeRecorder extends Recorder {
 
     private long lastJoin;
     private ChangeEntry lastEntry;
-    private DocumentListener listener = new DocumentListener() {
+
+    private Map<EditorPanel, ChangeListener> listeners;
+
+    private class ChangeListener implements DocumentListener {
+
+        private EditorPanel panel;
+
+        public ChangeListener(EditorPanel panel) {
+            this.panel = panel;
+        }
 
         private boolean shouldJoin(ChangeEntry.Type eventType, DocumentEvent event) {
 
@@ -89,7 +99,7 @@ public class ChangeRecorder extends Recorder {
                 lastJoin = System.currentTimeMillis();
             } else {
                 lastJoin = 0;
-                lastEntry = new ChangeEntry(ChangeEntry.Type.INSERT);
+                lastEntry = new ChangeEntry(panel, ChangeEntry.Type.INSERT);
                 lastEntry.setContent(content);
                 lastEntry.setOffset(event.getOffset());
                 lastEntry.setLength(event.getLength());
@@ -105,7 +115,7 @@ public class ChangeRecorder extends Recorder {
                 lastEntry.setLength(lastEntry.getLength() + event.getLength());
             } else {
                 lastJoin = 0;
-                lastEntry = new ChangeEntry(ChangeEntry.Type.REMOVE);
+                lastEntry = new ChangeEntry(panel, ChangeEntry.Type.REMOVE);
                 lastEntry.setOffset(event.getOffset());
                 lastEntry.setLength(event.getLength());
                 record.add(lastEntry);
@@ -134,6 +144,8 @@ public class ChangeRecorder extends Recorder {
                 joinTime = Long.parseLong(joinTimeAttr.getValue());
             }
         }
+
+        listeners = new HashMap<>();
     }
 
     /**
@@ -169,6 +181,9 @@ public class ChangeRecorder extends Recorder {
     public void onEditorPanelCreate(EditorPanel editorPanel) {
 
         if (enabled) {
+            ChangeListener listener = new ChangeListener(editorPanel);
+
+            listeners.put(editorPanel, listener);
             editorPanel.getTextArea().getDocument().addDocumentListener(listener);
         }
     }
@@ -177,7 +192,7 @@ public class ChangeRecorder extends Recorder {
     public void onEditorPanelClose(EditorPanel editorPanel) {
 
         if (enabled) {
-            editorPanel.getTextArea().getDocument().removeDocumentListener(listener);
+            editorPanel.getTextArea().getDocument().removeDocumentListener(listeners.remove(editorPanel));
         }
     }
 
