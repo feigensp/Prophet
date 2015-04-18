@@ -4,23 +4,24 @@ import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.CodeViewer;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin.RecordEntry;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.WeakHashMap;
 
 public abstract class CodeViewerEntry extends RecordEntry {
 
     protected static class IDProvider<T> {
 
-        private Map<T, Integer> cvIDs = new HashMap<>();
+        private Map<T, Integer> currentIDs = new WeakHashMap<>();
+        private Integer nextId = 0;
 
         public synchronized Integer idFor(T obj) {
             Integer id;
 
-            if (cvIDs.containsKey(obj)) {
-                id = cvIDs.get(obj);
+            if (currentIDs.containsKey(obj)) {
+                id = currentIDs.get(obj);
             } else {
-                id = cvIDs.values().stream().max(Integer::compareTo).orElse(-1) + 1;
-                cvIDs.put(obj, id);
+                id = nextId++;
+                currentIDs.put(obj, id);
             }
 
             return id;
