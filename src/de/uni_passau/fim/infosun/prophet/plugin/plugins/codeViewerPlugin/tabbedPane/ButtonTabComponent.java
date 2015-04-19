@@ -24,6 +24,7 @@ import javax.swing.*;
 import javax.swing.plaf.basic.BasicButtonUI;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.Objects;
 
 /**
  * A <code>JPanel</code> used for rendering the title of an <code>EditorPanel</code> tab in the
@@ -38,17 +39,22 @@ public class ButtonTabComponent extends JPanel {
      * Constructs a new <code>ButtonTabComponent</code> for the given <code>editorPanel</code> that must be contained
      * in the given <code>tabbedPane</code>.
      *
-     * @param tabbedPane the <code>EditorTabbedPane</code> containing the <code>editorPanel</code>
-     * @param editorPanel the <code>EditorPanel</code> whose title this <code>ButtonTabComponent</code> should render
+     * @param tabbedPane
+     *         the <code>EditorTabbedPane</code> containing the <code>editorPanel</code>
+     * @param editorPanel
+     *         the <code>EditorPanel</code> whose title this <code>ButtonTabComponent</code> should render
+     * @throws NullPointerException
+     *         if <code>tabbedPane</code> or <code>editorPanel</code> is <code>null</code>
      */
     public ButtonTabComponent(EditorTabbedPane tabbedPane, EditorPanel editorPanel) {
-        // unset default FlowLayout' gaps
         super(new FlowLayout(FlowLayout.LEFT, 0, 0));
-        if (tabbedPane == null) {
-            throw new NullPointerException("TabbedPane is null");
-        }
+
+        Objects.requireNonNull(tabbedPane, "tabbedPane must not be null!");
+        Objects.requireNonNull(editorPanel, "editorPanel must not be null!");
+
         this.tabbedPane = tabbedPane;
         this.editorPanel = editorPanel;
+
         setOpaque(false);
 
         // make JLabel read titles from JTabbedPane
