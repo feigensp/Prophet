@@ -56,28 +56,31 @@ public class ButtonTabComponent extends JPanel {
         this.editorPanel = editorPanel;
 
         setOpaque(false);
+        setBorder(BorderFactory.createEmptyBorder(2, 0, 0, 0));
 
-        // make JLabel read titles from JTabbedPane
-        JLabel label = new JLabel() {
-
-            @Override
-            public String getText() {
-                int i = tabbedPane.indexOfTabComponent(ButtonTabComponent.this);
-                if (i != -1) {
-                    return tabbedPane.getTitleAt(i);
-                }
-                return null;
-            }
-        };
-
-        add(label);
-        // add more space between the label and the button
+        JLabel label = new TabLabel();
         label.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
-        // tab button
+        add(label);
+
         JButton button = new TabButton();
         add(button);
-        // add more space to the top of the component
-        setBorder(BorderFactory.createEmptyBorder(2, 0, 0, 0));
+    }
+
+    /**
+     * A <code>JLabel</code> used for displaying the title of the tab.
+     */
+    private class TabLabel extends JLabel {
+
+        @Override
+        public String getText() {
+            int i = tabbedPane.indexOfTabComponent(ButtonTabComponent.this);
+
+            if (i != -1) {
+                return tabbedPane.getTitleAt(i);
+            }
+
+            return null;
+        }
     }
 
     /**
