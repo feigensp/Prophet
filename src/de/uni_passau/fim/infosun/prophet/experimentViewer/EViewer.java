@@ -20,6 +20,7 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
@@ -33,10 +34,28 @@ import de.uni_passau.fim.infosun.prophet.util.language.UIElementNames;
 import de.uni_passau.fim.infosun.prophet.util.qTree.Attribute;
 import de.uni_passau.fim.infosun.prophet.util.qTree.QTreeNode;
 import de.uni_passau.fim.infosun.prophet.util.qTree.handlers.QTreeXMLHandler;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 
-import static de.uni_passau.fim.infosun.prophet.Constants.*;
+import static de.uni_passau.fim.infosun.prophet.Constants.DEFAULT_FILE;
+import static de.uni_passau.fim.infosun.prophet.Constants.FILE_ANSWERS;
+import static de.uni_passau.fim.infosun.prophet.Constants.KEY_BACKWARD;
+import static de.uni_passau.fim.infosun.prophet.Constants.KEY_DONOTSHOWCONTENT;
+import static de.uni_passau.fim.infosun.prophet.Constants.KEY_EXPERIMENT_CODE;
+import static de.uni_passau.fim.infosun.prophet.Constants.KEY_FORWARD;
+import static de.uni_passau.fim.infosun.prophet.Constants.KEY_ONLY_SHOW_X_CHILDREN;
+import static de.uni_passau.fim.infosun.prophet.Constants.KEY_RANDOMIZE_CHILDREN;
+import static de.uni_passau.fim.infosun.prophet.Constants.KEY_SHOW_NUMBER_OF_CHILDREN;
+import static de.uni_passau.fim.infosun.prophet.Constants.KEY_SUBJECT_CODE;
+import static de.uni_passau.fim.infosun.prophet.Constants.KEY_TIMING;
+import static de.uni_passau.fim.infosun.prophet.Constants.KEY_VIEWER_LANGUAGE;
 import static de.uni_passau.fim.infosun.prophet.util.language.UIElementNames.getLocalized;
-import static javax.swing.JOptionPane.*;
+import static javax.swing.JOptionPane.ERROR_MESSAGE;
+import static javax.swing.JOptionPane.INFORMATION_MESSAGE;
+import static javax.swing.JOptionPane.YES_NO_OPTION;
+import static javax.swing.JOptionPane.YES_OPTION;
+import static javax.swing.JOptionPane.showConfirmDialog;
+import static javax.swing.JOptionPane.showMessageDialog;
 
 /**
  * A viewer for the experiments created with the <code>ExperimentEditor</code>.
@@ -48,7 +67,8 @@ public class EViewer extends JFrame {
     private static final int WIDTH = 800;
     private static final int HEIGHT = 600;
     private static final int LOAD_FAIL_EXIT_STATUS = 1;
-    private static final String DEFAULT_EXP_CODE = "default";
+    private static final String NO_EXP_CODE = "NoExperimentCode";
+    private static final String NO_SUBJ_CODE = "NoSubjectCode";
 
     private QTreeNode expTreeRoot;
     private List<ViewNode> experiment; // the experiment tree in pre-order
@@ -208,6 +228,8 @@ public class EViewer extends JFrame {
         }
 
         ViewNode newViewNode;
+        QTreeNode newTreeNode;
+        
         boolean doNotShow;
         int newIndex = currentIndex;
 
@@ -224,8 +246,11 @@ public class EViewer extends JFrame {
             }
 
             newViewNode = experiment.get(newIndex);
-            doNotShow = Boolean.parseBoolean(newViewNode.getTreeNode().getAttribute(KEY_DONOTSHOWCONTENT).getValue());
-        } while (doNotShow || PluginList.denyEnterNode(newViewNode.getTreeNode()));
+            newTreeNode = newViewNode.getTreeNode();
+            
+            doNotShow = newTreeNode.containsAttribute(KEY_DONOTSHOWCONTENT);  
+            doNotShow &= Boolean.parseBoolean(newTreeNode.getAttribute(KEY_DONOTSHOWCONTENT).getValue());
+        } while (doNotShow || PluginList.denyEnterNode(newTreeNode));
 
         switchNode(newIndex);
     }
@@ -323,7 +348,7 @@ public class EViewer extends JFrame {
 
     /**
      * Ends the experiment and shows a dialog containing the <code>Plugin</code> messages.
-     * The Window will then close.
+     * The window will then close.
      */
     private void endExperiment() {
         experiment.get(0).getStopwatch().pause();
@@ -339,14 +364,18 @@ public class EViewer extends JFrame {
         try {
             QTreeXMLHandler.saveAnswerXML(expTreeRoot, new File(getSaveDir(), FILE_ANSWERS));
         } catch (IOException e) {
-            System.err.println("Could not save the answers.xml. " + e);
+            System.err.println("Could not save the answers.xml.");
+            System.err.println(e.getMessage());
         }
 
-        String message = "<html><p>" + getLocalized("EVIEWER_EXPERIMENT_FINISHED") + "</p></html>";
-        message += PluginList.finishExperiment();
+        Document doc = Document.createShell("");
+        Element body = doc.body();
+
+        body.appendElement("p").text(getLocalized("EVIEWER_EXPERIMENT_FINISHED"));
+        body.append(PluginList.finishExperiment());
 
         setEnabled(false);
-        showMessageDialog(this, message, null, INFORMATION_MESSAGE);
+        showMessageDialog(this, new JLabel(doc.outerHtml()), null, INFORMATION_MESSAGE);
 
         dispose();
     }
@@ -413,34 +442,40 @@ public class EViewer extends JFrame {
      * @return the save directory or <code>null</code>
      */
     public File getSaveDir() {
-        if (saveDir == null) {
-            final String dirName;
-            String[] subjectCodeAns = expTreeRoot.getAnswers(KEY_SUBJECT_CODE);
-            String experimentCode;
-            String subjectCode;
 
-            if (subjectCodeAns != null && subjectCodeAns.length == 1) {
-                subjectCode = subjectCodeAns[0];
-                experimentCode = expTreeRoot.getAttribute(KEY_EXPERIMENT_CODE).getValue();
+        if (saveDir != null) {
+            return saveDir;
+        }
 
-                if (experimentCode == null) {
-                    experimentCode = DEFAULT_EXP_CODE;
-                }
+        String[] subjectCodeAns = expTreeRoot.getAnswers(KEY_SUBJECT_CODE);
+        String experimentCode;
+        String subjectCode;
+        String dirName;
 
-                dirName = experimentCode + '_' + subjectCode;
-                saveDir = new File(dirName);
+        if (subjectCodeAns != null && subjectCodeAns.length >= 1) {
+            subjectCode = subjectCodeAns[0].trim();
+            subjectCode = (subjectCode.isEmpty()) ? NO_SUBJ_CODE : subjectCode;
 
-                if (saveDir.exists()) {
-                    IntFunction<File> mapper = value -> new File(dirName + '_' + value);
-                    Stream<File> dirs = IntStream.rangeClosed(1, Integer.MAX_VALUE).mapToObj(mapper);
+            if (expTreeRoot.containsAttribute(KEY_EXPERIMENT_CODE)) {
+                experimentCode = expTreeRoot.getAttribute(KEY_EXPERIMENT_CODE).getValue().trim();
+                experimentCode = (experimentCode.isEmpty()) ? NO_EXP_CODE : experimentCode;
+            } else {
+                experimentCode = NO_EXP_CODE;
+            }
 
-                    saveDir = dirs.filter(f -> !f.exists()).findFirst().get();
-                }
+            dirName = experimentCode + '_' + subjectCode;
+            saveDir = new File(dirName);
 
-                if (!saveDir.mkdirs()) {
-                    System.err.println("Could not create the save directory for the ExperimentViewer.");
-                    saveDir = null;
-                }
+            if (saveDir.exists()) {
+                IntFunction<File> mapper = value -> new File(dirName + '_' + value);
+                Stream<File> dirs = IntStream.rangeClosed(1, Integer.MAX_VALUE).mapToObj(mapper);
+
+                saveDir = dirs.filter(f -> !f.exists()).findFirst().get();
+            }
+
+            if (!saveDir.mkdirs()) {
+                System.err.println("Could not create the save directory for the " + getClass().getSimpleName() + ".");
+                saveDir = null;
             }
         }
 

@@ -8,11 +8,9 @@ import java.util.Properties;
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.activation.FileDataSource;
-import javax.mail.Authenticator;
 import javax.mail.BodyPart;
 import javax.mail.Message;
 import javax.mail.MessagingException;
-import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
@@ -26,12 +24,12 @@ import de.uni_passau.fim.infosun.prophet.plugin.Plugin;
 import de.uni_passau.fim.infosun.prophet.util.Pair;
 import de.uni_passau.fim.infosun.prophet.util.qTree.Attribute;
 import de.uni_passau.fim.infosun.prophet.util.qTree.QTreeNode;
-import de.uni_passau.fim.infosun.prophet.util.settings.PluginSettings;
 import de.uni_passau.fim.infosun.prophet.util.settings.Setting;
-import de.uni_passau.fim.infosun.prophet.util.settings.components.SettingsComboBox;
-import de.uni_passau.fim.infosun.prophet.util.settings.components.SettingsPasswordField;
-import de.uni_passau.fim.infosun.prophet.util.settings.components.SettingsSpinner;
-import de.uni_passau.fim.infosun.prophet.util.settings.components.SettingsTextField;
+import de.uni_passau.fim.infosun.prophet.util.settings.SettingsList;
+import de.uni_passau.fim.infosun.prophet.util.settings.components.ComboBoxSetting;
+import de.uni_passau.fim.infosun.prophet.util.settings.components.PasswordFieldSetting;
+import de.uni_passau.fim.infosun.prophet.util.settings.components.SpinnerSetting;
+import de.uni_passau.fim.infosun.prophet.util.settings.components.TextFieldSetting;
 
 import static de.uni_passau.fim.infosun.prophet.util.language.UIElementNames.getLocalized;
 import static de.uni_passau.fim.infosun.prophet.util.qTree.QTreeNode.Type.EXPERIMENT;
@@ -74,28 +72,28 @@ public class MailPlugin implements Plugin {
         }
 
         Attribute mainAttribute = node.getAttribute(KEY);
-        PluginSettings pluginSettings = new PluginSettings(mainAttribute, getClass().getSimpleName(), true);
-        pluginSettings.setCaption(getLocalized("MAIL_SEND_MAIL"));
+        SettingsList settingsList = new SettingsList(mainAttribute, getClass().getSimpleName(), true);
+        settingsList.setCaption(getLocalized("MAIL_SEND_MAIL"));
 
         Attribute subAttribute = mainAttribute.getSubAttribute(SMTP_SENDER);
-        Setting subSetting = new SettingsTextField(subAttribute, null);
+        Setting subSetting = new TextFieldSetting(subAttribute, null);
         subSetting.setCaption(getLocalized("MAIL_SMTP_SENDER") + ':');
-        pluginSettings.addSetting(subSetting);
+        settingsList.addSetting(subSetting);
 
         subAttribute = mainAttribute.getSubAttribute(SMTP_RECEIVER);
-        subSetting = new SettingsTextField(subAttribute, null);
+        subSetting = new TextFieldSetting(subAttribute, null);
         subSetting.setCaption(getLocalized("MAIL_SMTP_RECIPIENT") + ':');
-        pluginSettings.addSetting(subSetting);
+        settingsList.addSetting(subSetting);
 
         subAttribute = mainAttribute.getSubAttribute(SMTP_SERVER);
-        subSetting = new SettingsTextField(subAttribute, null);
+        subSetting = new TextFieldSetting(subAttribute, null);
         subSetting.setCaption(getLocalized("MAIL_SMTP_SERVER") + ':');
-        pluginSettings.addSetting(subSetting);
+        settingsList.addSetting(subSetting);
 
         subAttribute = mainAttribute.getSubAttribute(SMTP_SERVER_PORT);
-        subSetting = new SettingsSpinner(subAttribute, null, new SpinnerNumberModel(587, 0, 65535, 1));
+        subSetting = new SpinnerSetting(subAttribute, null, new SpinnerNumberModel(587, 0, 65535, 1));
         subSetting.setCaption(getLocalized("MAIL_SMTP_SERVER_PORT") + ':');
-        pluginSettings.addSetting(subSetting);
+        settingsList.addSetting(subSetting);
 
         List<Pair<String, String>> items = new ArrayList<>();
         items.add(Pair.of(SEC_NONE, SEC_NONE));
@@ -103,21 +101,21 @@ public class MailPlugin implements Plugin {
         items.add(Pair.of(SEC_SSL_TLS, SEC_SSL_TLS));
 
         subAttribute = mainAttribute.getSubAttribute(SMTP_SERVER_SEC);
-        subSetting = new SettingsComboBox(subAttribute, null, items);
+        subSetting = new ComboBoxSetting(subAttribute, null, items);
         subSetting.setCaption(getLocalized("MAIL_SMTP_SECURITY") + ':');
-        pluginSettings.addSetting(subSetting);
+        settingsList.addSetting(subSetting);
 
         subAttribute = mainAttribute.getSubAttribute(SMTP_USER);
-        subSetting = new SettingsTextField(subAttribute, null);
+        subSetting = new TextFieldSetting(subAttribute, null);
         subSetting.setCaption(getLocalized("MAIL_SMTP_USER") + ':');
-        pluginSettings.addSetting(subSetting);
+        settingsList.addSetting(subSetting);
 
         subAttribute = mainAttribute.getSubAttribute(SMTP_PASS);
-        subSetting = new SettingsPasswordField(subAttribute, null);
+        subSetting = new PasswordFieldSetting(subAttribute, null);
         subSetting.setCaption(getLocalized("MAIL_SMTP_PASSWORD") + ':');
-        pluginSettings.addSetting(subSetting);
+        settingsList.addSetting(subSetting);
 
-        return pluginSettings;
+        return settingsList;
     }
 
     @Override
@@ -137,14 +135,14 @@ public class MailPlugin implements Plugin {
             return;
         }
 
-        enabled = Boolean.parseBoolean(node.getAttribute(KEY).getValue());
+        enabled = node.containsAttribute(KEY) && Boolean.parseBoolean(node.getAttribute(KEY).getValue());
 
         if (enabled) {
             Attribute attributes = node.getAttribute(KEY);
 
             smtpServer = attributes.getSubAttribute(SMTP_SERVER).getValue();
             smtpUser = attributes.getSubAttribute(SMTP_USER).getValue();
-            smtpPass = SettingsPasswordField.decode(attributes.getSubAttribute(SMTP_PASS).getValue());
+            smtpPass = PasswordFieldSetting.decode(attributes.getSubAttribute(SMTP_PASS).getValue());
             smtpSender = attributes.getSubAttribute(SMTP_SENDER).getValue();
             smtpReceiver = attributes.getSubAttribute(SMTP_RECEIVER).getValue();
             smtpSec = attributes.getSubAttribute(SMTP_SERVER_SEC).getValue();
@@ -196,24 +194,20 @@ public class MailPlugin implements Plugin {
      *         if there is an error creating or sending the EMail
      */
     private void sendEMail(String subject, String text, File attachmentFile) throws MessagingException {
-        MailAuthenticator auth = new MailAuthenticator(smtpUser, smtpPass);
         Properties properties = new Properties();
 
         properties.setProperty("mail.smtp.host", smtpServer);
         properties.setProperty("mail.smtp.port", String.valueOf(smtpPort));
         properties.setProperty("mail.smtp.auth", "true");
 
-        if (smtpSec.equals(SEC_STARTTLS) || smtpSec.equals(SEC_SSL_TLS)) {
+        if (SEC_STARTTLS.equals(smtpSec)) {
             properties.setProperty("mail.smtp.starttls.enable", "true");
+        } else if (SEC_SSL_TLS.equals(smtpSec)) {
+            properties.setProperty("mail.smtp.ssl.enable", "true");
         }
 
-        if (smtpSec.equals(SEC_SSL_TLS)) {
-            properties.setProperty("mail.smtp.socketFactory.port", String.valueOf(smtpPort));
-            properties.setProperty("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
-            properties.setProperty("mail.smtp.socketFactory.fallback", "false");
-        }
-
-        Session session = Session.getDefaultInstance(properties, auth);
+        Session session = Session.getInstance(properties);
+        Transport transport = session.getTransport("smtp");
         Message message = new MimeMessage(session);
 
         MimeMultipart content = new MimeMultipart();
@@ -237,37 +231,11 @@ public class MailPlugin implements Plugin {
         message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(smtpReceiver, false));
         message.setSubject(subject);
 
-        Transport.send(message);
-    }
-
-    /**
-     * An <code>Authenticator</code> that can be initialized with a username and password and will henceforth
-     * return an instance of <code>PasswordAuthentication</code> containing that information.
-     */
-    private static class MailAuthenticator extends Authenticator {
-
-        private final PasswordAuthentication auth;
-
-        /**
-         * Constructs a new <code>MailAuthenticator</code> that will provide a <code>PasswordAuthentication</code>
-         * containing the given username and password upon request.
-         *
-         * @param userName the username for the authentication
-         * @param password the password for the authentication
-         */
-        public MailAuthenticator(String userName, String password) {
-            auth = new PasswordAuthentication(userName, password);
-        }
-
-        /**
-         * Returns the <code>PasswordAuthentication</code> constructed from the username and password this instance
-         * of <code>MailAuthenticator</code> was initialized with.
-         *
-         * @return the <code>PasswordAuthentication</code> containing the username and password
-         */
-        @Override
-        protected PasswordAuthentication getPasswordAuthentication() {
-            return auth;
+        try {
+            transport.connect(smtpUser, smtpPass);
+            transport.sendMessage(message, message.getAllRecipients());
+        } finally {
+            transport.close();
         }
     }
 }

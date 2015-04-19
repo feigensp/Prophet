@@ -8,8 +8,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingConstants;
 
+import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.CodeViewer;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.CodeViewerPluginList;
-import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.recorder.Recorder;
 
 import static de.uni_passau.fim.infosun.prophet.util.language.UIElementNames.getLocalized;
 
@@ -19,19 +19,19 @@ import static de.uni_passau.fim.infosun.prophet.util.language.UIElementNames.get
  */
 public class EditorTabbedPane extends JTabbedPane {
 
-    private Recorder recorder;
+	private CodeViewer codeViewer;
     private Map<File, EditorPanel> panels;
 
     /**
      * Constructs a new <code>EditorTabbedPane</code> using the given <code>Recorder</code>.
      *
-     * @param recorder
-     *         the <code>Recorder</code> of the <code>CodeViewer</code> containing this <code>EditorTabbedPane</code>
+     * @param codeViewer
+     *         the <code>CodeViewer</code> this <code>EditorPanel</code> belongs to
      */
-    public EditorTabbedPane(Recorder recorder) {
+    public EditorTabbedPane(CodeViewer codeViewer) {
         super(SwingConstants.TOP);
 
-        this.recorder = recorder;
+		this.codeViewer = codeViewer;
         this.panels = new HashMap<>();
 
         this.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
@@ -51,10 +51,9 @@ public class EditorTabbedPane extends JTabbedPane {
             panel = panels.get(file);
 
             if (panel == null) {
-                panel = new EditorPanel(file);
+                panel = new EditorPanel(codeViewer, file);
 
-                recorder.onEditorPanelCreate(panel);
-                CodeViewerPluginList.onEditorPanelCreate(panel);
+                CodeViewerPluginList.onEditorPanelCreate(codeViewer, panel);
 
                 panels.put(file, panel);
                 add(file.getName(), panel);
@@ -97,8 +96,7 @@ public class EditorTabbedPane extends JTabbedPane {
             }
 
             if (panelFound) {
-                CodeViewerPluginList.onEditorPanelClose(panel);
-                recorder.onEditorPanelClose(panel);
+                CodeViewerPluginList.onEditorPanelClose(codeViewer, panel);
 
                 panels.remove(panel.getFile());
                 remove(panel);

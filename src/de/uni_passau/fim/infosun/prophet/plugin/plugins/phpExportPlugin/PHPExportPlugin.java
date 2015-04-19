@@ -7,6 +7,10 @@ import de.uni_passau.fim.infosun.prophet.util.settings.Setting;
 
 import static de.uni_passau.fim.infosun.prophet.util.qTree.QTreeNode.Type;
 
+/**
+ * <code>Plugin</code> that supplies the <code>PHPExportComponent</code> as its <code>Setting</code>. Has no
+ * effect on the experiment run.
+ */
 public class PHPExportPlugin implements Plugin {
 
     @Override
@@ -20,6 +24,7 @@ public class PHPExportPlugin implements Plugin {
 
     @Override
     public void experimentViewerRun(EViewer experimentViewer) {
+        
     }
 
     @Override
@@ -29,6 +34,7 @@ public class PHPExportPlugin implements Plugin {
 
     @Override
     public void enterNode(QTreeNode node) {
+        
     }
 
     @Override
@@ -38,6 +44,7 @@ public class PHPExportPlugin implements Plugin {
 
     @Override
     public void exitNode(QTreeNode node) {
+        
     }
 
     @Override

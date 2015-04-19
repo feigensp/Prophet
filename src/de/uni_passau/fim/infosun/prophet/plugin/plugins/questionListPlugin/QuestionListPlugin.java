@@ -8,12 +8,13 @@ import de.uni_passau.fim.infosun.prophet.plugin.Plugin;
 import de.uni_passau.fim.infosun.prophet.util.language.UIElementNames;
 import de.uni_passau.fim.infosun.prophet.util.qTree.QTreeNode;
 import de.uni_passau.fim.infosun.prophet.util.settings.Setting;
-import de.uni_passau.fim.infosun.prophet.util.settings.components.SettingsCheckBox;
+import de.uni_passau.fim.infosun.prophet.util.settings.components.CheckBoxSetting;
 
 import static de.uni_passau.fim.infosun.prophet.util.qTree.QTreeNode.Type;
 
 /**
- * Plugin that modifies the <code>ExperimentViewer</code> by adding a JTree representation of the current experiment.
+ * <code>Plugin</code> that modifies the <code>ExperimentViewer</code> by adding a JTree representation of the current
+ * experiment.
  */
 public class QuestionListPlugin implements Plugin {
 
@@ -28,7 +29,7 @@ public class QuestionListPlugin implements Plugin {
             return null;
         }
 
-        Setting setting = new SettingsCheckBox(node.getAttribute(KEY), getClass().getSimpleName());
+        Setting setting = new CheckBoxSetting(node.getAttribute(KEY), getClass().getSimpleName());
         setting.setCaption(UIElementNames.getLocalized("QUESTION_LIST_SHOW_LIST"));
 
         return setting;

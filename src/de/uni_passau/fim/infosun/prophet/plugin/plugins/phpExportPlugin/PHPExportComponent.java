@@ -1,14 +1,14 @@
 package de.uni_passau.fim.infosun.prophet.plugin.plugins.phpExportPlugin;
 
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.Date;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -21,52 +21,39 @@ import de.uni_passau.fim.infosun.prophet.util.VerticalLayout;
 import de.uni_passau.fim.infosun.prophet.util.settings.Setting;
 
 import static de.uni_passau.fim.infosun.prophet.util.language.UIElementNames.getLocalized;
+import static javax.swing.JOptionPane.showConfirmDialog;
 
+/**
+ * <code>Setting</code> that adds the ability to export PHP and SQL scripts to enable executing the experiment in a 
+ * browser and storing the answers in a database.
+ */
 public class PHPExportComponent extends Setting {
-
-    private static final long serialVersionUID = 1L;
-
-    private static byte[] index = new byte[0];
-    private static byte[] addexperiment = new byte[0];
-    private static byte[] constants = new byte[0];
-    private static byte[] sql = new byte[0];
 
     private static final String PHP_INDEX_PHP = "index.php";
     private static final String PHP_ADDEXPERIMENT_PHP = "addexperiment.php";
     private static final String PHP_CONSTANTS_PHP = "constants.php";
     private static final String PHP_PREPARATION_SQL = "preparation.sql";
+    private static final String PHP_CONFIG_PHP = "config.php";
 
-    static {
-
-        try (InputStream is = PHPExportComponent.class.getResourceAsStream(PHP_INDEX_PHP)) {
-            index = readAllBytes(is);
-        } catch (IOException e) {
-            System.err.println("Could not read " + PHP_INDEX_PHP);
-            System.err.println(e.getMessage());
-        }
-
-        try (InputStream is = PHPExportComponent.class.getResourceAsStream(PHP_ADDEXPERIMENT_PHP)) {
-            addexperiment = readAllBytes(is);
-        } catch (IOException e) {
-            System.err.println("Could not read " + PHP_ADDEXPERIMENT_PHP);
-            System.err.println(e.getMessage());
-        }
-
-        try (InputStream is = PHPExportComponent.class.getResourceAsStream(PHP_CONSTANTS_PHP)) {
-            constants = readAllBytes(is);
-        } catch (IOException e) {
-            System.err.println("Could not read " + PHP_CONSTANTS_PHP);
-            System.err.println(e.getMessage());
-        }
-
-        try (InputStream is = PHPExportComponent.class.getResourceAsStream(PHP_PREPARATION_SQL)) {
-            sql = readAllBytes(is);
-        } catch (IOException e) {
-            System.err.println("Could not read " + PHP_PREPARATION_SQL);
-            System.err.println(e.getMessage());
-        }
-    }
-
+    private static final String PHP_CONFIG_TEMPLATE =
+            "<?php%n" 
+                + "  $db_server = '%s';%n" 
+                + "  $db_base = '%s';%n" 
+                + "  $db_user = '%s';%n" 
+                + "  $db_pass = '%s';%n"
+                + "%n"
+                + "  mysql_connect($db_server, $db_user, $db_pass)%n"
+                + "    or die('Connection to database failed: ' . mysql_error());%n" 
+                + "  mysql_select_db($db_base)%n"
+                + "    or die('Selecting database failed: ' . mysql_error());%n" + 
+            "?>%n";
+    
+    /**
+     * Constructs a new <code>PHPExportComponent</code> with the given border description.
+     *
+     * @param borderDesc
+     *         the title for the border or <code>null</code> for no border
+     */
     public PHPExportComponent(String borderDesc) {
         super(null, borderDesc);
 
@@ -75,107 +62,86 @@ public class PHPExportComponent extends Setting {
 
         add(new JLabel(getLocalized("PHP_HOST") + ":")); // Server Label
 
-        final JTextField serverField = new JTextField("localhost", 20);
+        JTextField serverField = new JTextField("localhost", 20);
         add(serverField);
 
         add(new JLabel(getLocalized("PHP_NAME_OF_DATABASE") + ":")); // DB Label
 
-        final JTextField dbField = new JTextField(20);
+        JTextField dbField = new JTextField(20);
         add(dbField);
 
         add(new JLabel(getLocalized("PHP_USER_NAME") + ":")); // Username Label
 
-        final JTextField usernameField = new JTextField(20);
+        JTextField usernameField = new JTextField(20);
         add(usernameField);
 
         add(new JLabel(getLocalized("PHP_PASSWORD") + ":")); // Password label
 
-        final JPasswordField passwordField = new JPasswordField(20);
+        JPasswordField passwordField = new JPasswordField(20);
         add(passwordField);
+        
+        ActionListener exportAction = ignored -> {
+            String message = getLocalized("PHP_DIALOG_UNENCRYPTED_PASSWORD_CONTINUE");
+            String title = getLocalized("PHP_DIALOG_TITLE_CONFIRM");
 
+            if (showConfirmDialog(null, message, title, JOptionPane.YES_NO_OPTION) == JOptionPane.NO_OPTION) {
+                return;
+            }
+
+            File exportDir = new File(".", String.format("phpExport_%1$tF_%1$tH-%1$tM-%1$tS", new Date()));
+
+            if (!exportDir.mkdirs()) {
+                System.err.println("Could not create the export directory " + exportDir.getAbsolutePath());
+                return; 
+            }
+
+            try (InputStream is = PHPExportComponent.class.getResourceAsStream(PHP_INDEX_PHP)) {
+                Files.copy(is, new File(exportDir, PHP_INDEX_PHP).toPath());    
+            } catch (IOException e) {
+                System.err.println("Could not export " + PHP_INDEX_PHP);
+                System.err.println(e.getMessage());
+            }
+            
+            try (InputStream is = PHPExportComponent.class.getResourceAsStream(PHP_ADDEXPERIMENT_PHP)) {
+                Files.copy(is, new File(exportDir, PHP_ADDEXPERIMENT_PHP).toPath());
+            } catch (IOException e) {
+                System.err.println("Could not export " + PHP_ADDEXPERIMENT_PHP);
+                System.err.println(e.getMessage());
+            }
+            
+            try (InputStream is = PHPExportComponent.class.getResourceAsStream(PHP_CONSTANTS_PHP)) {
+                Files.copy(is, new File(exportDir, PHP_CONSTANTS_PHP).toPath());
+            } catch (IOException e) {
+                System.err.println("Could not export " + PHP_CONSTANTS_PHP);
+                System.err.println(e.getMessage());
+            }
+
+            try (InputStream is = PHPExportComponent.class.getResourceAsStream(PHP_PREPARATION_SQL)) {
+                Files.copy(is, new File(exportDir, PHP_PREPARATION_SQL).toPath());
+            } catch (Exception e) {
+                System.err.println("Could not export " + PHP_PREPARATION_SQL);
+                System.err.println(e.getMessage());
+            }
+
+            String db_server = serverField.getText();
+            String db_base = dbField.getText();
+            String db_user = usernameField.getText();
+            String db_pass = new String(passwordField.getPassword());
+            String config = String.format(PHP_CONFIG_TEMPLATE, db_server, db_base, db_user, db_pass);
+            
+            File configFile = new File(exportDir, PHP_CONFIG_PHP);
+            try (Writer w = new OutputStreamWriter(new FileOutputStream(configFile), StandardCharsets.UTF_8)) {
+                w.write(config);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            JOptionPane.showMessageDialog(null, getLocalized("PHP_MESSAGE_EXPORT_FINISHED"));
+        };
+        
         JButton exportButton = new JButton(getLocalized("PHP_EXPORT_SCRIPT"));
+        exportButton.addActionListener(exportAction);
         add(exportButton);
-        exportButton.addActionListener(new ActionListener() {
-
-            private void writeToFile(File fileName, byte[] content) {
-                assert fileName != null : "fileName must not be null";
-                assert content != null : "content must not be null";
-
-                try (FileOutputStream out = new FileOutputStream(fileName)) {
-                    out.write(content);
-                } catch (IOException e) {
-                    System.err.printf("Error while writing to file '%s': %s%n", fileName, e.getMessage());
-                }
-            }
-
-            @Override
-            public void actionPerformed(ActionEvent arg0) {
-                int confirm = JOptionPane
-                        .showConfirmDialog(null, getLocalized("PHP_DIALOG_UNENCRYPTED_PASSWORD_CONTINUE"),
-                                getLocalized("PHP_DIALOG_TITLE_CONFIRM"), JOptionPane.YES_NO_OPTION);
-                if (confirm == JOptionPane.NO_OPTION) {
-                    return;
-                }
-
-                Path dirName = Paths.get(".", String.format("phpExport_%1$tF_%1$tH-%1$tM-%1$tS", new Date()));
-
-                boolean mkdirSuccess = dirName.toFile().mkdirs();
-
-                if (!mkdirSuccess) {
-                    return; // if dir could not be created then exit
-                }
-
-                writeToFile(Paths.get(dirName.toString(), "index.php").toFile(), index);
-                writeToFile(Paths.get(dirName.toString(), "addexperiment.php").toFile(), addexperiment);
-                writeToFile(Paths.get(dirName.toString(), "constants.php").toFile(), constants);
-                writeToFile(Paths.get(dirName.toString(), "preparation.sql").toFile(), sql);
-
-                StringBuilder config = new StringBuilder();
-                config.append("<?php\n");
-                config.append(" $db_server = '" + serverField.getText() + "';\n");
-                config.append(" $db_base = '").append(dbField.getText()).append("';\n");
-                config.append(" $db_user = '").append(usernameField.getText()).append("';\n");
-                config.append(" $db_pass = '").append(new String(passwordField.getPassword())).append("';\n");
-                config.append("\n");
-                config.append("//=================================================================\n");
-                config.append("\n");
-                config.append(" //libxml_use_internal_errors(true);\n");
-                config.append(" mysql_connect($db_server, $db_user, $db_pass)\n");
-                config.append("  or die('Connection to database failed: ' . mysql_error());\n");
-                config.append(" mysql_select_db($db_base)\n");
-                config.append("  or die('Selecting database failed: ' . mysql_error());\n");
-                config.append("?>");
-
-                writeToFile(Paths.get(dirName.toString(), "config.php").toFile(), config.toString().getBytes());
-
-                JOptionPane.showMessageDialog(null, getLocalized("PHP_MESSAGE_EXPORT_FINISHED"));
-            }
-        });
-    }
-
-    /**
-     * Reads all available bytes from the given <code>InputStream</code> and returns them as a <code>byte[]</code>.
-     *
-     * @param inputStream
-     *         the <code>InputStream</code> to read from
-     *
-     * @return the read bytes as an array
-     *
-     * @throws IOException
-     *         if an <code>IOException</code> occurs reading from the <code>InputStream</code>
-     */
-    private static byte[] readAllBytes(InputStream inputStream) throws IOException {
-        ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
-
-        int numRead;
-        byte[] buffer = new byte[1024 * 32];
-
-        while ((numRead = inputStream.read(buffer, 0, buffer.length)) != -1) {
-            byteOut.write(buffer, 0, numRead);
-        }
-        byteOut.flush();
-
-        return byteOut.toByteArray();
     }
 
     @Override

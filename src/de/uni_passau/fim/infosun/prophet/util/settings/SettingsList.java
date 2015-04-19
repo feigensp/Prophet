@@ -11,17 +11,17 @@ import javax.swing.JPanel;
 import de.uni_passau.fim.infosun.prophet.util.qTree.Attribute;
 
 /**
- * A <code>Settings</code> implementation that represents the collected settings for a <code>Plugin</code>.
+ * A <code>Settings</code> implementation that represents the collected settings for a plugin.
  * Optionally these settings can be 'enableable' meaning they can be hidden or shown using a checkbox.
  */
-public class PluginSettings extends Setting {
+public class SettingsList extends Setting {
 
     private JPanel settingsPanel;
     private JCheckBox enableCheckBox;
     private List<Setting> settingsList;
 
     /**
-     * Constructs a new <code>PluginSettings</code> object.
+     * Constructs a new <code>SettingsList</code> object.
      *
      * @param attribute
      *         the <code>Attribute</code> for this <code>Setting</code>
@@ -30,7 +30,7 @@ public class PluginSettings extends Setting {
      * @param enableable
      *         whether the settings are enableable
      */
-    public PluginSettings(Attribute attribute, String pluginName, boolean enableable) {
+    public SettingsList(Attribute attribute, String pluginName, boolean enableable) {
         super(attribute, pluginName);
 
         settingsList = new ArrayList<>();
@@ -47,18 +47,21 @@ public class PluginSettings extends Setting {
     }
 
     /**
-     * Adds a <code>Setting</code> to this <code>PluginSettings</code> object.
+     * Adds a <code>Setting</code> to this <code>SettingsList</code> object.
      *
      * @param setting
      *         the <code>Setting</code> to be added
      */
     public void addSetting(Setting setting) {
-        settingsList.add(setting);
-        settingsPanel.add(setting);
+        
+        if (setting != null) {
+            settingsList.add(setting);
+            settingsPanel.add(setting);    
+        }
     }
 
     /**
-     * Adds all given <code>Setting</code> objects to this <code>PluginSettings</code> object.
+     * Adds all given <code>Setting</code> objects to this <code>SettingsList</code> object.
      *
      * @param settings
      *         the <code>Setting</code> objects to be added

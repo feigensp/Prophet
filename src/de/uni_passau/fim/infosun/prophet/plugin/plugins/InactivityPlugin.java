@@ -6,9 +6,11 @@ import de.uni_passau.fim.infosun.prophet.util.language.UIElementNames;
 import de.uni_passau.fim.infosun.prophet.util.qTree.Attribute;
 import de.uni_passau.fim.infosun.prophet.util.qTree.QTreeNode;
 import de.uni_passau.fim.infosun.prophet.util.settings.Setting;
-import de.uni_passau.fim.infosun.prophet.util.settings.components.SettingsCheckBox;
+import de.uni_passau.fim.infosun.prophet.util.settings.components.CheckBoxSetting;
 
-import static de.uni_passau.fim.infosun.prophet.util.qTree.QTreeNode.Type.*;
+import static de.uni_passau.fim.infosun.prophet.util.qTree.QTreeNode.Type.CATEGORY;
+import static de.uni_passau.fim.infosun.prophet.util.qTree.QTreeNode.Type.EXPERIMENT;
+import static de.uni_passau.fim.infosun.prophet.util.qTree.QTreeNode.Type.QUESTION;
 
 /**
  * This <code>Plugin</code> enables the <code>ExperimentEditor</code> to mark nodes as 'inactive'. The
@@ -27,7 +29,7 @@ public class InactivityPlugin implements Plugin {
         }
 
         Attribute mainAttribute = node.getAttribute(KEY);
-        Setting setting = new SettingsCheckBox(mainAttribute, getClass().getSimpleName());
+        Setting setting = new CheckBoxSetting(mainAttribute, getClass().getSimpleName());
 
         if (node.getType() == CATEGORY) {
             setting.setCaption(UIElementNames.getLocalized("MENU_TAB_SETTINGS_DEACTIVATE_NODES"));

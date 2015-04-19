@@ -20,7 +20,7 @@ import static de.uni_passau.fim.infosun.prophet.util.language.UIElementNames.get
  * A <code>Setting</code> that uses a <code>JFileChooser</code> enable choosing a path. The chosen path will be
  * displayed in a <code>JTextField</code>.
  */
-public class SettingsPathChooser extends Setting {
+public class PathChooserSetting extends Setting {
 
     /**
      * The type of path to enable choosing.
@@ -45,7 +45,7 @@ public class SettingsPathChooser extends Setting {
         private int mode;
 
         /**
-         * Constructs a new <code>SettingsPathChooser.Type</code> containing the given constant.
+         * Constructs a new <code>PathChooserSetting.Type</code> containing the given constant.
          *
          * @param mode
          *         should be one of {@link javax.swing.JFileChooser#FILES_ONLY},
@@ -71,21 +71,21 @@ public class SettingsPathChooser extends Setting {
     private JTextField textField;
 
     /**
-     * Constructs a new <code>SettingsPathChooser</code> for the given <code>Attribute</code>.
+     * Constructs a new <code>PathChooserSetting</code> for the given <code>Attribute</code>.
      * If <code>borderDesc</code> is not <code>null</code> this <code>JPanel</code> will be surrounded by a titled
-     * border with the given title. This <code>SettingsPathChooser</code> will only allow choosing files.
+     * border with the given title. This <code>PathChooserSetting</code> will only allow choosing files.
      *
      * @param attribute
      *         the <code>Attribute</code> for this <code>Setting</code>
      * @param borderDesc
      *         the title for the border or <code>null</code> for no border
      */
-    public SettingsPathChooser(Attribute attribute, String borderDesc) {
+    public PathChooserSetting(Attribute attribute, String borderDesc) {
         this(attribute, borderDesc, Type.FILES);
     }
 
     /**
-     * Constructs a new <code>SettingsPathChooser</code> for the given <code>Attribute</code>.
+     * Constructs a new <code>PathChooserSetting</code> for the given <code>Attribute</code>.
      * If <code>borderDesc</code> is not <code>null</code> this <code>JPanel</code> will be surrounded by a titled
      * border with the given title. Using the <code>type</code> argument the <code>JFileChooser</code> can
      * be configured to allow choosing files, directories or both.
@@ -97,7 +97,7 @@ public class SettingsPathChooser extends Setting {
      * @param type
      *         the type of path that can be chosen
      */
-    public SettingsPathChooser(Attribute attribute, String borderDesc, Type type) {
+    public PathChooserSetting(Attribute attribute, String borderDesc, Type type) {
         super(attribute, borderDesc);
         JButton pathButton;
 

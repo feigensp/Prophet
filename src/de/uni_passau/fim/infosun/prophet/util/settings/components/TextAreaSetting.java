@@ -2,21 +2,22 @@ package de.uni_passau.fim.infosun.prophet.util.settings.components;
 
 import java.awt.BorderLayout;
 import javax.swing.JLabel;
-import javax.swing.JTextField;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 
 import de.uni_passau.fim.infosun.prophet.util.qTree.Attribute;
 import de.uni_passau.fim.infosun.prophet.util.settings.Setting;
 
 /**
- * A <code>Setting</code> that uses a <code>JTextField</code> to get user input.
+ * A <code>Setting</code> that uses a <code>JTextArea</code> to get user input.
  */
-public class SettingsTextField extends Setting {
+public class TextAreaSetting extends Setting {
 
     private JLabel caption;
-    private JTextField textField;
+    private JTextArea textArea;
 
     /**
-     * Constructs a new <code>SettingsTextField</code> for the given <code>Attribute</code>. If <code>borderDesc</code>
+     * Constructs a new <code>TextAreaSetting</code> for the given <code>Attribute</code>. If <code>borderDesc</code>
      * is not <code>null</code> this <code>JPanel</code> will be surrounded by a titled border with the given title.
      *
      * @param attribute
@@ -24,14 +25,14 @@ public class SettingsTextField extends Setting {
      * @param borderDesc
      *         the title for the border or <code>null</code> for no border
      */
-    public SettingsTextField(Attribute attribute, String borderDesc) {
+    public TextAreaSetting(Attribute attribute, String borderDesc) {
         super(attribute, borderDesc);
 
         caption = new JLabel();
         add(caption, BorderLayout.NORTH);
 
-        textField = new JTextField();
-        add(textField, BorderLayout.CENTER);
+        textArea = new JTextArea(5, Integer.MAX_VALUE);
+        add(new JScrollPane(textArea), BorderLayout.CENTER);
     }
 
     @Override
@@ -41,11 +42,11 @@ public class SettingsTextField extends Setting {
 
     @Override
     public void loadValue() {
-        textField.setText(attribute.getValue());
+        textArea.setText(attribute.getValue());
     }
 
     @Override
     public void saveValue() {
-        attribute.setValue(textField.getText());
+        attribute.setValue(textArea.getText());
     }
 }

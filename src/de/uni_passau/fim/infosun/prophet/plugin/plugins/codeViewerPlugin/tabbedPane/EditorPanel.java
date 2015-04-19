@@ -10,6 +10,7 @@ import javax.swing.JPanel;
 import javax.swing.text.BadLocationException;
 
 import de.uni_passau.fim.infosun.prophet.experimentEditor.tabbedPane.editorTabs.ModifiedRSyntaxTextArea;
+import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.CodeViewer;
 import org.fife.ui.rsyntaxtextarea.RSyntaxDocument;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
@@ -24,15 +25,21 @@ public class EditorPanel extends JPanel {
     private static final Font FONT = new Font("monospaced", Font.PLAIN, 12);
 
     private final File file;
+
+    private CodeViewer viewer;
     private RSyntaxTextArea textArea;
     private RTextScrollPane scrollPane;
 
     /**
      * Constructs a new <code>EditorPanel</code> displaying the text content of the given <code>File</code>.
      *
-     * @param file the <code>File</code> to display
+     * @param viewer
+     *         the <code>CodeViewer</code> this <code>EditorPanel</code> belongs to
+     * @param file
+     *         the <code>File</code> to display
      */
-    public EditorPanel(File file) {
+    public EditorPanel(CodeViewer viewer, File file) {
+        this.viewer = viewer;
         this.file = file;
         this.textArea = new ModifiedRSyntaxTextArea();
         this.scrollPane = new RTextScrollPane(textArea);
@@ -58,6 +65,15 @@ public class EditorPanel extends JPanel {
     @Override
     public void grabFocus() {
         textArea.grabFocus();
+    }
+
+    /**
+     * Returns the <code>CodeViewer</code> this <code>EditorPanel</code> belongs to.
+     *
+     * @return the <code>CodeViewer</code> this <code>EditorPanel</code> belongs to
+     */
+    public CodeViewer getCodeViewer() {
+        return viewer;
     }
 
     /**

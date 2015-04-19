@@ -47,7 +47,12 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
-import static de.uni_passau.fim.infosun.prophet.Constants.*;
+import static de.uni_passau.fim.infosun.prophet.Constants.KEY_BACKWARD;
+import static de.uni_passau.fim.infosun.prophet.Constants.KEY_EXPERIMENT_CODE;
+import static de.uni_passau.fim.infosun.prophet.Constants.KEY_FORWARD;
+import static de.uni_passau.fim.infosun.prophet.Constants.KEY_QUESTIONSWITCHING;
+import static de.uni_passau.fim.infosun.prophet.Constants.KEY_SUBJECT_CODE;
+import static de.uni_passau.fim.infosun.prophet.Constants.KEY_SUBJECT_CODE_CAP;
 import static de.uni_passau.fim.infosun.prophet.util.language.UIElementNames.getLocalized;
 import static de.uni_passau.fim.infosun.prophet.util.qTree.QTreeNode.Type.CATEGORY;
 import static de.uni_passau.fim.infosun.prophet.util.qTree.QTreeNode.Type.EXPERIMENT;
@@ -328,8 +333,6 @@ public class QuestionViewPane extends JScrollPane {
                 answers.put(name, new ArrayList<>());
             }
         }
-
-        System.out.println(data); // TODO debug
 
         while (st.hasMoreTokens()) {
             String token = st.nextToken();

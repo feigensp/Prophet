@@ -10,12 +10,13 @@ import java.util.Map;
 
 import de.uni_passau.fim.infosun.prophet.experimentViewer.EViewer;
 import de.uni_passau.fim.infosun.prophet.plugin.Plugin;
-import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.recorder.Recorder;
+import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin
+        .RecorderPlugin;
 import de.uni_passau.fim.infosun.prophet.util.qTree.Attribute;
 import de.uni_passau.fim.infosun.prophet.util.qTree.QTreeNode;
-import de.uni_passau.fim.infosun.prophet.util.settings.PluginSettings;
 import de.uni_passau.fim.infosun.prophet.util.settings.Setting;
-import de.uni_passau.fim.infosun.prophet.util.settings.components.SettingsPathChooser;
+import de.uni_passau.fim.infosun.prophet.util.settings.SettingsList;
+import de.uni_passau.fim.infosun.prophet.util.settings.components.PathChooserSetting;
 
 import static de.uni_passau.fim.infosun.prophet.util.language.UIElementNames.getLocalized;
 import static de.uni_passau.fim.infosun.prophet.util.qTree.QTreeNode.Type.CATEGORY;
@@ -30,6 +31,13 @@ public class CodeViewerPlugin implements Plugin {
 
     public static final String KEY = "codeviewer";
 
+    static RecorderPlugin recorder;
+    
+    static {
+        recorder = new RecorderPlugin();
+        CodeViewerPluginList.add(recorder);
+    }
+    
     private EViewer experimentViewer;
     private int count = 1;
 
@@ -51,18 +59,17 @@ public class CodeViewerPlugin implements Plugin {
         }
 
         Attribute mainAttribute = node.getAttribute(KEY);
-        PluginSettings pluginSettings = new PluginSettings(mainAttribute, getClass().getSimpleName(), true);
-        pluginSettings.setCaption(getLocalized("MENU_TAB_SETTINGS_ACTIVATE_CODE_VIEWER"));
+        SettingsList settingsList = new SettingsList(mainAttribute, getClass().getSimpleName(), true);
+        settingsList.setCaption(getLocalized("MENU_TAB_SETTINGS_ACTIVATE_CODE_VIEWER"));
 
         Attribute subAttribute = mainAttribute.getSubAttribute(CodeViewer.KEY_PATH);
-        Setting subSetting = new SettingsPathChooser(subAttribute, null, SettingsPathChooser.Type.DIRECTORIES);
+        Setting subSetting = new PathChooserSetting(subAttribute, null, PathChooserSetting.Type.DIRECTORIES);
         subSetting.setCaption(getLocalized("MENU_TAB_SETTINGS_SOURCE_CODE_PATH") + ":");
-        pluginSettings.addSetting(subSetting);
+        settingsList.addSetting(subSetting);
 
-        pluginSettings.addSetting(Recorder.getSetting(mainAttribute));
-        pluginSettings.addAllSettings(CodeViewerPluginList.getAllSettings(mainAttribute));
+        settingsList.addAllSettings(CodeViewerPluginList.getAllSettings(mainAttribute));
 
-        return pluginSettings;
+        return settingsList;
     }
 
     @Override
@@ -88,7 +95,7 @@ public class CodeViewerPlugin implements Plugin {
 
     @Override
     public void enterNode(QTreeNode node) {
-        boolean enabled = Boolean.parseBoolean(node.getAttribute(KEY).getValue());
+        boolean enabled = node.containsAttribute(KEY) && Boolean.parseBoolean(node.getAttribute(KEY).getValue());
 
         if (!enabled) {
             return;
@@ -116,8 +123,7 @@ public class CodeViewerPlugin implements Plugin {
         CodeViewer cv = codeViewers.get(node);
 
         if (cv != null) {
-            CodeViewerPluginList.onClose();
-            cv.getRecorder().onClose();
+            CodeViewerPluginList.onClose(cv);
             cv.dispose();
 
             codeViewers.remove(node);

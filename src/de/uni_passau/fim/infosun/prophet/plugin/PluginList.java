@@ -1,6 +1,7 @@
 package de.uni_passau.fim.infosun.prophet.plugin;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,12 +18,12 @@ import de.uni_passau.fim.infosun.prophet.plugin.plugins.phpExportPlugin.PHPExpor
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.questionListPlugin.QuestionListPlugin;
 import de.uni_passau.fim.infosun.prophet.util.qTree.QTreeNode;
 import de.uni_passau.fim.infosun.prophet.util.settings.Setting;
-import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.parser.Tag;
 
 /**
- * A <code>Plugin</code> repository. Allows adding and removing <code>Plugin</code>s as well as calling the methods
- * of the <code>Plugin</code> interface on all currently active <code>Plugin</code>s.
+ * The top level <code>Plugin</code> repository. Allows adding and removing <code>Plugin</code>s as well as calling the
+ * methods of the <code>Plugin</code> interface on all currently active <code>Plugin</code>s.
  *
  * @author Georg Seibt
  * @author Andreas Hasselberg
@@ -46,12 +47,12 @@ public class PluginList {
     }
 
     /**
-     * Returns all currently active <code>Plugin</code>s.
+     * Returns an unmodifiable list view of all currently active <code>Plugin</code>s.
      *
      * @return the list of plugins
      */
     public static List<Plugin> getPlugins() {
-        return plugins;
+        return Collections.unmodifiableList(plugins);
     }
 
     /**
@@ -195,21 +196,20 @@ public class PluginList {
      * @return an HTML string comprised of 'p' tags containing the messages returned by the <code>Plugin</code>s
      */
     public static String finishExperiment() {
-        Document document = new Document("");
-        Element element = document.appendElement("html");
+        Element html = new Element(Tag.valueOf("html"), "");
 
         for (Plugin plugin : plugins) {
             try {
                 String pluginMessage = plugin.finishExperiment();
 
                 if (pluginMessage != null && !pluginMessage.isEmpty()) {
-                    element.appendElement("p").text(pluginMessage);
+                    html.appendElement("p").text(pluginMessage);
                 }
             } catch (RuntimeException e) {
                 e.printStackTrace();
             }
         }
 
-        return document.outerHtml();
+        return html.html();
     }
 }

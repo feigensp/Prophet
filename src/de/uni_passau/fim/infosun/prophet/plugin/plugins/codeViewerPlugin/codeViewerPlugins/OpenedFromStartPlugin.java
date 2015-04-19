@@ -7,42 +7,40 @@ import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.Plugin;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.tabbedPane.EditorPanel;
 import de.uni_passau.fim.infosun.prophet.util.language.UIElementNames;
 import de.uni_passau.fim.infosun.prophet.util.qTree.Attribute;
-import de.uni_passau.fim.infosun.prophet.util.settings.PluginSettings;
 import de.uni_passau.fim.infosun.prophet.util.settings.Setting;
-import de.uni_passau.fim.infosun.prophet.util.settings.components.SettingsTextField;
+import de.uni_passau.fim.infosun.prophet.util.settings.SettingsList;
+import de.uni_passau.fim.infosun.prophet.util.settings.components.TextFieldSetting;
 
+/**
+ * A <code>Plugin</code> that enables having a file opened immediately after the a <code>CodeViewer</code> was
+ * opened.
+ */
 public class OpenedFromStartPlugin implements Plugin {
 
     public static final String KEY = "openedByStart";
     public static final String KEY_PATH = "startPath";
-    private Attribute selected;
 
     @Override
     public Setting getSetting(Attribute mainAttribute) {
 
         Attribute attribute = mainAttribute.getSubAttribute(KEY);
-        PluginSettings pluginSettings = new PluginSettings(attribute, getClass().getSimpleName(), true);
-        pluginSettings.setCaption(UIElementNames.getLocalized("OPENED_FROM_START_OPEN_FILE_ON_START"));
+        SettingsList settingsList = new SettingsList(attribute, getClass().getSimpleName(), true);
+        settingsList.setCaption(UIElementNames.getLocalized("OPENED_FROM_START_OPEN_FILE_ON_START"));
 
         Attribute subAttribute = attribute.getSubAttribute(KEY_PATH);
-        Setting subSetting = new SettingsTextField(subAttribute, null);
+        Setting subSetting = new TextFieldSetting(subAttribute, null);
         subSetting.setCaption(UIElementNames.getLocalized("OPENED_FROM_START_FILE_TO_OPEN") + ":");
-        pluginSettings.addSetting(subSetting);
+        settingsList.addSetting(subSetting);
 
-        return pluginSettings;
+        return settingsList;
     }
 
     @Override
-    public void init(Attribute selected) {
-        this.selected = selected;
-    }
+    public void onCreate(CodeViewer viewer) {
+        Attribute attr = viewer.getAttribute();
 
-    @Override
-    public void onFrameCreate(CodeViewer viewer) {
-
-        if (selected.containsSubAttribute(KEY) && Boolean.parseBoolean(selected.getSubAttribute(KEY).getValue())) {
-            Attribute attributes = selected.getSubAttribute(KEY);
-            String path = attributes.getSubAttribute(KEY_PATH).getValue();
+        if (attr.containsSubAttribute(KEY) && Boolean.parseBoolean(attr.getSubAttribute(KEY).getValue())) {
+            String path = attr.getSubAttribute(KEY).getSubAttribute(KEY_PATH).getValue();
             File file = new File(viewer.getShowDir(), path);
 
             viewer.getTabbedPane().openFile(file);
@@ -51,17 +49,17 @@ public class OpenedFromStartPlugin implements Plugin {
     }
 
     @Override
-    public void onEditorPanelCreate(EditorPanel editorPanel) {
+    public void onEditorPanelCreate(CodeViewer codeViewer, EditorPanel editorPanel) {
 
     }
 
     @Override
-    public void onEditorPanelClose(EditorPanel editorPanel) {
+    public void onEditorPanelClose(CodeViewer codeViewer, EditorPanel editorPanel) {
 
     }
 
     @Override
-    public void onClose() {
+    public void onClose(CodeViewer codeViewer) {
 
     }
 }

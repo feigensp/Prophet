@@ -1,6 +1,10 @@
 package de.uni_passau.fim.infosun.prophet.plugin.plugins;
 
-import java.io.*;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
@@ -11,11 +15,11 @@ import de.uni_passau.fim.infosun.prophet.plugin.Plugin;
 import de.uni_passau.fim.infosun.prophet.util.language.UIElementNames;
 import de.uni_passau.fim.infosun.prophet.util.qTree.Attribute;
 import de.uni_passau.fim.infosun.prophet.util.qTree.QTreeNode;
-import de.uni_passau.fim.infosun.prophet.util.settings.PluginSettings;
 import de.uni_passau.fim.infosun.prophet.util.settings.Setting;
-import de.uni_passau.fim.infosun.prophet.util.settings.components.SettingsCheckBox;
-import de.uni_passau.fim.infosun.prophet.util.settings.components.SettingsPathChooser;
-import de.uni_passau.fim.infosun.prophet.util.settings.components.SettingsTextArea;
+import de.uni_passau.fim.infosun.prophet.util.settings.SettingsList;
+import de.uni_passau.fim.infosun.prophet.util.settings.components.CheckBoxSetting;
+import de.uni_passau.fim.infosun.prophet.util.settings.components.PathChooserSetting;
+import de.uni_passau.fim.infosun.prophet.util.settings.components.TextAreaSetting;
 
 import static de.uni_passau.fim.infosun.prophet.util.qTree.QTreeNode.Type.EXPERIMENT;
 
@@ -38,22 +42,22 @@ public class ValidSubjectCodePlugin implements Plugin {
         }
 
         Attribute mainAttribute = node.getAttribute(KEY);
-        PluginSettings pluginSettings = new PluginSettings(mainAttribute, getClass().getSimpleName(), true);
-        pluginSettings.setCaption(UIElementNames.getLocalized("SUBJECT_CODE_CHECK_SUBJECT_CODE"));
+        SettingsList settingsList = new SettingsList(mainAttribute, getClass().getSimpleName(), true);
+        settingsList.setCaption(UIElementNames.getLocalized("SUBJECT_CODE_CHECK_SUBJECT_CODE"));
 
-        SettingsTextArea settingsTextArea = new SettingsTextArea(mainAttribute.getSubAttribute(KEY_CODES), null);
-        settingsTextArea.setCaption(UIElementNames.getLocalized("SUBJECT_CODE_VALID_CODES"));
-        pluginSettings.addSetting(settingsTextArea);
+        TextAreaSetting textAreaSetting = new TextAreaSetting(mainAttribute.getSubAttribute(KEY_CODES), null);
+        textAreaSetting.setCaption(UIElementNames.getLocalized("SUBJECT_CODE_VALID_CODES"));
+        settingsList.addSetting(textAreaSetting);
 
-        SettingsPathChooser filePathChooser = new SettingsPathChooser(mainAttribute.getSubAttribute(KEY_PATH), null);
+        PathChooserSetting filePathChooser = new PathChooserSetting(mainAttribute.getSubAttribute(KEY_PATH), null);
         filePathChooser.setCaption(UIElementNames.getLocalized("SUBJECT_CODE_CODE_FILE"));
-        pluginSettings.addSetting(filePathChooser);
+        settingsList.addSetting(filePathChooser);
 
-        SettingsCheckBox settingsCheckBox = new SettingsCheckBox(mainAttribute.getSubAttribute(KEY_IGNORE_CASE), null);
-        settingsCheckBox.setCaption(UIElementNames.getLocalized("SUBJECT_CODE_IGNORE_CASE"));
-        pluginSettings.addSetting(settingsCheckBox);
+        CheckBoxSetting checkBoxSetting = new CheckBoxSetting(mainAttribute.getSubAttribute(KEY_IGNORE_CASE), null);
+        checkBoxSetting.setCaption(UIElementNames.getLocalized("SUBJECT_CODE_IGNORE_CASE"));
+        settingsList.addSetting(checkBoxSetting);
 
-        return pluginSettings;
+        return settingsList;
     }
 
     @Override

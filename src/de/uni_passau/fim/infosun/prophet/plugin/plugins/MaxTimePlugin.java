@@ -14,10 +14,10 @@ import de.uni_passau.fim.infosun.prophet.plugin.Plugin;
 import de.uni_passau.fim.infosun.prophet.util.language.UIElementNames;
 import de.uni_passau.fim.infosun.prophet.util.qTree.Attribute;
 import de.uni_passau.fim.infosun.prophet.util.qTree.QTreeNode;
-import de.uni_passau.fim.infosun.prophet.util.settings.PluginSettings;
 import de.uni_passau.fim.infosun.prophet.util.settings.Setting;
-import de.uni_passau.fim.infosun.prophet.util.settings.components.SettingsCheckBox;
-import de.uni_passau.fim.infosun.prophet.util.settings.components.SettingsTextField;
+import de.uni_passau.fim.infosun.prophet.util.settings.SettingsList;
+import de.uni_passau.fim.infosun.prophet.util.settings.components.CheckBoxSetting;
+import de.uni_passau.fim.infosun.prophet.util.settings.components.TextFieldSetting;
 
 import static de.uni_passau.fim.infosun.prophet.util.qTree.QTreeNode.Type.CATEGORY;
 import static de.uni_passau.fim.infosun.prophet.util.qTree.QTreeNode.Type.EXPERIMENT;
@@ -137,11 +137,11 @@ public class MaxTimePlugin implements Plugin {
     public Setting getSetting(QTreeNode node) {
 
         Attribute resultAttribute = node.getAttribute(KEY);
-        PluginSettings result = new PluginSettings(resultAttribute, getClass().getSimpleName(), true);
+        SettingsList result = new SettingsList(resultAttribute, getClass().getSimpleName(), true);
         result.setCaption(UIElementNames.getLocalized("MENU_TAB_SETTINGS_TIME_OUT"));
 
         Attribute subAttribute = resultAttribute.getSubAttribute(KEY_MAX_TIME);
-        Setting subSetting = new SettingsTextField(subAttribute, null);
+        Setting subSetting = new TextFieldSetting(subAttribute, null);
 
         switch (node.getType()) {
 
@@ -158,20 +158,20 @@ public class MaxTimePlugin implements Plugin {
         result.addSetting(subSetting);
 
         Attribute hardExitAttribute = resultAttribute.getSubAttribute(KEY_HARD_EXIT);
-        PluginSettings hardExit = new PluginSettings(hardExitAttribute, null, true);
+        SettingsList hardExit = new SettingsList(hardExitAttribute, null, true);
         hardExit.setCaption(UIElementNames.getLocalized("MENU_TAB_SETTINGS_HARD_TIME_OUT"));
 
         Attribute warningAttribute = hardExitAttribute.getSubAttribute(KEY_HARD_EXIT_WARNING);
-        PluginSettings warning = new PluginSettings(warningAttribute, null, true);
+        SettingsList warning = new SettingsList(warningAttribute, null, true);
         warning.setCaption(UIElementNames.getLocalized("MENU_TAB_SETTINGS_TIME_OUT_WARN_SUBJECTS"));
 
         subAttribute = warningAttribute.getSubAttribute(KEY_HARD_EXIT_WARNING_TIME);
-        subSetting = new SettingsTextField(subAttribute, null);
+        subSetting = new TextFieldSetting(subAttribute, null);
         subSetting.setCaption(UIElementNames.getLocalized("MENU_TAB_SETTINGS_TIME_OUT_WARNING_TIME") + ':');
         warning.addSetting(subSetting);
 
         subAttribute = warningAttribute.getSubAttribute(KEY_HARD_EXIT_WARNING_MESSAGE);
-        subSetting = new SettingsTextField(subAttribute, null);
+        subSetting = new TextFieldSetting(subAttribute, null);
         subSetting.setCaption(UIElementNames.getLocalized("MENU_TAB_SETTINGS_TIME_OUT_WARNING_MESSAGE") + ':');
         warning.addSetting(subSetting);
 
@@ -179,13 +179,13 @@ public class MaxTimePlugin implements Plugin {
         result.addSetting(hardExit);
 
         subAttribute = resultAttribute.getSubAttribute(KEY_MESSAGE);
-        subSetting = new SettingsTextField(subAttribute, null);
+        subSetting = new TextFieldSetting(subAttribute, null);
         subSetting.setCaption(UIElementNames.getLocalized("MENU_TAB_SETTINGS_TIME_OUT_MESSAGE") + ':');
         result.addSetting(subSetting);
 
         if (node.getType() == CATEGORY) {
             subAttribute = resultAttribute.getSubAttribute(KEY_IGNORE_TIMEOUT);
-            subSetting = new SettingsCheckBox(subAttribute, null);
+            subSetting = new CheckBoxSetting(subAttribute, null);
             subSetting.setCaption(UIElementNames.getLocalized("MENU_TAB_SETTINGS_IGNORE_TIME_OUT"));
             result.addSetting(subSetting);
         }

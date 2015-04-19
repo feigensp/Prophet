@@ -6,43 +6,46 @@ import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.tabbedP
 import de.uni_passau.fim.infosun.prophet.util.language.UIElementNames;
 import de.uni_passau.fim.infosun.prophet.util.qTree.Attribute;
 import de.uni_passau.fim.infosun.prophet.util.settings.Setting;
-import de.uni_passau.fim.infosun.prophet.util.settings.components.SettingsCheckBox;
+import de.uni_passau.fim.infosun.prophet.util.settings.components.CheckBoxSetting;
 
+/**
+ * A <code>Plugin</code> that enables/disables displaying line numbers in the <code>EditorPanel</code>s of the
+ * <code>CodeViewer</code>.
+ */
 public class LineNumbersPlugin implements Plugin {
 
     public static final String KEY = "linenumbers";
-    private Attribute selected;
 
     @Override
     public Setting getSetting(Attribute mainAttribute) {
 
         Attribute attribute = mainAttribute.getSubAttribute(KEY);
-        Setting setting = new SettingsCheckBox(attribute, getClass().getSimpleName());
+        Setting setting = new CheckBoxSetting(attribute, getClass().getSimpleName());
         setting.setCaption(UIElementNames.getLocalized("LINE_NUMBER_SHOW_LINE_NUMBERS"));
 
         return setting;
     }
 
     @Override
-    public void init(Attribute selected) {
-        this.selected = selected;
+    public void onCreate(CodeViewer viewer) {
+
     }
 
     @Override
-    public void onFrameCreate(CodeViewer viewer) {
+    public void onEditorPanelCreate(CodeViewer codeViewer, EditorPanel editorPanel) {
+        Attribute attr = codeViewer.getAttribute();
+        boolean enabled = attr.containsSubAttribute(KEY) && Boolean.parseBoolean(attr.getSubAttribute(KEY).getValue());
+
+        editorPanel.getScrollPane().setLineNumbersEnabled(enabled);
     }
 
     @Override
-    public void onEditorPanelCreate(EditorPanel editorPanel) {
-        boolean lineNumbers = Boolean.parseBoolean(selected.getSubAttribute("linenumbers_default").getValue());
-        editorPanel.getScrollPane().setLineNumbersEnabled(lineNumbers);
+    public void onClose(CodeViewer codeViewer) {
+
     }
 
     @Override
-    public void onClose() {
-    }
+    public void onEditorPanelClose(CodeViewer codeViewer, EditorPanel editorPanel) {
 
-    @Override
-    public void onEditorPanelClose(EditorPanel editorPanel) {
     }
 }

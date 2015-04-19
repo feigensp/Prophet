@@ -13,10 +13,11 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.plaf.basic.BasicSplitPaneDivider;
 
+import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin
+        .RecorderPlugin;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.fileTree.FileEvent;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.fileTree.FileListener;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.fileTree.FileTree;
-import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.recorder.Recorder;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.tabbedPane.EditorTabbedPane;
 import de.uni_passau.fim.infosun.prophet.util.qTree.Attribute;
 
@@ -28,7 +29,6 @@ import static de.uni_passau.fim.infosun.prophet.util.language.UIElementNames.get
 public class CodeViewer extends JFrame implements FileListener {
 
     public static final String KEY_PATH = "path";
-    public static final String KEY_EDITABLE = "editable";
 
     public static final int WIDTH = 400;
     public static final int HEIGHT = 300;
@@ -43,10 +43,10 @@ public class CodeViewer extends JFrame implements FileListener {
     private File showDir;
     private File saveDir;
 
-    private Recorder recorder;
+    private Attribute attribute;
 
     /**
-     * Constructs a new <code>CodeViewer</code> taking its settings from the sub-attributes of th given
+     * Constructs a new <code>CodeViewer</code> taking its settings from the sub-attributes of the given
      * <code>Attribute</code>.
      *
      * @param cvAttributes
@@ -69,6 +69,7 @@ public class CodeViewer extends JFrame implements FileListener {
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         setLayout(new BorderLayout());
 
+        this.attribute = cvAttributes;
         this.saveDir = saveDir;
 
         if (cvAttributes.containsSubAttribute(KEY_PATH)) {
@@ -100,9 +101,7 @@ public class CodeViewer extends JFrame implements FileListener {
         fileTree.addFileListener(this);
         splitPane.setLeftComponent(new JScrollPane(fileTree));
 
-        recorder = new Recorder(cvAttributes);
-
-        tabbedPane = new EditorTabbedPane(recorder);
+        tabbedPane = new EditorTabbedPane(this);
         tabbedPane.setBorder(null);
         splitPane.setRightComponent(tabbedPane);
 
@@ -115,9 +114,7 @@ public class CodeViewer extends JFrame implements FileListener {
 
         add(splitPane, BorderLayout.CENTER);
 
-        CodeViewerPluginList.init(cvAttributes);
-        recorder.onFrameCreate(this);
-        CodeViewerPluginList.onFrameCreate(this);
+        CodeViewerPluginList.onCreate(this);
 
         pack();
     }
@@ -131,12 +128,12 @@ public class CodeViewer extends JFrame implements FileListener {
     }
 
     /**
-     * Returns the <code>Recorder</code> used by this <code>CodeViewer</code>.
+     * Returns the <code>RecorderPlugin</code> used by this <code>CodeViewer</code>.
      *
-     * @return the <code>Recorder</code>
+     * @return the <code>RecorderPlugin</code>
      */
-    public Recorder getRecorder() {
-        return recorder;
+    public RecorderPlugin getRecorder() {
+        return CodeViewerPlugin.recorder;
     }
 
     /**
@@ -175,6 +172,16 @@ public class CodeViewer extends JFrame implements FileListener {
      */
     public File getSaveDir() {
         return saveDir;
+    }
+
+    /**
+     * Returns the main <code>Attribute</code> of the <code>CodeViewerPlugin</code> this <code>CodeViewer</code> belongs
+     * to. <code>Plugins</code> may take their settings from the sub-attributes of this <code>Attribute</code>.
+     *
+     * @return the main <code>Attribute</code> of this <code>CodeViewer</code>
+     */
+    public Attribute getAttribute() {
+        return attribute;
     }
 
     /**
