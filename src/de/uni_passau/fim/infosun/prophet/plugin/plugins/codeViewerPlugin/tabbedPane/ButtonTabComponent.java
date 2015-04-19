@@ -16,40 +16,32 @@
  *     contributors may be used to endorse or promote products derived
  *     from this software without specific prior written permission.
  *
- * modified by Markus Köppen and Andreas Hasselberg
+ * Modified by Markus Köppen, Andreas Hasselberg and Georg Seibt
  */
 package de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.tabbedPane;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import javax.swing.AbstractButton;
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+import javax.swing.*;
 import javax.swing.plaf.basic.BasicButtonUI;
+import java.awt.*;
+import java.awt.event.*;
 
 /**
- * Component to be used as tabComponent; Contains a JLabel to show the text and
- * a JButton to close the tab it belongs to
+ * A <code>JPanel</code> used for rendering the title of an <code>EditorPanel</code> tab in the
+ * <code>EditorTabbedPane</code>.
  */
-@SuppressWarnings("serial")
 public class ButtonTabComponent extends JPanel {
 
-    private final EditorTabbedPane tabbedPane;
+    private EditorTabbedPane tabbedPane;
     private EditorPanel editorPanel;
 
-    public ButtonTabComponent(final EditorTabbedPane tabbedPane, EditorPanel editorPanel) {
+    /**
+     * Constructs a new <code>ButtonTabComponent</code> for the given <code>editorPanel</code> that must be contained
+     * in the given <code>tabbedPane</code>.
+     *
+     * @param tabbedPane the <code>EditorTabbedPane</code> containing the <code>editorPanel</code>
+     * @param editorPanel the <code>EditorPanel</code> whose title this <code>ButtonTabComponent</code> should render
+     */
+    public ButtonTabComponent(EditorTabbedPane tabbedPane, EditorPanel editorPanel) {
         // unset default FlowLayout' gaps
         super(new FlowLayout(FlowLayout.LEFT, 0, 0));
         if (tabbedPane == null) {
@@ -82,6 +74,9 @@ public class ButtonTabComponent extends JPanel {
         setBorder(BorderFactory.createEmptyBorder(2, 0, 0, 0));
     }
 
+    /**
+     * The <code>JButton</code> used for closing the <code>EditorPanel</code>s tab.
+     */
     private class TabButton extends JButton implements ActionListener {
 
         public TabButton() {
@@ -135,6 +130,9 @@ public class ButtonTabComponent extends JPanel {
         }
     }
 
+    /**
+     * A <code>MouseListener</code> that hides the border of an <code>AbstractButton</code> when the mouse exits it.
+     */
     private static final MouseListener buttonMouseListener = new MouseAdapter() {
 
         @Override
