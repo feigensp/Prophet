@@ -49,17 +49,17 @@ public class OpenedFromStartPlugin implements Plugin {
     }
 
     @Override
-    public void onEditorPanelCreate(EditorPanel editorPanel) {
+    public void onEditorPanelCreate(CodeViewer codeViewer, EditorPanel editorPanel) {
 
     }
 
     @Override
-    public void onEditorPanelClose(EditorPanel editorPanel) {
+    public void onEditorPanelClose(CodeViewer codeViewer, EditorPanel editorPanel) {
 
     }
 
     @Override
-    public void onClose() {
+    public void onClose(CodeViewer codeViewer) {
 
     }
 }

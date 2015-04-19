@@ -1,17 +1,10 @@
 package de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeViewerPlugins;
 
-import java.awt.BorderLayout;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
-import java.util.HashMap;
-import java.util.Map;
-import javax.swing.JMenuItem;
-import javax.swing.KeyStroke;
-
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.CodeViewer;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.Plugin;
-import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.recorder.Recorder;
-import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.recorder.loggingTree.LoggingTreeNode;
+import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin.RecorderPlugin;
+import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin.recordEntries.GlobalSearchEntry;
+import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin.recordEntries.SearchEntry;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.tabbedPane.EditorPanel;
 import de.uni_passau.fim.infosun.prophet.util.language.UIElementNames;
 import de.uni_passau.fim.infosun.prophet.util.qTree.Attribute;
@@ -21,6 +14,13 @@ import de.uni_passau.fim.infosun.prophet.util.settings.Setting;
 import de.uni_passau.fim.infosun.prophet.util.settings.SettingsList;
 import de.uni_passau.fim.infosun.prophet.util.settings.components.CheckBoxSetting;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A <code>Plugin</code> that will enable showing <code>SearchBar</code>s for <code>EditorPanel</code>s opened in the
@@ -54,7 +54,7 @@ public class SearchBarPlugin implements Plugin {
     public static final String ATTRIBUTE_QUERY = "query";
     public static final String ATTRIBUTE_SUCCESS = "success";
 
-	private Recorder recorder;
+	private RecorderPlugin recorder;
     private boolean enabled;
 	private boolean regexDisabled;
 
@@ -89,8 +89,8 @@ public class SearchBarPlugin implements Plugin {
     }
 
 	@Override
-	public void onCreate(CodeViewer viewer) {
-		Attribute vAttr = viewer.getAttribute();
+	public void onCreate(CodeViewer codeViewer) {
+		Attribute vAttr = codeViewer.getAttribute();
 		this.enabled = vAttr.containsSubAttribute(KEY) && Boolean.parseBoolean(vAttr.getSubAttribute(KEY).getValue());
 
 		if (!enabled) {
@@ -99,13 +99,13 @@ public class SearchBarPlugin implements Plugin {
 
 		Attribute pluginAttr = vAttr.getSubAttribute(KEY);
 
-		this.recorder = viewer.getRecorder();
+		this.recorder = codeViewer.getRecorder();
 		this.regexDisabled = Boolean.parseBoolean(pluginAttr.getSubAttribute(KEY_DISABLE_REGEX).getValue());
 
 		JMenuItem findMenuItem = new JMenuItem(UIElementNames.getLocalized("SEARCH_BAR_MENU_SEARCH"));
 		findMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F, InputEvent.CTRL_MASK));
 		findMenuItem.addActionListener(e -> {
-			SearchBar sBar = searchBars.get(viewer.getTabbedPane().getSelectedComponent());
+			SearchBar sBar = searchBars.get(codeViewer.getTabbedPane().getSelectedComponent());
 
 			if (sBar != null) {
 				sBar.setVisible(true);
@@ -113,27 +113,20 @@ public class SearchBarPlugin implements Plugin {
 			}
 		});
 
-		viewer.addMenuItemToEditMenu(findMenuItem);
+		codeViewer.addMenuItemToEditMenu(findMenuItem);
 
 		if (Boolean.parseBoolean(pluginAttr.getSubAttribute(KEY_ENABLE_GLOBAL).getValue())) {
-			globalSearchBar = new GlobalSearchBar(viewer);
+			globalSearchBar = new GlobalSearchBar(codeViewer);
 			globalSearchBar.setVisible(false);
 
-			globalSearchBar.addSearchBarListener((action, query, success) -> {
-				LoggingTreeNode node = new LoggingTreeNode(TYPE_SEARCH);
-
-				node.setAttribute(ATTRIBUTE_ACTION, action);
-				node.setAttribute(ATTRIBUTE_QUERY, query);
-				node.setAttribute(ATTRIBUTE_SUCCESS, String.valueOf(success));
-
-				viewer.getRecorder().addLoggingTreeNode(node);
-			});
+			globalSearchBar.addSearchBarListener((action, query, success) ->
+					recorder.record(codeViewer, new GlobalSearchEntry(codeViewer, action, query, success)));
 
 			if (regexDisabled) {
 				globalSearchBar.getRegexCB().setVisible(false);
 			}
 
-			viewer.add(globalSearchBar, BorderLayout.SOUTH);
+			codeViewer.add(globalSearchBar, BorderLayout.SOUTH);
 
 			JMenuItem findGlobalMenuItem = new JMenuItem(UIElementNames.getLocalized("SEARCH_BAR_MENU_GLOBAL_SEARCH"));
 			findGlobalMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_H, InputEvent.CTRL_MASK));
@@ -142,12 +135,12 @@ public class SearchBarPlugin implements Plugin {
 				globalSearchBar.grabFocus();
 			});
 
-			viewer.addMenuItemToEditMenu(findGlobalMenuItem);
+			codeViewer.addMenuItemToEditMenu(findGlobalMenuItem);
 		}
 	}
 
 	@Override
-	public void onEditorPanelCreate(EditorPanel editorPanel) {
+	public void onEditorPanelCreate(CodeViewer codeViewer, EditorPanel editorPanel) {
 
 		if (!enabled) {
 			return;
@@ -157,15 +150,8 @@ public class SearchBarPlugin implements Plugin {
 		SearchBar searchBar = new SearchBar(textPane);
 		searchBar.setVisible(false);
 
-		searchBar.addSearchBarListener((action, query, success) -> {
-			LoggingTreeNode node = new LoggingTreeNode(TYPE_SEARCH);
-
-			node.setAttribute(ATTRIBUTE_ACTION, action);
-			node.setAttribute(ATTRIBUTE_QUERY, query);
-			node.setAttribute(ATTRIBUTE_SUCCESS, String.valueOf(success));
-
-			recorder.addLoggingTreeNode(node);
-		});
+		searchBar.addSearchBarListener((action, query, success) ->
+				recorder.record(codeViewer, new SearchEntry(editorPanel, action, query, success)));
 
 		if (regexDisabled) {
 			searchBar.getRegexCB().setVisible(false);
@@ -176,7 +162,7 @@ public class SearchBarPlugin implements Plugin {
 	}
 
     @Override
-    public void onClose() {
+    public void onClose(CodeViewer codeViewer) {
 		enabled = false;
 		regexDisabled = false;
 
@@ -187,7 +173,7 @@ public class SearchBarPlugin implements Plugin {
     }
 
     @Override
-    public void onEditorPanelClose(EditorPanel editorPanel) {
+    public void onEditorPanelClose(CodeViewer codeViewer, EditorPanel editorPanel) {
 
 		if (enabled) {
             searchBars.remove(editorPanel);

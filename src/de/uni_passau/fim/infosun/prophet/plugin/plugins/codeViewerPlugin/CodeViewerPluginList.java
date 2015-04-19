@@ -94,50 +94,58 @@ public class CodeViewerPluginList {
         }
     }
 
-	/**
-	 * Calls the {@link Plugin#onEditorPanelCreate(EditorPanel)} method of all currently active plugins with the given
-	 * <code>EditorPanel</code>.
-	 *
-	 * @param editorPanel
-	 * 		the created <code>EditorPanel</code>
-	 */
-    public static void onEditorPanelCreate(EditorPanel editorPanel) {
+    /**
+     * Calls the {@link Plugin#onEditorPanelCreate(CodeViewer, EditorPanel)} method of all currently active plugins
+     * with the given <code>EditorPanel</code> and <code>CodeViewer</code>
+     *
+     * @param codeViewer
+     *         the <code>CodeViewer</code> that the <code>editorPanel</code> belongs to
+     * @param editorPanel
+     *         the created <code>EditorPanel</code>
+     */
+    public static void onEditorPanelCreate(CodeViewer codeViewer, EditorPanel editorPanel) {
 
-		for (Plugin plugin : plugins) {
+        for (Plugin plugin : plugins) {
             try {
-                plugin.onEditorPanelCreate(editorPanel);
+                plugin.onEditorPanelCreate(codeViewer, editorPanel);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
     }
 
-	/**
-	 * Calls the {@link Plugin#onEditorPanelClose(EditorPanel)} method of all currently active plugins with the given
-	 * <code>EditorPanel</code>.
-	 *
-	 * @param editorPanel
-	 * 		the closed <code>EditorPanel</code>
-	 */
-    public static void onEditorPanelClose(EditorPanel editorPanel) {
+    /**
+     * Calls the {@link Plugin#onEditorPanelClose(CodeViewer, EditorPanel)} method of all currently active plugins with
+     * the given <code>EditorPanel</code> and <code>CodeViewer</code>.
+     *
+     * @param codeViewer
+     *         the <code>CodeViewer</code> that the <code>editorPanel</code> belongs to
+     * @param editorPanel
+     *         the closed <code>EditorPanel</code>
+     */
+    public static void onEditorPanelClose(CodeViewer codeViewer, EditorPanel editorPanel) {
 
-		for (Plugin plugin : plugins) {
+        for (Plugin plugin : plugins) {
             try {
-                plugin.onEditorPanelClose(editorPanel);
+                plugin.onEditorPanelClose(codeViewer, editorPanel);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
     }
 
-	/**
-	 * Calls the {@link Plugin#onClose()} method of all currently active plugins.
-	 */
-    public static void onClose() {
+    /**
+     * Calls the {@link Plugin#onClose(CodeViewer)} method of all currently active plugins with the given
+     * <code>CodeViewer</code>.
+     *
+     * @param codeViewer
+     *         the <code>CodeViewer</code> that was closed
+     */
+    public static void onClose(CodeViewer codeViewer) {
 
-		for (Plugin plugin : plugins) {
+        for (Plugin plugin : plugins) {
             try {
-                plugin.onClose();
+                plugin.onClose(codeViewer);
             } catch (Exception e) {
                 e.printStackTrace();
             }

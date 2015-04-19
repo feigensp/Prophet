@@ -24,27 +24,37 @@ public interface Plugin {
 
     /**
      * Called after a new <code>CodeViewer</code> was created.
-     * 
-     * @param viewer the <code>CodeViewer</code> that was created
+     *
+     * @param viewer
+     *         the <code>CodeViewer</code> that was created
      */
     void onCreate(CodeViewer viewer);
 
     /**
-     * Called after a new editor panel in the <code>CodeViewer</code> was created.
-     * 
-     * @param editorPanel the created <code>EditorPanel</code>
+     * Called after a new editor panel in a <code>CodeViewer</code> was created.
+     *
+     * @param codeViewer
+     *         the <code>CodeViewer</code> that the <code>editorPanel</code> belongs to
+     * @param editorPanel
+     *         the created <code>EditorPanel</code>
      */
-    void onEditorPanelCreate(EditorPanel editorPanel);
+    void onEditorPanelCreate(CodeViewer codeViewer, EditorPanel editorPanel);
 
     /**
-     * Called after an editor panel of the <code>CodeViewer</code> was closed.
-     * 
-     * @param editorPanel the closed <code>EditorPanel</code>
+     * Called after an editor panel of a <code>CodeViewer</code> was closed.
+     *
+     * @param codeViewer
+     *         the <code>CodeViewer</code> that the <code>editorPanel</code> belongs to
+     * @param editorPanel
+     *         the closed <code>EditorPanel</code>
      */
-    void onEditorPanelClose(EditorPanel editorPanel);
+    void onEditorPanelClose(CodeViewer codeViewer, EditorPanel editorPanel);
 
     /**
-     * Called after the <code>CodeViewer</code> was closed.
+     * Called after a <code>CodeViewer</code> was closed.
+     *
+     * @param codeViewer
+     *         the <code>CodeViewer</code> that was closed
      */
-    void onClose();
+    void onClose(CodeViewer codeViewer);
 }

@@ -16,13 +16,13 @@ repositories {
 }
 
 dependencies {
-    compile 'com.fifesoft:rsyntaxtextarea:2.5.3'
+    compile 'com.fifesoft:rsyntaxtextarea:2.5.6'
     compile 'com.sun.mail:javax.mail:1.5.2'
     compile 'net.sf.opencsv:opencsv:2.3'
     compile('com.io7m.xom:xom:1.2.10') {
         transitive = false // we only need xom.jar, see http://www.xom.nu/faq.xhtml#d0e213
     }
-    compile 'com.thoughtworks.xstream:xstream:1.4.7'
+    compile 'com.thoughtworks.xstream:xstream:1.4.8'
     compile 'org.jsoup:jsoup:1.8.1'
 }
 
@@ -35,19 +35,46 @@ def getClassPath() {
     return deps.collect {'lib/' + it}.join(' ')
 }
 
+def editorMainClass = 'de.uni_passau.fim.infosun.prophet.experimentEditor.ExperimentEditor'
+def viewerMainClass = 'de.uni_passau.fim.infosun.prophet.experimentViewer.EViewer'
+
 task editorJar(type: Jar) {
-    archiveName = "Editor.jar"
+    archiveName = 'Editor.jar'
     manifest {
-        attributes("Main-Class": "de.uni_passau.fim.infosun.prophet.experimentEditor.ExperimentEditor",
-                   "Class-Path": getClassPath())
+        attributes('Main-Class': editorMainClass, 'Class-Path': getClassPath())
     }
 }
 
 task viewerJar(type: Jar) {
-    archiveName = "Viewer.jar"
+    archiveName = 'Viewer.jar'
     manifest {
-        attributes("Main-Class": "de.uni_passau.fim.infosun.prophet.experimentViewer.EViewer",
-                   "Class-Path": getClassPath())
+        attributes('Main-Class': viewerMainClass, 'Class-Path': getClassPath())
+    }
+}
+
+task editor(type: JavaExec) {
+    group 'Execution'
+    description 'Runs the experiment editor.'
+    main = editorMainClass
+    classpath sourceSets.main.runtimeClasspath
+    
+    if (projInstallDir.exists() || projInstallDir.mkdirs()) {
+        workingDir projInstallDir    
+    } else {
+        logger.warn("Could not create the working directory ${projInstallDir}. Using the project directoy.")
+    }
+}
+
+task viewer(type: JavaExec) {
+    group 'Execution'
+    description 'Runs the experiment viewer.'
+    main = viewerMainClass
+    classpath sourceSets.main.runtimeClasspath
+
+    if (projInstallDir.exists() || projInstallDir.mkdirs()) {
+        workingDir projInstallDir
+    } else {
+        logger.warn("Could not create the working directory ${projInstallDir}. Using the project directoy.")
     }
 }
 
@@ -59,7 +86,7 @@ task libs(type: Copy) {
 def relInstallDirPath = rootProject.projectDir.toURI().relativize(projInstallDir.toURI()).getPath()
 
 task dist(type: Copy) {
-    group "Distribution"
+    group 'Distribution'
     description "Assembles a distribution of the application in the ${relInstallDirPath} directory."
     from editorJar, viewerJar
     into projInstallDir
@@ -68,7 +95,7 @@ task dist(type: Copy) {
 dist.dependsOn libs
 
 task distZip(type: Zip) {
-    group "Distribution"
+    group 'Distribution'
     description "Assembles a .zip file containing the application in the ${relInstallDirPath} directory."
     from dist
     destinationDir = installDir

@@ -10,7 +10,8 @@ import java.util.Map;
 
 import de.uni_passau.fim.infosun.prophet.experimentViewer.EViewer;
 import de.uni_passau.fim.infosun.prophet.plugin.Plugin;
-import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.recorder.Recorder;
+import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin
+        .RecorderPlugin;
 import de.uni_passau.fim.infosun.prophet.util.qTree.Attribute;
 import de.uni_passau.fim.infosun.prophet.util.qTree.QTreeNode;
 import de.uni_passau.fim.infosun.prophet.util.settings.Setting;
@@ -30,6 +31,13 @@ public class CodeViewerPlugin implements Plugin {
 
     public static final String KEY = "codeviewer";
 
+    static RecorderPlugin recorder;
+    
+    static {
+        recorder = new RecorderPlugin();
+        CodeViewerPluginList.add(recorder);
+    }
+    
     private EViewer experimentViewer;
     private int count = 1;
 
@@ -59,7 +67,6 @@ public class CodeViewerPlugin implements Plugin {
         subSetting.setCaption(getLocalized("MENU_TAB_SETTINGS_SOURCE_CODE_PATH") + ":");
         settingsList.addSetting(subSetting);
 
-        settingsList.addSetting(Recorder.getSetting(mainAttribute));
         settingsList.addAllSettings(CodeViewerPluginList.getAllSettings(mainAttribute));
 
         return settingsList;
@@ -116,8 +123,7 @@ public class CodeViewerPlugin implements Plugin {
         CodeViewer cv = codeViewers.get(node);
 
         if (cv != null) {
-            CodeViewerPluginList.onClose();
-            cv.getRecorder().onClose();
+            CodeViewerPluginList.onClose(cv);
             cv.dispose();
 
             codeViewers.remove(node);

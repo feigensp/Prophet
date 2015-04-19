@@ -23,7 +23,7 @@ public class QTreeFormatHandler {
      * @throws java.io.FileNotFoundException
      *         if the directory structure can not be created
      */
-    protected static void checkParent(File saveFile) throws FileNotFoundException {
+    public static void checkParent(File saveFile) throws FileNotFoundException {
         File parent = saveFile.getParentFile();
 
         if (parent == null || parent.exists()) {

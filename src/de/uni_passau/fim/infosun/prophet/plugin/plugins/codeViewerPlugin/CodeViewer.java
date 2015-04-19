@@ -13,10 +13,11 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.plaf.basic.BasicSplitPaneDivider;
 
+import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.codeViewerPlugins.recorderPlugin
+        .RecorderPlugin;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.fileTree.FileEvent;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.fileTree.FileListener;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.fileTree.FileTree;
-import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.recorder.Recorder;
 import de.uni_passau.fim.infosun.prophet.plugin.plugins.codeViewerPlugin.tabbedPane.EditorTabbedPane;
 import de.uni_passau.fim.infosun.prophet.util.qTree.Attribute;
 
@@ -42,7 +43,6 @@ public class CodeViewer extends JFrame implements FileListener {
     private File showDir;
     private File saveDir;
 
-    private Recorder recorder;
     private Attribute attribute;
 
     /**
@@ -101,9 +101,7 @@ public class CodeViewer extends JFrame implements FileListener {
         fileTree.addFileListener(this);
         splitPane.setLeftComponent(new JScrollPane(fileTree));
 
-        recorder = new Recorder(cvAttributes);
-
-        tabbedPane = new EditorTabbedPane(recorder);
+        tabbedPane = new EditorTabbedPane(this);
         tabbedPane.setBorder(null);
         splitPane.setRightComponent(tabbedPane);
 
@@ -116,7 +114,6 @@ public class CodeViewer extends JFrame implements FileListener {
 
         add(splitPane, BorderLayout.CENTER);
 
-        recorder.onFrameCreate(this);
         CodeViewerPluginList.onCreate(this);
 
         pack();
@@ -131,12 +128,12 @@ public class CodeViewer extends JFrame implements FileListener {
     }
 
     /**
-     * Returns the <code>Recorder</code> used by this <code>CodeViewer</code>.
+     * Returns the <code>RecorderPlugin</code> used by this <code>CodeViewer</code>.
      *
-     * @return the <code>Recorder</code>
+     * @return the <code>RecorderPlugin</code>
      */
-    public Recorder getRecorder() {
-        return recorder;
+    public RecorderPlugin getRecorder() {
+        return CodeViewerPlugin.recorder;
     }
 
     /**
