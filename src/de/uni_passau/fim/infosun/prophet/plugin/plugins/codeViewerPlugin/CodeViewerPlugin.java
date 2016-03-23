@@ -20,6 +20,7 @@ import de.uni_passau.fim.infosun.prophet.util.settings.components.PathChooserSet
 
 import static de.uni_passau.fim.infosun.prophet.util.language.UIElementNames.getLocalized;
 import static de.uni_passau.fim.infosun.prophet.util.qTree.QTreeNode.Type.CATEGORY;
+import static de.uni_passau.fim.infosun.prophet.util.qTree.QTreeNode.Type.EXPERIMENT;
 
 /**
  * A <code>Plugin</code> that displays a separate window in which code samples appropriate for the current experiment
@@ -54,7 +55,7 @@ public class CodeViewerPlugin implements Plugin {
     @Override
     public Setting getSetting(QTreeNode node) {
 
-        if (node.getType() != CATEGORY) {
+        if (node.getType() == EXPERIMENT) {
             return null;
         }
 
