@@ -68,7 +68,7 @@ public final class QTreeCSVHandler extends QTreeFormatHandler {
             if (file.isDirectory()) {
                 xmlFiles.addAll(getFilesByName(file, fileName));
             } else {
-                if (file.getName().equals(fileName)) {
+                if (file.getName().contains(fileName)) {
                     xmlFiles.add(file);
                 }
             }
