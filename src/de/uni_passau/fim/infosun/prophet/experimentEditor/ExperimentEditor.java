@@ -179,6 +179,7 @@ public class ExperimentEditor extends JFrame {
 
         languages.put("German", Locale.GERMAN);
         languages.put("English", Locale.ENGLISH);
+        languages.put("Portuguese (Brazil)", new Locale("pt", "BR"));
 
         values = languages.keySet().toArray();
         selectedLanguage = JOptionPane.showInputDialog(null, message, title, JOptionPane.INFORMATION_MESSAGE, null,
