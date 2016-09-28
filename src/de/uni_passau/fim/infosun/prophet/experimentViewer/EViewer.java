@@ -180,7 +180,7 @@ public class EViewer extends JFrame {
     private void initLanguage() {
         String langTag = expTreeRoot.getAttribute(KEY_VIEWER_LANGUAGE).getValue();
 
-        if (langTag.equals(Locale.GERMAN.toLanguageTag()) || langTag.equals(Locale.ENGLISH.toLanguageTag())) {
+        if (langTag.equals(Locale.GERMAN.toLanguageTag()) || langTag.equals(Locale.ENGLISH.toLanguageTag()) || langTag.equals(new Locale("pt","BR").toLanguageTag())) {
             UIElementNames.setLocale(Locale.forLanguageTag(langTag));
         }
     }
