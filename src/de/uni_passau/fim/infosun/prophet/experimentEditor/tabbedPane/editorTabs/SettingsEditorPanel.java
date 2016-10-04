@@ -129,7 +129,7 @@ public class SettingsEditorPanel extends ExperimentEditorTab {
             items.add(Pair.of(Constants.KEY_VIEWER_LANGUAGE_SYSTEM, getLocalized("LANGUAGE_SYSTEM")));
             items.add(Pair.of(Locale.GERMAN.toLanguageTag(), getLocalized("LANGUAGE_GERMAN")));
             items.add(Pair.of(Locale.ENGLISH.toLanguageTag(), getLocalized("LANGUAGE_ENGLISH")));
-            items.add(Pair.of(new Locale("pt", "BR").toLanguageTag(), getLocalized("LANGUAGE_PORTUGUESE.BR")));
+            items.add(Pair.of(Constants.PORTUGUES_BR.toLanguageTag(), getLocalized("LANGUAGE_PORTUGUESE.BR")));
 
             attribute = selected.getAttribute(Constants.KEY_VIEWER_LANGUAGE);
             setting = new ComboBoxSetting(attribute, null, items);
