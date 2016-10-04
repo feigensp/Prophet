@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
+
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -31,6 +32,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.WindowConstants;
 import javax.swing.plaf.basic.BasicSplitPaneDivider;
 
+import de.uni_passau.fim.infosun.prophet.Constants;
 import de.uni_passau.fim.infosun.prophet.experimentEditor.qTree.QTree;
 import de.uni_passau.fim.infosun.prophet.experimentEditor.tabbedPane.ExperimentEditorTabbedPane;
 import de.uni_passau.fim.infosun.prophet.util.language.UIElementNames;
@@ -179,7 +181,7 @@ public class ExperimentEditor extends JFrame {
 
         languages.put("German", Locale.GERMAN);
         languages.put("English", Locale.ENGLISH);
-        languages.put("Portuguese (Brazil)", new Locale("pt", "BR"));
+        languages.put("Portuguese (Brazil)", Constants.PORTUGUES_BR);
 
         values = languages.keySet().toArray();
         selectedLanguage = JOptionPane.showInputDialog(null, message, title, JOptionPane.INFORMATION_MESSAGE, null,

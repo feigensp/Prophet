@@ -1,5 +1,7 @@
 package de.uni_passau.fim.infosun.prophet;
 
+import java.util.Locale;
+
 import de.uni_passau.fim.infosun.prophet.util.qTree.QTreeNode;
 import de.uni_passau.fim.infosun.prophet.util.qTree.handlers.QTreeXMLHandler;
 
@@ -99,4 +101,9 @@ public final class Constants {
      * input element that takes the subject code input.
      */
     public static final String KEY_SUBJECT_CODE_CAP = "subjectcode_caption";
+    
+    /*
+     * New Languages
+     */
+    public static final Locale PORTUGUES_BR = new Locale("pt", "BR");
 }
