@@ -18,6 +18,7 @@ import java.util.function.IntFunction;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
+
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -28,12 +29,14 @@ import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.WindowConstants;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import de.uni_passau.fim.infosun.prophet.Constants;
 import de.uni_passau.fim.infosun.prophet.plugin.PluginList;
 import de.uni_passau.fim.infosun.prophet.util.QuestionViewPane;
 import de.uni_passau.fim.infosun.prophet.util.language.UIElementNames;
 import de.uni_passau.fim.infosun.prophet.util.qTree.Attribute;
 import de.uni_passau.fim.infosun.prophet.util.qTree.QTreeNode;
 import de.uni_passau.fim.infosun.prophet.util.qTree.handlers.QTreeXMLHandler;
+
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
@@ -180,7 +183,7 @@ public class EViewer extends JFrame {
     private void initLanguage() {
         String langTag = expTreeRoot.getAttribute(KEY_VIEWER_LANGUAGE).getValue();
 
-        if (langTag.equals(Locale.GERMAN.toLanguageTag()) || langTag.equals(Locale.ENGLISH.toLanguageTag())) {
+        if (langTag.equals(Locale.GERMAN.toLanguageTag()) || langTag.equals(Locale.ENGLISH.toLanguageTag()) || langTag.equals(Constants.PORTUGUES_BR.toLanguageTag())) {
             UIElementNames.setLocale(Locale.forLanguageTag(langTag));
         }
     }
