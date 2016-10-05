@@ -101,9 +101,9 @@ public final class Constants {
      * input element that takes the subject code input.
      */
     public static final String KEY_SUBJECT_CODE_CAP = "subjectcode_caption";
-    
-    /*
-     * New Languages
+
+    /**
+     * A <code>Locale</code> representing Brazilian Portuguese.
      */
-    public static final Locale PORTUGUES_BR = new Locale("pt", "BR");
+    public static final Locale PORTUGUES_BR = Locale.forLanguageTag("pt-BR");
 }
