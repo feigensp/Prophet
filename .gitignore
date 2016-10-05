@@ -1,45 +1,85 @@
-### LyX
+### LyX template
 # Ignore LyX backup and autosave files
 # http://www.lyx.org/
 *.lyx~
 *.lyx#
 
-### Gradle
+### Gradle template
 .gradle
-gradle/
 build/
 
 # Ignore Gradle GUI config
 gradle-app.setting
 
-### JetBrains
-# Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm
+# Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
+!gradle-wrapper.jar
 
-# Directory-based project format:
+# Cache of project
+.gradletasknamecache
+
+# # Work around https://youtrack.jetbrains.com/issue/IDEA-116898
+# gradle/wrapper/gradle-wrapper.properties
+
+### JetBrains template
+# Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio and Webstorm
+# Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
+
 .idea/
-*.iml
 
-# File-based project format:
-*.ipr
+# User-specific stuff:
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/dictionaries
+.idea/vcs.xml
+.idea/jsLibraryMappings.xml
+
+# Sensitive or high-churn files:
+.idea/dataSources.ids
+.idea/dataSources.xml
+.idea/dataSources.local.xml
+.idea/sqlDataSources.xml
+.idea/dynamic.xml
+.idea/uiDesigner.xml
+
+# Gradle:
+.idea/gradle.xml
+.idea/libraries
+
+# Mongo Explorer plugin:
+.idea/mongoSettings.xml
+
+## File-based project format:
 *.iws
 
-# IntelliJ output folder
-out/
+## Plugin-specific files:
 
-### NetBeans
+# IntelliJ
+/out/
+
+# mpeltonen/sbt-idea plugin
+.idea_modules/
+
+# JIRA plugin
+atlassian-ide-plugin.xml
+
+# Crashlytics plugin (for Android Studio and IntelliJ)
+com_crashlytics_export_strings.xml
+crashlytics.properties
+crashlytics-build.properties
+fabric.properties
+
+### NetBeans template
 nbproject/private/
 build/
 nbbuild/
 dist/
 nbdist/
 nbactions.xml
-nb-configuration.xml
+.nb-gradle/
 
+### Eclipse template
 
-### Eclipse
-*.pydevproject
 .metadata
-.gradle
 bin/
 tmp/
 *.tmp
@@ -49,6 +89,10 @@ tmp/
 local.properties
 .settings/
 .loadpath
+.recommenders
+
+# Eclipse Core
+.project
 
 # External tool builders
 .externalToolBuilders/
@@ -56,14 +100,32 @@ local.properties
 # Locally stored "Eclipse launch configurations"
 *.launch
 
-# CDT-specific
+# PyDev specific (Python IDE for Eclipse)
+*.pydevproject
+
+# CDT-specific (C/C++ Development Tooling)
 .cproject
 
-# PDT-specific
+# JDT-specific (Eclipse Java Development Tools)
+.classpath
+
+# Java annotation processor (APT)
+.factorypath
+
+# PDT-specific (PHP Development Tools)
 .buildpath
 
 # sbteclipse plugin
 .target
 
+# Tern plugin
+.tern-project
+
 # TeXlipse plugin
 .texlipse
+
+# STS (Spring Tool Suite)
+.springBeans
+
+# Code Recommenders
+.recommenders/
