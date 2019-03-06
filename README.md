@@ -9,7 +9,7 @@ Contact
 -------
 
 ###  Responsible for Development: 
- * Janet Siegmund (siegmunj[at]fim.uni-passau.de)
+ * Janet Siegmund (siegmund[at]fim.uni-passau.de)
  
 ### Current Developers of PROPHET:
  * Georg Seibt  (seibt[at]fim.uni-passau.de)
