@@ -1,5 +1,23 @@
-apply plugin: 'java' 
-apply plugin: 'eclipse'
+plugins {
+    id 'java'
+    id 'idea'
+    id 'application'
+    id 'eclipse'
+}
+
+group = "de.uni_passau.fim.infosun.prophet"
+version = "1.0.0"
+
+sourceCompatibility = '11'
+targetCompatibility = '11'
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+javadoc {
+    options.setEncoding 'UTF-8'
+}
 
 sourceSets {
     main {
@@ -17,52 +35,44 @@ repositories {
 }
 
 dependencies {
-    compile 'com.fifesoft:rsyntaxtextarea:2.5.6'
-    compile 'com.sun.mail:javax.mail:1.5.2'
-    compile 'net.sf.opencsv:opencsv:2.3'
-    compile('com.io7m.xom:xom:1.2.10') {
+    implementation 'com.fifesoft:rsyntaxtextarea:2.5.6'
+    implementation 'com.sun.mail:javax.mail:1.5.2'
+    implementation 'net.sf.opencsv:opencsv:2.3'
+    implementation('com.io7m.xom:xom:1.2.10') {
         transitive = false // we only need xom.jar, see http://www.xom.nu/faq.xhtml#d0e213
     }
-    compile 'com.thoughtworks.xstream:xstream:1.4.8'
-    compile 'org.jsoup:jsoup:1.8.1'
+    implementation 'com.thoughtworks.xstream:xstream:1.4.8'
+    implementation 'org.jsoup:jsoup:1.8.1'
 }
 
-def installDir = new File(rootProject.buildDir, 'install')
-def projInstallDir = new File(installDir, rootProject.name)
-def libsDir = new File(projInstallDir, 'lib')
-
-def getClassPath() {
-    def deps = configurations.runtime.collect {it.getName()} + jar.archiveName 
-    return deps.collect {'lib/' + it}.join(' ')
+idea.module {
+    downloadJavadoc = true
+    downloadSources = true
 }
 
-def editorMainClass = 'de.uni_passau.fim.infosun.prophet.experimentEditor.ExperimentEditor'
-def viewerMainClass = 'de.uni_passau.fim.infosun.prophet.experimentViewer.EViewer'
-
-task editorJar(type: Jar) {
-    archiveName = 'Editor.jar'
-    manifest {
-        attributes('Main-Class': editorMainClass, 'Class-Path': getClassPath())
-    }
+eclipse.classpath {
+    downloadJavadoc = true
+    downloadSources = true
 }
 
-task viewerJar(type: Jar) {
-    archiveName = 'Viewer.jar'
-    manifest {
-        attributes('Main-Class': viewerMainClass, 'Class-Path': getClassPath())
-    }
-}
+def projInstallDir = file("$buildDir/install/${project.name}")
+def projBinDir = file("$projInstallDir/bin")
+
+def editorMainClass = "${group}.experimentEditor.ExperimentEditor"
+def viewerMainClass = "${group}.experimentViewer.EViewer"
 
 task editor(type: JavaExec) {
     group 'Execution'
     description 'Runs the experiment editor.'
     main = editorMainClass
     classpath sourceSets.main.runtimeClasspath
-    
-    if (projInstallDir.exists() || projInstallDir.mkdirs()) {
-        workingDir projInstallDir    
-    } else {
-        logger.warn("Could not create the working directory ${projInstallDir}. Using the project directoy.")
+
+    doLast {
+        if (projBinDir.exists() || projBinDir.mkdirs()) {
+            workingDir projBinDir
+        } else {
+            logger.warn("Could not create the working directory ${projBinDir}. Using the project directoy.")
+        }
     }
 }
 
@@ -72,32 +82,25 @@ task viewer(type: JavaExec) {
     main = viewerMainClass
     classpath sourceSets.main.runtimeClasspath
 
-    if (projInstallDir.exists() || projInstallDir.mkdirs()) {
-        workingDir projInstallDir
-    } else {
-        logger.warn("Could not create the working directory ${projInstallDir}. Using the project directoy.")
+    doLast {
+        if (projBinDir.exists() || projBinDir.mkdirs()) {
+            workingDir projBinDir
+        } else {
+            logger.warn("Could not create the working directory ${projBinDir}. Using the project directoy.")
+        }
     }
 }
 
-task libs(type: Copy) {
-    from configurations.runtime, jar
-    into libsDir
+application {
+    applicationName = project.name
+    mainClassName = editorMainClass
 }
 
-def relInstallDirPath = rootProject.projectDir.toURI().relativize(projInstallDir.toURI()).getPath()
-
-task dist(type: Copy) {
-    group 'Distribution'
-    description "Assembles a distribution of the application in the ${relInstallDirPath} directory."
-    from editorJar, viewerJar
-    into projInstallDir
+def viewerStartScripts = task viewerStartScripts(type: CreateStartScripts) {
+    applicationName = "ProphetViewer"
+    mainClassName = viewerMainClass
+    classpath = startScripts.classpath
+    outputDir = startScripts.outputDir
 }
 
-dist.dependsOn libs
-
-task distZip(type: Zip) {
-    group 'Distribution'
-    description "Assembles a .zip file containing the application in the ${relInstallDirPath} directory."
-    from dist
-    destinationDir = installDir
-}
+installDist.dependsOn(viewerStartScripts)
