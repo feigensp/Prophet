@@ -67,7 +67,7 @@ task editor(type: JavaExec) {
     main = editorMainClass
     classpath sourceSets.main.runtimeClasspath
 
-    doLast {
+    doFirst {
         if (projBinDir.exists() || projBinDir.mkdirs()) {
             workingDir projBinDir
         } else {
@@ -82,7 +82,7 @@ task viewer(type: JavaExec) {
     main = viewerMainClass
     classpath sourceSets.main.runtimeClasspath
 
-    doLast {
+    doFirst {
         if (projBinDir.exists() || projBinDir.mkdirs()) {
             workingDir projBinDir
         } else {
